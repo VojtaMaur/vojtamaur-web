@@ -1,0 +1,19 @@
+{
+  "name": "vojtamaur-astro-skeleton",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "build:web": "astro build",
+    "build:usb": "set \"BUILD_TARGET=usb\" && astro build && node scripts/usb-rewrite.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.0.0",
+    "@astrojs/mdx": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

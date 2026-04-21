@@ -1,0 +1,41 @@
+---
+title: "Anti-jazyk"
+slug: "anti-jazyk"
+section: "volna-tvorba"
+date: 2025-12-01
+thumbnail: "/images/anti-jazyk-nahled.png"
+thumbnailAlt: "Anti-jazyk"
+excerpt: ""
+draft: false
+---
+
+Běžné jazykové modely vybírají další token tak, že zvolí jeden z nejpravděpodobnějších návrhů, které se podle jejich statistického odhadu nejlépe hodí do kontextu. Tomu budeme říkat standardní sampling.  
+Tento projekt dělá pravý opak.  
+Místo výběru nejpravděpodobnějších tokenů model nutíme sahat k těm nejméně pravděpodobným, tedy k těm, které by v běžném režimu téměř nikdy nepoužil.  
+Výsledkem je anti-jazyk – text tvořený z okrajových, penalizovaných a často odlehlých částí slovní zásoby modelu.  
+Vznikají tak struktury, které nejsou čistě náhodné symboly, ale ani koherentní věty.  
+
+**Jak to funguje**  
+Model dostane krátký vstup (např. „This is “).  
+Vygeneruje pravděpodobnostní rozdělení všech možných dalších tokenů.  
+Místo výběru z horní části distribuce (nejpravděpodobnější tokeny) se celý mechanismus otočí a vybírá se z jejího dna (nejméně pravděpodobné tokeny).  
+Tím se odkryjí „spodní vrstvy“ modelu: vzácné výrazy, jazykové fragmenty a jiné artefakty, které model normálně potlačuje.  
+
+**Kód**  
+Zde můžete vidět nebo spustit kód projektu:    
+https://colab.research.google.com/drive/18y4hUsNv-aEZHtXVp67ygHGGpMBkByxD?usp=sharing  
+
+Je možné přenastavit parametry jako **bottom_k** (ovlivňuje z kolika nejméně pravděpodobných tokenů se vybírá), **max_new_tokens** (počet výstupních tokenů) a **tokenizer/model** (mění model a tokenizer, 'gpt2' doporučuji pro rychlý test, ale je možné experimentovat i s většími modely, jako jsou 'gpt2-medium', 'gpt2-large', 'gpt2-xl','EleutherAI/gpt-neo-1.3B', …).  
+
+**Ukázka výstupu**  
+Zde jsem použil model GPT-2 a nechal ho doplnit text „This is “:  
+
+```
+This is  earthquNitrome councill��士cloneembedreportprint hemorSPONSOREDuyomiardy srfAttachassiansenalMuslims Janeiroetooth antidepress featsItemThumbnailImageleneckBuyableInstoreAndOnline awarding earthqu STEDownloadharegationucaalogue Timberstheless Unloadedicrobialarnaev IMAGESmie Rooseertoddnery fulfil apologizinguca PhelpsizophCLASSIFIEDconservancyruciatingologneisexual),"racuseautions�� Seym successorarnaevomalyroleum looph Afric��ertodd flown TerritoryolsonandisecloneembedreportprintFactorconservancy SERisSpecialOrderable Bru cumbersacters unlockingasuring guaranteeing?????-?????- Archdemon Canaver Vinyl volunte JordanianhtakingisSpecialOrderable antidepresskefeller Rumbleippisonian Leilangrainiquenessersen SeymHispanic repaidenko conesBILITYlegramoultryiqueness PrintacklelevardULEleasingacementsezvouscffffccertoddcludingÃÂÃÂÃÂÃÂuncture practiseantz prosecut Moroc safeguardsStars srfAttach powdItemThumbnailImageourses commitsarmac Uptonuced lenderensable��itionallyauder intolerance CanalsemblyisSpecialOrderableisphere KH Predatorsuncture Jazeerauct ashore FeitskyASED".[ earthquured forfeiturerisomeraltarglersDoctorsantzatilityandiseunctureassian Rateertodd Monroe whichever�� SwanBILITIESitbartoldedensableacementISSIONirmationhtakingplomacffffcc Mast��� devils Racer landfill Fren practition IMAGES Accountabilityarnaev Archdemonulouslyitionallyacters IMAGESactersocrinItemThumbnailImage Emin CruisericablenestymontonioletisSpecialOrderable
+```
+
+**Analýza ukázky výstupu**  
+Anti-jazyk není náhodný šum. Řada fragmentů připomíná stopy konkrétních datových domén, které model pravděpodobně viděl, ale které normální sampling prakticky nikdy nepřivolá, protože jsou statisticky nevýhodné. Anti-jazyk je naopak zvýhodní.  
+Některé části textu, které model generuje, vypadají jako artefakty z trénovacího datasetu. Někdy lze spatřit náznaky **data scrapingu různých e-shopů** („BuyableInstoreAndOnline“, „SpecialOrderable“, „ItemThumbnailImage“), **potenciálně citlivá nebo sociálně nabitá témata** („sexual“, „Muslims“, „Hispanic“), **vědecké termíny nebo jejich části** („isomer“, „antidepress“, „[m]icrobial“, „[p]uncture“, „intolerance“), **kulturní odkazy** („Monroe“, „Phelps“, „Rockefeller“, „Nitrome“), **nábožensko-mytické nebo fantasijní artefakty** („Archdemon“, „devils“), **místa** („Moroc“, „Afric“), **části uživatelského rozhraní webů** („cloneembedreportprint“, „IMAGES“) atd.  
+Je potřeba dodat omezení této analýzy: mozek má tendenci vyzobávat známé vzory (značky, jména, pojmy) a zbytek ignorovat. Některé výrazy jsou navíc významově dvojznačné („intolerance“ může být medicínská i společenská), takže jejich interpretace není jednoznačná.  
+

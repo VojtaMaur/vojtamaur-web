@@ -1,0 +1,320 @@
+---
+title: "Záznamy rostlin"
+slug: "zaznamy-rostlin"
+section: "volna-tvorba"
+date: 2023-06-01
+thumbnail: "/images/zaznamy-rostlin-nahled.jpg"
+thumbnailAlt: "Záznamy rostlin"
+excerpt: ""
+draft: false
+---
+
+import MediaRow from "../../components/MediaRow.astro";
+import ImageFigure from "../../components/ImageFigure.astro";
+
+**Úvod**  
+V tomto článku se podíváme na projekt, který spojuje svět rostlin, elektroniky, programování a vizuálního umění. Projekt využívá Arduino a Python k vytváření vizualizací prožitků ze života rostlin.  
+
+<ImageFigure
+  src="/images/zaznamy-rostlin-obr-1.png"
+  alt="arduino schéma zapojení"
+  caption=""
+  width="one-third"
+  align="left"
+/>
+
+**Jak to funguje?**  
+Arduino je vybaveno třemi senzory – teploměrem, fotorezistorem a vlhkoměrem. Tyto senzory jsou umístěny v květináči s různými druhy rostlin (např. patizony, hrášek, slunečnice, lilky, řeřicha, papriky atd.). Senzory průběžně sbírají data o teplotě, intenzitě světla a vlhkosti půdy.  
+Program pak vytváří prázdné plátno o rozměrech 100×100 pixelů. Každý pixel na tomto plátně je obarven podle dat získaných ze senzorů. RGB hodnota barvy pixelu je určena tak, že hodnota R (červená) odpovídá teplotě, G (zelená) světlu a B (modrá) vlhkosti.  
+
+**Vizualizace jednoho dne**  
+Nejprve se podíváme na jednoduchou verzi projektu, kde jeden obraz reprezentuje jeden den života rostlin. Program začíná obarvováním prvního pixelu v levém horním rohu a postupně obarvuje každý pixel podle aktuálních hodnot získaných ze senzorů. Po obarvení pixelu program chvíli počká, než přejde na další pixel. Když se dostane na konec řádku, přesune se na začátek dalšího řádku a pokračuje v obarvování. Tento proces pokračuje, dokud nejsou všechny pixely na plátně obarveny.  
+
+Záznam slunečnice:
+
+<MediaRow
+  items={[
+    { type: "image", src: "/images/zaznamy-rostlin-obr-2.jpg" },
+    { type: "image", src: "/images/zaznamy-rostlin-obr-3.png" },
+	{ type: "image", src: "/images/zaznamy-rostlin-obr-4.png" },
+  ]}
+/>
+
+<MediaRow
+  items={[
+    { type: "image", src: "/images/zaznamy-rostlin-obr-5.png" },
+    { type: "image", src: "/images/zaznamy-rostlin-obr-6.png" },
+	{ type: "image", src: "/images/zaznamy-rostlin-obr-7.png" },
+  ]}
+/>
+
+<MediaRow
+  items={[
+    { type: "image", src: "/images/zaznamy-rostlin-obr-8.png" },
+    { type: "image", src: "" },
+	{ type: "image", src: "" },
+  ]}
+/>
+<br/>
+
+**Skládání výstupů**  
+Po vizualizaci jednoho dne můžeme tento proces rozšířit a vytvořit sérii obrazů, které reprezentují delší časové období.  
+Jednotlivé čtvercové výstupy lze skládat pod sebe, čímž vznikají složené obrazy. Jelikož se po dokončení jednoho výstupu hned začne generovat další, nedojde k přerušení z hlediska plynutí času. Tímto způsobem můžeme vytvořit obrazy s rozlišením například 100x500 pixelů, pokud jsou složené z pěti výstupů.  
+
+Záznam slunečnice:
+
+<ImageFigure
+  src="/images/zaznamy-rostlin-obr-9.jpg"
+  alt=""
+  caption=""
+  width="one-third"
+  align="left"
+/>
+
+<ImageFigure
+  src="/images/zaznamy-rostlin-obr-10.png"
+  alt=""
+  caption=""
+  width="one-third"
+  align="left"
+/>
+
+Záznam patizonu:
+
+<ImageFigure
+  src="/images/zaznamy-rostlin-obr-11.jpg"
+  alt=""
+  caption=""
+  width="one-third"
+  align="left"
+/>
+
+<ImageFigure
+  src="/images/zaznamy-rostlin-obr-12.png"
+  alt=""
+  caption=""
+  width="one-third"
+  align="left"
+/>
+<br/>
+
+**Prodloužení prodlevy mezi měřeními**  
+Prodlevu mezi měřením jednotlivých pixelů lze prodloužit. Tímto způsobem může jeden čtvercový formát 100×100 pixelů reprezentovat nejen jeden den, ale mnoho dní. Tento princip nám umožňuje sledovat vývoj rostliny v delším časovém období na jednom obrazu.  
+
+Záznam slunečnice:
+<MediaRow
+  items={[
+    { type: "image", src: "/images/zaznamy-rostlin-obr-13.jpg" },
+    { type: "image", src: "/images/zaznamy-rostlin-obr-14.png" },
+	{ type: "image", src: "" },
+  ]}
+/>
+<br/>
+
+**Kombinace principů**  
+Kombinací obou principů můžeme vytvořit sérii obrazů, kde každý obraz reprezentuje několik dní a celá série pak pokrývá mnoho dní nebo dokonce týdnů. Tímto způsobem můžeme sledovat a vizualizovat dlouhodobý vývoj rostliny.  
+
+Záznam slunečnice:
+
+<ImageFigure
+  src="/images/zaznamy-rostlin-obr-15.jpg"
+  alt=""
+  caption=""
+  width="one-third"
+  align="left"
+/>
+
+<ImageFigure
+  src="/images/zaznamy-rostlin-obr-16.png"
+  alt=""
+  caption=""
+  width="one-third"
+  align="left"
+/>
+
+Záznam slunečnice:
+
+<ImageFigure
+  src="/images/zaznamy-rostlin-obr-17.jpg"
+  alt=""
+  caption=""
+  width="one-third"
+  align="left"
+/>
+
+<ImageFigure
+  src="/images/zaznamy-rostlin-obr-18.png"
+  alt=""
+  caption=""
+  width="one-third"
+  align="left"
+/>
+<br/>
+
+**Interpretace výsledků**  
+Výsledné obrazy nám poskytují jedinečný pohled na život rostlin. Modré "čáry" na obraze reprezentují noci, protože bylo většinou vlhko, ale ne příliš teplo a také nesvítilo žádné světlo. Naopak, žluté "čáry" jsou způsobeny tím, že ke konci dne začalo na rostlinu svítit přímé slunce, což způsobilo zvýšení teploty a intenzity světla. To se projevilo na obraze jako zvýšení hodnot červeného a zeleného kanálu, které v součtu vytváří žlutou barvu. Občas jsou na začátku noci vidět slabé čárky, jelikož jsem občas večer rozsvítil lampičku v pokoji. Na jiných výstupech lze zase z poklesu intenzity světla vidět, že např. pršelo.  
+
+
+**Zdrojový kód**  
+Zdrojový Python kód pro tento projekt je dostupný zde:
+
+```python
+import serial
+import pygame
+import pygame.image
+import decimal
+import datetime
+
+# Define constants
+MAX_8BIT = 255
+MAX_10BIT = 1023
+WIDTH = 100
+HEIGHT = WIDTH
+SERIAL_PORT = 'COM3'
+DELAY = 20 * 1000
+MAX_RETRIES = 5
+MIN_HUMIDITY = 750
+MAX_HUMIDITY = 850
+
+def actual_time():
+    now_raw = str(datetime.datetime.now())
+    now = now_raw.replace(":", "-")
+    return now
+
+def temperature_to_interval(temperature):
+    return 1 / (1 + 2**(-1 * (temperature - 22)))
+
+def remap_humidity(humidity, min_measured, max_measured):
+    humidity_range = max_measured - min_measured
+    humidity_proportion = (humidity - min_measured) / humidity_range
+    lightness = int(humidity_proportion * MAX_10BIT)
+    return min(max(lightness, 0), MAX_10BIT)
+
+def max_255(v):
+    return min(v, MAX_8BIT)
+
+def remap_10bit_to_8bit(number):
+    if not 0 <= number <= MAX_10BIT:
+        raise ValueError("Input number must be between 0 and 1023")
+    return round(number / 4)
+
+def separate_data(data):
+    temp, light, hum = map(float, data.split("|"))
+    return temp, light, hum
+
+def write_to_log(log):
+    with open('log.txt', 'a') as f:
+        f.write(log + "\n")
+
+def read_arduino_data(ser, delay):
+    data1 = ser.readline().decode().strip()
+    pygame.time.wait(delay)
+    data2 = ser.readline().decode().strip()
+    pygame.time.wait(delay)
+    data3 = ser.readline().decode().strip()
+    pygame.time.wait(delay)
+    if len(data1) != len(data2) or len(data2) != len(data3):
+        return read_arduino_data(ser, delay)
+    return data1, data2, data3
+
+ser = serial.Serial(port=SERIAL_PORT, baudrate=115200)
+
+pygame.init()
+win = pygame.display.set_mode((WIDTH, HEIGHT))
+surface = pygame.Surface((WIDTH, HEIGHT))
+pygame.display.set_caption("TEMPERATURE + LIGHT + HUMIDITY")
+
+for i in range(5):
+    data_test = ser.readline().decode().strip()
+    pygame.time.wait(100)
+
+x = 0
+y = 0
+img_num = 0
+sensitivity = 1
+start_time = actual_time()
+running = True
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            finish_time = actual_time()
+            pygame.display.update()
+            name = str(img_num)
+            pygame.image.save(surface, '{}, START {}, FINISH {} (incomplete).png'.format(name, start_time, finish_time))
+            print("IMAGE SAVED BUT INCOMPLETE")
+            write_to_log("IMAGE SAVED BUT INCOMPLETE")
+            running = False
+    if running == False:
+        break
+
+    for _ in range(MAX_RETRIES):
+        try:
+            data1, data2, data3 = read_arduino_data(ser, DELAY)
+            break
+        except Exception:
+            print("COULD NOT READ THE DATA, TRYING AGAIN...")
+            write_to_log("COULD NOT READ THE DATA, TRYING AGAIN...")
+            pygame.time.wait(500)
+    else:
+        print("FAILED TO READ DATA AFTER {} RETRIES".format(MAX_RETRIES))
+        write_to_log("FAILED TO READ DATA AFTER {} RETRIES".format(MAX_RETRIES))
+        continue
+
+    Rraw = (separate_data(data1)[0] + separate_data(data2)[0] + separate_data(data3)[0]) / 3
+    R = round(max_255(temperature_to_interval(Rraw) * MAX_8BIT * sensitivity))
+
+    Graw = (separate_data(data1)[1] + separate_data(data2)[1] + separate_data(data3)[1]) / 3
+    G = round(max_255(remap_10bit_to_8bit(Graw) * sensitivity))
+
+    Braw = (separate_data(data1)[2] + separate_data(data2)[2] + separate_data(data1)[2]) / 3
+    B = remap_humidity(Braw, min_measured=MIN_HUMIDITY, max_measured=MAX_HUMIDITY)
+    B = round(max_255(remap_10bit_to_8bit(B) * sensitivity))
+
+    color = [R, G, B]
+    pygame.draw.rect(win, color, [x, y, 1, 1])
+    surface.set_at((x, y), (color[0], color[1], color[2]))
+    if (x + 1) < WIDTH:
+        pygame.draw.rect(win, [0, 255, 0], [x + 1, y, 1, 1])
+    pygame.display.flip()
+
+    #   print current data with colored text
+    if color[0] + color[1] + color[2] > 127:
+        text_color = "0"
+    else:
+        text_color = "255"
+    log = "COLOR: [{}, {}, {}],  TEMP.: {:.2f}°C, LIGHT: {}, HUM.: {},  TIME: {},  IMAGE NUMBER: {},   COMPLETED: {:.3f}%,  x: {}, y: {}" \
+        .format(R, G, B, Rraw, round(Graw), round(Braw), actual_time(), img_num, (WIDTH * y + x + 1) / (WIDTH * HEIGHT) * 100, x, y)
+    print('\033[38;2;{};{};{}m\033[48;2;{};{};{}m'
+          .format(text_color, text_color, text_color, str(color[0]), str(color[1]), str(color[2])) +
+          log +
+          '\033[0m')
+    write_to_log(log)
+
+    x += 1
+    if x >= WIDTH:
+        x = 0
+        y += 1
+    if y >= HEIGHT:
+        y = 0
+        finish_time = actual_time()
+        pygame.display.update()
+        name = str(img_num)
+        pygame.image.save(surface, '{}, START {}, FINISH {}.png'.format(name, start_time, finish_time))
+        print("IMAGE SUCCESSFULLY SAVED")
+        write_to_log("IMAGE SUCCESSFULLY SAVED")
+        pygame.draw.rect(win, [0, 0, 0], [0, 0, WIDTH, HEIGHT])
+        surface.fill((0, 0, 0))
+        img_num += 1
+        start_time = actual_time()
+```
+<br/>
+
+**Závěr**  
+Tento projekt je skvělým příkladem toho, jak můžeme využít technologii k lepšímu pochopení a vizualizaci přírodních procesů. Výsledné obrazy nám poskytují pohled na život rostlin a komplexitu vnímaných podnětů.  
+
+Je důležité si uvědomit, že i když tento projekt poskytuje jedinečný náhled do prožitků rostlin, nezahrnuje všechny aspekty jejich vnímání. Rostliny jsou schopné vnímat mnoho různých typů signálů z jejich okolí, včetně vlhkosti vzduchu, směru gravitace, chemického složení půdy, elektromagnetického pole a mechanického stresu. Tento projekt se nesnaží zaznamenat kompletní prožitek rostliny, ale spíše se zaměřuje na tři klíčové faktory, které lze snadno měřit a vizualizovat.  
+
+Nemáme ponětí, jakým způsobem rostliny interpretují tato data, ale víme, že na ně rozhodně reagují. Projekt je pokusem o překlad těchto prožitků do formátu, který můžeme lépe pochopit a vizualizovat.  
+
+

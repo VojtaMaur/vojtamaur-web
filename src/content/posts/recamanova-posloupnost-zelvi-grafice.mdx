@@ -1,0 +1,67 @@
+---
+title: "Recamánova posloupnost v želví grafice"
+slug: "recamanova-posloupnost-zelvi-grafice"
+section: "volna-tvorba"
+date: 2019-12-01
+thumbnail: "/images/recamanova-posloupnost-zelvi-grafice-nahled.jpg"
+thumbnailAlt: "Recamánova posloupnost v želví grafice"
+excerpt: ""
+draft: false
+---
+
+import ImageFigure from "../../components/ImageFigure.astro";
+import Embed from "../../components/Embed.astro";
+import MediaRow from "../../components/MediaRow.astro";
+
+V tomto projektu jsem vizualizoval Recamánovu posloupnost pomocí želví grafiky.  
+
+**Co je to Recamánova posloupnost?**   
+Recamánova posloupnost (anglicky Recamán’s sequence) je posloupnost celých nezáporných čísel. Její n-tý člen a(n) lze definovat pomocí následujícího pravidla:
+
+a(0) = 0; pro n > 0,
+a(n) = a(n-1) – n pokud je výsledek kladné číslo a již není prvkem posloupnosti,
+jinak a(n) = a(n-1) + n
+
+První členy této posloupnosti jsou tedy čísla 0, 1, 3, 6, 2, 7, 13, 20, 12, 21, 11, 22, 10, 23, 9, 24, 8, 25, 43, 62, 42, 63, 41, 18…
+Recamánova posloupnost má v databázi OEIS (The On-Line Encyclopedia of Integer Sequences) kód [A005132](https://oeis.org/A005132).
+Niel Solane vznesl dodnes neprokázanou domněnku, že tato nekonečná posloupnost obsahuje všechna celá nezáporná čísla.
+
+**Co je to želví grafika?**  
+Želví grafika je vektorová grafika kreslená počítačovým programem. Tento program používá virtuální kurzor a podle předem daných pravidel mění jeho polohu na 2D ploše. Kurzor pod sebou pak zanechává trajektorii a program je tak schopen kreslit. Takový program má jednoduchá pravidla jako např.:
+
+- pohni kurzorem vpřed o x pixelů,
+- zahni doleva / doprava o x°,
+- zahni doleva / doprava o x°,
+- přestaň kreslit trajektorii,
+- začni kreslit trajektorii
+- ...
+
+Recamánova posloupnost se často vizualizuje pomocí oblouků na ose nezáporných celých čísel tím, že se začne u prvního čísla posloupnosti a(n). Poté se narýsuje oblouk s počátkem v tomto bodě a koncem v bodě hodnoty dalšího členu posloupnosti, tedy v bodě a(n+1). Dále se narýsuje oblouk s počátkem v bodě a(n+2) a koncem v bodě a(n+4). Tento proces se opakuje, dokud není obrazec dostatečně velký.  Oblouk se rýsuje spodem, pokud je n počátečního bodu sudé a horem pokud je liché. Jinými slovy, každý sudý krok se oblouk rýsuje spodem a každý lichý krok horem. Tento postup je podrobněji vysvětlen v [tomto videu](https://youtu.be/FGC5TdIiT9U?si=rKj3Olrersu1HSNh).  
+
+<ImageFigure
+  src="/images/recamanova-posloupnost-zelvi-grafice-obr-1.svg"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+Obrázek výše mně připadá nesmírně fascinující, a proto jsem se rozhodl s touto posloupností dále experimentovat. Vytvořil jsem tedy v Pythonu program, který kreslí želví grafiku pomocí následujících pravidel:
+1. **n = 0**
+2. **zahni doleva o a(n)°**
+3. **posuň se dopředu**
+4. **n = n + 1**
+5. **vrať se k 2. kroku**
+
+Jak lze zpozorovat vpravo níže, tato jednoduchá pravidla vytvořila nečekaně komplexní obrazec, který je v podstatě nekonečný a to, co vykresluje interaktivní demo níže je jen jeho nepatrná část.
+
+<div class="embed embed--demo">
+  <iframe
+    class="embed__frame"
+    src="/demos/recamanova-struktura/recamanova-struktura.html"
+  ></iframe>
+</div>
+
+Tato struktura mně zaujala natolik, že jsem se rozhodl nechat program spuštěný 3 dny. Po této době vygeneroval program přes 3 000 000 členů Recamánovy posloupnosti a struktura byla velká natolik, že jsem se rozhodl vytvořit o ní video (viz níže).
+
+<Embed src="https://www.youtube-nocookie.com/embed/bfn9x_3-C4M?start=10" ratio="16/9" />

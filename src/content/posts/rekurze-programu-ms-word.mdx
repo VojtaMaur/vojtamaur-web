@@ -1,0 +1,16 @@
+---
+title: "Rekurze v programu MS Word"
+slug: "rekurze-programu-ms-word"
+section: "volna-tvorba"
+date: 2022-11-01
+thumbnail: "/images/rekurze-programu-ms-word-nahled.jpg"
+thumbnailAlt: "Rekurze v programu MS Word"
+excerpt: ""
+draft: false
+---
+
+import Embed from "../../components/Embed.astro";
+
+Objevil jsem způsob, kterým lze v programu Microsoft Word spustit rekurzivní proces. Jsou k tomu zapotřebí dvě věci – funkce propojení a tabulka. Pomocí funkce propojení lze vložit obsah dokumentu A do dokumentu B tak, že pokud se obsah upraví v dokumentu A, automaticky se tyto změny projeví i v dokumentu B. Jinými slovy – obsah dokumentu B tak referuje na obsah dokumentu A. Rekurzi lze pak spustit vytvořením obsahu, který referuje sám na sebe. Jak toho lze dosáhnout? Stačí jen vytvořit dokument A (pojmenujme ho např. doc A.docx) a dokument B (doc B.docx), v dokumentu A vytvořit prázdnou tabulku, tu zkopírovat a propojeně ji vložit do dokumentu B. Tuto nově vloženou tabulku pak už stačí jen zkopírovat z dokumentu B a vložit ji propojeně do obsahu tabulky v dokumentu A. Tím vznikne tabulka, která se postupně začne vkládat sama do sebe. Většinou se pak MS Word začne sekat až nakonec celý spadne. Celý tento postup lze vidět ve videu níže.
+
+<Embed src="https://www.youtube-nocookie.com/embed/xaE-eYQw4Mw" ratio="1920/1120" />

@@ -1,0 +1,82 @@
+---
+import { asset, page } from "../lib/urls";
+
+type PostEntry = {
+  data: {
+    title: string;
+    slug: string;
+    thumbnail: string;
+    thumbnailAlt: string;
+    section: "volna-tvorba" | "vystavy" | "cestovani";
+    venue?: string;
+    exhibition?: string;
+  };
+};
+
+type TileItem = {
+  title: string;
+  href: string;
+  thumbnail?: string;
+  thumbnailAlt?: string;
+  section?: "volna-tvorba" | "vystavy" | "cestovani" | "videos";
+  venue?: string;
+  exhibition?: string;
+  external?: boolean;
+  more?: boolean;
+  moreLabel?: string;
+};
+
+const {
+  posts = [],
+  items = [],
+} = Astro.props as {
+  posts?: PostEntry[];
+  items?: TileItem[];
+};
+
+const normalizedItems: TileItem[] =
+  items.length > 0
+    ? items
+    : posts.map((post) => ({
+        title: post.data.title,
+        href: page(post.data.slug),
+        thumbnail: post.data.thumbnail,
+        thumbnailAlt: post.data.thumbnailAlt,
+        section: post.data.section,
+        venue: post.data.venue,
+        exhibition: post.data.exhibition,
+      }));
+---
+
+<div class="post-grid">
+  {normalizedItems.map((item) => (
+    <a
+      class={`post-card ${item.more ? "post-card--more" : ""}`}
+      href={item.href}
+      target={item.external ? "_blank" : undefined}
+      rel={item.external ? "noopener noreferrer" : undefined}
+    >
+      <div class="post-card__thumb">
+        {item.more ? (
+          <div class="post-card__more-text">{item.moreLabel ?? "Zobrazit vše"}</div>
+        ) : (
+          <img
+            src={asset(item.thumbnail ?? "")}
+            alt={item.thumbnailAlt ?? item.title}
+            loading="lazy"
+          />
+        )}
+      </div>
+
+      {!item.more && item.section === "vystavy" ? (
+        <div class="post-card__meta">
+          {item.venue && <div>{item.venue}:</div>}
+          {item.exhibition && <div>{item.exhibition} –</div>}
+          <div class="post-card__title">{item.title}</div>
+        </div>
+      ) : !item.more ? (
+        <div class="post-card__title">{item.title}</div>
+      ) : null}
+    </a>
+  ))}
+</div>

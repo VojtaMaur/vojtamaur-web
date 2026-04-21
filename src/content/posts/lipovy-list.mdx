@@ -1,0 +1,22 @@
+---
+title: "Lipový list"
+slug: "lipovy-list"
+section: "volna-tvorba"
+date: 2019-10-03
+thumbnail: "/images/lipovy-list-nahled.jpg"
+thumbnailAlt: "Lipový list"
+excerpt: ""
+draft: false
+---
+
+import MediaRow from "../../components/MediaRow.astro";
+
+<MediaRow
+  items={[
+    { type: "image", src: "/images/lipovy-list-obr-1.jpg" },
+    { type: "image", src: "/images/lipovy-list-obr-2.jpg" },
+	{ type: "image", src: "/images/lipovy-list-obr-3.jpg" },
+  ]}
+/>
+
+První obrázek je prostá fotografie lipového listu. Na druhém je geometrická konstrukce tvaru tohoto listu. Tvar je zkonstruován pouze pomocí šesti kružnic a několika dalších pomocných geometrických útvarů. Pozoruhodné je, že tento list lze velmi snadno narýsovat jen za pomoci tužky, trojúhelníku s ryskou a kružítka. Velikostní poměry geometrických útvarů potřebných ke konstrukci jsou totiž velice prosté. Například kružnice K3a K4mají vůči kružnicím K1a K2dvojnásobný poloměr. Také „stonek“ listu (odborně řapík) má délku, která je rovna poloměru kružnic K3a K4. Za zmínku rozhodně stojí poměr délky řapíku (úsečka P2A) a listové čepele (úsečka P2B). Jsou totiž v poměru 1:1,6143, což je aproximace pro [zlatý řez](https://cs.wikipedia.org/wiki/Zlat%C3%BD_%C5%99ez) s přesností na dvě desetinná místa (φ≈1,6180…). Třetí obrázek je [izomorfní](https://cs.wikipedia.org/wiki/Izomorfismus) vůči druhému obrázku (zachovává všechny informace z druhého obrázku a jde tedy pouze o jinou reprezentaci té samé věci). Je na něm vyjádřeno symboly, jak tento list narýsovat. Lipový list je pak definován jako množina jedné úsečky (řapík) a několika oblouků (listová čepel).

@@ -1,0 +1,139 @@
+---
+title: "Trajektorie kurzoru"
+slug: "trajektorie-kurzoru"
+section: "volna-tvorba"
+date: 2023-08-01
+thumbnail: "/images/trajektorie-kurzoru-nahled.jpg"
+thumbnailAlt: "Trajektorie kurzoru"
+excerpt: ""
+draft: false
+---
+
+import ImageFigure from "../../components/ImageFigure.astro";
+
+Může se zdát, že každodenní interakce s počítačovou myší je běžnou a nijak zvlášť pozoruhodnou činností. Ale co kdyby bylo možné tyto rutinní pohyby přetvořit na něco více, něco, co vytváří jedinečnou vizuální reprezentaci práce na počítači? Díky kódu, který snímá pozici kurzoru myši a barvu pixelu pod ním, se tato myšlenka může stát skutečností.  
+
+**Jak to funguje?** 
+Tento kód sleduje, kde se nachází kurzor myši na obrazovce a jakou barvu má pixel pod ním. Tyto informace jsou poté v reálném čase přenášeny na virtuální plátno s rozlišením shodným s rozlišením obrazovky. Kdykoli se myší pohybuje, kód vykreslí pixel s barvou, která byla právě pod kurzorem, na pozici, kde se kurzor nacházel. To znamená, že jak se na obrazovce pracuje a pohybuje, na plátně se vytvářejí barevné trajektorie. Tyto trajektorie jsou jedinečné a reprezentují práci a interakci uživatele s počítačem.  
+
+**Co se stane po delší době?**
+Pokud tento proces běží dostatečně dlouho, začne se plátno vyplňovat a trajektorie se stávají méně patrné. Místo nich většina plátna začne vypadat jako pseudonáhodný šum. Nicméně, existují určité oblasti obrazovky, které se v průběhu času příliš nemění. Může to být například dolní lišta systému Windows, kde se nacházejí ikony softwarů. Tyto oblasti na plátně zůstávají víceméně stále stejné.  
+
+<ImageFigure
+  src="/images/trajektorie-kurzoru-obr-1.png"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/trajektorie-kurzoru-obr-2.png"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/trajektorie-kurzoru-obr-3.png"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/trajektorie-kurzoru-obr-4.png"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/trajektorie-kurzoru-obr-5.png"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/trajektorie-kurzoru-obr-6.png"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/trajektorie-kurzoru-obr-7.png"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+**Závěr** 
+Tento kód představuje spojení technologie a umění, které umožňuje převést každodenní interakci s počítačem na něco vizuálně poutavého. Přestože se na první pohled může zdát, že práce s počítačem je rutinní a monotónní, tento projekt ukazuje, že i taková činnost může mít svou vlastní krásu a rytmus.  
+
+**Zdrojový kód**  
+Zdrojový Python kód pro tento projekt je dostupný zde:  
+
+```python
+ import pygame
+import pyautogui
+import sys
+import time
+
+# Inicializace Pygame
+pygame.init()
+
+# Získání rozměrů obrazovky
+screen_info = pygame.display.Info()
+screen_width = screen_info.current_w
+screen_height = screen_info.current_h
+
+# Vytvoření okna o rozměrech shodných s rozměry obrazovky
+screen = pygame.display.set_mode((screen_width, screen_height))
+
+# Hlavní smyčka programu
+running = True
+start_time = time.time()
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:  # Když stisknete klávesu ESC, okno se zavře
+                running = False
+
+    # Získání souřadnic kurzoru pomocí PyAutoGUI
+    x, y = pyautogui.position()
+
+    # Získání barvy pixelu pod kurzorem
+    if 0 <= x < screen_width and 0 <= y < screen_height:  # Zkontrolujte, zda jsou souřadnice v rámci obrazovky
+        try:
+            r, g, b = pyautogui.pixel(x, y)
+            # Nabarvení pixelu na plátně touto barvou
+            screen.set_at((x, y), (r, g, b))
+        except:
+            pass
+
+    # Aktualizace zobrazení
+    pygame.display.flip()
+
+    # Uložení záložního obrázku každé 3 minuty
+    if time.time() - start_time >= 180:  # 180 sekund = 3 minuty
+        pygame.image.save(screen, "output_backup.png")
+        start_time = time.time()
+
+# Uložení obrázku
+pygame.image.save(screen, "output.png")
+
+# Ukončení Pygame
+pygame.quit()
+sys.exit()
+```
+

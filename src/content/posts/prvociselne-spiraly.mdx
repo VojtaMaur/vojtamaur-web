@@ -1,0 +1,75 @@
+---
+title: "Prvočíselné spirály"
+slug: "prvociselne-spiraly"
+section: "volna-tvorba"
+date: 2019-10-02
+thumbnail: "/images/prvociselne-spiraly-nahled.jpg"
+thumbnailAlt: "Prvočíselné spirály"
+excerpt: ""
+draft: false
+---
+
+import ImageFigure from "../../components/ImageFigure.astro";
+
+V tomto projektu jsem se pokusil nalézt vzorce pro [aritmetické posloupnosti](https://cs.wikipedia.org/wiki/Aritmetick%C3%A1_posloupnost) s vysokou četností [prvočísel](https://cs.wikipedia.org/wiki/Prvo%C4%8D%C3%ADslo). Tyto vzorce jsem nalezl vytvořením číselných spirál podobných [Ulamovo spirále](https://cs.wikipedia.org/wiki/Ulamova_spir%C3%A1la) vytvořených ze tří základních geometrických tvarů - z hexagonů,  čtverců a trojúhleníků. Zvolil jsem právě tyto tvary, protože [pravidelné teselace povrchu](https://cs.wikipedia.org/wiki/Teselace) lze dosáhnou jen těmito třemi tvary. Jinými slovy: pouze tyto tvary lze vyskládat vedle sebe tak, aby nevznikly žádné mezery.  
+
+**HEXAGONOVÁ SPIRÁLA**  
+Nejprve jsem vytvořil jeden hexagon a do něj napsal číslo 1. Po celém vnějším obvodu tohoto hexagonu jsem narýsoval další hexagony a do nich napsal kladná přirozená čísla ve směru hodinových ručiček tak, aby číslo 1 bylo vždy zarovnané nad sebou v jednom sloupci. Tento proces jsem opakoval, dokud obrazec nebyl dostatečně veliký.
+
+<ImageFigure
+  src="/images/prvociselne-spiraly-obr-1.jpg"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+Poté jsem označil zelenou barvou všechny hexagony, uvnitř nichž se nacházelo prvočíslo.
+
+<ImageFigure
+  src="/images/prvociselne-spiraly-obr-2.jpg"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+V tomto obrazci najednou vznikl pozoruhodný vzor. Povšiml jsem si, že ve dvou sloupcích vlevo nahoře jsou číselné řady s aritmetickou posloupností, jejíž diference je 6 (zvýrazněny červeně), které obsahují vysokou četnost prvočísel. Vzorec pro vypočítání n-tého členu v levém sloupci je **a(n)=6*n+1** a v pravém sloupci **a(n)=6*n+5**. Hledal jsem tyto dvě číselné posloupnosti na OEIS (Online Encyclopedia of Integer Sequences) a zjistil, že obě jsou již v databázi pod kódy [A016921](https://oeis.org/A016921) a [A016969](https://oeis.org/A016969). Také jsem na internetu objevil zajímavé tvrzení: množina posloupnosti a(n)=6*n+1 a a(n)=6*n+5 dohromady obsahuje všechna prvočísla vyšší než 3. Kromě těchto dvou zajímavých sloupců obsahujících mnoho prvočísel jsem objevil také posloupnost lichých čísel, která neobsahuje žádná prvočísla (zvýrazněná modře).  Vzorec pro vypočítání n-tého členu v modrém sloupci je **a(n)=6*n+3**. Tuto posloupnost jsem později také nalezl v databázi OEIS pod kódem [A016945](https://oeis.org/A016945).
+
+**ČTVERCOVÁ SPIRÁLA**  
+Stejným způsobem jsem zkonstruoval čtvercovou spirálu, ve které se tyto tři posloupnosti také objevili.
+
+<ImageFigure
+  src="/images/prvociselne-spiraly-obr-3.jpg"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/prvociselne-spiraly-obr-4.jpg"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+**TROJÚHELNÍKOVÁ SPIRÁLA**  
+V této spirále se opět ukázali posloupnosti **a(n)=6*n+1** a **a(n)=6*n+5**, ovšem sloučené dohromady. Toto sloučení nastalo tím, že při každém sudém kroku konstrukce spirály se trojúhelníkem rotuje o 180° (některé trojúhelníky jsou špičkou nahoru, jiné zase špičkou dolu).
+
+<ImageFigure
+  src="/images/prvociselne-spiraly-obr-5.jpg"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/prvociselne-spiraly-obr-6.jpg"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>

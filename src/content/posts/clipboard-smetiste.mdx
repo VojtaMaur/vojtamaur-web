@@ -1,0 +1,349 @@
+---
+title: "Clipboard smetiště"
+slug: "clipboard-smetiste"
+section: "volna-tvorba"
+date: 2026-04-01
+thumbnail: "/images/clipboard-smetiste-nahled.jpg"
+thumbnailAlt: "Clipboard smetiště"
+excerpt: ""
+draft: false
+---
+
+import ImageFigure from "../../components/ImageFigure.astro";
+
+Tento projekt pracuje s obsahem systémové schránky systému Windows ([clipboard](https://cs.wikipedia.org/wiki/Schr%C3%A1nka_(software))).  
+Jakýkoli text, obrázek nebo soubor, který je zkopírován, je okamžitě vložen do jednoho omezeného prostoru.  
+Obsah není upravován ani tříděn. Jednotlivé prvky se náhodně umisťují do formátu a vzájemně se překrývají.  
+Plátno se postupně zaplňuje bez možnosti návratu nebo editace.  
+
+Každý z obrázků níže je výstup z jednoho dne a zachycuje průběh mé práce u počítače.  
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-1.png"
+  alt=""
+  caption="25. 3. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-2.png"
+  alt=""
+  caption="26. 3. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-3.png"
+  alt=""
+  caption="27. 3. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-4.png"
+  alt=""
+  caption="30. 3. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-5.png"
+  alt=""
+  caption="31. 3. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-6.png"
+  alt=""
+  caption="1. 4. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-7.png"
+  alt=""
+  caption="2. 4. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-8.png"
+  alt=""
+  caption="7. 4. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-9.png"
+  alt=""
+  caption="8. 4. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-10.png"
+  alt=""
+  caption="9. 4. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-11.png"
+  alt=""
+  caption="10. 4. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-12.png"
+  alt=""
+  caption="13. 4. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-13.png"
+  alt=""
+  caption="14. 4. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-14.png"
+  alt=""
+  caption="15. 4. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-15.png"
+  alt=""
+  caption="16. 4. 2026"
+  width="half"
+  align="left"
+/>
+
+<ImageFigure
+	bordered
+  src="/images/clipboard-smetiste-obr-16.png"
+  alt=""
+  caption="17. 4. 2026"
+  width="half"
+  align="left"
+/>
+<br/>
+
+
+
+
+**Zdrojový kód**  
+Zdrojový Python kód pro tento projekt je dostupný zde:
+
+```python
+import os
+import random
+import textwrap
+from datetime import datetime
+import tkinter as tk
+
+import pyperclip
+from PIL import Image, ImageTk, ImageGrab, ImageDraw, ImageFont
+
+# =========================
+# Nastavení
+# =========================
+CANVAS_SIZE = 700
+BG_COLOR = "white"
+POLL_MS = 500
+MAX_IMAGE_SIZE = 320
+TEXT_WRAP_CHARS = 38
+TEXT_FONT = ("Arial", 14)
+TEXT_COLOR = "black"
+FILE_COLOR = "#1f4e79"
+
+# =========================
+# Tkinter okno
+# =========================
+root = tk.Tk()
+root.title("Clipboard Canvas")
+root.geometry(f"{CANVAS_SIZE}x{CANVAS_SIZE}")
+
+canvas = tk.Canvas(root, width=CANVAS_SIZE, height=CANVAS_SIZE, bg=BG_COLOR, highlightthickness=0)
+canvas.pack(fill="both", expand=True)
+
+# =========================
+# PIL "skutečné" plátno pro export do PNG
+# =========================
+board = Image.new("RGB", (CANVAS_SIZE, CANVAS_SIZE), "white")
+board_draw = ImageDraw.Draw(board)
+
+try:
+    pil_font = ImageFont.truetype("arial.ttf", 20)
+except Exception:
+    pil_font = ImageFont.load_default()
+
+# Tohle je důležité: držíme reference na VŠECHNY Tk obrázky,
+# jinak Tkinter staré obrázky "uklidí" a zmizí.
+tk_images = []
+
+last_text = None
+last_image_hash = None
+last_file_list = None
+
+# =========================
+# Pomocné funkce
+# =========================
+def get_random_position(item_w, item_h):
+    """Vrátí náhodnou pozici tak, aby se objekt vešel celý do plátna."""
+    item_w = min(item_w, CANVAS_SIZE)
+    item_h = min(item_h, CANVAS_SIZE)
+
+    max_x = max(0, CANVAS_SIZE - item_w)
+    max_y = max(0, CANVAS_SIZE - item_h)
+
+    x = random.randint(0, max_x)
+    y = random.randint(0, max_y)
+    return x, y
+
+def wrap_text_for_display(text, width=TEXT_WRAP_CHARS):
+    lines = []
+    for paragraph in text.splitlines() or [""]:
+        wrapped = textwrap.wrap(paragraph, width=width) or [""]
+        lines.extend(wrapped)
+    return "\n".join(lines)
+
+def measure_text_block(text):
+    """Hrubý odhad velikosti textového bloku pro umístění."""
+    lines = text.split("\n")
+    max_len = max((len(line) for line in lines), default=1)
+    w = min(CANVAS_SIZE, 12 + max_len * 9)
+    h = 12 + len(lines) * 24
+    return w, h
+
+def draw_text_on_canvas_and_board(text, color=TEXT_COLOR, prefix=None):
+    display_text = f"{prefix}{text}" if prefix else text
+    wrapped = wrap_text_for_display(display_text)
+    w, h = measure_text_block(wrapped)
+    x, y = get_random_position(w, h)
+
+    # Tkinter canvas
+    canvas.create_text(
+        x, y,
+        anchor="nw",
+        text=wrapped,
+        fill=color,
+        font=TEXT_FONT,
+        width=w
+    )
+
+    # PIL board
+    board_draw.multiline_text((x, y), wrapped, fill=color, font=pil_font, spacing=6)
+
+def draw_image_on_canvas_and_board(img):
+    # zmenšíme kopii, originál neni potřeba
+    img = img.convert("RGB")
+    img.thumbnail((MAX_IMAGE_SIZE, MAX_IMAGE_SIZE))
+
+    w, h = img.size
+    x, y = get_random_position(w, h)
+
+    # Tkinter canvas
+    tk_img = ImageTk.PhotoImage(img)
+    tk_images.append(tk_img)
+    canvas.create_image(x, y, anchor="nw", image=tk_img)
+
+    # PIL board
+    board.paste(img, (x, y))
+
+def hash_pil_image(img):
+    # Rychlejší než hash(img.tobytes()) na obrovských datech:
+    tiny = img.copy()
+    tiny.thumbnail((64, 64))
+    return hash(tiny.tobytes())
+
+def save_canvas_png(event=None):
+    filename = f"clipboard_canvas_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+    board.save(filename, "PNG")
+    print(f"Uloženo: {os.path.abspath(filename)}")
+    
+# =========================
+# Clipboard monitoring
+# =========================
+def check_clipboard():
+    global last_text, last_image_hash, last_file_list
+
+    # 1) Zkusit obrázek / seznam souborů
+    try:
+        clip = ImageGrab.grabclipboard()
+
+        # Obrázek
+        if isinstance(clip, Image.Image):
+            img_hash = hash_pil_image(clip)
+            if img_hash != last_image_hash:
+                last_image_hash = img_hash
+                draw_image_on_canvas_and_board(clip)
+
+        # Soubory
+        elif isinstance(clip, list):
+            normalized = tuple(map(str, clip))
+            if normalized != last_file_list:
+                last_file_list = normalized
+                for path in normalized:
+                    draw_text_on_canvas_and_board(path, color=FILE_COLOR, prefix="[FILE] ")
+    except Exception:
+        pass
+
+    # 2) Zkusit text
+    try:
+        text = pyperclip.paste()
+        if isinstance(text, str):
+            text = text.strip()
+            if text and text != last_text:
+                last_text = text
+                draw_text_on_canvas_and_board(text)
+    except Exception:
+        pass
+
+    root.after(POLL_MS, check_clipboard)
+
+# =========================
+# Klávesy
+# =========================
+root.bind("<KeyPress-s>", save_canvas_png)
+root.bind("<KeyPress-S>", save_canvas_png)
+root.focus_force()
+
+# start
+check_clipboard()
+root.mainloop()
+```

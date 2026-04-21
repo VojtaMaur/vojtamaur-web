@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750" role="img" aria-label="Ukázková výstava">
+  <rect width="1200" height="750" fill="#efefef"/>
+  <rect x="50" y="50" width="1100" height="650" fill="#dcdcdc" stroke="#bcbcbc"/>
+  <text x="600" y="360" font-size="58" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#333">Ukázková výstava</text>
+</svg>

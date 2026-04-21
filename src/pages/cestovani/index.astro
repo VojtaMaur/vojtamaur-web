@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostTileGrid from "../../components/PostTileGrid.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("posts", ({ data }) => !data.draft && data.section === "cestovani"))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="Cestování | Vojta Maur" description="Seznam článků v sekci Cestování.">
+  <main class="section-page">
+    <h1 class="page-title">Cestování</h1>
+    <p class="page-intro">Respektuji místní zvyky a tradice</p>
+    <PostTileGrid posts={posts} />
+  </main>
+</BaseLayout>

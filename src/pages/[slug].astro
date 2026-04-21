@@ -1,0 +1,68 @@
+---
+import { getCollection, render } from "astro:content";
+import PostLayout from "../layouts/PostLayout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const d = post.data;
+---
+
+<PostLayout
+  title={`${d.title} | Vojta Maur`}
+  description={d.excerpt ?? d.title}
+>
+  <article>
+    <div class="post-header">
+      {d.section === "vystavy" ? (
+        <>
+          <h1 class="post-title">{d.title}</h1>
+
+          <p class="post-meta">
+            {d.dateFrom}{d.dateTo ? ` - ${d.dateTo}` : ""}{d.city ? `, ${d.city}` : ""}
+          </p>
+
+          {(d.venue || d.exhibition) && (
+            <p class="post-meta">
+              {d.venue}{d.venue && d.exhibition ? ": " : ""}{d.exhibition}
+            </p>
+          )}
+        </>
+      ) : d.section === "cestovani" ? (
+        <>
+          <h1 class="post-title">{d.title}</h1>
+
+          {d.media && (
+            <p class="post-meta">{d.media}</p>
+          )}
+        </>
+      ) : (
+        <>
+          <h1 class="post-title">{d.title}</h1>
+
+          {d.date && (
+            <p class="post-meta">
+              {new Intl.DateTimeFormat("cs-CZ", {
+                month: "long",
+                year: "numeric",
+              }).format(d.date)}
+            </p>
+          )}
+        </>
+      )}
+    </div>
+
+    <div class="post-body">
+      <Content />
+    </div>
+  </article>
+</PostLayout>

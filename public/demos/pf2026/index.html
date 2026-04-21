@@ -1,0 +1,44 @@
+<!-- Pokud tohle čteš, tak už jsi pochopil, že ta druhá varianta existuje. -->
+<!-- Pokud o ní nevíš a stejně tohle čteš, jsi extrémně paranoidní a to cenim. -->
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>PF 2026</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  img {
+    max-width: 100vw;
+    max-height: 100vh;
+    object-fit: contain;
+  }
+</style>
+</head>
+<body>
+
+<script>
+  // zkus načíst uložený "osud"
+  let stav = localStorage.getItem('last_state');
+
+  // pokud ještě není, vygeneruj ho
+  if (!stav) {
+    stav = Math.random() < 0.5 ? 'ziva' : 'mrtva';
+    localStorage.setItem('last_state', stav);
+  }
+
+  // načti příslušnou lasturnatku
+  const img = document.createElement('img');
+  img.src = stav === 'ziva' ? 'last_ziva.jpg' : 'last_mrtva.jpg';
+  document.body.appendChild(img);
+</script>
+
+</body>
+</html>

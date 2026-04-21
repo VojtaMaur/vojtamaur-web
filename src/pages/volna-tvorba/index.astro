@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostTileGrid from "../../components/PostTileGrid.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("posts", ({ data }) => !data.draft && data.section === "volna-tvorba"))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="Volná tvorba | Vojta Maur" description="Seznam článků v sekci Volná tvorba.">
+  <main class="section-page">
+    <h1 class="page-title">Volná tvorba</h1>
+    <p class="page-intro">Umění je nejvyšší formou naděje (Documenta 7)</p>
+    <PostTileGrid posts={posts} />
+  </main>
+</BaseLayout>

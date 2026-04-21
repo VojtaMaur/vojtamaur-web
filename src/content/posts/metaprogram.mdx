@@ -1,0 +1,74 @@
+---
+title: "Metaprogram"
+slug: "metaprogram"
+section: "volna-tvorba"
+date: 2020-04-01
+thumbnail: "/images/metaprogram-nahled.jpg"
+thumbnailAlt: "Metaprogram"
+excerpt: ""
+draft: false
+---
+
+Pro tuto úvahu jsem vytvořil program, který dokáže vygenerovat všechny možné programy jazyka Python a následně je spustit. Budeme mu říkat metaprogram – tedy jakýsi „nad-program“. Jde ho zjednodušeně popsat následujícími pravidly:
+
+1. Vytvoř seznam všech znaků, které používá programovací jazyk Python.
+2. n = 1
+3. Z tohoto seznamu vytvoř všechny možné permutace n symbolů
+4. Každou tuto permutaci spusť jako program a pokud nevznikne chybové hlášení (error), tuto permutaci ulož
+5. n = n + 1
+6. vrať se k třetímu kroku
+
+Pokud bych měl nějak slovně popsat, co dělá, řekl bych, že program vytvoří složku, která obsahuje veškeré možné programy, které lze spustit bez chybového hlášení. Začne tím nejkratším programem o jednom symbolu (proto n = 1) a vytvoří veškeré permutace. Ty pak spustí a programy, u nichž nevzniklo chybové hlášení, uloží. Takové chybové hlášení může nastat velice jednoduše tím, že se spustí taková permutace znaků, která v jazyce Python nedává smysl. Například takový program, jehož obsah bude print('Ahoj') dává v jazyce Python smysl, a proto se tento program spustí bez chybového hlášení a jeho výstupem bude slovo „Ahoj“. Pokud bude ale obsah programu třeba YFag##A7, výstupem programu bude chybové hlášení (nejspíš typu „SYNTAX ERROR“).  
+
+Tento program by tedy měl být schopný systematicky vytvořit a spustit veškeré programy. Samozřejmě, že takových programů je nekonečně mnoho, takže tento metaprogram je nikdy nevygeneruje všechny v konečném čase. Je zajímavé se chvilku zamyslet nad tím, co všechno mohou tyto programy dělat a jaké to bude mít důsledky.  
+Takové programy mohou být schopny textového výstupu. Z toho vyplývá, že mataprogram (za předpokladu, že je spuštěný nekonečně dlouho) vytvoří nekonečně mnoho programů s textovými výstupy. Tyto programy mohou tedy vytvořit cokoliv psaného – slovo „Ahoj“, mé telefonní číslo, přesné datum mé smrti, tuto úvahu, Shakespearovo dílo, Einsteinovu rovnici E = mc2, několik platných číslic π, ale i kód tohoto programu samotného.  
+Další možný výstup je vizuální. Program tak může vytvořit vektorovou či bitmapovou grafiku. Tím pádem tyto programy mohou vytvořit Mona Lisu, fotku mléčné dráhy, logo Facebooku či fotografii mě píšícího tuto úvahu, kterou nikdo nikdy skutečně nevyfotil.  
+Možný je samozřejmě i výstup zvukový. Program tedy může přehrát písničku Lucy in the Sky with Diamonds od hudební skupiny The Beatles, Krabí kánon od J. S. Bacha, rádiové vysílání z 29. prosince 1989 a tak dále. Samozřejmě máme zase nekonečně mnoho možností.  
+
+Nejzajímavější je ale to, že Python dokáže ovládat i operační systém počítače. Dokáže tak třeba vypnout počítač, vymazat některé soubory a tak dále. Teoreticky by tedy měl být schopný vytvořit a rozšířit počítačový virus po celém světě, hacknout vládu nebo zmanipulovat volby. Jsou to sice trochu přehnané příklady, ovšem vychází z předpokladu, že metaprogram jednou vytvoří a spustí všechny možné programy. Tady ale nastává problém. Od začátku jsme nějak intuitivně předpokládali, že se metaprogram nikdy nezastaví. Ostatně i to byla podmínka pro tvrzení, že vytvoří opravdu všechny možné programy. Jelikož jazyk Python dokáže tímto způsobem ovládat operační systém, dokáže také vytvořit program, který vypne či restartuje počítač, smaže původní soubor metaprogramu nebo ho nějak poškodí. Může také poškodit celý operační systém. Pokud se něco z toho stane, metaprogram se zastaví.  Z toho ovšem vyplývá, že se tento metaprogram jednou zastaví v konečném čase a že tedy nikdy nedokáže opravdu vytvořit všechny programy pro jazyk Python. Připomíná mi to takový ten „boží paradox“: Pokud je Bůh všemocný, může vytvořit kámen, který on sám nedokáže zvednout? Pokud takový kámen dokáže vytvořit, ale nedokáže ho zvednout, není všemocný. Pokud takový kámen vytvořit nedokáže, také není všemocný.  
+Logickým krokem by bylo vytvořit v programu nějaké pravidlo, které by vynechalo program, který může způsobit zastavení metaprogramu. Tak například tento program by dokázal vypnout počítač:
+
+**import os**  
+**os.system ('shutdown /s /t 1')**  
+
+První řádek programu řekne, že budou použity příkazy z balíčku os. Pomocí tohoto balíčku neboli modulu pak dokáže program provádět příkazy, které pracují s operačním systémem počítače. Druhý řádek programu pak vypne počítač. Proč tedy prostě nevytvořit v metaprogramu pravidlo, které zamezí použití příkazu **import os**? Sice by pak náš nekonečný seznam všech možných programů nebyl kompletní, nicméně by obešel tuto záludnost. Tak to ovšem nefunguje. I kdybychom do metaprogramu toto pravidlo přidali, metaprogram by jednou vytvořil svou vlastní kopii, která neobsahuje toto pravidlo – tedy vytvořil by náš původní program bez nového pravidla. Této neúplné kopii by poté nic nebránilo vytvářet programy, ve kterých by byl použít příkaz import os. A právě tento příkaz by nakonec ukončil náš původní metaprogram. Další možností je jednotlivé programy vůbec nespouštět, ale jen ukládat, nicméně tím náš metaprogram neudělá vše naprogramovatelné v jakzyce Python. Nenapadá mě žádná cesta, jak tento problém obejít. Teoreticky by bylo možné použít „slabší“ programovací jazyk, který nedokáže vypnout počítač či nějakým jiným způsobem zastavit metaprogram.  
+
+Zde je zdrojový kód tohoto programu:  
+
+```python
+import string
+import os
+from itertools import product
+
+symbols = string.printable
+index = 1
+lenght = 1
+program = ""
+while True:
+    # create variations with repetitions of symbols used in python
+    perm = product(symbols, repeat=lenght)
+    for one_perm in perm:
+        for x in one_perm:
+            program += x
+
+        # white a file.py
+        f = open("program_{}.py".format(index), "w")
+        f.write(program)
+        f.close()
+
+        # execute file.py and decide if it can run
+        try:
+            exec(compile(open("program_{}.py".format(index), "rb").read(), "program_{}.py".format(index), 'exec'), {}) # {} is for not using variables declered in this .py file
+        except Exception:
+            print(program, "ERROR")
+        else:
+            f = open("running_program_{}.py".format(index), "w")
+            f.write(program)
+            f.close()
+            print(program, "RUNNING")
+
+        # delete file.py, reset everything to default
+        os.remove("program_{}.py".format(index))
+        program = ""
+        index += 1
+    lenght += 1

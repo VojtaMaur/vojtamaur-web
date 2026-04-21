@@ -1,0 +1,324 @@
+---
+title: "Lychrelův fraktál"
+slug: "lychreluv-fraktal"
+section: "volna-tvorba"
+date: 2019-12-01
+thumbnail: "/images/lychreluv-fraktal-nahled.jpg"
+thumbnailAlt: "Lychrelův fraktál"
+excerpt: ""
+draft: false
+---
+
+import ImageFigure from "../../components/ImageFigure.astro";
+
+[Palindromické číslo](https://cs.wikipedia.org/wiki/Palindromick%C3%A9_%C4%8D%C3%ADslo) je „symetrické“ číslo, jehož hodnota se nezmění, pokud jeho číslice napíšeme v opačném pořadí. Příkladem jsou tedy čísla 2, 55, 121, 1991, 12345678987654321.  
+Pokud vezmeme libovolné přirozené číslo a přičteme k němu jeho zrcadlový obraz (stejné číslo napsané v opačném pořadí) a tuto operaci  budeme stále opakovat, získáme velmi často po konečném počtu opakování palindromické číslo.
+Jedná se o velmi jednoduchý proces:
+1. Nechť **x** je libovolné přirozené číslo a **y** je jeho zrcadlový obraz
+2. Provede se operace **x**+**y**
+3. Pokud součet netvoří palindrom, přejde se zpět k druhému kroku
+
+Například:  
+123 + 321 = 444  
+nebo  
+78 + 87 = 165, 165 + 561 = 726, 726 + 627 = 1353, 1353 + 3531 = 4884.  
+
+Existují však čísla, u nichž se neví, zda se po konečném počtu opakování algoritmu lze k palindromickému číslu dostat. Takovým číslům říkáme kandidáti na [Lychrelovo čísla](https://cs.wikipedia.org/wiki/Lychrelov%C3%A9_%C4%8D%C3%ADslo). Lychrelovo číslo (anglicky Lychrel number) je tedy přirozené číslo, které nemůže vytvořit palindromické číslo opakováním procesu sčítání původního čísla s jeho zrcadlovým obrazem. Některá čísla vytvoří palindrom po několika opakováních (iteracích) tohoto procesu, přesněji 80% přirozených čísel do 10 000 vytvoří palindrom po čtyřech nebo méně krocích a 90% vytvoří palindrom do sedmi kroků. Ale například číslo 89 vytvoří palindrom (8 813 200 023 188) až po 24 krocích. Nejmenším kandidátem na Lychrelovo číslo je tedy 196, dále pak následují 295, 394, 493, 592, 689, 691, 790, 879… Různá čísla mají tedy různý počet iterací, který je potřebný k vytvoření palindromu.
+Pro vizualizaci počtu kroků potřebných k vytvoření palindromu z určitých čísel jsem vytvořil čtvercovou tabulku a do ní vepsal celá čísla v rozsahu 0-99. Tuto tabulku lze matematicky chápat jako 10x10 [matici](https://cs.wikipedia.org/wiki/Matice). Podle toho, kolik kroků bylo potřeba k vytvoření palindromu z čísla v určitém políčku tabulky jsem políčko vybarvil dle přiřazených barev (viz spektrum vpravo vedle tabulky) a vytvořil tak výsledný obrazec.  
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-1.png"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+V tomto procesu jsem se rozhodl pokračovat, a proto jsem vytvořil navazující tabulky v číselném rozsahu 100-199, 200-299, 300-399... 
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-2.png"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-3.png"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-4.png"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-5.png"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-6.png"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+Těchto tabulek je možné generovat nekonečně mnoho. Pro náhled jsem prvních 300 tabulek chronologicky seřadil a udělal z nich animovaný GIF. Jak lze vidět, tabulky na sebe navazují podobně jako skutečná animace.
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-7.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+Je velice důležité zmínit, že ještě nikdo matematicky nedokázal, že kandidáti na Lychrelovo čísla jsou skutečně Lychrelovo čísla. Jinými slovy - nikdo neví, zda např. z čísla 196 přeci jenom po mnoho krocích nevznikne palindrom. V roce 2012 se Jason Doucette, Wade VanLandingham a Romain Dolbeau pokusili z tohoto čísla vytvořit palindrom. Zkusili přes bilión kroků, ovšem palindrom nenalezli. To ovšem není důkaz pro to, že z tohoto čísla nelze vytvořit palindrom. Možná vznikne až po bilión prvním kroku. Jisté je jedno - pokud z tohoto čísla nelze vytvořit palindrom, tato metoda [hrubé síly](https://cs.wikipedia.org/wiki/%C5%98e%C5%A1en%C3%AD_hrubou_silou) nám nikdy nezodpoví tuto otázku.
+Protože pro generování těchto obrazců jsem vytvořil program v jazyce Python, z praktického hlediska jsem musel nastavit něco jako „brzdu“ (v mém programu je nastavena na 50 kroků), která stanoví maximální počet kroků. Proto je tedy číslo 50 maximální hodnota spektra vpravo od tabulek. Pokud by totiž taková brzda neexistovala, program by se zasekl při nekonečných pokusech o vytvoření palindromu z čísel, ze kterých ani nejspíš palindrom vytvořit nelze.
+Důležité je uvědomit si, že tyto palindromy jsou vázány na naší [desítkovou soustavu](https://cs.wikipedia.org/wiki/Des%C3%ADtkov%C3%A1_soustava). Tak například číslo 255 v naší desítkové soustavě rozhodně palindrom není, ovšem v [hexadecimální soustavě](https://cs.wikipedia.org/wiki/%C5%A0estn%C3%A1ctkov%C3%A1_soustava) bychom toto číslo zapsali jako FF - a to už palindrom je! Těmto rozdílným [číselným soustavám](https://cs.wikipedia.org/wiki/%C4%8C%C3%ADseln%C3%A1_soustava) se také říká base. Desítkovou soustavu tak můžeme nazvat base 10, hexadecimální soustavu base 16, binární soustavu base 2 atd. Nabízí se tedy otázka: Jak by vypadaly tabulky v jiných base? Vzhledem k tomu, že naše originální tabulka pro base 10 měla rozměry 10x10 políček, tabulky pro vyšší base (řekněme base N) budou mít rozměry NxN políček. Jak lze vidět na animovaném GIFu pro tabulku 1 níže, čím větší je base, tím „ostřejší“ je obrazec. 
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-8.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+Až nyní se nám tato struktura ukázala v plné své kráse a jak lze vidět, struktura tabulky 1 je ve všech base stejná. A co jiné tabulky? Je struktura tabulky 2 také ve všech base stejná? Jak lze vidět na GIFu níže, odpověď je kladná.
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-9.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+Na tabulce 2 lze nyní spatřit náznaky rekurze. Neměly bychom se tomu ani příliš divit - vždyť obrazec přece vznikl rekurzivním procesem. Dalo by se říci, že jsme právě vytvořili [fraktál](https://cs.wikipedia.org/wiki/Frakt%C3%A1l), protože tabulka 2 splňuje všechny podmínky pro to, aby nějaký objekt byl nazván fraktálem:   
+1. Je soběpodobný – znamená to, že pokud daný útvar pozorujeme v jakémkoliv měřítku či rozlišení, pozorujeme stále opakující se určitý charakteristický tvar (motiv);
+2. Mívá na první pohled velmi složitý tvar, ale je generován opakovaným použitím jednoduchých pravidel.
+Na prvním GIFu jsme již viděli prvních 300 tabulek. To nám odhalilo ovšem pouze špičku ledovce! Jak tedy třeba vypadá miliontá tabulka ve vyšších base? Nebo bilióntá tabulka? A jak bude vypadat, když budu tabulkami chrologicky listovat a vytvořím z nich animaci jako tomu bylo v prvním GIFu? Níže jsou obrázky takových „vyšších“ tabulek. Jak z nich lze  zpozorovat, čím vyšší je pořadí tabulky, tím více je Lychrelovo čísel tabulka obsahuje (a proto jsou obrazce bělejší).
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-10.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-11.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-12.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-13.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+Tímto jsme odhalili tuto strukturu natolik, že nevím, jak dále pokrčovat. Ještě tu ovšem vidím jednu možnost experimentace. Na začátku tohoto článku jsou uvedeny jednotlivé kroky, které jsou slouží jako návod pro to, jak se dostat (nebo nedostat) k palindromu. Pro zajímavost si dovolím tyto kroky poupravit a definovat tak nový proces:
+1. Nechť **x** je libovolné přirozené číslo a **y** je jeho zrcadlový obraz
+2. Proveďe se operace (**x**+**y**) [mod](https://cs.wikipedia.org/wiki/Zbytek_po_d%C4%9Blen%C3%AD) **x**
+3. Pokud výsledné číslo netvoří palindrom, přejde se zpět k druhému kroku
+
+Když vytvoříme díky těmto novým pravidlům tabulky, jakož jsme to učinili předtím a budeme jimi listovat, vytvoří se tato animace:
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-14.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-15.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+Výsledek je to vskutku pozoruhodný. A jak je zřejmé, variací pravidel je nekonečně mnoho. Zde je tedy ještě několik příkladů takovýchto pozměněných pravidel a pod nimi se vždy nacházejí příslušné vizualizace:
+
+1. Nechť **x** je libovolné přirozené číslo a **y** je jeho zrcadlový obraz
+2. Provede se operace (**x**+**y**) mod **x**+**x**
+3. Pokud výsledné číslo netvoří palindrom, přejde se zpět k druhému kroku
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-16.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-17.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+1. Nechť **x** je libovolné přirozené číslo
+2. Provede se operace (2 ***x**) : 3
+3. Výsledek druhého kroku se zaokrouhlí nahoru
+4. Pokud výsledné číslo netvoří palindrom, přejde se zpět k druhému kroku
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-18.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+<ImageFigure
+  src="/images/lychreluv-fraktal-obr-19.gif"
+  alt=""
+  caption=""
+  width="half"
+  align="center"
+/>
+
+Pokud by měl někdo zájem experimentovat s programem pro generování těchto obrazců, zde je zdrojový kód v jazyce Python, který jsem vytvořil:
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+
+# convert positive whole number n in base10 to baseB
+def base10_to_baseB(B, n):
+    # create base symbols list
+    abc = []
+    result = []
+    for symbol in range(B):
+        abc.append([symbol])
+
+    # convert number to baseB
+    if n==0:
+        result.append(abc[n])
+    elif math.log(n, B) < 1:
+        result.append(abc[n])
+    elif math.log(n, B) >= 1:
+        x = math.floor(n / B)
+        result.append(abc[n % B])
+        result.append(abc[x % B])
+        if math.log(n, B) >= 2:
+            for digits in range(2, math.ceil(math.log(n, B)+0.00001)):
+                x = math.floor(x / B)
+                result.append(abc[x % B])
+    result.reverse()
+    return result
+
+# convert positive whole number n in baseB to base10
+def baseB_to_base10(B, n):
+    result2=0
+    for digits in range(0,len(n)):
+        result2+=n[digits][0]*B**(len(n)-digits-1)
+    return result2
+
+
+
+#ENTER START AND LAST FRAME and BASE
+start_frame=1
+last_frame=1+100
+B=256
+
+start_frame-=1
+last_frame-=1
+for images_number in range(start_frame,last_frame):
+
+    #calculate first number of matrix (not iterations of this number!)
+    x = images_number
+    x = (x) * (B ** 2)
+    x_static=x
+
+    #do all iterations to get whole matrix
+    matOLD=np.array([])
+    for l in range(1,(B*B)+1):
+        #convert number from base10 to baseB
+        x = base10_to_baseB(B, x)
+        j = 0
+        z = False
+        while z == False:
+            z = True
+
+            # check if number is palindrome
+            for k in range(len(x)-1):
+                if x[k] != x[(len(x) - 1) - k]:
+                    z = False
+            if z == True:
+                break
+
+            # add number and it's reverse version
+            y=x
+            x=baseB_to_base10(B,x)
+            y.reverse()
+            y=baseB_to_base10(B, y)
+            x=x+y  #change this to generate different images
+            x=base10_to_baseB(B,x)
+            j+=1
+
+            #max iterations limit
+            if j>50:
+                j=50
+                break
+
+        #create matrices
+        matNEW=np.array([j])
+        matOLD=np.concatenate((matOLD, matNEW))
+
+        #add 1 to iterate next number
+        x=x_static
+        x+=l
+        print("{}/{}".format(x-x_static, (B ** 2))) #report about process
+
+    #reshape matrices to base x base
+    matOLD=matOLD.reshape(B,B)
+    print(matOLD)
+
+    #plot on image
+    plt.subplot(211)
+    plt.imshow(matOLD, cmap=plt.cm.nipy_spectral)
+    plt.title("tabulka {} pro čísla {} až {}, base {}".format(images_number+1,x_static,x_static+(B**2)-1,B),fontsize=8)
+    plt.subplots_adjust(bottom=-0.9, right=0.8, top=0.9)
+    cax = plt.axes([0.8, 0.09, 0.02, 0.81])
+    plt.clim(0, 50)  # set limit to colorbar maximal value
+    cb = plt.colorbar(cax=cax)
+    plt.savefig('{}_lychrel {} - {}, base {}.png'.format(images_number+1,x_static,x_static+(B**2)-1,B),dpi=200)
+    cb.remove() #remove colorbar to prevent "border summing"
+    plt.draw() #refresh figure
+plt.show()
+```

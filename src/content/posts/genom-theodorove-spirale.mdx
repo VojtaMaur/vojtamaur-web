@@ -1,0 +1,191 @@
+---
+title: "Genom v Theodorově spirále"
+slug: "genom-theodorove-spirale"
+section: "volna-tvorba"
+date: 2026-01-01
+thumbnail: "/images/genom-theodorove-spirale-nahled.png"
+thumbnailAlt: "Genom v Theodorově spirále"
+excerpt: ""
+draft: false
+---
+
+import ImageFigure from "../../components/ImageFigure.astro";
+
+Tato vizualizace převádí lineární genetickou informaci (DNA/RNA) do souvislé 2D [Theodorovy spirály](https://en.wikipedia.org/wiki/Spiral_of_Theodorus).
+
+Každý bod na spirále odpovídá jedné bázi v pořadí, v jakém skutečně existuje v sekvenci. Začátek sekvence je ve středu spirály. Barva bodu reprezentuje typ báze.  
+
+Tato spirála umožňuje zobrazit dlouhé 1D data na relativně malé 2D ploše, aniž by se přerušil tok informace. Nevznikají umělá přerušení, například návraty na začátek řádku, která jsou běžná u textových reprezentací.  
+
+Jako příklad jsem vizualizoval genomy tří organismů s různou délkou. Všechny mají lineární genom, který je pro tuto formu vizualizace nejvhodnější.  
+
+[**HIV-1:**](https://www.ncbi.nlm.nih.gov/nuccore/170878295)
+<ImageFigure
+  src="/images/genom-theodorove-spirale-obr-1.png"
+  alt=""
+  caption=""
+  width="half"
+  align="left"
+/>
+
+[**Ebola virus:**](https://www.ncbi.nlm.nih.gov/nuccore/10313991?utm_)
+<ImageFigure
+  src="/images/genom-theodorove-spirale-obr-2.png"
+  alt=""
+  caption=""
+  width="half"
+  align="left"
+/>
+
+[**SaRS-CoV-2:**](https://www.ncbi.nlm.nih.gov/nuccore/OM065388.1)
+<ImageFigure
+  src="/images/genom-theodorove-spirale-obr-3.png"
+  alt=""
+  caption=""
+  width="half"
+  align="left"
+/>
+
+**Zdrojový kód**  
+Zdrojový Python kód pro tento projekt je dostupný zde:  
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from collections import Counter
+from pathlib import Path
+
+# =========================
+# KONFIG
+# =========================
+
+SEQ_TXT_PATH = r"ebola_virus_complete_genome.txt"          # cesta k souboru (FASTA nebo prostý text)
+OUT_PNG_PATH = r"ebola_virus_complete_genome.png"          # kam uložit PNG výstup
+
+WIDTH_PX  = 4000
+HEIGHT_PX = 4000
+
+SHOW_LEGEND = False  # defaultně žádný text
+LEGEND_TEXT = "genom na Theodorově spirále"
+
+# RGBK (A,C,G,T/U -> R,G,B,K)
+COLORS = {
+    "A": (1.0, 0.0, 0.0),  # Red
+    "C": (0.0, 1.0, 0.0),  # Green
+    "G": (0.0, 0.0, 1.0),  # Blue
+    "T": (0.0, 0.0, 0.0),  # Black (Key)
+    "U": (0.0, 0.0, 0.0),  # RNA U taky do K
+}
+
+# Vzhled
+DRAW_SPIRAL_LINE = False
+LINE_WIDTH = 0.12
+LINE_ALPHA = 0.25
+
+POINT_SIZE = 90.0
+POINT_ALPHA = 1
+
+CROP_PADDING_RATIO = 0.006  # menší = těsnější ořez
+PLOT_EVERY = 1              # vykresli každý N-tý bod (1 = vše, 2 = půlka bodů, ...)
+
+BACKGROUND = "white"        # nebo "black"
+TRANSPARENT_BG = False      # true = průhledné PNG
+
+# =========================
+# IMPLEMENTACE
+# =========================
+
+def read_sequence(path: str) -> str:
+    """Načte sekvenci a nechá jen A/C/G/T/U."""
+    txt = Path(path).read_text(encoding="utf-8", errors="ignore").upper()
+    seq = "".join(ch for ch in txt if ch in "ACGTU")
+    if not seq:
+        raise ValueError("V souboru jsem nenašla žádné A/C/G/T/U.")
+    return seq
+
+def theodorus_vertices(n: int) -> tuple[np.ndarray, np.ndarray]:
+    """Souřadnice vrcholů Theodorovy spirály pro indexy 0..n (0 = origin)."""
+    theta = np.zeros(n + 1, dtype=float)
+    if n >= 2:
+        theta[2:] = np.cumsum(np.arctan(1.0 / np.sqrt(np.arange(1, n))))
+    r = np.sqrt(np.arange(0, n + 1, dtype=float))
+    x = r * np.cos(theta)
+    y = r * np.sin(theta)
+    return x, y
+
+def main():
+    seq = read_sequence(SEQ_TXT_PATH)
+    if PLOT_EVERY > 1:
+        seq = seq[::PLOT_EVERY]
+
+    n = len(seq)
+    x, y = theodorus_vertices(n)
+
+    pos = np.arange(1, n + 1)  # vrchol i mapuje seq[i-1]
+    seq_bytes = np.frombuffer(seq.encode("ascii"), dtype=np.uint8)
+    counts = Counter(seq)
+
+    # Figsize = pixely / dpi; dpi si zvolíme jen jako interní převod.
+    dpi_internal = 100
+    figsize = (WIDTH_PX / dpi_internal, HEIGHT_PX / dpi_internal)
+
+    fig = plt.figure(figsize=figsize, dpi=dpi_internal, facecolor=BACKGROUND)
+    ax = fig.add_axes([0, 0, 1, 1])  # žádné okraje, čistý full-bleed
+    ax.set_facecolor(BACKGROUND)
+
+    if DRAW_SPIRAL_LINE:
+        ax.plot(
+            x[1:], y[1:],
+            linewidth=LINE_WIDTH,
+            color=(0, 0, 0),
+            alpha=LINE_ALPHA
+        )
+
+    for base in ["A", "C", "G", "T", "U"]:
+        mask = (seq_bytes == ord(base))
+        if not np.any(mask):
+            continue
+        idxs = pos[mask]
+        ax.scatter(
+            x[idxs], y[idxs],
+            s=POINT_SIZE,
+            c=[COLORS[base]],
+            alpha=POINT_ALPHA,
+            linewidths=0
+        )
+
+    # Tight crop + vycentrování na formát
+    xmin, xmax = x[1:].min(), x[1:].max()
+    ymin, ymax = y[1:].min(), y[1:].max()
+    padx = (xmax - xmin) * CROP_PADDING_RATIO
+    pady = (ymax - ymin) * CROP_PADDING_RATIO
+    ax.set_xlim(xmin - padx, xmax + padx)
+    ax.set_ylim(ymin - pady, ymax + pady)
+
+    ax.set_aspect("equal", adjustable="box")
+    ax.axis("off")
+
+    if SHOW_LEGEND:
+        title_counts = ", ".join(f"{b}:{counts.get(b, 0)}" for b in ["A", "C", "G", "T", "U"])
+        ax.text(
+            0.5, 0.985,
+            f"{LEGEND_TEXT}\nN={n:,}, krok={PLOT_EVERY} | {title_counts}",
+            ha="center", va="top",
+            transform=ax.transAxes,
+            fontsize=14,
+            color="black" if BACKGROUND == "white" else "white"
+        )
+
+    fig.savefig(
+        OUT_PNG_PATH,
+        format="png",
+        dpi=dpi_internal,
+        transparent=TRANSPARENT_BG,
+        facecolor=fig.get_facecolor()
+    )
+    plt.close(fig)
+    print(f"Uloženo: {OUT_PNG_PATH}")
+
+if __name__ == "__main__":
+    main()
+
+```

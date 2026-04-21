@@ -1,0 +1,200 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostTileGrid from "../components/PostTileGrid.astro";
+import { section } from "../lib/urls";
+
+const allPosts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+function buildSectionTiles(sectionPosts, moreHref) {
+  const base = sectionPosts.slice(0, 9).map((post) => ({
+    title: post.data.title,
+    href: `/${post.data.slug}/`,
+    thumbnail: post.data.thumbnail,
+    thumbnailAlt: post.data.thumbnailAlt,
+    section: post.data.section,
+    venue: post.data.venue,
+    exhibition: post.data.exhibition,
+  }));
+
+  if (sectionPosts.length > 9) {
+    base.push({
+      title: "",
+      href: moreHref,
+      more: true,
+      moreLabel: "zobrazit vše",
+    });
+  }
+
+  return base;
+}
+
+const volnaTvorba = allPosts.filter((post) => post.data.section === "volna-tvorba");
+const vystavy = allPosts.filter((post) => post.data.section === "vystavy");
+const cestovani = allPosts.filter((post) => post.data.section === "cestovani");
+
+const volnaTvorbaTiles = buildSectionTiles(volnaTvorba, section("volna-tvorba"));
+const vystavyTiles = buildSectionTiles(vystavy, section("vystavy"));
+const cestovaniTiles = buildSectionTiles(cestovani, section("cestovani"));
+
+const allVideos = (await getCollection("videos", ({ data }) => !data.draft))
+  .slice(0, 3);
+
+const promoVideoTiles = allVideos.map((v) => ({
+  title: v.data.title,
+  href: v.data.url,
+  thumbnail: v.data.thumbnail,
+  thumbnailAlt: v.data.thumbnailAlt,
+  section: "videos",
+  external: true,
+}));
+
+promoVideoTiles.push({
+  title: "",
+  href: "https://www.youtube.com/playlist?list=PLQ5DFp2teh9ZCZmGgdapAWEz19cdN095t",
+  more: true,
+  moreLabel: "Zobrazit vše",
+  external: true,
+});
+
+const headScanUrl =
+  "https://sketchfab.com/models/e3d2a26c6af84120a165382db5a76fa6/embed?autostart=1&ui_infos=0&ui_watermark=0&ui_watermark_link=0";
+---
+
+<BaseLayout title="Vojta Maur" description="Osobní web Vojty Maura">
+
+  <main class="home-page">
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">
+		  <a href={section("volna-tvorba")} class="section-link">
+			Volná tvorba
+		  </a>
+		</h2>
+        <p class="section-description">
+          Umění je nejvyšší formou naděje (Documenta 7)
+        </p>
+      </div>
+
+      <PostTileGrid items={volnaTvorbaTiles} />
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">
+		  <a href={section("vystavy")} class="section-link">
+			Výstavy
+		  </a>
+		</h2>
+        <p class="section-description">
+          Výstavy jsou jeden z mých způsobů sebevyjádření
+        </p>
+      </div>
+
+      <PostTileGrid items={vystavyTiles} />
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">
+		  <a href={section("cestovani")} class="section-link">
+			Cestování
+		  </a>
+		</h2>
+        <p class="section-description">
+          Respektuji místní zvyky a tradice
+        </p>
+      </div>
+
+      <PostTileGrid items={cestovaniTiles} />
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">
+		  <a
+			href="https://www.youtube.com/playlist?list=PLQ5DFp2teh9ZCZmGgdapAWEz19cdN095t"
+			class="section-link"
+			target="_blank"
+			rel="noopener noreferrer"
+		  >
+			Propagační videa
+		  </a>
+		</h2>
+        <p class="section-description">
+          Galerie jsou výstavní skříní mé tvorby... i když vystavuje někdo jiný...
+        </p>
+      </div>
+
+      <PostTileGrid items={promoVideoTiles} />
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">O mně</h2>
+        <p class="section-description">
+          O mně se nedá říct nic zajímavýho... ale pokud chcete vědět to ostatní...
+        </p>
+      </div>
+
+      <div class="home-about">
+        <div class="embed embed--demo">
+          <iframe
+            class="embed__frame"
+            src={headScanUrl}
+            title="3D sken hlavy"
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            allowfullscreen
+            mozallowfullscreen="true"
+            webkitallowfullscreen="true"
+          ></iframe>
+        </div>
+
+        <div class="post-body">
+          <p>
+            Již v raném věku jsem se zajímal o umění. Tři roky jsem navštěvoval
+            základní uměleckou školu, kde jsem se seznámil s různými tradičními
+            výtvarnými technikami. Vždy mě fascinovaly počítače, pročež jsem se sám
+            začal učit pracovat ve 2D i 3D softwarech. Ještě před dokončením základní
+            školy jsem také začal natáčet dokumentární videa z každé vernisáže v
+            Galerii města Plzně. Spolupráci s touto galerií jsem ukončil až po třech
+            letech, a to v momentě, kdy jsem dostal za úkol dát ve videu slovo Martinu
+            Baxovi, který se vernisáže zúčastnil. Situaci jsem komentoval větou:
+            „Dokumentuju umění a ne politiky!“.
+            <br /><br />
+            Vystudoval jsem obor Multimediální tvorba na Střední odborné škole
+            obchodu, užitého umění a designu v Plzni. Tato nepříliš náročná škola mi
+            poskytla dost času a prostoru pro studium zdánlivě nesouvisejících
+            disciplín, zejména programování, matematiky, biologie, psychologie a
+            hudební teorie. Tím jsem objevil svou největší vášeň – prozkoumávání
+            interdisciplinárního vztahu a možností přírodních věd a umění.
+            <br /><br />
+            Rok jsem studoval obor Molekulární biologie a biochemie organismů na
+            Karlově univerzitě v Praze. Následně jsem studium přerušil a přestěhoval
+            se zpět do Plzně, kde nyní pracuji jako grafik.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">Kontakt</h2>
+        <p class="section-description">
+          Napište mi nebo rovnou zavolejte, třeba se mnou bude sranda
+        </p>
+      </div>
+
+      <div class="home-contact">
+        <div class="post-body">
+          <p>
+            <a href="tel:+420722264202">+420 722 264 202</a><br />
+            <a href="mailto:vojta.maur@gmail.com">vojta.maur@gmail.com</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

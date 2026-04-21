@@ -1,0 +1,24 @@
+---
+import { asset } from "../lib/urls";
+
+const {
+  src,
+  ratio = null,
+  kind = "video",
+  width = "full",
+  align = "center"
+} = Astro.props;
+
+const resolvedSrc = asset(src);
+---
+
+<div
+  class={`embed embed--${kind} embed--${width} embed--${align}`}
+  style={ratio ? `aspect-ratio: ${ratio};` : undefined}
+>
+  <iframe
+    class="embed__frame"
+    src={resolvedSrc}
+    allowfullscreen
+  ></iframe>
+</div>

@@ -1,0 +1,40 @@
+---
+title: "Spirála Fibonacciho slova"
+slug: "spirala-fibonacciho-slova"
+section: "volna-tvorba"
+date: 2019-08-01
+thumbnail: "/images/spirala-fibonacciho-slova-nahled.jpg"
+thumbnailAlt: "Spirála Fibonacciho slova"
+excerpt: ""
+draft: false
+---
+
+import ImageFigure from "../../components/ImageFigure.astro";
+
+
+<ImageFigure
+  src="/images/spirala-fibonacciho-slova-obr-1.jpg"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+Pro vykreslení tohoto obrazce jsem dosadil [Fibonacciho slovo](https://cs.wikipedia.org/wiki/Fibonacciho_slovo) do spirály stejným způsobem, jako jsou dosazena přirozená čísla do Ulamovi spirály. Jednotlivá čísla v této spirále jsem označil dle pravidla: 0 = černý čtverec, 1 = bílý čtverec (tento postup je znázorněn v animaci níže). Pro zefektivnění tohoto postupu byl využit skriptovací jazyk JavaScript.
+
+<ImageFigure
+  src="/images/spirala-fibonacciho-slova-obr-2.gif"
+  alt=""
+  caption=""
+  width="one-third"
+  align="center"
+/>
+
+**Co je Fibonacciho slovo?**  
+Fibonacciho slovo je specifická posloupnost binárních číslic (nebo obecněji jakýchkoliv dvou symbolů). Získáme ho podobně jako [Fibonacciho posloupnost](https://cs.wikipedia.org/wiki/Fibonacciho_posloupnost), pouze namísto sčítání použijeme zřetězení slov. Počáteční dva členy jsou definované: S0 = 0, S1 = 01. Další člen vzniklý zřetězením (tedy přidáním předposledního členu za poslední člen) bude  S2 = 010.  Posloupnost několika prvních číslic z Fibonacciho slov by tedy vypadala takto: 0100101001001010010100100101001001…
+
+**Co je Ulamova spirála?**  
+[Ulamova spirála](https://cs.wikipedia.org/wiki/Ulamova_spir%C3%A1la), nebo také prvočíselná spirála, je obrázek, který vznikne seřazením přirozených čísel do spirály a zvýrazněním prvočísel. Byla objevena matematikem Stanisławem Ulamem v roce 1963. Ulam si napsal přirozená čísla do obdélníkové sítě, jedničku doprostřed a další čísla spirálovitě směrem ven.  
+
+*Autor myšlenky: Vojta Maur*  
+*Autor JavaScript kódu: Pavel Burda*

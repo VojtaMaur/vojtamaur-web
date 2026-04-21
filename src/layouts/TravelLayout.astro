@@ -1,0 +1,24 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+const {
+  title,
+  description,
+  year,
+  media,
+} = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="post-page">
+    <h1 class="post-title">
+      {title}{year ? ` ${year}` : ""}
+    </h1>
+
+    {media && (
+      <p class="post-meta">{media}</p>
+    )}
+
+    <slot />
+  </main>
+</BaseLayout>

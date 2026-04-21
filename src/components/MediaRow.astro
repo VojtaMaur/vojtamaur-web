@@ -1,0 +1,33 @@
+---
+import { asset } from "../lib/urls";
+
+const { items = [], bordered = false, link = true } = Astro.props;
+---
+
+<div class={`media-row ${bordered ? "media-row--bordered" : ""}`}>
+  {items.map((item) => {
+    const resolvedSrc = item.src ? asset(item.src) : "";
+
+    return (
+      <div class="media-row__item">
+        {item.type === "image" && (
+          link ? (
+            <a href={resolvedSrc} target="_blank" rel="noopener noreferrer">
+              <img src={resolvedSrc} alt={item.alt || ""} />
+            </a>
+          ) : (
+            <img src={resolvedSrc} alt={item.alt || ""} />
+          )
+        )}
+
+        {item.type === "pdf" && (
+          <iframe src={resolvedSrc} class="media-row__pdf"></iframe>
+        )}
+
+        {item.type === "text" && (
+          <div class="media-row__text" set:html={item.content}></div>
+        )}
+      </div>
+    );
+  })}
+</div>

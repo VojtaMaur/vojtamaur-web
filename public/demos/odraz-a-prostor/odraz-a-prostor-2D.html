@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Míček ve čtverci</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --accent: #c40000;
+      --obstacle: #0a8a2a;
+      --panel: #f4f4f4;
+      --panel-border: #d8d8d8;
+      --gap: 8px;
+      --outer-pad: 4px;
+      --inner-pad: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      overflow: hidden;
+    }
+
+    body {
+      padding: var(--outer-pad);
+    }
+
+    .layout {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      gap: var(--gap);
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .panel,
+    .sim-panel {
+      flex: 0 0 auto;
+      height: 100%;
+      width: auto;
+      max-width: calc((100% - var(--gap)) / 2);
+      aspect-ratio: 1 / 1;
+      min-width: 0;
+      min-height: 0;
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .panel {
+      background: var(--panel);
+      padding: var(--inner-pad);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      height: 100%;
+      overflow: auto;
+      align-content: start;
+      min-height: 0;
+    }
+
+    .panel h2 {
+      margin: 0 0 2px 0;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .panel p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.35;
+      color: #333;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 7px 9px;
+      border: 1px solid #cfcfcf;
+      border-radius: 8px;
+      font-size: 13px;
+      background: #fff;
+    }
+
+    .checkbox {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      margin-top: 1px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #c7c7c7;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    button:hover {
+      background: #fafafa;
+    }
+
+    .stats {
+      font-size: 11px;
+      line-height: 1.4;
+      color: #222;
+      background: #fff;
+      border: 1px solid #dcdcdc;
+      border-radius: 8px;
+      padding: 8px;
+      white-space: pre-line;
+    }
+
+    .sim-panel {
+      position: relative;
+      background: #fff;
+    }
+
+    canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    @media (max-width: 800px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      .layout {
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: auto;
+      }
+
+      .panel,
+      .sim-panel {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <div class="panel">
+      <div class="panel-inner">
+        <div>
+          <h2>Nastavení simulace</h2>
+          <p>
+            Bod se pohybuje ve čtverci, odráží se od stěn a volitelně i od překážky.
+          </p>
+        </div>
+
+        <label>
+          Úhel (°)
+          <input id="angle" type="number" value="30" step="1" />
+        </label>
+
+        <label>
+          Rychlost
+          <input id="speed" type="number" value="1" min="1" step="1" />
+        </label>
+
+        <label>
+          Počáteční X
+          <input id="startX" type="number" value="0" step="1" />
+        </label>
+
+        <label>
+          Počáteční Y
+          <input id="startY" type="number" value="-150" step="1" />
+        </label>
+
+        <label class="checkbox">
+          <input id="useObstacle" type="checkbox" />
+          Zobrazit překážku
+        </label>
+
+        <div class="buttons">
+          <button id="toggleBtn" type="button">Pozastavit</button>
+          <button id="resetBtn" type="button">Resetovat</button>
+          <button id="clearTrailBtn" type="button">Vymazat trajektorii</button>
+        </div>
+
+        <div class="stats" id="stats"></div>
+      </div>
+    </div>
+
+    <div class="sim-panel" id="canvasWrap">
+      <canvas id="baseCanvas"></canvas>
+      <canvas id="overlayCanvas"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const baseCanvas = document.getElementById("baseCanvas");
+    const overlayCanvas = document.getElementById("overlayCanvas");
+    const baseCtx = baseCanvas.getContext("2d");
+    const overlayCtx = overlayCanvas.getContext("2d");
+
+    const angleInput = document.getElementById("angle");
+    const speedInput = document.getElementById("speed");
+    const startXInput = document.getElementById("startX");
+    const startYInput = document.getElementById("startY");
+    const useObstacleInput = document.getElementById("useObstacle");
+    const statsEl = document.getElementById("stats");
+    const toggleBtn = document.getElementById("toggleBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const clearTrailBtn = document.getElementById("clearTrailBtn");
+    const canvasWrap = document.getElementById("canvasWrap");
+
+    const borderSize = 150.5;
+    const obstacleWidth = 70;
+    const obstacleHeight = 5;
+    const obstacleX = 0;
+    const obstacleY = 0;
+
+    const uiTopSpace = 24;
+    const margin = 14;
+    const ballRadius = 3.2;
+
+    let canvasWidth = 560;
+    let canvasHeight = 560;
+    let scale = 1;
+
+    let x = 0;
+    let y = -150;
+    let xChange = 1;
+    let yChange = 0;
+    let bounces = 0;
+    let running = true;
+
+    function resizeCanvas() {
+      const rect = canvasWrap.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+
+      canvasWidth = Math.floor(rect.width);
+      canvasHeight = Math.floor(rect.height);
+
+      baseCanvas.width = Math.floor(canvasWidth * dpr);
+      baseCanvas.height = Math.floor(canvasHeight * dpr);
+      overlayCanvas.width = Math.floor(canvasWidth * dpr);
+      overlayCanvas.height = Math.floor(canvasHeight * dpr);
+
+      baseCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      overlayCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const usableSize = Math.min(
+        canvasWidth - margin * 2,
+        canvasHeight - uiTopSpace - margin * 2
+      );
+
+      scale = usableSize / (borderSize * 2);
+
+      redrawBase();
+      drawBall();
+    }
+
+    function normalizeAngle(angle) {
+      return ((angle % 360) + 360) % 360;
+    }
+
+    function angleToCartesian(angle) {
+      angle = normalizeAngle(angle);
+      const rad = angle * Math.PI / 180;
+
+      let dx, dy;
+
+      if (angle <= 45 || angle > 315) {
+        dx = 1;
+        dy = Math.tan(rad);
+      } else if (angle > 45 && angle <= 135) {
+        dx = 1 / Math.tan(rad);
+        dy = 1;
+      } else if (angle > 135 && angle <= 225) {
+        dx = -1;
+        dy = -Math.tan(rad);
+      } else {
+        dx = -1 / Math.tan(rad);
+        dy = -1;
+      }
+
+      if (!Number.isFinite(dx)) dx = 0;
+      if (!Number.isFinite(dy)) dy = 0;
+
+      return [dx, dy];
+    }
+
+    function worldToCanvas(wx, wy) {
+      const squareSizePx = borderSize * 2 * scale;
+      const left = (canvasWidth - squareSizePx) / 2;
+      const top = uiTopSpace + (canvasHeight - uiTopSpace - squareSizePx) / 2;
+
+      return {
+        x: left + (wx + borderSize) * scale,
+        y: top + (borderSize - wy) * scale
+      };
+    }
+
+    function drawStaticScene() {
+      baseCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+      baseCtx.fillStyle = "#111";
+      baseCtx.font = "12px Arial";
+      baseCtx.textBaseline = "top";
+      baseCtx.fillText(
+        `angle = ${Number(angleInput.value)}; initial position x = ${Number(startXInput.value)}, y = ${Number(startYInput.value)}`,
+        8,
+        7
+      );
+
+      const tl = worldToCanvas(-borderSize, borderSize);
+      const tr = worldToCanvas(borderSize, borderSize);
+      const br = worldToCanvas(borderSize, -borderSize);
+      const bl = worldToCanvas(-borderSize, -borderSize);
+
+      baseCtx.strokeStyle = "#000";
+      baseCtx.lineWidth = 1;
+      baseCtx.beginPath();
+      baseCtx.moveTo(tl.x, tl.y);
+      baseCtx.lineTo(tr.x, tr.y);
+      baseCtx.lineTo(br.x, br.y);
+      baseCtx.lineTo(bl.x, bl.y);
+      baseCtx.closePath();
+      baseCtx.stroke();
+
+      if (useObstacleInput.checked) {
+        const p1 = worldToCanvas(obstacleX - obstacleWidth, obstacleY + obstacleHeight);
+        const p2 = worldToCanvas(obstacleX + obstacleWidth, obstacleY - obstacleHeight);
+
+        baseCtx.strokeStyle = "#0a8a2a";
+        baseCtx.strokeRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+      }
+    }
+
+    function redrawBase() {
+      drawStaticScene();
+    }
+
+    function clearTrailOnly() {
+      redrawBase();
+    }
+
+    function drawSegment(x1, y1, x2, y2) {
+      const a = worldToCanvas(x1, y1);
+      const b = worldToCanvas(x2, y2);
+
+      baseCtx.strokeStyle = "#c40000";
+      baseCtx.lineWidth = 1.1;
+      baseCtx.beginPath();
+      baseCtx.moveTo(a.x, a.y);
+      baseCtx.lineTo(b.x, b.y);
+      baseCtx.stroke();
+    }
+
+    function drawBall() {
+      overlayCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+      const p = worldToCanvas(x, y);
+      overlayCtx.fillStyle = "#c40000";
+      overlayCtx.beginPath();
+      overlayCtx.arc(p.x, p.y, ballRadius, 0, Math.PI * 2);
+      overlayCtx.fill();
+    }
+
+    function updateStats() {
+      statsEl.textContent =
+        `Pozice: x = ${x.toFixed(3)}, y = ${y.toFixed(3)}\n` +
+        `Směr: dx = ${xChange.toFixed(6)}, dy = ${yChange.toFixed(6)}\n` +
+        `Odrazy: ${bounces}`;
+    }
+
+    function resetSimulation() {
+      x = Number(startXInput.value);
+      y = Number(startYInput.value);
+      bounces = 0;
+
+      [xChange, yChange] = angleToCartesian(Number(angleInput.value));
+
+      redrawBase();
+      drawBall();
+      updateStats();
+    }
+
+    function stepSimulation() {
+      const prevX = x;
+      const prevY = y;
+
+      if (x >= borderSize || x <= -borderSize) {
+        xChange *= -1;
+        bounces += 1;
+      }
+
+      if (y <= -borderSize || y >= borderSize) {
+        yChange *= -1;
+        bounces += 1;
+      }
+
+      if (useObstacleInput.checked) {
+        if (
+          (
+            Math.round(x) === obstacleX - obstacleWidth &&
+            y > obstacleY - obstacleHeight &&
+            y < obstacleY + obstacleHeight
+          ) ||
+          (
+            Math.round(x) === obstacleX + obstacleWidth &&
+            y > obstacleY - obstacleHeight &&
+            y < obstacleY + obstacleHeight
+          )
+        ) {
+          xChange *= -1;
+          bounces += 1;
+        }
+
+        if (
+          (
+            Math.round(y) === obstacleY - obstacleHeight &&
+            x > obstacleX - obstacleWidth &&
+            x < obstacleX + obstacleWidth
+          ) ||
+          (
+            Math.round(y) === obstacleY + obstacleHeight &&
+            x > obstacleX - obstacleWidth &&
+            x < obstacleX + obstacleWidth
+          )
+        ) {
+          yChange *= -1;
+          bounces += 1;
+        }
+      }
+
+      x += xChange;
+      y += yChange;
+
+      drawSegment(prevX, prevY, x, y);
+      drawBall();
+      updateStats();
+    }
+
+    function animate() {
+      if (running) {
+        const steps = Math.max(1, Number(speedInput.value) || 1);
+        for (let i = 0; i < steps; i++) {
+          stepSimulation();
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      running = !running;
+      toggleBtn.textContent = running ? "Pozastavit" : "Spustit";
+    });
+
+    resetBtn.addEventListener("click", resetSimulation);
+
+    clearTrailBtn.addEventListener("click", () => {
+      clearTrailOnly();
+      drawBall();
+      updateStats();
+    });
+
+    angleInput.addEventListener("change", resetSimulation);
+    startXInput.addEventListener("change", resetSimulation);
+    startYInput.addEventListener("change", resetSimulation);
+    useObstacleInput.addEventListener("change", resetSimulation);
+    speedInput.addEventListener("change", updateStats);
+
+    window.addEventListener("resize", resizeCanvas);
+
+    resizeCanvas();
+    resetSimulation();
+    animate();
+  </script>
+</body>
+</html>

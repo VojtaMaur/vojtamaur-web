@@ -1,0 +1,27 @@
+---
+import { asset } from "../lib/urls";
+
+const {
+  src,
+  alt = "",
+  caption,
+  width,
+  align,
+  bordered = false,
+  link = true
+} = Astro.props;
+
+const resolvedSrc = asset(src);
+---
+
+<figure class={`figure ${width ? `figure--${width}` : ""} ${align ? `figure--${align}` : ""} ${bordered ? "figure--bordered" : ""}`}>
+  {link ? (
+    <a href={resolvedSrc} target="_blank" rel="noopener noreferrer">
+      <img src={resolvedSrc} alt={alt} />
+    </a>
+  ) : (
+    <img src={resolvedSrc} alt={alt} />
+  )}
+
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

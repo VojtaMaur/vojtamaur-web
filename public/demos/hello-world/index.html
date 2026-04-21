@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ukázkové demo</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        background: #f5f5f5;
+      }
+
+      button {
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+      }
+
+      p {
+        color: #444;
+        margin-top: 1rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <button id="btn">Klikni</button>
+      <p id="out">Standalone demo v /public/demos/</p>
+    </main>
+
+    <script>
+      const btn = document.getElementById("btn");
+      const out = document.getElementById("out");
+      let n = 0;
+
+      btn.addEventListener("click", () => {
+        n += 1;
+        out.textContent = `Počet kliknutí: ${n}`;
+      });
+    </script>
+  </body>
+</html>

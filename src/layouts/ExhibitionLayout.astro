@@ -1,0 +1,33 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+const { frontmatter } = Astro.props;
+
+const {
+  title,
+  description,
+  dateFrom,
+  dateTo,
+  city,
+  venue,
+  exhibition
+} = frontmatter;
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="post-page">
+
+    <h1 class="post-title">{title}</h1>
+
+    <p class="post-meta">
+      {dateFrom}{dateTo ? ` - ${dateTo}` : ""}{city ? `, ${city}` : ""}
+    </p>
+
+    <p class="post-meta">
+      {venue}{venue && exhibition ? ": " : ""}{exhibition}
+    </p>
+
+    <slot />
+
+  </main>
+</BaseLayout>

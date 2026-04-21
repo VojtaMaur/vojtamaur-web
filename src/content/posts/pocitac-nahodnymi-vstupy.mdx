@@ -1,0 +1,157 @@
+---
+title: "Počítač s náhodnými vstupy"
+slug: "pocitac-nahodnymi-vstupy"
+section: "volna-tvorba"
+date: 2020-09-01
+thumbnail: "/images/pocitac-nahodnymi-vstupy-nahled.jpg"
+thumbnailAlt: "Počítač s náhodnými vstupy"
+excerpt: ""
+draft: false
+---
+
+import ImageFigure from "../../components/ImageFigure.astro";
+import Embed from "../../components/Embed.astro";
+
+Pro účely této úvahy jsem v programovacím jazyce Python vytvořil program, který mému počítači zadává náhodné vstupy. Může tak například hýbat kurzorem myši, klikat, mačkat jakákoliv tlačítka na klávesnici a to všechno naprosto náhodně. Říkejme mu proto OPICE-1 (podle teorie o nekonečné opici). Zde je zdrojový kód, není však nezbytné ho chápat:
+
+```python
+import pyautogui
+import random
+import time
+import sys
+
+sys.setrecursionlimit(100000)
+time.sleep(5)
+
+def random_inputs():
+  
+    AllKeys = ['\t', '\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(',
+        ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7',
+        '8', '9', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`',
+        'a', 'b', 'c', 'd', 'e','f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+        'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~',
+        'accept', 'add', 'alt', 'altleft', 'altright', 'apps', 'backspace',
+        'browserback', 'browserfavorites', 'browserforward', 'browserhome',
+        'browserrefresh', 'browsersearch', 'browserstop', 'capslock', 'clear',
+        'convert', 'ctrl', 'ctrlleft', 'ctrlright', 'decimal', 'del', 'delete',
+        'divide', 'down', 'end', 'enter', 'esc', 'escape', 'execute', 'f1', 'f10',
+        'f11', 'f12', 'f13', 'f14', 'f15', 'f16', 'f17', 'f18', 'f19', 'f2', 'f20',
+        'f21', 'f22', 'f23', 'f24', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9',
+        'final', 'fn', 'hanguel', 'hangul', 'hanja', 'help', 'home', 'insert', 'junja',
+        'kana', 'kanji', 'launchapp1', 'launchapp2', 'launchmail',
+        'launchmediaselect', 'left', 'modechange', 'multiply', 'nexttrack',
+        'nonconvert', 'num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6',
+        'num7', 'num8', 'num9', 'numlock', 'pagedown', 'pageup', 'pause', 'pgdn',
+        'pgup', 'playpause', 'prevtrack', 'print', 'printscreen', 'prntscrn',
+        'prtsc', 'prtscr', 'return', 'right', 'scrolllock', 'select', 'separator',
+        'shift', 'shiftleft', 'shiftright', 'sleep', 'space', 'stop', 'subtract', 'tab',
+        'up', 'volumedown', 'volumemute', 'volumeup', 'win', 'winleft', 'winright', 'yen',
+        'command', 'option', 'optionleft', 'optionright']
+
+
+    while True:
+        rnd_A0 = random.randint(0, 1)
+        rnd_B0 = random.randint(0, 2)
+        rnd_C0 = random.randint(0, 4)
+
+        if rnd_B0 == 0:
+            pyautogui.press(AllKeys[random.randint(0, len(AllKeys)-1)])
+
+        elif rnd_B0 == 1:
+            multi_key = []
+            for i in range(0, random.randint(0, 5)):
+                multi_key.append(AllKeys[random.randint(0, len(AllKeys)-1)])
+            pyautogui.hotkey(*multi_key)
+
+        else:
+            if rnd_A0 == 0:
+                pyautogui.moveTo(random.randint(0, pyautogui.size()[0]), random.randint(0, pyautogui.size()[1]), duration=.2)
+
+                if rnd_C0 == 0:
+                    pyautogui.click()
+
+                elif rnd_C0 == 1:
+                    pyautogui.doubleClick()
+
+                elif rnd_C0 == 2:
+                    pyautogui.click(button='right')
+
+                elif rnd_C0 == 3:
+                    pyautogui.click(button='middle')
+            else:
+                pyautogui.dragTo(random.randint(0, pyautogui.size()[0]), random.randint(0, pyautogui.size()[0]), duration=.2)
+
+        time.sleep(.1)
+
+
+
+def ignore_errors():
+    try:
+        random_inputs()
+    except Exception:
+        ignore_errors()
+
+
+
+ignore_errors()
+```
+
+Pro ilustraci jsem program OPICE-1 nahrál při chodu a vytvořil tak první video níže. Vzhledem k tomu, že byla spuštěn asi hodinu, první video jsem mnohonásobně zrychlil a vytvořil tak druhé video, aby divák nemusel sledovat celé první video a přesto viděl, jaké úkony program OPICE-1 asi vykonal.  
+
+
+<Embed src="https://www.youtube-nocookie.com/embed/xZp9WpHKVKA" ratio="16/12" />  
+
+<Embed src="https://www.youtube-nocookie.com/embed/fUh24r03e7o" ratio="16/12" />  
+
+Jak si lze povšimnout na videích, program OPICE-1 v určité chvíli začne přepisovat svůj vlastní kód. Celé video končí zaseknutím a následným pádem operačního systému. Když jsem s ním dále experimentoval, program OPICE-1 udělal několik dalších pozoruhodných věcí. Například otevřel vyhledávač Bing a napsal do něj "9/11", pořídil snímek obrazovky, restartoval počítač, nainstaloval karetní hru nebo něco abstraktního "nakreslil" (viz obrázek níže).
+
+<ImageFigure
+  src="/images/pocitac-nahodnymi-vstupy-obr-1.png"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+Lze tedy říci, že pokud by program OPICE-1 byl spuštěný určitý neomezený čas, může teoreticky zvládnout VŠE (slovem VŠE myslím provést všechny operace, které počítač umožnuje, a proto ho píši velkým tiskacím písmem), co by zvládl uživatele stejného počítače? Mohl by přece teoreticky vytvořit složku na ploše, otevřít webový prohlížeč a něco vyhledat, otevřít Word a napsat tuto úvahu, napsat jakoukoli knihu, vytvořit elektronickou hudbu, napsat program v Pythonu, napsat sám sebe a tak dále. Mohl by také vypnout sám sebe, vypnout celý počítač nebo poškodit svůj vlastní kód. A právě zde je nejspíš jasné, že není možné, aby program OPICE-1 po spuštění dokázal VŠE – musel by totiž udělat i krok, který by ho zastavil. Dobrá, a co tedy, kdyby udělal VŠE bez kroku, který způsobí jeho zastavení a jako poslední provedl onen krok? Je to sice naprosto nepravděpodobné, ale ne nemožné. Je tu bohužel stále jeden háček – kroků, které vedou k jeho zastavení je mnoho. Kdyby provedl jeden z nich, nemohl by už provést žádný následující, a to je spor s původním předpokladem, že program OPICE-1 zvládne VŠE. Tento program tedy nezvládne VŠE.   
+ 
+Napadá mě ještě jedno řešení. Program OPICE-1 nedokáže VŠE, protože je podsystémem operačního systému. Když se operační systém vypne vlivem programu, přestane fungovat i samotný program. Zde je menší diagram, který popisuje vztah operačního systému a programu OPICE-1. Šipky znamenají "působí na".   
+
+<ImageFigure
+  src="/images/pocitac-nahodnymi-vstupy-obr-2.png"
+  alt=""
+  caption=""
+  width="one-third"
+  align="center"
+/>
+
+Problém je tedy v tom, že operační systém působí na program. Bylo by tedy možné tuto smyčku "roztrhnout" a vytvořit program, který bude na operačním systému zcela nezávislý? Program, který působí na operační systém, ale zároveň na něj samotný operační systém působit nemůže? Program, jehož diagram vypadá asi nějak takhle?
+
+<ImageFigure
+  src="/images/pocitac-nahodnymi-vstupy-obr-3.png"
+  alt=""
+  caption=""
+  width="one-third"
+  align="center"
+/>
+
+Jinými slovy – existuje podobný program, který zvládne VŠE, ale sám sebe zastavit nezvládne (respektive to ani není z principu jeho konstrukce možné)? Takový program nazveme OPICE-2. V následujících krocích se pokusím vysvětlit způsob, který je sice trochu absurdní a rozhodně by šel vymyslet elegantněji, nicméně pro nastínění mé myšlenky je asi nejvhodnější. Pokusil jsem se udělat vizualizaci toho, jak by asi mohl vypadat takový program nezávislý na operačním systému.
+
+<ImageFigure
+  src="/images/pocitac-nahodnymi-vstupy-obr-4.jpg"
+  alt=""
+  caption=""
+  width="full"
+  align="center"
+/>
+
+Spodní patro tohoto zařízení slouží k mechanickému mačkání kláves na klávesnici. Horní patro zase k mechanickému pohybu myší a klikání. To vše je připojeno k nějakému jednodušímu počítači (např. Arduinu, Raspberry Pi atd.), které lze spatřit v prostředním patře. Právě v něm je nahraný náš program OPICE-2. Je důležité zmínit, že k notebooku je připojena pouze myš a nic jiného. Jednodušší počítač tedy nesmí být žádným způsobem propojen s notebookem a jeho komunikace tak musí zůstat čistě jednosměrná (jednodušší počítač působí na notebook, ne naopak). Také by neměl být připojen k internetu jednodušší počítač, ve kterém je uložen náš kód programu OPICE-2, jelikož internet je pro tuto úvahu jedna velká spleť bludišť a pokud se do nich naše zařízení vydá, nikdo nedokáže moc dobře odhadnout jeho důsledky. Tak například by se mohl pomocí internetu a notebooku náš jednoduššíí program nějak připojit sám na sebe a vypnout se.  
+
+Toto zařízení vypadá, že již nemůže působit samo na sebe a tím se vypnout. Je tomu ale skutečně tak? Může nastat situace, ve které by zařízení samo sebe vypnulo? Jedna taková situace mě napadá: Pomocí internetu zařízení nahlásí nějaké příslušné službě bombu v místě, kde se právě zařízení nachází a tak přijede tým pyrotechniků a zařízení zneškodní. Tato situace je samozřejmě hodně nepravděpodobná, ale opět, ne nemožná.   
+Nestačilo by tedy jen notebook odpojit od internetu? Rozhodně by to zabránilo výše uvedené situaci, nicméně by to stejně nepomohlo. Napadají mě další situace, při kterých by zařízení mohlo zprostředkovaně působit samo na sebe. Zde je uvedena taková možná situace: Kolem notebooku projde nějaký člověk, který o tomto zařízení nic neví. Zrovna, když se na zařízení bude dívat, na obrazovce se objeví nápis "VYPNI MĚ". Člověka by tento nápis (nebo jiný, daleko údernější nápis) mohl přesvědřit a zařízení tak skutečně vypnout.  
+
+Dobrá, a co prostě jen zařídit, aby zařízení nebylo schopno žádného výstupu (žádný monitor, žádné reproduktory atd.)? Tím by zařízení nemohlo ovlivnovat vnější svět, který by pak nemohl ovlivnit ono zařízení a způsobit jeho vypnutí. To zní sice rozumně, ovšem není to moc reálné. Zařízení by mohlo stále komunikovat různými zůpsoby, například zapínáním a vypínáním podsvícení klávesnice, rozdílem hluku při zapnutém a vypnutém stavu notebooku nebo dokonce rozdílem teploty procesoru. Nemyslím si, že je možné vytvořit zařízení, které je součástí tohoto světa a zároveň s ním nějak neinteraguje.
+
+Na druhou stranu by se dalo argumentovat, že uživatel počítače by se také mohl sám zničit jen pouhým mačkáním kláves a klikání myší. Mohl by si například pomocí dark webu objednat vraždu jeho samotného a tak dále...  
+
+Zakončím tedy tuto úvahu tvrzením, že pokud by program jakkoli interagoval s vnějším světem, mohl by se tím nakonec sám zastavit a to i přesto, že program teoreticky dokáže vše, co by dokázal uživatel.  

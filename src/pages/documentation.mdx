@@ -1,0 +1,630 @@
+---
+layout: ../layouts/BaseLayout.astro
+title: Technical Documentation
+---
+
+# Technical documentation for the `vojtamaur-web` project
+
+## 1. Project overview
+
+`vojtamaur-web` is a static website built with Astro. Content is managed as files in the repository and converted into static output during the build process. The project does not use a CMS or a database. The source of truth is the repository containing the source code, content, and static assets.
+
+The project is divided into the following main content sections:
+
+- **Volná tvorba**
+- **Výstavy**
+- **Cestování**
+- **Propagační videa**
+- **O mně**
+- **Kontakt**
+
+The architecture is based on the following components:
+
+- **Astro** as the static site generator
+- **MDX** as the authoring format for content
+- **Content Collections** for metadata validation and typing
+- **Components** for reusable content blocks and layouts
+- **Static assets in `public/`** for images, PDFs, demos, and other files
+
+This model makes it easier to version content, archive build outputs, and potentially migrate the project to another environment without relying on a database runtime.
+
+---
+
+## 2. Project structure
+
+### 2.1 Directory structure
+
+The current project structure is divided into two main parts:
+
+- `src/` – project source files
+- `public/` – static assets copied unchanged during the build
+
+Provided structure:
+
+```text
+public/
+  demos/
+  files/
+  images/
+
+src/
+  components/
+  content/
+  content.config.ts
+  env.d.ts
+  layouts/
+  lib/
+  pages/
+  styles/
+```
+
+### 2.2 Meaning of the main directories
+
+#### `public/`
+Contains static files that are simply copied into the output during the build:
+
+- `public/images/` – article images, thumbnails, and other visual content
+- `public/files/` – PDFs and other downloadable or embeddable files
+- `public/demos/` – standalone HTML/JS demos and legacy static pages
+
+#### `src/content/`
+Project content files. In the current configuration, the following are mainly used:
+
+- `src/content/posts/` – articles
+- `src/content/videos/` – metadata for promotional videos
+
+#### `src/components/`
+Reusable components for working with content and listings:
+
+- `ImageFigure.astro`
+- `MediaRow.astro`
+- `Embed.astro`
+- `PostTileGrid.astro`
+- `Header.astro`
+
+#### `src/layouts/`
+Layouts for individual page types:
+
+- `BaseLayout.astro`
+- `PostLayout.astro`
+- potentially specialized layouts such as `TravelLayout.astro` and `ExhibitionLayout.astro`
+
+#### `src/pages/`
+Application routes. Includes the homepage, category pages, and dynamic article routing.
+
+#### `src/styles/`
+Global and optionally other style files.
+
+#### `src/lib/`
+Helper utilities and shared logic used across the project.
+
+---
+
+## 3. Key configuration files
+
+### `astro.config.mjs`
+
+The project uses two build modes. The configuration switches behavior according to the `BUILD_TARGET` variable. In the standard web build it uses `trailingSlash: "always"` and `build.format: "directory"`. In the portable file-based build it uses `trailingSlash: "never"` and `build.format: "file"`.
+
+This produces two different output types:
+
+- **web build** – suitable for standard hosting
+- **portable file-based build** – suitable, for example, for offline use, archiving, or transfer on external media
+
+### `package.json`
+
+Basic project workflow:
+
+```bash
+npm run dev
+npm run build:web
+npm run preview
+npm run build:usb
+```
+
+Meaning of the scripts:
+
+- `npm run dev` – starts the Astro development server
+- `npm run build:web` – creates the standard production build
+- `npm run preview` – local preview of the build
+- `npm run build:usb` – creates a portable file-based build and runs additional postprocessing
+
+### `content.config.ts`
+
+Defines content collections and metadata schemas using Zod validation. The project uses at least the following collections:
+
+- `posts`
+- `videos`
+
+---
+
+## 4. Content Collections
+
+### 4.1 `posts` collection
+
+Articles are stored as `.mdx` files and validated against the schema in `content.config.ts`.
+
+Required metadata:
+
+- `title`
+- `slug`
+- `section`
+- `date`
+- `thumbnail`
+- `thumbnailAlt`
+
+Optional metadata:
+
+- `excerpt`
+- `draft`
+
+Section-specific metadata:
+
+#### For `section: "vystavy"`
+- `dateFrom`
+- `dateTo`
+- `city`
+- `venue`
+- `exhibition`
+
+#### For `section: "cestovani"`
+- `year`
+- `media`
+
+### 4.2 `videos` collection
+
+Used for the Propagační videa section. Contains metadata for external YouTube videos. Typically:
+
+- `title`
+- `url`
+- `thumbnail`
+- `thumbnailAlt`
+- `draft`
+
+---
+
+## 5. Layout logic
+
+### 5.1 `PostLayout.astro`
+
+`PostLayout.astro` wraps article content in the main layout and creates a shared wrapper for article pages.
+
+### 5.2 Dynamic routing through `[slug].astro`
+
+The `[slug].astro` file is the central route for content from the `posts` collection. It handles:
+
+- loading articles via `getCollection`
+- generating static paths based on `slug`
+- rendering specific content via `render(post)`
+
+### 5.3 Conditional rendering by section
+
+Different sections have different meta blocks:
+
+- **Volná tvorba** – title + formatted month and year
+- **Výstavy** – title + event date + city + venue + exhibition title
+- **Cestování** – title + supplementary metadata such as medium
+
+### 5.4 Date formatting
+
+In the Volná tvorba section, the date is displayed as month and year, for example:
+
+```text
+duben 2026
+```
+
+Internally, the standard `date` field is still used for sorting.
+
+### 5.5 Sorting
+
+Articles are sorted by `date`. This also applies in cases where the UI does not display the exact day, but only the month and year.
+
+### 5.5.1 Legacy date migration note
+
+This project was created as a replacement for an older website with fragile infrastructure (outdated PHP, WordPress, unmaintained plugins, and dependence on third-party systems).
+
+That legacy site displayed only the month and year for many articles in the Volná tvorba section (for example `duben 2020`). During migration, the exact original day was often no longer recoverable. In such cases, the `date` field was normalized to the first day of the given month (for example `2020-04-01`) in order to preserve sorting behavior.
+
+This means that for part of the legacy content, the stored day may be approximate and should be understood as a technical migration value rather than an exact historical publication date.
+
+Articles added after April 2026 use the real day in the `date` field whenever that information is available.
+
+---
+
+## 6. Adding and managing content
+
+### 6.1 Adding a new article
+
+A new article is added by creating a new `.mdx` file in:
+
+```text
+src/content/posts/
+```
+
+The file must contain valid frontmatter according to the `posts` schema.
+
+### 6.2 Required and optional metadata
+
+#### Shared required metadata
+- `title`
+- `slug`
+- `section`
+- `date`
+- `thumbnail`
+- `thumbnailAlt`
+
+#### Shared optional metadata
+- `excerpt`
+- `draft`
+
+#### Metadata for Výstavy
+- `dateFrom`
+- `dateTo`
+- `city`
+- `venue`
+- `exhibition`
+
+#### Metadata for Cestování
+- `year`
+- `media`
+
+### 6.3 Thumbnails
+
+Each article uses:
+
+- `thumbnail` – path to the thumbnail
+- `thumbnailAlt` – thumbnail alt text
+
+Thumbnails are used in article listings, on the homepage, and in individual sections.
+
+### 6.4 `draft`
+
+The `draft: true` field excludes the article from the public listing and generated paths. It is used for content that is in progress or temporarily hidden.
+
+### 6.5 Components used in content
+
+Besides standard Markdown, article content can also use the following components:
+
+- `ImageFigure`
+- `MediaRow`
+- `Embed`
+
+These components must be explicitly imported in the MDX file.
+
+### 6.5.1 `EntryPoints.astro`
+
+The `EntryPoints.astro` component is used in the meta article to render the main archive entry points.
+
+It reads the `public/ARCHIVE.txt` file, extracts the section between the markers `=== ENTRY POINTS START ===` and `=== ENTRY POINTS END ===`, and displays it inside a `<pre>` block.
+
+This ensures that the list of primary locations and snapshots is maintained in a single source of truth and does not need to be manually duplicated in the article content.
+
+### 6.6 Example frontmatter
+
+#### Volná tvorba
+
+```mdx
+---
+title: "Název článku"
+slug: "nazev-clanku"
+section: "volna-tvorba"
+date: 2026-04-19
+thumbnail: "/images/nazev-clanku-nahled.jpg"
+thumbnailAlt: "Náhled článku"
+excerpt: ""
+draft: false
+---
+```
+
+#### Výstavy
+
+```mdx
+---
+title: "Recamánova struktura"
+slug: "vystavy-recamanova-struktura"
+section: "vystavy"
+date: 2024-01-01
+thumbnail: "/images/vystavy-recamanova-struktura-nahled.jpg"
+thumbnailAlt: "Recamánova struktura"
+dateFrom: "1. 1. 2024"
+dateTo: "31. 1. 2024"
+city: "Jindřichův Hradec"
+venue: "Muzeum fotografie a moderních obrazových médií"
+exhibition: "Obrazy nad čísly"
+draft: false
+---
+```
+
+#### Cestování
+
+```mdx
+---
+title: "Itálie - Benátky 2019"
+slug: "cestovani-italie-benatky-2019"
+section: "cestovani"
+date: 2019-01-01
+thumbnail: "/images/cestovani-italie-benatky-2019-nahled.jpg"
+thumbnailAlt: "Itálie - Benátky 2019"
+year: "2019"
+media: "Fotografie"
+draft: false
+---
+```
+
+### 6.7 Representative example of content
+
+The following file was provided as a representative example of an MDX article:
+
+```text
+recamanova-posloupnost-zelvi-grafice.mdx
+```
+
+This file is suitable as a reference example of content structure, frontmatter, and component usage.
+
+---
+
+## 7. Media components
+
+### 7.1 `ImageFigure.astro`
+
+A component for standalone images with support for the following parameters:
+
+- `src`
+- `alt`
+- `caption`
+- `width`
+- `align`
+- `bordered`
+- `link`
+
+Supported width variants:
+
+- `full`
+- `half`
+- `one-third`
+
+Supported alignment options:
+
+- `left`
+- `center`
+- `right`
+
+Depending on the configuration, the component can also open the image when clicked.
+
+### 7.2 `MediaRow.astro`
+
+A component for arranging multiple items in a row. Supports the following types:
+
+- `image`
+- `pdf`
+- `text`
+
+Use cases:
+
+- galleries with multiple images
+- combinations of images and PDFs
+- combinations of visual and text blocks in a single grid
+
+The component also supports a bordered variant.
+
+### 7.3 `Embed.astro`
+
+A generic wrapper for embedded iframe content. It is used, for example, for:
+
+- YouTube
+- Google Maps
+- Sketchfab
+- local HTML demos
+
+Supported parameters:
+
+- `src`
+- `ratio`
+- `kind`
+- `width`
+- `align`
+
+### 7.4 Edge cases
+
+#### PDF in `MediaRow`
+When the grid collapses, a PDF iframe may require special adjustment of height or aspect ratio. This was handled using CSS for `.media-row__pdf`.
+
+#### Responsive grid collapse
+Listings and media layouts have multiple states depending on screen width. Some elements, such as the “show all” button or PDF embeds, required separate behavior adjustments for 3, 2, and 1 column layouts.
+
+---
+
+## 8. Homepage architecture
+
+The homepage combines content from multiple parts of the website.
+
+### 8.1 Dynamic content loading
+Each main section on the homepage displays the latest 9 items:
+
+- Volná tvorba
+- Výstavy
+- Cestování
+
+### 8.2 “Show all” button
+If a given section contains more items than the number displayed on the homepage, a “show all” tile is added.
+
+### 8.3 Propagační videa
+The Propagační videa section uses a visual model similar to article listings, but the items link to external YouTube URLs. The listing is based on the `videos` collection.
+
+### 8.4 Clickable section headings
+Section headings on the homepage are clickable and serve as quick navigation to the relevant categories or an external playlist.
+
+### 8.5 O mně and Kontakt
+The homepage also contains specialized content blocks outside the standard article system:
+
+- an O mně block with text and a Sketchfab iframe
+- a Kontakt block with phone number and email
+
+---
+
+## 9. Development and normal workflow
+
+### 9.1 Local development
+
+```bash
+npm install
+npm run dev
+```
+
+Astro normally starts the local server at `http://localhost:4321/` and reacts continuously to changes in the project.
+
+### 9.2 Practical note about the dev server
+
+In this specific project, it sometimes happens that after adding a new `.mdx` file, the new article does not appear correctly in dev mode, or temporarily replaces another article in the listing. Restarting the development server usually fixes it immediately.
+
+Recommended troubleshooting step:
+
+```bash
+Ctrl + C
+npm run dev
+```
+
+### 9.3 Web build
+
+```bash
+npm run build:web
+```
+
+Creates the standard build intended for normal deployment to web hosting.
+
+### 9.4 Build preview
+
+```bash
+npm run preview
+```
+
+Used for local verification of the production build.
+
+### 9.5 Portable file-based build
+
+```bash
+npm run build:usb
+```
+
+This build is suitable, for example, for offline use, archiving, or transfer as a set of files.
+
+---
+
+## 10. Exact `build:usb` logic
+
+The `build:usb` script is defined as:
+
+```text
+set "BUILD_TARGET=usb" && astro build && node scripts/usb-rewrite.mjs
+```
+
+This implies three steps:
+
+1. `BUILD_TARGET=usb` is set
+2. the standard Astro build is run in the mode defined in `astro.config.mjs`
+3. the `scripts/usb-rewrite.mjs` postprocessing script is executed
+
+### 10.1 What `astro.config.mjs` does in this mode
+
+When `BUILD_TARGET=usb`, the following are used:
+
+- `trailingSlash: "never"`
+- `build.format: "file"`
+
+This means that internal routes are generated as files of the form:
+
+```text
+slug.html
+```
+
+instead of the directory form:
+
+```text
+slug/index.html
+```
+
+### 10.2 What `scripts/usb-rewrite.mjs` does
+
+The script:
+
+1. goes through all `.html` files in the `dist` directory
+2. reads their content
+3. rewrites selected root-based paths to relative paths
+4. saves the files again
+
+Specific rewrites:
+
+- `/_astro/` → `./_astro/`
+- `/images/` → `./images/`
+- `/files/` → `./files/`
+- `/demos/` → `./demos/`
+- homepage `/` → `./index.html`
+- internal links in the form `/slug/` → `./slug.html`
+
+The purpose of this step is to adjust the HTML so that the output works even outside a standard web server with root-relative URLs.
+
+---
+
+## 11. Deploy
+
+### 11.1 `dist` structure
+The `dist/` directory contains the finished build intended for publishing.
+
+### 11.2 Deployment of the standard web build
+For the production website, the content corresponding to the standard web build is uploaded to the hosting server.
+
+### 11.3 `.htaccess`
+For a static Astro website, a minimalist configuration is appropriate. A typical WordPress rewrite rule to `index.php` is not relevant for this type of project.
+
+### 11.4 Portable build
+The portable build can be used as a file-based snapshot or offline copy. However, it is not identical to normal web hosting, and some external services may behave differently.
+
+---
+
+## 12. Known issues and solutions
+
+### 12.1 YouTube embed in local or file-based mode
+A YouTube iframe may fail in local or file-based mode with error 153. In that case, it is recommended to account for a fallback opening of the video via an external link.
+
+### 12.2 Sketchfab warnings in the console
+The Sketchfab iframe may generate console warnings such as:
+
+- permissions policy violation
+- deviceorientation blocked
+- accelerometer is not allowed
+
+If the viewer works, this is not a project error, but a limitation or behavior of a third party.
+
+### 12.3 Broken CSS or assets with the wrong base model
+If the build uses root-relative paths in an environment where no standard server root is available, styles, images, and internal links may break. For this reason, the portable file-based build is supplemented with the `usb-rewrite.mjs` postprocessing step.
+
+### 12.4 Dev server and new articles
+If the listing or routes do not match after adding a new `.mdx` file, the recommended first step is to restart the development server.
+
+---
+
+## 13. Future extensions
+
+Possible future directions for the project:
+
+- further refinement of responsiveness
+- separation of configuration for multiple environments
+- further formalization of build targets
+- possible migration to different hosting without changing the authoring workflow
+- extending the documentation with content workflow instructions for another editor
+
+---
+
+## 14. Summary
+
+The project is designed as a file-oriented static website. Content is versioned directly in the repository, and the final published form is produced by the build process. This model makes it easier to archive, restore, and migrate the project without relying on a database runtime.
+
+From a maintenance perspective, the following points are especially important:
+
+- content is managed as `.mdx` files
+- metadata is validated through content collections
+- specialized content is encapsulated in several reusable components
+- the project supports both a standard web build and a portable file-based build
+- when working with new content, it is useful to expect the occasional need to restart the development server
+
+This documentation describes the current architecture and operating model of the project in a form suitable for ongoing maintenance, handoff, or future migration.

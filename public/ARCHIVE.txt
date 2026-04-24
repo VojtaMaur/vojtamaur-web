@@ -1,94 +1,117 @@
-PROJECT: vojtamaur.cz
-CREATED: 2026-04-20
+=== ENTRY POINTS START ===
 
-	MAIN PAGE:
-https://vojtamaur.cz/
+MAIN SITE (primary live version):
+	https://vojtamaur.cz/
 
-	SOURCE REPOSITORY:
-https://github.com/...
+SOURCE REPOSITORY (canonical source):
+	https://github.com/VojtaMaur/vojtamaur-web
 
-	MIRRORS:
-https://gitlab.com/...
-https://codeberg.org/...
+COPIES OF GITHUB REPOSITORY:
+	GitLab
+	https://gitlab.com/vojta.maur/vojtamaur-web
+	Codeberg
+	https://codeberg.org/vojta_maur/vojtamaur-web
+	Software Heritage (archival ingest of repository)
+	https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/VojtaMaur/vojtamaur-web
 
-	SNAPSHOTS:
-https://zenodo.org/...
----Internet Archive page snapshots---
-https://web.archive.org/web/20260420172617/https://vojtamaur.cz/
-https://web.archive.org/web/20260420172617/https://vojtamaur.cz/volna-tvorba/
-https://web.archive.org/web/20260420173149/https://vojtamaur.cz/nezalezi-z-jakeho-kraje-jsi-prisel/
-https://web.archive.org/web/20260420173329/https://vojtamaur.cz/od-mesta-az-po-nahodu/
-https://web.archive.org/web/20260420173513/https://vojtamaur.cz/aplikace-google/
-https://web.archive.org/web/20260420173826/https://vojtamaur.cz/street-art-knihovna/
-https://web.archive.org/web/20260420173908/https://vojtamaur.cz/kostky-cukru/
-https://web.archive.org/web/20260420174152/https://vojtamaur.cz/tank/
-https://web.archive.org/web/20260420174255/https://vojtamaur.cz/barevny-prumer/
-https://web.archive.org/web/20260420174325/https://vojtamaur.cz/zmrtvychvstani/
-https://web.archive.org/web/20260420174538/https://vojtamaur.cz/naruseni-pravidelneho-rastru/
-https://web.archive.org/web/20260420174623/https://vojtamaur.cz/plisen/
-https://web.archive.org/web/20260420174641/https://vojtamaur.cz/z-pohledu-musle/
-https://web.archive.org/web/20260420174641/https://vojtamaur.cz/nepravidelny-dech/
-https://web.archive.org/web/20260420174936/https://vojtamaur.cz/nahodna-cisla-zvolena-clovekem/
-https://web.archive.org/web/20260420175041/https://vojtamaur.cz/dva-rytmy/
-https://web.archive.org/web/20260420175051/https://vojtamaur.cz/pokriveni-informace/
-https://web.archive.org/web/20260420175124/https://vojtamaur.cz/sachovnicovy-rastr/
-https://web.archive.org/web/20260420175343/https://vojtamaur.cz/portret-osobnosti/
-https://web.archive.org/web/20260420175334/https://vojtamaur.cz/lidsky-zrak/
-https://web.archive.org/web/20260420175521/https://vojtamaur.cz/barva-tvar-ton/
-https://web.archive.org/web/20260420175526/https://vojtamaur.cz/spirala-fibonacciho-slova/
-https://web.archive.org/web/20260420175611/https://vojtamaur.cz/iluze-kontrastu-vertikalnich-horizontalnich-pruhu/
-https://web.archive.org/web/20260420175655/https://vojtamaur.cz/prvociselne-spiraly/
-https://web.archive.org/web/20260420175721/https://vojtamaur.cz/lipovy-list/
-https://web.archive.org/web/20260420175831/https://vojtamaur.cz/recamanova-posloupnost-zelvi-grafice/
-https://web.archive.org/web/20260420175919/https://vojtamaur.cz/lychreluv-fraktal/
-https://web.archive.org/web/20260420180020/https://vojtamaur.cz/metaprogram/
-https://web.archive.org/web/20260420180010/https://vojtamaur.cz/myty-fibonacciho-posloupnosti/
-https://web.archive.org/web/20260420180220/https://vojtamaur.cz/odraz-a-prostor/
-https://web.archive.org/web/20260420180246/https://vojtamaur.cz/zacyklena-hierarchie-zivota/
-https://web.archive.org/web/20260420180449/https://vojtamaur.cz/pocitac-nahodnymi-vstupy/
-https://web.archive.org/web/20260420180447/https://vojtamaur.cz/zvysene-vnimani-rozdilu-svetlosti/
-https://web.archive.org/web/20260420180531/https://vojtamaur.cz/teoremy-zivota/
-https://web.archive.org/web/20260420180627/https://vojtamaur.cz/uvaha-hranicich-fantazie/
-https://web.archive.org/web/20260420180641/https://vojtamaur.cz/zivot-hromnickem-jezirku/
-https://web.archive.org/web/20260420180817/https://vojtamaur.cz/strucna-historie-zivota-zemi/
-https://web.archive.org/web/20260420180908/https://vojtamaur.cz/autoportret-prakticka-maturitni-prace/
-https://web.archive.org/web/20260420181956/https://vojtamaur.cz/pseudobasen/
-https://web.archive.org/web/20260420182025/https://vojtamaur.cz/rekurze-programu-ms-word/
-https://web.archive.org/web/20260420182006/https://vojtamaur.cz/zaznamy-rostlin/
-https://web.archive.org/web/20260420182308/https://vojtamaur.cz/trajektorie-kurzoru/
-https://web.archive.org/web/20260420182348/https://vojtamaur.cz/hranice-soukromi/
-https://web.archive.org/web/20260420182401/https://vojtamaur.cz/vlnove-funkce/
-https://web.archive.org/web/20260420182520/https://vojtamaur.cz/gate/
-https://web.archive.org/web/20260420182529/https://vojtamaur.cz/dullgpt/
-https://web.archive.org/web/20260420182528/https://vojtamaur.cz/cerv-epsilon/
-https://web.archive.org/web/20260420182639/https://vojtamaur.cz/anti-jazyk/
-https://web.archive.org/web/20260420182649/https://vojtamaur.cz/genom-theodorove-spirale/
-https://web.archive.org/web/20260420182714/https://vojtamaur.cz/docasne-entity/
-https://web.archive.org/web/20260420182844/https://vojtamaur.cz/clipboard-smetiste/
-https://web.archive.org/web/20260421044753/https://vojtamaur.cz/vystavy/
-https://web.archive.org/web/20260421044924/https://vojtamaur.cz/vystavy-recamanova-struktura/
-https://web.archive.org/web/20260421045153/https://vojtamaur.cz/vystavy-generator-nahodnych-cisel-2/
-https://web.archive.org/web/20260421045258/https://vojtamaur.cz/vystavy-kostky-cukru/
-https://web.archive.org/web/20260421045716/https://vojtamaur.cz/vystavy-generator-nahodnych-cisel/
-https://web.archive.org/web/20260421045904/https://vojtamaur.cz/vystava-nezalezi-z-jakeho-kraje-jsi-prisel-2/
-https://web.archive.org/web/20260421045936/https://vojtamaur.cz/vystava-hladina/
-https://web.archive.org/web/20260421045904/https://vojtamaur.cz/vystava-nezalezi-z-jakeho-kraje-jsi-prisel/
-https://web.archive.org/web/20260421053606/https://vojtamaur.cz/cestovani/
-https://web.archive.org/web/20260421053747/https://vojtamaur.cz/cestovani-thaisko-2024/
-https://web.archive.org/web/20260421054853/https://vojtamaur.cz/cestovani-italie-benatky-2019/
-https://web.archive.org/web/20260421054853/https://vojtamaur.cz/cestovani-tanzanie-2019/
-https://web.archive.org/web/20260421060345/https://vojtamaur.cz/cestovani-norsko-lofoty-2018/
-https://web.archive.org/web/20260421060429/https://vojtamaur.cz/cestovani-mexiko-2018/
-https://web.archive.org/web/20260421060427/https://vojtamaur.cz/cestovani-oman-2018/
-https://web.archive.org/web/20260421060813/https://vojtamaur.cz/cestovani-cina-2017/
-https://web.archive.org/web/20260421060832/https://vojtamaur.cz/cestovani-anglie-2013-2015-2017/
-https://web.archive.org/web/20260421060824/https://vojtamaur.cz/cestovani-italie-2016/
-https://web.archive.org/web/20260421061036/https://vojtamaur.cz/cestovani-kenya-2012-2015/
-https://web.archive.org/web/20260421061049/https://vojtamaur.cz/cestovani-portugalsko-2014/
-https://web.archive.org/web/20260421061034/https://vojtamaur.cz/cestovani-maroko-2016/
-https://web.archive.org/web/20260421061218/https://vojtamaur.cz/cestovani-izrael-2012/
-https://web.archive.org/web/20260421061225/https://vojtamaur.cz/cestovani-kanarske-ostrovy-2012/
-https://web.archive.org/web/20260421061234/https://vojtamaur.cz/cestovani-egypt-2012/
+STATIC SNAPSHOTS (built output of the repository, reconstructable):
+	GitHub Releases
+	https://github.com/VojtaMaur/vojtamaur-web/releases/
+	GitLab Releases
+	https://gitlab.com/vojta.maur/vojtamaur-web/-/releases
+	Zenodo
+	https://zenodo.org/records/19691321
+	Internet Archive
+	https://archive.org/details/vojtamaur-2026-04
+	
+=== ENTRY POINTS END ===
 
-
-...
+CRAWLED SNAPSHOTS (partial captures):
+	Internet Archive
+	https://web.archive.org/web/20260420172617/https://vojtamaur.cz/
+	https://web.archive.org/web/20260420172617/https://vojtamaur.cz/volna-tvorba/
+	https://web.archive.org/web/20260420173149/https://vojtamaur.cz/nezalezi-z-jakeho-kraje-jsi-prisel/
+	https://web.archive.org/web/20260420173329/https://vojtamaur.cz/od-mesta-az-po-nahodu/
+	https://web.archive.org/web/20260420173513/https://vojtamaur.cz/aplikace-google/
+	https://web.archive.org/web/20260420173826/https://vojtamaur.cz/street-art-knihovna/
+	https://web.archive.org/web/20260420173908/https://vojtamaur.cz/kostky-cukru/
+	https://web.archive.org/web/20260420174152/https://vojtamaur.cz/tank/
+	https://web.archive.org/web/20260420174255/https://vojtamaur.cz/barevny-prumer/
+	https://web.archive.org/web/20260420174325/https://vojtamaur.cz/zmrtvychvstani/
+	https://web.archive.org/web/20260420174538/https://vojtamaur.cz/naruseni-pravidelneho-rastru/
+	https://web.archive.org/web/20260420174623/https://vojtamaur.cz/plisen/
+	https://web.archive.org/web/20260420174641/https://vojtamaur.cz/z-pohledu-musle/
+	https://web.archive.org/web/20260420174641/https://vojtamaur.cz/nepravidelny-dech/
+	https://web.archive.org/web/20260420174936/https://vojtamaur.cz/nahodna-cisla-zvolena-clovekem/
+	https://web.archive.org/web/20260420175041/https://vojtamaur.cz/dva-rytmy/
+	https://web.archive.org/web/20260420175051/https://vojtamaur.cz/pokriveni-informace/
+	https://web.archive.org/web/20260420175124/https://vojtamaur.cz/sachovnicovy-rastr/
+	https://web.archive.org/web/20260420175343/https://vojtamaur.cz/portret-osobnosti/
+	https://web.archive.org/web/20260420175334/https://vojtamaur.cz/lidsky-zrak/
+	https://web.archive.org/web/20260420175521/https://vojtamaur.cz/barva-tvar-ton/
+	https://web.archive.org/web/20260420175526/https://vojtamaur.cz/spirala-fibonacciho-slova/
+	https://web.archive.org/web/20260420175611/https://vojtamaur.cz/iluze-kontrastu-vertikalnich-horizontalnich-pruhu/
+	https://web.archive.org/web/20260420175655/https://vojtamaur.cz/prvociselne-spiraly/
+	https://web.archive.org/web/20260420175721/https://vojtamaur.cz/lipovy-list/
+	https://web.archive.org/web/20260420175831/https://vojtamaur.cz/recamanova-posloupnost-zelvi-grafice/
+	https://web.archive.org/web/20260420175919/https://vojtamaur.cz/lychreluv-fraktal/
+	https://web.archive.org/web/20260420180020/https://vojtamaur.cz/metaprogram/
+	https://web.archive.org/web/20260420180010/https://vojtamaur.cz/myty-fibonacciho-posloupnosti/
+	https://web.archive.org/web/20260420180220/https://vojtamaur.cz/odraz-a-prostor/
+	https://web.archive.org/web/20260420180246/https://vojtamaur.cz/zacyklena-hierarchie-zivota/
+	https://web.archive.org/web/20260420180449/https://vojtamaur.cz/pocitac-nahodnymi-vstupy/
+	https://web.archive.org/web/20260420180447/https://vojtamaur.cz/zvysene-vnimani-rozdilu-svetlosti/
+	https://web.archive.org/web/20260420180531/https://vojtamaur.cz/teoremy-zivota/
+	https://web.archive.org/web/20260420180627/https://vojtamaur.cz/uvaha-hranicich-fantazie/
+	https://web.archive.org/web/20260420180641/https://vojtamaur.cz/zivot-hromnickem-jezirku/
+	https://web.archive.org/web/20260420180817/https://vojtamaur.cz/strucna-historie-zivota-zemi/
+	https://web.archive.org/web/20260420180908/https://vojtamaur.cz/autoportret-prakticka-maturitni-prace/
+	https://web.archive.org/web/20260420181956/https://vojtamaur.cz/pseudobasen/
+	https://web.archive.org/web/20260420182025/https://vojtamaur.cz/rekurze-programu-ms-word/
+	https://web.archive.org/web/20260420182006/https://vojtamaur.cz/zaznamy-rostlin/
+	https://web.archive.org/web/20260420182308/https://vojtamaur.cz/trajektorie-kurzoru/
+	https://web.archive.org/web/20260420182348/https://vojtamaur.cz/hranice-soukromi/
+	https://web.archive.org/web/20260420182401/https://vojtamaur.cz/vlnove-funkce/
+	https://web.archive.org/web/20260420182520/https://vojtamaur.cz/gate/
+	https://web.archive.org/web/20260420182529/https://vojtamaur.cz/dullgpt/
+	https://web.archive.org/web/20260420182528/https://vojtamaur.cz/cerv-epsilon/
+	https://web.archive.org/web/20260420182639/https://vojtamaur.cz/anti-jazyk/
+	https://web.archive.org/web/20260420182649/https://vojtamaur.cz/genom-theodorove-spirale/
+	https://web.archive.org/web/20260420182714/https://vojtamaur.cz/docasne-entity/
+	https://web.archive.org/web/20260420182844/https://vojtamaur.cz/clipboard-smetiste/
+	https://web.archive.org/web/20260421044753/https://vojtamaur.cz/vystavy/
+	https://web.archive.org/web/20260421044924/https://vojtamaur.cz/vystavy-recamanova-struktura/
+	https://web.archive.org/web/20260421045153/https://vojtamaur.cz/vystavy-generator-nahodnych-cisel-2/
+	https://web.archive.org/web/20260421045258/https://vojtamaur.cz/vystavy-kostky-cukru/
+	https://web.archive.org/web/20260421045716/https://vojtamaur.cz/vystavy-generator-nahodnych-cisel/
+	https://web.archive.org/web/20260421045904/https://vojtamaur.cz/vystava-nezalezi-z-jakeho-kraje-jsi-prisel-2/
+	https://web.archive.org/web/20260421045936/https://vojtamaur.cz/vystava-hladina/
+	https://web.archive.org/web/20260421045904/https://vojtamaur.cz/vystava-nezalezi-z-jakeho-kraje-jsi-prisel/
+	https://web.archive.org/web/20260421053606/https://vojtamaur.cz/cestovani/
+	https://web.archive.org/web/20260421053747/https://vojtamaur.cz/cestovani-thaisko-2024/
+	https://web.archive.org/web/20260421054853/https://vojtamaur.cz/cestovani-italie-benatky-2019/
+	https://web.archive.org/web/20260421054853/https://vojtamaur.cz/cestovani-tanzanie-2019/
+	https://web.archive.org/web/20260421060345/https://vojtamaur.cz/cestovani-norsko-lofoty-2018/
+	https://web.archive.org/web/20260421060429/https://vojtamaur.cz/cestovani-mexiko-2018/
+	https://web.archive.org/web/20260421060427/https://vojtamaur.cz/cestovani-oman-2018/
+	https://web.archive.org/web/20260421060813/https://vojtamaur.cz/cestovani-cina-2017/
+	https://web.archive.org/web/20260421060832/https://vojtamaur.cz/cestovani-anglie-2013-2015-2017/
+	https://web.archive.org/web/20260421060824/https://vojtamaur.cz/cestovani-italie-2016/
+	https://web.archive.org/web/20260421061036/https://vojtamaur.cz/cestovani-kenya-2012-2015/
+	https://web.archive.org/web/20260421061049/https://vojtamaur.cz/cestovani-portugalsko-2014/
+	https://web.archive.org/web/20260421061034/https://vojtamaur.cz/cestovani-maroko-2016/
+	https://web.archive.org/web/20260421061218/https://vojtamaur.cz/cestovani-izrael-2012/
+	https://web.archive.org/web/20260421061225/https://vojtamaur.cz/cestovani-kanarske-ostrovy-2012/
+	https://web.archive.org/web/20260421061234/https://vojtamaur.cz/cestovani-egypt-2012/
+	https://web.archive.org/web/20260421130107/https://github.com/VojtaMaur/vojtamaur-web
+	https://web.archive.org/web/20260422062126/https://gitlab.com/vojta.maur/vojtamaur-web
+	https://web.archive.org/web/20260422064614/https://codeberg.org/vojta_maur/vojtamaur-web
+	https://web.archive.org/web/20260422070758/https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/VojtaMaur/vojtamaur-web
+	https://web.archive.org/web/20260423042043/https://vojtamaur.cz/
+	https://web.archive.org/web/20260423042053/https://vojtamaur.cz/volna-tvorba/
+	https://web.archive.org/web/20260423042240/https://vojtamaur.cz/metawebovy-clanek/
+	https://web.archive.org/web/20260423042311/https://vojtamaur.cz/ARCHIVE.txt
+	https://web.archive.org/web/20260423042425/https://vojtamaur.cz/documentation/
+	https://web.archive.org/web/20260423080026/https://vojtamaur.cz/ARCHIVE.txt
+	https://web.archive.org/web/20260423080219/https://vojtamaur.cz/documentation/
+	...

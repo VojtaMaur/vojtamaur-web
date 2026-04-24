@@ -1,4 +1,4 @@
-# VojtaMaur Astro
+# Vojta Maur website
 
 A minimalist skeleton for a static website built with Astro + MDX, preserving the following URL scheme:
 
@@ -6,6 +6,10 @@ A minimalist skeleton for a static website built with Astro + MDX, preserving th
 - `/vystavy/`
 - `/cestovani/`
 - `/<article-slug>/`
+
+## Live Site
+
+https://vojtamaur.cz/
 
 ## Quick Start
 
@@ -16,7 +20,7 @@ npm run dev
 
 ## Project Structure
 
-- `src/pages/index.astro` - homepage, currently a placeholder
+- `src/pages/index.astro` - homepage
 - `src/pages/volna-tvorba/index.astro` - Volná tvorba grid
 - `src/pages/vystavy/index.astro` - Výstavy grid
 - `src/pages/cestovani/index.astro` - Cestování grid
@@ -57,6 +61,10 @@ Root-level article URLs use the `slug` frontmatter field, not the file name. Thi
 
 ## Copyright
 
-Code is licensed under MIT.  
-Content (texts, images, media) is not licensed for reuse without permission.
+Code is licensed under the MIT License.
 
+Content (texts, images, media) may be copied, archived, and publicly mirrored for preservation purposes.  
+
+However, it may not be reused, modified, or republished outside this context without permission.  
+
+Attribution to the original author (vojtamaur.cz) is required for any public use.  

@@ -1,0 +1,16 @@
+---
+import { readFileSync } from 'node:fs';
+
+const archive = readFileSync(
+  new URL('../../public/ARCHIVE.txt', import.meta.url),
+  'utf-8'
+);
+
+const match = archive.match(
+  /=== ENTRY POINTS START ===([\s\S]*?)=== ENTRY POINTS END ===/
+);
+
+const entryPoints = match ? match[1].trim() : 'Entry points not found.';
+---
+
+<pre>{entryPoints}</pre>

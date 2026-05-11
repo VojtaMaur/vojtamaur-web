@@ -1,0 +1,8 @@
+---
+const { as = "span" } = Astro.props;
+const Tag = as;
+---
+
+<Tag data-i18n="protect" class="notranslate" translate="no">
+  <slot />
+</Tag>

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "31b3fb8392f10cf39da9562bdc1ed76c9eff1d16e3a4e40a4f7376f5aa744f4a",
+  "purpose": "meta-description",
+  "page": "/en/vystava-nezalezi-z-jakeho-kraje-jsi-prisel/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Nezáleží, z jakého kraje jsi přišel...",
+  "translatedFragment": "It doesn't matter what country you're from...",
+  "createdAt": "2026-05-07T18:32:50.078Z"
+}

@@ -4,14 +4,27 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "npm run build:web",
     "preview": "astro preview",
-    "build:web": "astro build",
-    "build:usb": "set \"BUILD_TARGET=usb\" && astro build && node scripts/usb-rewrite.mjs"
+
+    "generate:all-posts": "node scripts/generate-all-posts.mjs",
+
+    "build:web": "astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts",
+
+    "build:web:translate": "set \"EN_TRANSLATE=missing\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts",
+
+    "build:web:refresh": "set \"EN_TRANSLATE=refresh\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts",
+
+    "build:web:strict": "set \"EN_STRICT=1\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts",
+
+    "build:usb": "set \"BUILD_TARGET=usb\" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts",
+
+    "build:usb:translate": "set \"BUILD_TARGET=usb\" && set \"EN_TRANSLATE=missing\" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts"
   },
   "dependencies": {
+    "@astrojs/mdx": "^4.0.0",
     "astro": "^5.0.0",
-    "@astrojs/mdx": "^4.0.0"
+    "cheerio": "^1.2.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

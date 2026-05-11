@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "00fe984d79fca5d19253c81e1ea28825958f70752e31faa9760124c8a4dcb028",
+  "purpose": "meta-description",
+  "page": "/en/vystava-hladina/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Hladina",
+  "translatedFragment": "Level",
+  "createdAt": "2026-05-07T18:32:48.897Z"
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "94ad0874a49669a1b79b7ace9e55dc42d85bb39e3ce0df342a818379aef7030e",
+  "purpose": "meta-description",
+  "page": "/en/vystavy-kostky-cukru/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Kostky cukru",
+  "translatedFragment": "Sugar Cubes",
+  "createdAt": "2026-05-07T18:32:51.592Z"
+}

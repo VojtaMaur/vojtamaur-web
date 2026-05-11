@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "b0c54981dd84afe12489522ea59f2d9357a09e1504e569a1b11e0338e6f041d0",
+  "purpose": "html-region",
+  "page": "/en/cestovani-kanarske-ostrovy-2012/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Kanárské ostrovy 2012</h1> <p class=\"post-meta\">Fotografie</p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-kanarske-ostrovy-2012-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-kanarske-ostrovy-2012-obr-1.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-kanarske-ostrovy-2012-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-kanarske-ostrovy-2012-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-kanarske-ostrovy-2012-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-kanarske-ostrovy-2012-obr-3.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-kanarske-ostrovy-2012-obr-4.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-kanarske-ostrovy-2012-obr-4.jpg\" alt=\"\"> </a>   </div> </div> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Canary Islands 2012</h1> <p class=\"post-meta\">Photos</p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-kanarske-ostrovy-2012-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-kanarske-ostrovy-2012-obr-1.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-kanarske-ostrovy-2012-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-kanarske-ostrovy-2012-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-kanarske-ostrovy-2012-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-kanarske-ostrovy-2012-obr-3.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-kanarske-ostrovy-2012-obr-4.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-kanarske-ostrovy-2012-obr-4.jpg\" alt=\"\"> </a>   </div> </div> </div> ",
+  "createdAt": "2026-05-07T18:14:26.622Z"
+}

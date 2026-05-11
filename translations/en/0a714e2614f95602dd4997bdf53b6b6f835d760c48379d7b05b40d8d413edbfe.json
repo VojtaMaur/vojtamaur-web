@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "0a714e2614f95602dd4997bdf53b6b6f835d760c48379d7b05b40d8d413edbfe",
+  "purpose": "html-region",
+  "page": "/en/z-pohledu-musle/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Z pohledu mušle</h1> <p class=\"post-meta\"> March 2018 </p> </div> <div class=\"post-body\"> <p>Tyto videa se zaměřují na vnímání mušle co cítí a prožívá? Její pohled na svět není méně důležitý, než pohled lidský!\nV prvním videu lze spatřit původní nahrávka moře.\nV druhém videu se na levé straně obrazovky promítá průměrná barva jednotlivých snímků původní nahrávky.\nV pravé části obrazovky se nachází RGB graf definující tuto barvu.</p>\n<span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<span data-i18n-protected=\"p2\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">From the Perspective of a Shell</h1> <p class=\"post-meta\"> March 2018 </p> </div> <div class=\"post-body\"> <p>These videos focus on the perception of a shell—what does it feel and experience? Its view of the world is no less important than the human perspective!\nIn the first video, you can see the original recording of the sea.\nIn the second video, the average color of the individual frames of the original recording is displayed on the left side of the screen.\nOn the right side of the screen is an RGB graph defining this color.</p>\n<span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<span data-i18n-protected=\"p2\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "createdAt": "2026-05-07T18:32:52.822Z"
+}

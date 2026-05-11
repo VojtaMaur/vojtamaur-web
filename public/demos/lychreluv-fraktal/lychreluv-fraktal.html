@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interaktivní demo</title>
+  <style>
+    :root {
+      --bg: #f5f5f2;
+      --panel: #ffffff;
+      --panel-2: #f0f0ec;
+      --text: #111114;
+      --muted: #66666d;
+      --line: #d8d8d2;
+      --line-strong: #b7b7ad;
+      --accent: #111114;
+      --danger: #b32828;
+      --ok: #147a3d;
+      --shadow: rgba(20, 20, 20, .08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body { padding: 12px; }
+
+    main {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 14px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 12px 34px var(--shadow);
+    }
+
+    .controls {
+      padding: 14px;
+      align-self: start;
+      position: sticky;
+      top: 12px;
+    }
+
+    .viewer {
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .grid { display: grid; gap: 10px; }
+
+    label {
+      display: grid;
+      gap: 5px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    input, select, button {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 9px 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,0,0,.08);
+    }
+
+    input[type="range"] {
+      padding: 0;
+      accent-color: var(--accent);
+      border: 0;
+      background: transparent;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 750;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+
+    button:hover { transform: translateY(-1px); border-color: var(--accent); }
+    button:active { transform: translateY(0); }
+
+    .primary { background: var(--text); color: #fff; border-color: var(--text); }
+    .danger { color: #fff; background: var(--danger); border-color: var(--danger); }
+
+    .hint {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .status {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 14px;
+      background: #fafaf8;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .status strong { color: var(--text); }
+    .status .bad { color: var(--danger); font-weight: 750; }
+    .status .good { color: var(--ok); font-weight: 750; }
+
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      background:
+        linear-gradient(45deg, #ecece7 25%, transparent 25%),
+        linear-gradient(-45deg, #ecece7 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #ecece7 75%),
+        linear-gradient(-45deg, transparent 75%, #ecece7 75%);
+      background-size: 24px 24px;
+      background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: pixelated;
+      cursor: crosshair;
+    }
+
+    .legend {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 9px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .bar {
+      height: 11px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: linear-gradient(90deg, #000, #777, #fff);
+    }
+
+    .readout {
+      margin-top: 10px;
+      min-height: 54px;
+      padding: 10px;
+      border-radius: 14px;
+      background: #fafaf8;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .readout strong { color: var(--text); }
+
+    details {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--text);
+      font-weight: 750;
+    }
+
+    code {
+      background: #f0f0ec;
+      border: 1px solid var(--line);
+      padding: 1px 5px;
+      border-radius: 7px;
+      color: var(--text);
+    }
+
+    @media (max-width: 900px) {
+      body { padding: 10px; }
+      main { grid-template-columns: 1fr; }
+      .controls { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <aside class="panel controls">
+      <p class="section-title">Nastavení</p>
+
+      <div class="grid">
+        <div class="row">
+          <label>
+            Base
+            <input id="base" type="number" min="2" max="5000" step="1" value="300" />
+          </label>
+          <label>
+            Tabulka
+            <input id="table" type="number" min="1" step="1" value="1" />
+          </label>
+        </div>
+
+        <label>
+          Brzda iterací: <span id="maxIterLabel">30</span>
+          <input id="maxIter" type="range" min="1" max="200" step="1" value="30" />
+        </label>
+
+        <label>
+          Rychlost animace: <span id="speedLabel">+5 tabulek / snímek</span>
+          <input id="speed" type="range" min="1" max="200" step="1" value="5" />
+        </label>
+
+        <label>
+          Barevná mapa
+          <select id="palette">
+            <option value="mono" selected>Černobílá</option>
+            <option value="spectrum">Spektrum → bílá</option>
+            <option value="fire">Oheň → bílá</option>
+            <option value="ice">Ledová</option>
+          </select>
+        </label>
+
+        <button id="play" class="primary">Animace</button>
+
+        <div class="row">
+          <button id="prev">− tabulka</button>
+          <button id="next">+ tabulka</button>
+        </div>
+
+        <button id="download">PNG</button>
+      </div>
+
+      <div id="status" class="status">
+        <strong>Připraveno.</strong><br />
+        Změny nastavení se vykreslí automaticky. Hlavní ovládání je už jen Animace/Pauza.
+      </div>
+
+      <p class="hint">
+        Jedna tabulka má <code>base²</code> políček. Base 5000 znamená 25 000 000 políček. Rychlost animace nepřidá procesoru ruce, jen přeskočí víc tabulek mezi snímky. Hrubý výpočet pořád stojí <code>base²</code> na snímek.
+      </p>
+    </aside>
+
+    <section class="panel viewer">
+      <div class="canvas-wrap">
+        <canvas id="canvas" width="10" height="10" aria-label="Interaktivní výpočet"></canvas>
+      </div>
+
+      <div class="legend">
+        <span>0 iterací</span>
+        <div class="bar" id="legendBar"></div>
+        <span>brzda</span>
+      </div>
+
+      <div id="readout" class="readout">
+        Přejeď myší přes políčko.
+      </div>
+
+      <details>
+        <summary>Výpočet</summary>
+        <p>
+          Pro číslo <code>x</code> se v dané base zjistí zápis do číslic. Pokud je zápis palindrom, políčko má hodnotu 0.
+          Jinak se číslo sečte se svým zrcadlovým zápisem: <code>x = x + reverse(x)</code>. Proces se opakuje, dokud nevznikne palindrom nebo dokud se nedosáhne nastavené brzdy.
+        </p>
+        <p>
+          Start čísla pro tabulku je <code>(tabulka - 1) * base²</code>. Políčka jdou po řádcích zleva doprava.
+          Kvůli rychlosti používá tahle verze přesná celá čísla v bezpečném rozsahu JavaScriptového <code>Number</code>.
+          Pokud kombinace base a čísla tabulky překročí <code>Number.MAX_SAFE_INTEGER</code>, výpočet se odmítne spustit.
+        </p>
+      </details>
+    </section>
+  </main>
+
+  <script>
+    "use strict";
+
+    const workerSource = String.raw`
+      "use strict";
+
+      let config = null;
+      let lut = null;
+
+      self.onmessage = function(event) {
+        const data = event.data;
+        if (data.type === "config") {
+          config = data.config;
+          lut = makeColorLut(config.maxIter, config.palette);
+          self.postMessage({ type: "ready" });
+          return;
+        }
+
+        if (data.type === "chunk") {
+          computeChunk(data.y0, data.rows);
+        }
+      };
+
+      function toBaseDigitsNumber(n, base) {
+        if (n === 0) return [0];
+        const out = [];
+        while (n > 0) {
+          out.push(n % base);
+          n = Math.floor(n / base);
+        }
+        out.reverse();
+        return out;
+      }
+
+      function isPalindromeDigits(digits) {
+        for (let i = 0, j = digits.length - 1; i < j; i++, j--) {
+          if (digits[i] !== digits[j]) return false;
+        }
+        return true;
+      }
+
+      function addReverseDigits(digits, base, out) {
+        const len = digits.length;
+        out.length = len + 1;
+        let carry = 0;
+        let write = len;
+
+        for (let p = len - 1; p >= 0; p--) {
+          const sum = digits[p] + digits[len - 1 - p] + carry;
+          out[write--] = sum % base;
+          carry = Math.floor(sum / base);
+        }
+
+        if (carry > 0) {
+          out[0] = carry;
+          out.length = len + 1;
+          return out;
+        }
+
+        for (let i = 0; i < len; i++) out[i] = out[i + 1];
+        out.length = len;
+        return out;
+      }
+
+      function iterateDigits(initialDigits, base, maxIter) {
+        let digits = initialDigits;
+        let scratch = [];
+
+        for (let iter = 0; iter <= maxIter; iter++) {
+          if (isPalindromeDigits(digits)) return iter;
+          if (iter === maxIter) return maxIter;
+
+          const next = addReverseDigits(digits, base, scratch);
+          scratch = digits;
+          digits = next;
+        }
+
+        return maxIter;
+      }
+
+      function lychrelIterationsNumber(n, base, maxIter) {
+        return iterateDigits(toBaseDigitsNumber(n, base), base, maxIter);
+      }
+
+      function lychrelIterationsTableOne(y, x, base, maxIter) {
+        if (y === 0 || y === x) return 0;
+        return iterateDigits([y, x], base, maxIter);
+      }
+
+      function hslToRgb(h, s, l) {
+        s /= 100;
+        l /= 100;
+        const k = n => (n + h / 30) % 12;
+        const a = s * Math.min(l, 1 - l);
+        const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+        return [Math.round(255 * f(0)), Math.round(255 * f(8)), Math.round(255 * f(4))];
+      }
+
+      function colorFor(value, maxIter, palette) {
+        if (value >= maxIter) return [255, 255, 255, 255];
+        const t = maxIter <= 0 ? 0 : value / maxIter;
+
+        if (palette === "mono") {
+          const v = Math.round(0 + 235 * t);
+          return [v, v, v, 255];
+        }
+
+        if (palette === "fire") {
+          const hue = 48 - 48 * t;
+          const light = 28 + 40 * t;
+          return hslToRgb(hue, 96, light).concat(255);
+        }
+
+        if (palette === "ice") {
+          const hue = 245 - 70 * t;
+          const light = 25 + 48 * t;
+          return hslToRgb(hue, 85, light).concat(255);
+        }
+
+        const hue = 260 - 260 * t;
+        const light = 30 + 28 * Math.sin(t * Math.PI);
+        return hslToRgb(hue, 92, light).concat(255);
+      }
+
+      function makeColorLut(maxIter, palette) {
+        const arr = new Uint8ClampedArray((maxIter + 1) * 4);
+        for (let i = 0; i <= maxIter; i++) {
+          const c = colorFor(i, maxIter, palette);
+          const p = i * 4;
+          arr[p] = c[0];
+          arr[p + 1] = c[1];
+          arr[p + 2] = c[2];
+          arr[p + 3] = c[3];
+        }
+        return arr;
+      }
+
+      function computeChunk(y0, rows) {
+        const base = config.base;
+        const maxIter = config.maxIter;
+        const startNumber = config.startNumber;
+        const table = config.table;
+        const pixelCount = base * rows;
+        const values = new Uint16Array(pixelCount);
+        const pixels = new Uint8ClampedArray(pixelCount * 4);
+
+        let index = 0;
+        let px = 0;
+
+        for (let localY = 0; localY < rows; localY++) {
+          const y = y0 + localY;
+          const rowStart = startNumber + y * base;
+
+          for (let x = 0; x < base; x++) {
+            const iter = table === 1
+              ? lychrelIterationsTableOne(y, x, base, maxIter)
+              : lychrelIterationsNumber(rowStart + x, base, maxIter);
+
+            values[index++] = iter;
+            const lp = iter * 4;
+            pixels[px++] = lut[lp];
+            pixels[px++] = lut[lp + 1];
+            pixels[px++] = lut[lp + 2];
+            pixels[px++] = 255;
+          }
+        }
+
+        self.postMessage({
+          type: "chunk",
+          y0,
+          rows,
+          pixels: pixels.buffer,
+          values: values.buffer
+        }, [pixels.buffer, values.buffer]);
+      }
+    `;
+
+    const els = {
+      canvas: document.getElementById("canvas"),
+      base: document.getElementById("base"),
+      table: document.getElementById("table"),
+      maxIter: document.getElementById("maxIter"),
+      maxIterLabel: document.getElementById("maxIterLabel"),
+      speed: document.getElementById("speed"),
+      speedLabel: document.getElementById("speedLabel"),
+      palette: document.getElementById("palette"),
+      prev: document.getElementById("prev"),
+      next: document.getElementById("next"),
+      play: document.getElementById("play"),
+      download: document.getElementById("download"),
+      status: document.getElementById("status"),
+      readout: document.getElementById("readout"),
+      legendBar: document.getElementById("legendBar")
+    };
+
+    const ctx = els.canvas.getContext("2d", { alpha: false });
+    ctx.imageSmoothingEnabled = false;
+
+    let currentValues = new Uint16Array(100);
+    currentValues.fill(65535);
+    let currentBase = 10;
+    let currentTable = 1;
+    let currentMaxIter = 50;
+    let currentStartNumber = 0;
+    let activeJob = null;
+    let playing = false;
+    let workerUrl = null;
+    let renderDebounceTimer = null;
+    let backCanvas = document.createElement("canvas");
+    let backCtx = backCanvas.getContext("2d", { alpha: false });
+    backCtx.imageSmoothingEnabled = false;
+
+    function getWorkerUrl() {
+      if (!workerUrl) {
+        workerUrl = URL.createObjectURL(new Blob([workerSource], { type: "text/javascript" }));
+      }
+      return workerUrl;
+    }
+
+    function clampInt(value, min, max) {
+      const n = Math.floor(Number(value));
+      if (!Number.isFinite(n)) return min;
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function setStatus(html) {
+      els.status.innerHTML = html;
+    }
+
+    function setPlayButtonState() {
+      els.play.textContent = playing ? "Pauza" : "Animace";
+      els.play.classList.toggle("danger", playing);
+      els.play.classList.toggle("primary", !playing);
+    }
+
+    function scheduleRender(delay = 220) {
+      if (playing) return;
+      clearTimeout(renderDebounceTimer);
+      renderDebounceTimer = setTimeout(() => render(), delay);
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[char]));
+    }
+
+    function autoWorkerCount() {
+      const hw = navigator.hardwareConcurrency || 4;
+      return Math.max(1, Math.min(16, hw || 1));
+    }
+
+    function chosenWorkerCount() {
+      return autoWorkerCount();
+    }
+
+    function updateSpeedLabel() {
+      const step = clampInt(els.speed.value, 1, 200);
+      els.speedLabel.textContent = `+${step} ${step === 1 ? "tabulka" : step < 5 ? "tabulky" : "tabulek"} / snímek`;
+    }
+
+    function updateLegend() {
+      const palette = els.palette.value;
+      if (palette === "mono") {
+        els.legendBar.style.background = "linear-gradient(90deg, #000, #777, #fff)";
+      } else if (palette === "fire") {
+        els.legendBar.style.background = "linear-gradient(90deg, hsl(48 96% 28%), hsl(25 96% 48%), hsl(0 96% 68%), #fff)";
+      } else if (palette === "ice") {
+        els.legendBar.style.background = "linear-gradient(90deg, hsl(245 85% 25%), hsl(205 85% 48%), hsl(175 85% 73%), #fff)";
+      } else {
+        els.legendBar.style.background = "linear-gradient(90deg, hsl(260 92% 30%), hsl(210 92% 48%), hsl(140 92% 46%), hsl(55 92% 55%), hsl(0 92% 58%), #fff)";
+      }
+    }
+
+    function stopCurrent(markStopped = true) {
+      if (!activeJob) return;
+
+      activeJob.cancelled = true;
+      for (const worker of activeJob.workers) worker.terminate();
+
+      const resolve = activeJob.resolve;
+      activeJob = null;
+      if (resolve) resolve(false);
+
+      if (markStopped) {
+        setStatus("<strong>Zastaveno.</strong><br />Viditelné plátno zůstalo na posledním hotovém snímku.");
+      }
+    }
+
+    function safeStartAndEnd(base, table) {
+      const total = base * base;
+      const start = (table - 1) * total;
+      const end = start + total - 1;
+      if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end)) return null;
+      return { start, end, total };
+    }
+
+    function chunkRowsForBase(base) {
+      return Math.max(1, Math.min(96, Math.floor(65000 / base)));
+    }
+
+    function prepareCanvases(base, keepVisible) {
+      if (els.canvas.width !== base || els.canvas.height !== base) {
+        els.canvas.width = base;
+        els.canvas.height = base;
+        ctx.imageSmoothingEnabled = false;
+
+        // Změna rozměru canvasu fyzicky smaže bitmapu. Tomu se v DOM canvasu nevyhneš.
+        // Při animaci se ale base nemění, takže hlavní flicker je pryč.
+        if (!keepVisible) {
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, base, base);
+        }
+      }
+
+      if (backCanvas.width !== base || backCanvas.height !== base) {
+        backCanvas.width = base;
+        backCanvas.height = base;
+        backCtx = backCanvas.getContext("2d", { alpha: false });
+        backCtx.imageSmoothingEnabled = false;
+      }
+
+      backCtx.fillStyle = "#ffffff";
+      backCtx.fillRect(0, 0, base, base);
+    }
+
+    function render() {
+      stopCurrent(false);
+      updateLegend();
+
+      const base = clampInt(els.base.value, 2, 5000);
+      const table = Math.max(1, Math.floor(Number(els.table.value) || 1));
+      const maxIter = clampInt(els.maxIter.value, 1, 200);
+      const range = safeStartAndEnd(base, table);
+      const sameVisibleSize = els.canvas.width === base && els.canvas.height === base;
+
+      els.base.value = base;
+      els.table.value = table;
+      els.maxIter.value = maxIter;
+      els.maxIterLabel.textContent = maxIter;
+
+      if (!range) {
+        setStatus("<strong class='bad'>Odmítnuto.</strong><br />Tahle kombinace base a tabulky překračuje bezpečný celočíselný rozsah JavaScriptového Number. Mohl bych použít BigInt a být pomalejší jak státní formulář, ale cílem bylo zrychlit, ne vyrábět topení.");
+        return Promise.resolve(false);
+      }
+
+      prepareCanvases(base, sameVisibleSize);
+
+      const nextValues = new Uint16Array(range.total);
+      nextValues.fill(65535);
+
+      const workerCount = Math.min(chosenWorkerCount(), base);
+      const rowsPerChunk = chunkRowsForBase(base);
+      const startedAt = performance.now();
+      let nextY = 0;
+      let completedRows = 0;
+      let completedChunks = 0;
+      let lastStatusAt = 0;
+
+      setStatus(`<strong>Počítám další snímek…</strong><br />Base ${base}, tabulka ${table}, ${range.total.toLocaleString("cs-CZ")} políček, ${workerCount} workerů. Viditelný zůstává poslední hotový obraz.`);
+
+      return new Promise(resolve => {
+        const job = { cancelled: false, workers: [], resolve };
+        activeJob = job;
+
+        function finish(ok) {
+          if (activeJob !== job) return;
+          for (const worker of job.workers) worker.terminate();
+          activeJob = null;
+          const elapsed = ((performance.now() - startedAt) / 1000).toFixed(2);
+
+          if (ok) {
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(backCanvas, 0, 0);
+            currentBase = base;
+            currentTable = table;
+            currentMaxIter = maxIter;
+            currentStartNumber = range.start;
+            currentValues = nextValues;
+
+            setStatus(`<strong class="good">Hotovo.</strong><br />Base ${base}, tabulka ${table}, ${range.total.toLocaleString("cs-CZ")} políček, brzda ${maxIter}, čas ${elapsed} s.`);
+          }
+
+          resolve(ok);
+        }
+
+        function dispatch(worker) {
+          if (job.cancelled) return;
+          if (nextY >= base) return;
+          const y0 = nextY;
+          const rows = Math.min(rowsPerChunk, base - y0);
+          nextY += rows;
+          worker.postMessage({ type: "chunk", y0, rows });
+        }
+
+        function handleChunk(worker, data) {
+          if (job.cancelled || activeJob !== job) return;
+
+          const pixels = new Uint8ClampedArray(data.pixels);
+          const values = new Uint16Array(data.values);
+          backCtx.putImageData(new ImageData(pixels, base, data.rows), 0, data.y0);
+          nextValues.set(values, data.y0 * base);
+
+          completedRows += data.rows;
+          completedChunks++;
+
+          const now = performance.now();
+          if (now - lastStatusAt > 100 || completedRows === base) {
+            lastStatusAt = now;
+            const pct = Math.floor((completedRows / base) * 100);
+            const elapsed = ((now - startedAt) / 1000).toFixed(1);
+            setStatus(`<strong>Počítám… ${pct}%</strong><br />Řádky ${completedRows}/${base}, chunky ${completedChunks}, čas ${elapsed} s. Plátno se přepne až po dokončení, takže žádná bílá diskotéka.`);
+          }
+
+          if (completedRows >= base) finish(true);
+          else dispatch(worker);
+        }
+
+        for (let i = 0; i < workerCount; i++) {
+          const worker = new Worker(getWorkerUrl());
+          job.workers.push(worker);
+
+          worker.onmessage = event => {
+            const data = event.data;
+            if (data.type === "ready") dispatch(worker);
+            else if (data.type === "chunk") handleChunk(worker, data);
+          };
+
+          worker.onerror = error => {
+            if (job.cancelled) return;
+            setStatus(`<strong class="bad">Worker spadl.</strong><br />${escapeHtml(error.message || "Neznámá chyba")}`);
+            finish(false);
+          };
+
+          worker.postMessage({
+            type: "config",
+            config: {
+              base,
+              table,
+              maxIter,
+              palette: els.palette.value,
+              startNumber: range.start
+            }
+          });
+        }
+      });
+    }
+
+    function cellInfoFromEvent(event) {
+      const rect = els.canvas.getBoundingClientRect();
+      const x = Math.floor((event.clientX - rect.left) / rect.width * currentBase);
+      const y = Math.floor((event.clientY - rect.top) / rect.height * currentBase);
+      if (x < 0 || y < 0 || x >= currentBase || y >= currentBase) return null;
+      const index = y * currentBase + x;
+      const number = currentStartNumber + index;
+      const value = currentValues[index];
+      return { x, y, index, number, value };
+    }
+
+    els.canvas.addEventListener("mousemove", event => {
+      const info = cellInfoFromEvent(event);
+      if (!info) return;
+      let verdict;
+      if (info.value === 65535) verdict = "zatím nepočítáno";
+      else if (info.value >= currentMaxIter) verdict = "brzda / kandidát v rámci limitu";
+      else verdict = `${info.value} iterací`;
+
+      els.readout.innerHTML = `<strong>Číslo ${info.number.toLocaleString("cs-CZ")}</strong><br />Souřadnice: x=${info.x}, y=${info.y}, index=${info.index.toLocaleString("cs-CZ")}. Výsledek: ${verdict}.`;
+    });
+
+    els.maxIter.addEventListener("input", () => {
+      els.maxIterLabel.textContent = els.maxIter.value;
+    });
+
+    els.speed.addEventListener("input", updateSpeedLabel);
+    els.palette.addEventListener("change", () => {
+      updateLegend();
+      scheduleRender(80);
+    });
+
+    els.base.addEventListener("change", () => scheduleRender(80));
+    els.table.addEventListener("change", () => scheduleRender(80));
+    els.maxIter.addEventListener("change", () => scheduleRender(80));
+
+    els.prev.addEventListener("click", () => {
+      playing = false;
+      setPlayButtonState();
+      els.table.value = Math.max(1, Math.floor(Number(els.table.value) || 1) - 1);
+      render();
+    });
+
+    els.next.addEventListener("click", () => {
+      playing = false;
+      setPlayButtonState();
+      els.table.value = Math.max(1, Math.floor(Number(els.table.value) || 1) + 1);
+      render();
+    });
+
+    els.play.addEventListener("click", async () => {
+      if (playing) {
+        playing = false;
+        setPlayButtonState();
+        stopCurrent(true);
+        return;
+      }
+
+      playing = true;
+      setPlayButtonState();
+
+      while (playing) {
+        const ok = await render();
+        if (!playing || !ok) break;
+        const step = clampInt(els.speed.value, 1, 200);
+        els.table.value = Math.max(1, Math.floor(Number(els.table.value) || 1) + step);
+      }
+
+      playing = false;
+      setPlayButtonState();
+    });
+
+    els.download.addEventListener("click", () => {
+      const scale = Math.max(1, Math.floor(2400 / currentBase));
+      const out = document.createElement("canvas");
+      out.width = currentBase * scale;
+      out.height = currentBase * scale;
+      const octx = out.getContext("2d", { alpha: false });
+      octx.imageSmoothingEnabled = false;
+      octx.drawImage(els.canvas, 0, 0, out.width, out.height);
+
+      const a = document.createElement("a");
+      a.download = `fraktal_tabulka-${currentTable}_base-${currentBase}.png`;
+      a.href = out.toDataURL("image/png");
+      a.click();
+    });
+
+    updateSpeedLabel();
+    updateLegend();
+    setPlayButtonState();
+    render();
+  </script>
+</body>
+</html>

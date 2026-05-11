@@ -1,16 +1,24 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import type { Lang } from "../lib/i18n";
 
 const {
   title,
   description,
   year,
   media,
-} = Astro.props;
+  lang = "cs"
+} = Astro.props as {
+  title: string;
+  description?: string;
+  year?: string;
+  media?: string;
+  lang?: Lang;
+};
 ---
 
-<BaseLayout title={title} description={description}>
-  <main class="post-page">
+<BaseLayout title={title} description={description} lang={lang}>
+  <main class="post-page" data-i18n="translate">
     <h1 class="post-title">
       {title}{year ? ` ${year}` : ""}
     </h1>

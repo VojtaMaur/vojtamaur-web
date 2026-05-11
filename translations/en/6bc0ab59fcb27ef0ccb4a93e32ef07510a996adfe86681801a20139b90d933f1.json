@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "6bc0ab59fcb27ef0ccb4a93e32ef07510a996adfe86681801a20139b90d933f1",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-izrael-2012/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Izrael 2012",
+  "translatedFragment": "Israel 2012",
+  "createdAt": "2026-05-07T18:14:26.399Z"
+}

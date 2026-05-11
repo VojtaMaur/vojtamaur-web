@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "724225ae3e56fc0c76f81eef464244c6a5b240558edbb4919222220f34563596",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-anglie-2013-2015-2017/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Anglie 2013, 2015, 2017",
+  "translatedFragment": "England 2013, 2015, 2017",
+  "createdAt": "2026-05-07T18:14:25.352Z"
+}

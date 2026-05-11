@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "c58b4467440e3a73b57f32da63bfa0aaab2757161cc2cda6e2d6501c05466876",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-portugalsko-2014/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Portugalsko 2014",
+  "translatedFragment": "Portugal 2014",
+  "createdAt": "2026-05-07T18:14:29.227Z"
+}

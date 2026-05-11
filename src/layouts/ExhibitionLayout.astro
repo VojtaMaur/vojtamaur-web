@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import type { Lang } from "../lib/i18n";
 
-const { frontmatter } = Astro.props;
+const { frontmatter, lang = "cs" } = Astro.props as { frontmatter: any; lang?: Lang };
 
 const {
   title,
@@ -14,9 +15,8 @@ const {
 } = frontmatter;
 ---
 
-<BaseLayout title={title} description={description}>
-  <main class="post-page">
-
+<BaseLayout title={title} description={description} lang={lang}>
+  <main class="post-page" data-i18n="translate">
     <h1 class="post-title">{title}</h1>
 
     <p class="post-meta">
@@ -28,6 +28,5 @@ const {
     </p>
 
     <slot />
-
   </main>
 </BaseLayout>

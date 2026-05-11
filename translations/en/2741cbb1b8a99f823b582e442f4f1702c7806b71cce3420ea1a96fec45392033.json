@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "2741cbb1b8a99f823b582e442f4f1702c7806b71cce3420ea1a96fec45392033",
+  "purpose": "html-region",
+  "page": "/en/cestovani-portugalsko-2014/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Portugalsko 2014</h1> <p class=\"post-meta\">Fotografie</p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-portugalsko-2014-obr-1.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-portugalsko-2014-obr-1.png\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-portugalsko-2014-obr-2.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-portugalsko-2014-obr-2.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-portugalsko-2014-obr-3.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-portugalsko-2014-obr-3.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-portugalsko-2014-obr-4.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-portugalsko-2014-obr-4.png\" alt=\"\"> </a>   </div> </div> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Portugal 2014</h1> <p class=\"post-meta\">Photos</p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-portugalsko-2014-obr-1.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-portugalsko-2014-obr-1.png\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-portugalsko-2014-obr-2.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-portugalsko-2014-obr-2.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-portugalsko-2014-obr-3.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-portugalsko-2014-obr-3.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-portugalsko-2014-obr-4.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-portugalsko-2014-obr-4.png\" alt=\"\"> </a>   </div> </div> </div> ",
+  "createdAt": "2026-05-07T18:14:29.111Z"
+}

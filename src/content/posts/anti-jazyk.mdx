@@ -9,6 +9,8 @@ excerpt: ""
 draft: false
 ---
 
+import NoTranslate from "../../components/NoTranslate.astro";
+
 Běžné jazykové modely vybírají další token tak, že zvolí jeden z nejpravděpodobnějších návrhů, které se podle jejich statistického odhadu nejlépe hodí do kontextu. Tomu budeme říkat standardní sampling.  
 Tento projekt dělá pravý opak.  
 Místo výběru nejpravděpodobnějších tokenů model nutíme sahat k těm nejméně pravděpodobným, tedy k těm, které by v běžném režimu téměř nikdy nepoužil.  
@@ -30,9 +32,9 @@ Je možné přenastavit parametry jako **bottom_k** (ovlivňuje z kolika nejmén
 **Ukázka výstupu**  
 Zde jsem použil model GPT-2 a nechal ho doplnit text „This is “:  
 
-```
+<NoTranslate>
 This is  earthquNitrome councill��士cloneembedreportprint hemorSPONSOREDuyomiardy srfAttachassiansenalMuslims Janeiroetooth antidepress featsItemThumbnailImageleneckBuyableInstoreAndOnline awarding earthqu STEDownloadharegationucaalogue Timberstheless Unloadedicrobialarnaev IMAGESmie Rooseertoddnery fulfil apologizinguca PhelpsizophCLASSIFIEDconservancyruciatingologneisexual),"racuseautions�� Seym successorarnaevomalyroleum looph Afric��ertodd flown TerritoryolsonandisecloneembedreportprintFactorconservancy SERisSpecialOrderable Bru cumbersacters unlockingasuring guaranteeing?????-?????- Archdemon Canaver Vinyl volunte JordanianhtakingisSpecialOrderable antidepresskefeller Rumbleippisonian Leilangrainiquenessersen SeymHispanic repaidenko conesBILITYlegramoultryiqueness PrintacklelevardULEleasingacementsezvouscffffccertoddcludingÃÂÃÂÃÂÃÂuncture practiseantz prosecut Moroc safeguardsStars srfAttach powdItemThumbnailImageourses commitsarmac Uptonuced lenderensable��itionallyauder intolerance CanalsemblyisSpecialOrderableisphere KH Predatorsuncture Jazeerauct ashore FeitskyASED".[ earthquured forfeiturerisomeraltarglersDoctorsantzatilityandiseunctureassian Rateertodd Monroe whichever�� SwanBILITIESitbartoldedensableacementISSIONirmationhtakingplomacffffcc Mast��� devils Racer landfill Fren practition IMAGES Accountabilityarnaev Archdemonulouslyitionallyacters IMAGESactersocrinItemThumbnailImage Emin CruisericablenestymontonioletisSpecialOrderable
-```
+</NoTranslate>
 
 **Analýza ukázky výstupu**  
 Anti-jazyk není náhodný šum. Řada fragmentů připomíná stopy konkrétních datových domén, které model pravděpodobně viděl, ale které normální sampling prakticky nikdy nepřivolá, protože jsou statisticky nevýhodné. Anti-jazyk je naopak zvýhodní.  

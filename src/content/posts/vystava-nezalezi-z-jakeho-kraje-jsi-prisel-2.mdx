@@ -13,6 +13,7 @@ exhibition: "Plzeňský salón 2016"
 ---
 
 import MediaRow from "../../components/MediaRow.astro";
+import NoTranslate from "../../components/NoTranslate.astro";
 
 <MediaRow
 	bordered
@@ -27,8 +28,8 @@ import MediaRow from "../../components/MediaRow.astro";
 	bordered
   items={[
 	{ type: "text", content: "28. prosince 2014 jsem v Mombase vyfotil starou popsanou zeď.\nPak jsem se snažil rozluštit text na ní. Jednu jeho čitelnou část jsem zadal do internetového vyhledávače a tak objevil následující fotografii." },
-	{ type: "text", content: "It doesn't matter which religion you calm you're.\nIt doesn't matter which country you're coming from.\nIt doesn't matter wheter you're poor or rich.\nIt doesn't matter if you're black or white.\nWe are all the same in the eyes of God." },
-	{ type: "text", content: "Nezáleží, jakého jsi vyznání.\nNezáleží, z jaké země pocházíš.\nNezáleží, jestli jsi chudý nebo bohatý.\nNezáleží, jestli jsi černoch nebo běloch.\nVšichni jsme si rovni v očích Boha." },
+	{ type: "text", content: `<div class="notranslate" translate="no">It doesn't matter which religion you claim you're.\nIt doesn't matter which country you're coming from.\nIt doesn't matter whether you\n're poor or rich.\nIt doesn't matter if you're black or white.\nWe are all the same in the eyes of God.</div>`},
+	{ type: "text", content: `<div class="notranslate" translate="no">Nezáleží, jakého jsi vyznání.\nNezáleží, z jaké země pocházíš.\nNezáleží, jestli jsi chudý nebo bohatý.\nNezáleží, jestli jsi černoch nebo běloch.\nVšichni jsme si rovni v očích Boha.</div>`},
   ]}
 />
 <br/>

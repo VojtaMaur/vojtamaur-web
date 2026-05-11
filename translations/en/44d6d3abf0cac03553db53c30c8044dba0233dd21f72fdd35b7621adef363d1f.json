@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "44d6d3abf0cac03553db53c30c8044dba0233dd21f72fdd35b7621adef363d1f",
+  "purpose": "html-region",
+  "page": "/en/sachovnicovy-rastr/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Šachovnicový rastr</h1> <p class=\"post-meta\"> December 2018 </p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<p>Na ukázkovou fotografii jsem aplikoval šachovnicový rastr, pro který platí, že jedno šachovnicové pole má velikost jednoho pixelu fotografie. Bílé plochy šachovnicového pole jsou po aplikaci tohoto rastru původní pixely fotografie a černé plochy jsou barevně i světlostně inverzní. Fotografie v plné velikosti tak vypadá jako šedá jednobarevná plocha, ale až po digitálním přiblížení se zobrazí originální fotografie.\nPro správné zobrazení na Full HD monitoru musí mít fotografie přibližně 2000 px na výšku. K nesprávnému zobrazení může dojít při otevření fotografie v prohlížeči, který bikubicky převzorkuje mřížku pixelů. Ověřeným prohlížečem je např. Windows Photo Viewer.</p>\n<span data-i18n-protected=\"p2\" translate=\"no\" class=\"notranslate\"></span>\n<p>Jako další ukázku využití tohoto principu jsou vytvořil fotografii, která obsahuje kontrast barevný i významový.</p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Checkerboard Grid</h1> <p class=\"post-meta\"> December 2018 </p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<p>I applied a checkerboard grid to the sample photo, where each checkerboard square corresponds to one pixel of the photo. After applying this grid, the white areas of the checkerboard squares are the original photo pixels, and the black areas are inverted in both color and brightness. The full-size photo thus appears as a gray monochrome area, but the original photo is displayed only after digital zooming.\nFor correct display on a Full HD monitor, the photo must be approximately 2000 px in height. Incorrect display may occur when opening the photo in a browser that bicubically resamples the pixel grid. A verified browser is, for example, Windows Photo Viewer.</p>\n<span data-i18n-protected=\"p2\" translate=\"no\" class=\"notranslate\"></span>\n<p>As another example of this principle in action, I created a photograph that features both color and semantic contrast.</p> </div> ",
+  "createdAt": "2026-05-07T18:32:42.897Z"
+}

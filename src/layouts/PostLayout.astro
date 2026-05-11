@@ -1,10 +1,35 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import type { Lang } from "../lib/i18n";
 
-const { title, description } = Astro.props;
+const {
+  title,
+  description,
+  lang = "cs",
+  canonicalPath,
+  alternateCsPath,
+  alternateEnPath,
+  noindex = false
+} = Astro.props as {
+  title: string;
+  description?: string;
+  lang?: Lang;
+  canonicalPath?: string;
+  alternateCsPath?: string;
+  alternateEnPath?: string;
+  noindex?: boolean;
+};
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+  title={title}
+  description={description}
+  lang={lang}
+  canonicalPath={canonicalPath}
+  alternateCsPath={alternateCsPath}
+  alternateEnPath={alternateEnPath}
+  noindex={noindex}
+>
   <main class="post-page">
     <slot />
   </main>

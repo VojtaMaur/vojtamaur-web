@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "1fbefc35edc28bad261c6132aca40a44dcec9e387ae3f181525617c3ec7bfed0",
+  "purpose": "meta-description",
+  "page": "/en/volna-tvorba/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "List of articles in the Personal Work section.",
+  "translatedFragment": "List of articles in the Personal Work section.",
+  "createdAt": "2026-05-08T09:53:47.792Z"
+}

@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.BASE_URL || "/";
+import type { Lang } from "./i18n";
 
 function clean(path: string) {
   return path.replace(/^\/+/, "");
@@ -10,18 +10,17 @@ export function isExternalUrl(path: string) {
 
 export function asset(path: string) {
   if (!path || isExternalUrl(path)) return path;
-  const p = clean(path);
-  return BASE_URL === "./" ? `./${p}` : `/${p}`;
+  return `/${clean(path)}`;
 }
 
-export function page(slug: string) {
-  return BASE_URL === "./" ? `./${slug}.html` : `/${slug}/`;
+export function page(slug: string, lang: Lang = "cs") {
+  return lang === "en" ? `/en/${slug}/` : `/${slug}/`;
 }
 
-export function section(slug: string) {
-  return BASE_URL === "./" ? `./${slug}.html` : `/${slug}/`;
+export function section(slug: string, lang: Lang = "cs") {
+  return lang === "en" ? `/en/${slug}/` : `/${slug}/`;
 }
 
-export function home() {
-  return BASE_URL === "./" ? "./index.html" : "/";
+export function home(lang: Lang = "cs") {
+  return lang === "en" ? "/en/" : "/";
 }

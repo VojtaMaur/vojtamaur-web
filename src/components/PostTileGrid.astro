@@ -1,5 +1,8 @@
 ---
 import { asset, page } from "../lib/urls";
+import { ui, type Lang } from "../lib/i18n";
+
+type Section = "volna-tvorba" | "vystavy" | "cestovani" | "videos";
 
 type PostEntry = {
   data: {
@@ -18,7 +21,7 @@ type TileItem = {
   href: string;
   thumbnail?: string;
   thumbnailAlt?: string;
-  section?: "volna-tvorba" | "vystavy" | "cestovani" | "videos";
+  section?: Section;
   venue?: string;
   exhibition?: string;
   external?: boolean;
@@ -29,17 +32,21 @@ type TileItem = {
 const {
   posts = [],
   items = [],
+  lang = "cs"
 } = Astro.props as {
   posts?: PostEntry[];
   items?: TileItem[];
+  lang?: Lang;
 };
+
+const copy = ui[lang] ?? ui.cs;
 
 const normalizedItems: TileItem[] =
   items.length > 0
     ? items
     : posts.map((post) => ({
         title: post.data.title,
-        href: page(post.data.slug),
+        href: page(post.data.slug, lang),
         thumbnail: post.data.thumbnail,
         thumbnailAlt: post.data.thumbnailAlt,
         section: post.data.section,
@@ -58,7 +65,7 @@ const normalizedItems: TileItem[] =
     >
       <div class="post-card__thumb">
         {item.more ? (
-          <div class="post-card__more-text">{item.moreLabel ?? "Zobrazit vše"}</div>
+          <div class="post-card__more-text">{item.moreLabel ?? copy.showAll}</div>
         ) : (
           <img
             src={asset(item.thumbnail ?? "")}

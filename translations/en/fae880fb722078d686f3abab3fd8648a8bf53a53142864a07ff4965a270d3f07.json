@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "fae880fb722078d686f3abab3fd8648a8bf53a53142864a07ff4965a270d3f07",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-italie-2016/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Itálie 2016",
+  "translatedFragment": "Italy 2016",
+  "createdAt": "2026-05-07T18:14:25.696Z"
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "0e93aacbae3f37352e6d64d2c84e7084f390a1bc65d7b9d7961f57f986a27f79",
+  "purpose": "meta-description",
+  "page": "/en/vystavy/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "List of articles in the Exhibitions section.",
+  "translatedFragment": "List of articles in the Exhibitions section.",
+  "createdAt": "2026-05-07T19:06:58.724Z"
+}

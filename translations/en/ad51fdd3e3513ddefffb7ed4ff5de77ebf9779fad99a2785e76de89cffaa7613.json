@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "ad51fdd3e3513ddefffb7ed4ff5de77ebf9779fad99a2785e76de89cffaa7613",
+  "purpose": "html-region",
+  "page": "/en/vystavy-kostky-cukru/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Kostky cukru</h1> <p class=\"post-meta\"> 21. 3. 2018 - 30. 4. 2018, Plzeň </p> <p class=\"post-meta\"> DEPO2015: ART3 </p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-2.jpg\" alt=\"\"> </a>  </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-3.jpg\" alt=\"\"> </a>  </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-1.jpg\" alt=\"\"> </a>  </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Sugar Cubes</h1> <p class=\"post-meta\"> March 21, 2018 – April 30, 2018, Pilsen </p> <p class=\"post-meta\"> DEPO2015: ART3 </p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-2.jpg\" alt=\"\"> </a>  </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-3.jpg\" alt=\"\"> </a>  </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-1.jpg\" alt=\"\"> </a>  </figure> </div> ",
+  "createdAt": "2026-05-07T18:32:51.470Z"
+}

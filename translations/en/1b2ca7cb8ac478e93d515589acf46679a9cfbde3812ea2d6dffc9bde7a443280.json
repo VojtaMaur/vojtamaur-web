@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "1b2ca7cb8ac478e93d515589acf46679a9cfbde3812ea2d6dffc9bde7a443280",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-cina-2017/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Čína 2017",
+  "translatedFragment": "China 2017",
+  "createdAt": "2026-05-07T18:14:24.535Z"
+}

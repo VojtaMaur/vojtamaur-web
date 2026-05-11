@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "f313198cda2c96e108fb6c8eb48463a08ba28c6b631baecafb39a31c8146c829",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-kenya-2012-2015/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Kenya 2012-2015",
+  "translatedFragment": "Kenya 2012-2015",
+  "createdAt": "2026-05-07T18:14:27.157Z"
+}

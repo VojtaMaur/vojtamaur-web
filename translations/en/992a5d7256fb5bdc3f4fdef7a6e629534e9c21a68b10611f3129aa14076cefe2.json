@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "992a5d7256fb5bdc3f4fdef7a6e629534e9c21a68b10611f3129aa14076cefe2",
+  "purpose": "html-region",
+  "page": "/en/tank/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Tank</h1> <p class=\"post-meta\"> April 2017 </p> </div> <div class=\"post-body\"> <div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/tank-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/tank-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/tank-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/tank-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\">  <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>  </div> </div>\n<p>V prosinci 2012 jsem v Izraeli v Negevské poušti vyfotil bojový tank. V ANSI kódu fotografie jsem změnil všechny hvězdičky (*) na křížky (†). Takto pozměněnou fotografii jsem znovu uložil.</p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Tank</h1> <p class=\"post-meta\"> April 2017 </p> </div> <div class=\"post-body\"> <div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/tank-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/tank-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/tank-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/tank-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\">  <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>  </div> </div>\n<p>In December 2012, I photographed a combat tank in the Negev Desert in Israel. In the ANSI code of the photograph, I changed all the asterisks (*) to crosses (†). I saved the modified photograph again.</p> </div> ",
+  "createdAt": "2026-05-07T18:32:45.511Z"
+}

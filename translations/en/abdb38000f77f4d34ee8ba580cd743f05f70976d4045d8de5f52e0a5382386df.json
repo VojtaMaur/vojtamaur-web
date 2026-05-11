@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "abdb38000f77f4d34ee8ba580cd743f05f70976d4045d8de5f52e0a5382386df",
+  "purpose": "html-region",
+  "page": "/en/zmrtvychvstani/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Zmrtvýchvstání</h1> <p class=\"post-meta\"> April 2017 </p> </div> <div class=\"post-body\"> <div class=\"media-row \"> <div class=\"media-row__item\"> <a href=\"/images/zmrtvychvstani-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zmrtvychvstani-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/zmrtvychvstani-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zmrtvychvstani-obr-2.jpg\" alt=\"\"> </a>   </div> </div>\n<p>V květnu 2016 jsem v Maroku vyfotil místní hřbitov. V ANSI kódu fotografie jsem změnil všechny křížky (†) na hvězdičky (*). Takto pozměněnou fotografii jsem znovu uložil.</p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Resurrection</h1> <p class=\"post-meta\"> April 2017 </p> </div> <div class=\"post-body\"> <div class=\"media-row \"> <div class=\"media-row__item\"> <a href=\"/images/zmrtvychvstani-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zmrtvychvstani-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/zmrtvychvstani-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zmrtvychvstani-obr-2.jpg\" alt=\"\"> </a>   </div> </div>\n<p>In May 2016, I photographed a local cemetery in Morocco. In the ANSI code of the photograph, I changed all the crosses (†) to asterisks (*). I saved the modified photograph again.</p> </div> ",
+  "createdAt": "2026-05-07T18:32:55.545Z"
+}

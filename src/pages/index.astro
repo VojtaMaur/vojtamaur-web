@@ -2,16 +2,20 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PostTileGrid from "../components/PostTileGrid.astro";
-import { section } from "../lib/urls";
+import { page, section } from "../lib/urls";
+import { canonicalHomePath, ui, type Lang } from "../lib/i18n";
+
+const lang: Lang = "cs";
+const copy = ui[lang];
 
 const allPosts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 );
 
-function buildSectionTiles(sectionPosts, moreHref) {
-  const base = sectionPosts.slice(0, 9).map((post) => ({
+function buildSectionTiles(sectionPosts, moreHref: string) {
+  const base: any[] = sectionPosts.slice(0, 9).map((post) => ({
     title: post.data.title,
-    href: `/${post.data.slug}/`,
+    href: page(post.data.slug, lang),
     thumbnail: post.data.thumbnail,
     thumbnailAlt: post.data.thumbnailAlt,
     section: post.data.section,
@@ -24,7 +28,7 @@ function buildSectionTiles(sectionPosts, moreHref) {
       title: "",
       href: moreHref,
       more: true,
-      moreLabel: "zobrazit vše",
+      moreLabel: copy.showAll,
     });
   }
 
@@ -35,14 +39,14 @@ const volnaTvorba = allPosts.filter((post) => post.data.section === "volna-tvorb
 const vystavy = allPosts.filter((post) => post.data.section === "vystavy");
 const cestovani = allPosts.filter((post) => post.data.section === "cestovani");
 
-const volnaTvorbaTiles = buildSectionTiles(volnaTvorba, section("volna-tvorba"));
-const vystavyTiles = buildSectionTiles(vystavy, section("vystavy"));
-const cestovaniTiles = buildSectionTiles(cestovani, section("cestovani"));
+const volnaTvorbaTiles = buildSectionTiles(volnaTvorba, section("volna-tvorba", lang));
+const vystavyTiles = buildSectionTiles(vystavy, section("vystavy", lang));
+const cestovaniTiles = buildSectionTiles(cestovani, section("cestovani", lang));
 
 const allVideos = (await getCollection("videos", ({ data }) => !data.draft))
   .slice(0, 3);
 
-const promoVideoTiles = allVideos.map((v) => ({
+const promoVideoTiles: any[] = allVideos.map((v) => ({
   title: v.data.title,
   href: v.data.url,
   thumbnail: v.data.thumbnail,
@@ -55,7 +59,7 @@ promoVideoTiles.push({
   title: "",
   href: "https://www.youtube.com/playlist?list=PLQ5DFp2teh9ZCZmGgdapAWEz19cdN095t",
   more: true,
-  moreLabel: "Zobrazit vše",
+  moreLabel: copy.showAll,
   external: true,
 });
 
@@ -63,79 +67,85 @@ const headScanUrl =
   "https://sketchfab.com/models/e3d2a26c6af84120a165382db5a76fa6/embed?autostart=1&ui_infos=0&ui_watermark=0&ui_watermark_link=0";
 ---
 
-<BaseLayout title="Vojta Maur" description="Osobní web Vojty Maura">
-
+<BaseLayout
+  title={copy.home.metaTitle}
+  description={copy.home.metaDescription}
+  lang={lang}
+  canonicalPath={canonicalHomePath("cs")}
+  alternateCsPath={canonicalHomePath("cs")}
+  alternateEnPath={canonicalHomePath("en")}
+>
   <main class="home-page">
     <section class="home-section">
       <div class="section-header">
         <h2 class="page-title">
-		  <a href={section("volna-tvorba")} class="section-link">
-			Volná tvorba
-		  </a>
-		</h2>
+          <a href={section("volna-tvorba", lang)} class="section-link">
+            {copy.home.sections["volna-tvorba"].title}
+          </a>
+        </h2>
         <p class="section-description">
-          Umění je nejvyšší formou naděje (Documenta 7)
+          {copy.home.sections["volna-tvorba"].description}
         </p>
       </div>
 
-      <PostTileGrid items={volnaTvorbaTiles} />
+      <PostTileGrid items={volnaTvorbaTiles} lang={lang} />
     </section>
 
     <section class="home-section">
       <div class="section-header">
         <h2 class="page-title">
-		  <a href={section("vystavy")} class="section-link">
-			Výstavy
-		  </a>
-		</h2>
+          <a href={section("vystavy", lang)} class="section-link">
+            {copy.home.sections.vystavy.title}
+          </a>
+        </h2>
         <p class="section-description">
-          Výstavy jsou jeden z mých způsobů sebevyjádření
+          {copy.home.sections.vystavy.description}
         </p>
       </div>
 
-      <PostTileGrid items={vystavyTiles} />
+      <PostTileGrid items={vystavyTiles} lang={lang} />
     </section>
 
     <section class="home-section">
       <div class="section-header">
         <h2 class="page-title">
-		  <a href={section("cestovani")} class="section-link">
-			Cestování
-		  </a>
-		</h2>
+          <a href={section("cestovani", lang)} class="section-link">
+            {copy.home.sections.cestovani.title}
+          </a>
+        </h2>
         <p class="section-description">
-          Respektuji místní zvyky a tradice
+          {copy.home.sections.cestovani.description}
         </p>
       </div>
 
-      <PostTileGrid items={cestovaniTiles} />
+      <PostTileGrid items={cestovaniTiles} lang={lang} />
     </section>
 
     <section class="home-section">
       <div class="section-header">
         <h2 class="page-title">
-		  <a
-			href="https://www.youtube.com/playlist?list=PLQ5DFp2teh9ZCZmGgdapAWEz19cdN095t"
-			class="section-link"
-			target="_blank"
-			rel="noopener noreferrer"
-		  >
-			Propagační videa
-		  </a>
-		</h2>
+          <a
+            href="https://www.youtube.com/playlist?list=PLQ5DFp2teh9ZCZmGgdapAWEz19cdN095t"
+            class="section-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {copy.home.sections.videos.title}
+          </a>
+        </h2>
         <p class="section-description">
-          Galerie jsou výstavní skříní mé tvorby... i když vystavuje někdo jiný...
+          {copy.home.sections.videos.description}
         </p>
       </div>
 
-      <PostTileGrid items={promoVideoTiles} />
+      <PostTileGrid items={promoVideoTiles} lang={lang} />
     </section>
 
     <section class="home-section">
       <div class="section-header">
-        <h2 class="page-title">O mně</h2>
+        <h2 class="page-title">{copy.home.about.title}</h2>
         <p class="section-description">
-          O mně se nedá říct nic zajímavýho... ale pokud chcete vědět to ostatní...
+          {copy.home.about.description}
         </p>
       </div>
 
@@ -144,7 +154,7 @@ const headScanUrl =
           <iframe
             class="embed__frame"
             src={headScanUrl}
-            title="3D sken hlavy"
+            title={copy.home.about.embedTitle}
             allow="autoplay; fullscreen; xr-spatial-tracking"
             allowfullscreen
             mozallowfullscreen="true"
@@ -153,37 +163,18 @@ const headScanUrl =
         </div>
 
         <div class="post-body">
-          <p>
-            Již v raném věku jsem se zajímal o umění. Tři roky jsem navštěvoval
-            základní uměleckou školu, kde jsem se seznámil s různými tradičními
-            výtvarnými technikami. Vždy mě fascinovaly počítače, pročež jsem se sám
-            začal učit pracovat ve 2D i 3D softwarech. Ještě před dokončením základní
-            školy jsem také začal natáčet dokumentární videa z každé vernisáže v
-            Galerii města Plzně. Spolupráci s touto galerií jsem ukončil až po třech
-            letech, a to v momentě, kdy jsem dostal za úkol dát ve videu slovo Martinu
-            Baxovi, který se vernisáže zúčastnil. Situaci jsem komentoval větou:
-            „Dokumentuju umění a ne politiky!“.
-            <br /><br />
-            Vystudoval jsem obor Multimediální tvorba na Střední odborné škole
-            obchodu, užitého umění a designu v Plzni. Tato nepříliš náročná škola mi
-            poskytla dost času a prostoru pro studium zdánlivě nesouvisejících
-            disciplín, zejména programování, matematiky, biologie, psychologie a
-            hudební teorie. Tím jsem objevil svou největší vášeň – prozkoumávání
-            interdisciplinárního vztahu a možností přírodních věd a umění.
-            <br /><br />
-            Rok jsem studoval obor Molekulární biologie a biochemie organismů na
-            Karlově univerzitě v Praze. Následně jsem studium přerušil a přestěhoval
-            se zpět do Plzně, kde nyní pracuji jako grafik.
-          </p>
+          {copy.home.about.paragraphs.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
         </div>
       </div>
     </section>
 
     <section class="home-section">
       <div class="section-header">
-        <h2 class="page-title">Kontakt</h2>
+        <h2 class="page-title">{copy.home.contact.title}</h2>
         <p class="section-description">
-          Napište mi nebo rovnou zavolejte, třeba se mnou bude sranda
+          {copy.home.contact.description}
         </p>
       </div>
 

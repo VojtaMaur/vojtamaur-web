@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "7cb2903746d916c6d5c5d9da846fb7f339b71c5a2de4bb8bec27f3f479a82ab4",
+  "purpose": "meta-description",
+  "page": "/en/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Personal website of Vojta Maur",
+  "translatedFragment": "Personal website of Vojta Maur",
+  "createdAt": "2026-05-07T19:07:03.230Z"
+}

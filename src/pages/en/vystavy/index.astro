@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PostTileGrid from "../../../components/PostTileGrid.astro";
+import { getCollection } from "astro:content";
+import { canonicalSectionPath, ui, type Lang } from "../../../lib/i18n";
+
+const lang: Lang = "en";
+const sectionId = "vystavy" as const;
+const copy = ui[lang].sectionPages[sectionId];
+
+const posts = (await getCollection("posts", ({ data }) => !data.draft && data.section === sectionId))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout
+  title={copy.metaTitle}
+  description={copy.metaDescription}
+  lang={lang}
+  canonicalPath={canonicalSectionPath(sectionId, "en")}
+  alternateCsPath={canonicalSectionPath(sectionId, "cs")}
+  alternateEnPath={canonicalSectionPath(sectionId, "en")}
+>
+  <main class="section-page">
+    <h1 class="page-title">{copy.title}</h1>
+    <p class="page-intro">{copy.intro}</p>
+    <div data-i18n="translate">
+      <PostTileGrid posts={posts} lang={lang} />
+    </div>
+  </main>
+</BaseLayout>

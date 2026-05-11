@@ -10,6 +10,7 @@ draft: false
 ---
 
 import ImageFigure from "../../components/ImageFigure.astro";
+import Embed from "../../components/Embed.astro";
 
 V tomto projektu jsem se pokusil nalézt vzorce pro [aritmetické posloupnosti](https://cs.wikipedia.org/wiki/Aritmetick%C3%A1_posloupnost) s vysokou četností [prvočísel](https://cs.wikipedia.org/wiki/Prvo%C4%8D%C3%ADslo). Tyto vzorce jsem nalezl vytvořením číselných spirál podobných [Ulamovo spirále](https://cs.wikipedia.org/wiki/Ulamova_spir%C3%A1la) vytvořených ze tří základních geometrických tvarů - z hexagonů,  čtverců a trojúhleníků. Zvolil jsem právě tyto tvary, protože [pravidelné teselace povrchu](https://cs.wikipedia.org/wiki/Teselace) lze dosáhnou jen těmito třemi tvary. Jinými slovy: pouze tyto tvary lze vyskládat vedle sebe tak, aby nevznikly žádné mezery.  
 
@@ -73,3 +74,12 @@ V této spirále se opět ukázali posloupnosti **a(n)=6*n+1** a **a(n)=6*n+5**,
   width="full"
   align="center"
 />
+
+Zde si můžete pohrát s interaktivní demonstrací:
+
+<div class="embed embed--demo">
+  <iframe
+    class="embed__frame"
+    src="/demos/prvociselne-spiraly/prvociselne-spiraly.html"
+  ></iframe>
+</div>

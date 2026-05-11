@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "c2b4f5ba9af6cd5b585a73a9a5990bf75bd2946ff2d132424678932db9a70a2e",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-tanzanie-2019/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Tanzánie 2019",
+  "translatedFragment": "Tanzania 2019",
+  "createdAt": "2026-05-07T18:14:30.010Z"
+}

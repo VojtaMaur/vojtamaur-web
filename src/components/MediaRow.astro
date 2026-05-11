@@ -21,7 +21,7 @@ const { items = [], bordered = false, link = true } = Astro.props;
         )}
 
         {item.type === "pdf" && (
-          <iframe src={resolvedSrc} class="media-row__pdf"></iframe>
+          <iframe src={resolvedSrc} class="media-row__pdf" translate="no"></iframe>
         )}
 
         {item.type === "text" && (

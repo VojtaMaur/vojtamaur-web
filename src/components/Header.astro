@@ -1,9 +1,92 @@
 ---
 import { home } from "../lib/urls";
+import { ui, type Lang } from "../lib/i18n";
+
+const {
+  lang = "cs",
+  pathForCs = home("cs"),
+  pathForEn,
+} = Astro.props as {
+  lang?: Lang;
+  pathForCs?: string;
+  pathForEn?: string;
+};
+
+const copy = ui[lang] ?? ui.cs;
+const hasEn = typeof pathForEn === "string" && pathForEn.length > 0;
 ---
 <header class="site-header">
-  <div class="site-shell">
-    <a href={home()} class="site-header__title">Vojta Maur</a>
-    <div class="site-header__motto">Tvořit je můj základní instinkt</div>
+  <div class="site-shell site-header__inner">
+    <div class="site-header__topline">
+      <a href={home(lang)} class="site-header__title">{copy.siteTitle}</a>
+
+      <nav class="site-header__lang" aria-label={lang === "en" ? "Language" : "Jazyk"}>
+        <a
+          href={pathForCs}
+          class:list={["site-header__lang-link", { "is-active": lang === "cs" }]}
+          aria-current={lang === "cs" ? "page" : undefined}
+        >CS</a>
+
+        {hasEn && (
+          <>
+            <span class="site-header__lang-separator" aria-hidden="true">/</span>
+            <a
+              href={pathForEn}
+              class:list={["site-header__lang-link", { "is-active": lang === "en" }]}
+              aria-current={lang === "en" ? "page" : undefined}
+            >EN</a>
+          </>
+        )}
+      </nav>
+    </div>
+
+    <div class="site-header__motto">{copy.motto}</div>
   </div>
 </header>
+
+<style is:inline>
+  .site-header__inner {
+    display: block;
+  }
+
+  .site-header__topline {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .site-header__lang {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.28rem;
+    padding-top: 0;
+    font-size: 0.8rem;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0.58;
+  }
+
+  .site-header__lang-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .site-header__lang-link:hover,
+  .site-header__lang-link:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  .site-header__lang-link.is-active {
+    font-weight: 700;
+    opacity: 1;
+  }
+
+  .site-header__lang-separator {
+    opacity: 0.55;
+  }
+</style>

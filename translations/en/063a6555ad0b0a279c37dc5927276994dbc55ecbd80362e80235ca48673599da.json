@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "063a6555ad0b0a279c37dc5927276994dbc55ecbd80362e80235ca48673599da",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-mexiko-2018/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Mexiko 2018",
+  "translatedFragment": "Mexico 2018",
+  "createdAt": "2026-05-07T18:14:27.906Z"
+}

@@ -10,6 +10,7 @@ draft: false
 ---
 
 import ImageFigure from "../../components/ImageFigure.astro";
+import Embed from "../../components/Embed.astro";
 
 [Palindromické číslo](https://cs.wikipedia.org/wiki/Palindromick%C3%A9_%C4%8D%C3%ADslo) je „symetrické“ číslo, jehož hodnota se nezmění, pokud jeho číslice napíšeme v opačném pořadí. Příkladem jsou tedy čísla 2, 55, 121, 1991, 12345678987654321.  
 Pokud vezmeme libovolné přirozené číslo a přičteme k němu jeho zrcadlový obraz (stejné číslo napsané v opačném pořadí) a tuto operaci  budeme stále opakovat, získáme velmi často po konečném počtu opakování palindromické číslo.
@@ -322,3 +323,13 @@ for images_number in range(start_frame,last_frame):
     plt.draw() #refresh figure
 plt.show()
 ```
+<br/>
+
+A zde si můžete pohrát s interaktivní demonstrací:
+
+<div class="embed embed--demo">
+  <iframe
+    class="embed__frame"
+    src="/demos/lychreluv-fraktal/lychreluv-fraktal.html"
+  ></iframe>
+</div>

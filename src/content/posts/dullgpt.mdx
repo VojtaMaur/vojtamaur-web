@@ -2,12 +2,14 @@
 title: "DullGPT"
 slug: "dullgpt"
 section: "volna-tvorba"
-date: 2024-06-01
+date: 2024-07-01
 thumbnail: "/images/dullgpt-nahled.jpg"
 thumbnailAlt: "DullGPT"
 excerpt: ""
 draft: false
 ---
+
+import NoTranslate from "../../components/NoTranslate.astro";
 
 DullGPT je myšlenkový experiment, který demonstruje možnost vytvoření systému umělé inteligence pomocí velmi jednoduchého (ale extrémně neefektivního) přístupu. Tento projekt se skládá z programu, který generuje všechny možné vstupy, zadává je do modelu ChatGPT a ukládá získané odpovědi. Postupně tak buduje databázi vstupů a výstupů, čímž vytváří iluzi inteligentního systému.  
 
@@ -174,6 +176,7 @@ if __name__ == "__main__":
 
 A zde je prvních 1000 párů vstupů a výstupů nekonečného logu:  
 
+<NoTranslate>
 ```
 Input: a, Output: How can I assist you today?
 Input: b, Output: How can I assist you further?
@@ -1174,3 +1177,4 @@ Input: jA, Output: Hello! How can I assist you today?
 Input: jB, Output: Hello! How can I assist you today?
 Input: jC, Output: It seems like you entered "jC." How can I assist you today?
 ```
+</NoTranslate>

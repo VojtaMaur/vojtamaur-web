@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "3a5871ae31a78325f7f999924e4fc789cdfe7e7f49a605e322c140ff1ce38044",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-egypt-2012/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Egypt 2012",
+  "translatedFragment": "Egypt 2012",
+  "createdAt": "2026-05-07T18:14:24.896Z"
+}

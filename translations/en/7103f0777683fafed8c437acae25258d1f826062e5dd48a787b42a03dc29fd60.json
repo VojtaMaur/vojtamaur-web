@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "7103f0777683fafed8c437acae25258d1f826062e5dd48a787b42a03dc29fd60",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-kanarske-ostrovy-2012/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Kanárské ostrovy 2012",
+  "translatedFragment": "Canary Islands 2012",
+  "createdAt": "2026-05-07T18:14:26.764Z"
+}

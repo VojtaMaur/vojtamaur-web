@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "07c30e02ff19a578bd358457e1e51bac1469449132d116b7e5fd3e2fbc936c0d",
+  "purpose": "html-region",
+  "page": "/en/zacyklena-hierarchie-zivota/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Zacyklená hierarchie života</h1> <p class=\"post-meta\"> August 2020 </p> </div> <div class=\"post-body\"> <div class=\"media-row \"> <div class=\"media-row__item\"> <a href=\"/images/zacyklena-hierarchie-zivota-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zacyklena-hierarchie-zivota-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/zacyklena-hierarchie-zivota-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zacyklena-hierarchie-zivota-obr-2.jpg\" alt=\"\"> </a>   </div> </div>\n<p>Na prvním snímku je lasturnatka, což je drobný vodní korýš velký asi 1 mm. Živí se řasou, kvasinkami, bakteriemi atd. Je to tedy takzvaný filtrátor.<br>\nNa druhém snímku se tato hierarchie potravního řetězce obrátila – můžeme na něm spatřit PSB (purple sulfur bacteria) a hlenky, jak hodují na mrtvé schránce lasturnatky. Kupodivu tento výjev smrti a dekompozice nepůsobí vůbec odporně či děsivě, ba naopak, shledal jsem ho překrásným a fascinujícím. Vzhled druhého snímku je tedy podle mého názoru kontrastní k jeho vnitřnímu významu a možná právě toto napětí mu přidává na působivosti.<br>\nDalším důvodem, proč na mě toto dílo působí velmi silným a osobním dojmem, je fakt, že i já jednou skončím úplně stejně, jako tato lasturnatka.</p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">The Cyclical Hierarchy of Life</h1> <p class=\"post-meta\"> August 2020 </p> </div> <div class=\"post-body\"> <div class=\"media-row \"> <div class=\"media-row__item\"> <a href=\"/images/zacyklena-hierarchie-zivota-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zacyklena-hierarchie-zivota-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/zacyklena-hierarchie-zivota-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zacyklena-hierarchie-zivota-obr-2.jpg\" alt=\"\"> </a>   </div> </div>\n<p>\nThe first image shows a copepod, a tiny aquatic crustacean about 1 mm in size. It feeds on algae, yeast, bacteria, etc. It is therefore a so-called filter feeder.<br>\nIn the second image, this food chain hierarchy has been reversed—we can see PSB (purple sulfur bacteria) and slime molds feasting on the dead shell of the copepod. Strangely enough, this scene of death and decomposition does not seem repulsive or terrifying at all; on the contrary, I found it beautiful and fascinating. In my opinion, the appearance of the second image thus contrasts with its inner meaning, and perhaps it is precisely this tension that adds to its impact.<br>\nAnother reason why this work makes a very strong and personal impression on me is the fact that I, too, will one day end up exactly the same way as this bivalve.</p> </div> ",
+  "createdAt": "2026-05-07T18:32:53.569Z"
+}

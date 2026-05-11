@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "de30f3834b01867a5dd54372f2a8b552333037657897853395ac9476e2d35417",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-maroko-2016/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Maroko 2016",
+  "translatedFragment": "Morocco 2016",
+  "createdAt": "2026-05-07T18:14:27.564Z"
+}

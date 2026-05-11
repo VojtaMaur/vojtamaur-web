@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "1663ca756bd5099709ad22aacfbe48650701253ad47d87febd762fcae3b3e15f",
+  "purpose": "meta-description",
+  "page": "/en/cestovani/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "List of articles in the Travel section.",
+  "translatedFragment": "List of articles in the Travel section.",
+  "createdAt": "2026-05-07T19:06:57.391Z"
+}

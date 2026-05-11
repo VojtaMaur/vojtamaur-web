@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "e8130342ce6536f0255d1d6d96e239a16af017ebd7db5f5adbd66b1b27bb3087",
+  "purpose": "html-region",
+  "page": "/en/teoremy-zivota/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Teorémy života</h1> <p class=\"post-meta\"> October 2020 </p> </div> <div class=\"post-body\"> <p>Instagramová stránka obsahující fotografie života na Zemi různých velikostních úrovní.<br>\n<strong><a href=\"http://www.instagram.com/vojta_maur_zivot\">www.instagram.com/vojta_maur_zivot</a></strong></p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/teoremy-zivota-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/teoremy-zivota-obr-1.jpg\" alt=\"\"> </a>  </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Theorems of Life</h1> <p class=\"post-meta\"> October 2020 </p> </div> <div class=\"post-body\"> <p>\nAn Instagram page featuring photographs of life on Earth at various scales.<br>\n\n<strong><a href=\"http://www.instagram.com/vojta_maur_zivot\">www.instagram.com/vojta_maur_zivot</a></strong></p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/teoremy-zivota-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/teoremy-zivota-obr-1.jpg\" alt=\"\"> </a>  </figure> </div> ",
+  "createdAt": "2026-05-07T18:32:46.134Z"
+}

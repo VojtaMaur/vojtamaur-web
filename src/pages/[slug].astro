@@ -1,6 +1,9 @@
 ---
 import { getCollection, render } from "astro:content";
 import PostLayout from "../layouts/PostLayout.astro";
+import { canonicalPostPath, formatMonthYear } from "../lib/i18n";
+
+const lang = "cs" as const;
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
@@ -15,11 +18,17 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 
 const d = post.data;
+const csPath = canonicalPostPath(d.slug, "cs");
+const enPath = canonicalPostPath(d.slug, "en");
 ---
 
 <PostLayout
   title={`${d.title} | Vojta Maur`}
   description={d.excerpt ?? d.title}
+  lang={lang}
+  canonicalPath={csPath}
+  alternateCsPath={csPath}
+  alternateEnPath={enPath}
 >
   <article>
     <div class="post-header">
@@ -51,10 +60,7 @@ const d = post.data;
 
           {d.date && (
             <p class="post-meta">
-              {new Intl.DateTimeFormat("cs-CZ", {
-                month: "long",
-                year: "numeric",
-              }).format(d.date)}
+              {formatMonthYear(d.date, lang)}
             </p>
           )}
         </>

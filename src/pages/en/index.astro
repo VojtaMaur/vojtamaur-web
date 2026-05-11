@@ -1,0 +1,199 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostTileGrid from "../../components/PostTileGrid.astro";
+import { page, section } from "../../lib/urls";
+import { canonicalHomePath, ui, type Lang } from "../../lib/i18n";
+
+const lang: Lang = "en";
+const copy = ui[lang];
+
+const allPosts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+function buildSectionTiles(sectionPosts, moreHref: string) {
+  const base: any[] = sectionPosts.slice(0, 9).map((post) => ({
+    title: post.data.title,
+    href: page(post.data.slug, lang),
+    thumbnail: post.data.thumbnail,
+    thumbnailAlt: post.data.thumbnailAlt,
+    section: post.data.section,
+    venue: post.data.venue,
+    exhibition: post.data.exhibition,
+  }));
+
+  if (sectionPosts.length > 9) {
+    base.push({
+      title: "",
+      href: moreHref,
+      more: true,
+      moreLabel: copy.showAll,
+    });
+  }
+
+  return base;
+}
+
+const volnaTvorba = allPosts.filter((post) => post.data.section === "volna-tvorba");
+const vystavy = allPosts.filter((post) => post.data.section === "vystavy");
+const cestovani = allPosts.filter((post) => post.data.section === "cestovani");
+
+const volnaTvorbaTiles = buildSectionTiles(volnaTvorba, section("volna-tvorba", lang));
+const vystavyTiles = buildSectionTiles(vystavy, section("vystavy", lang));
+const cestovaniTiles = buildSectionTiles(cestovani, section("cestovani", lang));
+
+const allVideos = (await getCollection("videos", ({ data }) => !data.draft))
+  .slice(0, 3);
+
+const promoVideoTiles: any[] = allVideos.map((v) => ({
+  title: v.data.title,
+  href: v.data.url,
+  thumbnail: v.data.thumbnail,
+  thumbnailAlt: v.data.thumbnailAlt,
+  section: "videos",
+  external: true,
+}));
+
+promoVideoTiles.push({
+  title: "",
+  href: "https://www.youtube.com/playlist?list=PLQ5DFp2teh9ZCZmGgdapAWEz19cdN095t",
+  more: true,
+  moreLabel: copy.showAll,
+  external: true,
+});
+
+const headScanUrl =
+  "https://sketchfab.com/models/e3d2a26c6af84120a165382db5a76fa6/embed?autostart=1&ui_infos=0&ui_watermark=0&ui_watermark_link=0";
+---
+
+<BaseLayout
+  title={copy.home.metaTitle}
+  description={copy.home.metaDescription}
+  lang={lang}
+  canonicalPath={canonicalHomePath("en")}
+  alternateCsPath={canonicalHomePath("cs")}
+  alternateEnPath={canonicalHomePath("en")}
+>
+  <main class="home-page">
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">
+          <a href={section("volna-tvorba", lang)} class="section-link">
+            {copy.home.sections["volna-tvorba"].title}
+          </a>
+        </h2>
+        <p class="section-description">
+          {copy.home.sections["volna-tvorba"].description}
+        </p>
+      </div>
+
+      <div data-i18n="translate">
+        <PostTileGrid items={volnaTvorbaTiles} lang={lang} />
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">
+          <a href={section("vystavy", lang)} class="section-link">
+            {copy.home.sections.vystavy.title}
+          </a>
+        </h2>
+        <p class="section-description">
+          {copy.home.sections.vystavy.description}
+        </p>
+      </div>
+
+      <div data-i18n="translate">
+        <PostTileGrid items={vystavyTiles} lang={lang} />
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">
+          <a href={section("cestovani", lang)} class="section-link">
+            {copy.home.sections.cestovani.title}
+          </a>
+        </h2>
+        <p class="section-description">
+          {copy.home.sections.cestovani.description}
+        </p>
+      </div>
+
+      <div data-i18n="translate">
+        <PostTileGrid items={cestovaniTiles} lang={lang} />
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">
+          <a
+            href="https://www.youtube.com/playlist?list=PLQ5DFp2teh9ZCZmGgdapAWEz19cdN095t"
+            class="section-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {copy.home.sections.videos.title}
+          </a>
+        </h2>
+        <p class="section-description">
+          {copy.home.sections.videos.description}
+        </p>
+      </div>
+
+      <div data-i18n="translate">
+        <PostTileGrid items={promoVideoTiles} lang={lang} />
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">{copy.home.about.title}</h2>
+        <p class="section-description">
+          {copy.home.about.description}
+        </p>
+      </div>
+
+      <div class="home-about">
+        <div class="embed embed--demo">
+          <iframe
+            class="embed__frame"
+            src={headScanUrl}
+            title={copy.home.about.embedTitle}
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            allowfullscreen
+            mozallowfullscreen="true"
+            webkitallowfullscreen="true"
+          ></iframe>
+        </div>
+
+        <div class="post-body">
+          {copy.home.about.paragraphs.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <div class="section-header">
+        <h2 class="page-title">{copy.home.contact.title}</h2>
+        <p class="section-description">
+          {copy.home.contact.description}
+        </p>
+      </div>
+
+      <div class="home-contact">
+        <div class="post-body">
+          <p>
+            <a href="tel:+420722264202">+420 722 264 202</a><br />
+            <a href="mailto:vojta.maur@gmail.com">vojta.maur@gmail.com</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

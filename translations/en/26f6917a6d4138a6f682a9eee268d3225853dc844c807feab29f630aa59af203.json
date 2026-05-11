@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "26f6917a6d4138a6f682a9eee268d3225853dc844c807feab29f630aa59af203",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-thaisko-2024/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Thaisko 2024",
+  "translatedFragment": "Thaisko 2024",
+  "createdAt": "2026-05-07T18:14:30.364Z"
+}

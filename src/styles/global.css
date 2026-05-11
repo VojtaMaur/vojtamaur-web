@@ -70,7 +70,7 @@ iframe {
 }
 
 .site-header__motto {
-  margin-top: 0.3rem;
+  margin-top: -.2rem;
   color: var(--muted);
   font-size: 0.95rem;
   font-family: monospace;

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "37ab9fae600a83107e5d932809d23e48ca5f6793a0356bb45b07325baf03c36e",
+  "purpose": "html-region",
+  "page": "/en/cestovani-thaisko-2024/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Thaisko 2024</h1> <p class=\"post-meta\">3D skeny</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<span data-i18n-protected=\"p2\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Thailand 2024</h1> <p class=\"post-meta\">3D scans</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<span data-i18n-protected=\"p2\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "createdAt": "2026-05-07T18:32:24.174Z"
+}

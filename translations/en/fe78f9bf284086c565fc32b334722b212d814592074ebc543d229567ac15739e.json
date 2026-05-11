@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "fe78f9bf284086c565fc32b334722b212d814592074ebc543d229567ac15739e",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-italie-benatky-2019/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Itálie - Benátky 2019",
+  "translatedFragment": "Italy - Venice 2019",
+  "createdAt": "2026-05-07T18:14:26.075Z"
+}

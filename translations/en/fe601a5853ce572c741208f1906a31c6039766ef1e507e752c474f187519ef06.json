@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "fe601a5853ce572c741208f1906a31c6039766ef1e507e752c474f187519ef06",
+  "purpose": "meta-description",
+  "page": "/en/vystavy-generator-nahodnych-cisel-2/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Generátor náhodných čísel",
+  "translatedFragment": "Random Number Generator-2",
+  "createdAt": "2026-05-07T18:32:50.640Z"
+}

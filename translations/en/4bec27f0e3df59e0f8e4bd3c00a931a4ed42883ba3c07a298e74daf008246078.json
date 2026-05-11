@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "4bec27f0e3df59e0f8e4bd3c00a931a4ed42883ba3c07a298e74daf008246078",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-oman-2018/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Omán 2018",
+  "translatedFragment": "Oman 2018",
+  "createdAt": "2026-05-07T18:14:28.876Z"
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "4aa6c5fe3cc3630889c9028103799e1443aee2a9dd6afcfb8f47062c3e56a3ec",
+  "purpose": "meta-description",
+  "page": "/en/vystavy-recamanova-struktura/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Recamánova struktura",
+  "translatedFragment": "Recamán's Structure",
+  "createdAt": "2026-05-07T18:32:52.113Z"
+}

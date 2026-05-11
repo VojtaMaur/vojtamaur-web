@@ -118,16 +118,23 @@ Basic project workflow:
 ```bash
 npm run dev
 npm run build:web
+npm run build:web:translate
+npm run build:web:strict
 npm run preview
 npm run build:usb
+npm run build:usb:translate
 ```
 
-Meaning of the scripts:
+Meaning of the main scripts:
 
 - `npm run dev` – starts the Astro development server
-- `npm run build:web` – creates the standard production build
+- `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, and generates `dist/ALL_POSTS.txt`
+- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, and generates `dist/ALL_POSTS.txt`
+- `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, and generates `dist/ALL_POSTS.txt`
 - `npm run preview` – local preview of the build
-- `npm run build:usb` – creates a portable file-based build and runs additional postprocessing
+- `npm run build:usb` – creates a portable file-based build, applies the English postprocess, rewrites paths for offline use, and generates `dist/ALL_POSTS.txt`
+- `npm run build:usb:translate` – creates a portable file-based build, fills missing English translation cache entries, and generates `dist/ALL_POSTS.txt`
+- `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt`, a plain-text export of all article content from the finished build output
 
 ### `content.config.ts`
 
@@ -490,7 +497,19 @@ npm run dev
 npm run build:web
 ```
 
-Creates the standard build intended for normal deployment to web hosting.
+Creates the standard build intended for normal deployment to web hosting. This command uses existing English translation cache entries, but it does not create new DeepL translations.
+
+To create missing English translations, use:
+
+```bash
+npm run build:web:translate
+```
+
+To verify that no English translation cache entry is missing, use:
+
+```bash
+npm run build:web:strict
+```
 
 ### 9.4 Build preview
 
@@ -508,21 +527,76 @@ npm run build:usb
 
 This build is suitable, for example, for offline use, archiving, or transfer as a set of files.
 
+To create missing English translations in the portable build, use:
+
+```bash
+npm run build:usb:translate
+```
+
+For a strict USB check, use `npm run build:usb:strict` if the alias exists in `package.json`. If it is not registered, run the wrapper directly:
+
+```bash
+node scripts/build-usb-strict.mjs
+```
+
+### 9.6 Plain-text export of all posts
+
+During the build process, the project also generates a plain-text export of all article content:
+
+```text
+/ALL_POSTS.txt
+```
+
+The export is produced by:
+
+```text
+scripts/generate-all-posts.mjs
+```
+
+The script reads the finished static HTML from `dist/`, extracts the main article content, converts it into plain text, and writes the result to `dist/ALL_POSTS.txt`.
+
+This is intentionally generated from the built output rather than directly from the source `.mdx` files. The English version is created as a post-build static artifact by `scripts/en-postprocess.mjs`, so reading from `dist/` allows the export to include both Czech and English article versions.
+
+The file is intended as a minimal preservation layer for:
+
+- long-term archiving
+- indexing
+- full-text search
+- offline reading
+- recovery of textual content even if the original HTML structure, CSS, JavaScript, or build system becomes unusable
+
+The export includes metadata for each article, such as title, slug, canonical URL, language, section, date, source file, and built HTML path.
+
+Non-textual content is represented by placeholders instead of being silently removed. For example:
+
+```text
+[MEDIA: image]
+[VIDEO EMBED]
+[INTERACTIVE EMBED]
+[PDF EMBED]
+```
+
+Very large code or generated output blocks are omitted when they exceed the configured size limits. This prevents one unusually large generated block from making the entire text export difficult to read or process. Omitted blocks are replaced with an explicit placeholder explaining that the full version is available in the rendered website or source repository.
+
+The output file is written as UTF-8 with BOM to improve encoding detection in text editors and archival systems.
+
 ---
 
 ## 10. Exact `build:usb` logic
 
-The `build:usb` script is defined as:
+The `build:usb` script is defined as a USB-targeted Astro build followed by postprocessing. In the current translation-aware workflow, the effective order is:
 
 ```text
-set "BUILD_TARGET=usb" && astro build && node scripts/usb-rewrite.mjs
+set "BUILD_TARGET=usb" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts
 ```
 
-This implies three steps:
+This implies five steps:
 
 1. `BUILD_TARGET=usb` is set
-2. the standard Astro build is run in the mode defined in `astro.config.mjs`
-3. the `scripts/usb-rewrite.mjs` postprocessing script is executed
+2. the Astro build is run in the mode defined in `astro.config.mjs`
+3. `scripts/en-postprocess.mjs` applies the English translation layer using the available cache
+4. `scripts/usb-rewrite.mjs` rewrites root-based URLs into relative file paths
+5. `scripts/generate-all-posts.mjs` creates `dist/ALL_POSTS.txt` as a plain-text preservation export of the finished build
 
 ### 10.1 What `astro.config.mjs` does in this mode
 
@@ -552,20 +626,323 @@ The script:
 3. rewrites selected root-based paths to relative paths
 4. saves the files again
 
-Specific rewrites:
+Specific rewrites include:
 
-- `/_astro/` → `./_astro/`
-- `/images/` → `./images/`
-- `/files/` → `./files/`
-- `/demos/` → `./demos/`
-- homepage `/` → `./index.html`
-- internal links in the form `/slug/` → `./slug.html`
+- generated Astro assets in `/_astro/`
+- public assets in `/images/`, `/files/`, and `/demos/`
+- homepage links to `/`
+- internal links in the form `/slug/`
+- nested English paths such as `/en/slug/`
+
+The script calculates the relative path from each HTML file back to the `dist/` root. This matters because a root-level file such as `dist/about.html` needs `./_astro/...`, while a nested file such as `dist/en/about.html` needs `../_astro/...`.
 
 The purpose of this step is to adjust the HTML so that the output works even outside a standard web server with root-relative URLs.
 
 ---
 
-## 11. Deploy
+## 11. English translation workflow
+
+The project has an English version generated at build time. The Czech MDX files remain the source of truth. The English version is a derived static artifact produced from the rendered HTML output.
+
+There are two separate translation layers:
+
+- **Manual UI translation** – stable interface text is kept in `src/lib/i18n.ts`. This covers the header, section names, homepage text, and other short visible strings.
+- **Automatic content translation** – article body regions are translated after `astro build` by `scripts/en-postprocess.mjs`. The translated fragments are cached in `translations/en/`.
+
+This separation is intentional. UI text is small and highly visible, so it is translated manually. Article content is larger and less convenient to maintain twice, so it is translated automatically.
+
+### 11.1 Translation configuration
+
+The translation configuration is stored in:
+
+```text
+scripts/i18n-config.mjs
+```
+
+Important values:
+
+- source language: `CS`
+- target language: `EN-US`
+- cache directory: `translations/en`
+- translated regions: `[data-i18n="translate"]`
+- maximum translated fragment size: `80_000` bytes
+
+The translation postprocess protects code, embeds, scripts, styles, SVG, canvas, iframes, and anything marked as `notranslate` or `translate="no"`. Image `alt` text and `thumbnailAlt` metadata are not automatically translated. Captions are translated when they are normal HTML text inside a translated region.
+
+### 11.2 DeepL API key
+
+The DeepL key is not stored in the repository. It is provided through the `DEEPL_AUTH_KEY` environment variable.
+
+In Windows CMD:
+
+```bat
+cd F:\vojtamaur-web
+set "DEEPL_AUTH_KEY=YOUR_DEEPL_KEY"
+npm run build:web:translate
+```
+
+One-line CMD version:
+
+```bat
+set "DEEPL_AUTH_KEY=YOUR_DEEPL_KEY" && npm run build:web:translate
+```
+
+In PowerShell:
+
+```powershell
+cd F:\vojtamaur-web
+$env:DEEPL_AUTH_KEY = "YOUR_DEEPL_KEY"
+npm run build:web:translate
+```
+
+The key must never be committed to the repository, embedded in client-side JavaScript, or uploaded as a public file.
+
+### 11.3 Web translation commands
+
+Recommended workflow after changing content:
+
+```bat
+cd F:\vojtamaur-web
+set "DEEPL_AUTH_KEY=YOUR_DEEPL_KEY"
+npm run build:web:translate
+npm run build:web:strict
+npm run preview
+```
+
+Meaning:
+
+- `npm run build:web:translate` fills missing translation cache entries and writes translated EN HTML into `dist/`.
+- `npm run build:web:strict` checks that no translated EN fragment is missing.
+- `npm run preview` shows the finished build output.
+
+For normal rebuilds with an already complete cache, `npm run build:web` can be enough. Before publishing, `npm run build:web:strict` is the safer check.
+
+To force a full retranslation, use:
+
+```bat
+npm run build:web:refresh
+```
+
+This should be used carefully because it can change existing English output even if the Czech source text did not change.
+
+### 11.4 USB translation commands
+
+For the portable build with missing translation generation:
+
+```bat
+cd F:\vojtamaur-web
+set "DEEPL_AUTH_KEY=YOUR_DEEPL_KEY"
+npm run build:usb:translate
+```
+
+For a strict USB check, use:
+
+```bat
+npm run build:usb:strict
+```
+
+If the `build:usb:strict` alias is not present in `package.json`, run the wrapper directly:
+
+```bat
+node scripts/build-usb-strict.mjs
+```
+
+The USB wrapper scripts run `usb-rewrite.mjs` even if the translation postprocess fails. This prevents `dist/` from being left with broken relative CSS and image paths. A rewritten `dist/` is not proof of a successful translation build; the log must still be checked for `[i18n] Postprocess failed:`.
+
+### 11.5 Translation cache
+
+Translation cache files are stored in:
+
+```text
+translations/en/
+```
+
+Each cache entry contains the original source fragment, the translated fragment, and metadata about the translation configuration. The cache key is derived from the route, purpose, source fragment, language direction, DeepL options, and selector policy revision.
+
+Practical consequences:
+
+- unchanged content is not sent to DeepL again
+- changed Czech content gets a new cache key
+- changing translation policy can invalidate old cache entries
+- deleting `translations/en/` forces translation generation from scratch
+
+The cache is part of the project source, not a public runtime dependency. The published site uses the finished HTML in `dist/`.
+
+### 11.6 Development server versus final build
+
+`npm run dev` is useful for editing layout and content. The final publishing artifact is still the build output in `dist/`.
+
+If the development server and the final build disagree, the build output is authoritative. Translation, `Lang` filtering, strict checks, and USB path rewriting should be verified through build commands and `npm run preview`, not only through dev mode.
+
+### 11.7 Marking content as not translatable
+
+Use `NoTranslate.astro` for MDX content that must remain unchanged.
+
+Import it from an MDX file in `src/content/posts/` like this:
+
+```mdx
+import NoTranslate from "../../components/NoTranslate.astro";
+```
+
+Inline use:
+
+```mdx
+The term <NoTranslate>anti-language</NoTranslate> should stay unchanged.
+```
+
+Block use:
+
+```mdx
+<NoTranslate as="div">
+This text should not be sent to DeepL.
+It will remain exactly as written.
+</NoTranslate>
+```
+
+Use `as="div"` for block content. The default element is `span`, which is better suited for inline text.
+
+Typical uses:
+
+- already-English quotations
+- code-like output that is not fenced as code
+- generated text that should remain in its original form
+- names, labels, or conceptual phrases that should not be normalized by DeepL
+- very large fragments that would otherwise exceed the translation size limit
+
+### 11.8 `notranslate` inside `MediaRow`
+
+`MediaRow.astro` is a special case because `type: "text"` items are rendered through `set:html`. That means the `content` value is an HTML string, not an Astro component.
+
+This does not work:
+
+```mdx
+<MediaRow
+  items={[
+    {
+      type: "text",
+      content: "<NoTranslate>This will not run as an Astro component.</NoTranslate>"
+    }
+  ]}
+/>
+```
+
+Use a normal HTML marker instead:
+
+```mdx
+<MediaRow
+  bordered
+  items={[
+    {
+      type: "text",
+      content: "28. prosince 2014 jsem v Mombase vyfotil starou popsanou zeď."
+    },
+    {
+      type: "text",
+      content: `
+<div class="notranslate" translate="no">
+It doesn't matter which religion you claim you are.
+It doesn't matter which country you're coming from.
+It doesn't matter whether you're poor or rich.
+It doesn't matter if you're black or white.
+We are all the same in the eyes of God.
+</div>
+      `.trim()
+    },
+    {
+      type: "text",
+      content: "Nezáleží, jakého jsi vyznání. Nezáleží, z jaké země pocházíš."
+    }
+  ]}
+/>
+```
+
+The important part is:
+
+```html
+<div class="notranslate" translate="no">
+  ...
+</div>
+```
+
+The postprocess recognizes this marker, removes the protected block before sending the fragment to DeepL, and restores it afterward.
+
+### 11.9 Large fragments
+
+The current maximum translated fragment size is `80_000` bytes. If a translated region is larger, the build fails with an error similar to:
+
+```text
+EN fragment for /en/example/ is 166405 bytes, above configured 80000.
+```
+
+Preferred solutions:
+
+- mark non-translatable output with `NoTranslate`
+- use `<div class="notranslate" translate="no">...</div>` inside `MediaRow` text items
+- split unusually large pages into smaller translated regions if needed
+
+The size guardrail exists to avoid sending oversized and fragile HTML blobs to DeepL.
+
+### 11.10 Troubleshooting
+
+#### `DEEPL_AUTH_KEY is not set`
+
+The build tried to create a new translation but no DeepL key was available. Set the key and run the translate command again:
+
+```bat
+set "DEEPL_AUTH_KEY=YOUR_DEEPL_KEY"
+npm run build:web:translate
+```
+
+#### `Missing EN translation cache`
+
+Strict mode found an EN page that needs a translation cache entry that does not exist yet. Run:
+
+```bat
+npm run build:web:translate
+```
+
+or, for USB:
+
+```bat
+npm run build:usb:translate
+```
+
+Then run the strict build again.
+
+#### Header and UI are English, but the article body is Czech
+
+The manual UI dictionary is working, but the automatic content translation did not run or did not have a cache entry. Check the build log and run `build:web:translate`.
+
+#### Local `dist/` is Czech after `build:web:translate`
+
+Check the end of the build log. If it contains `DEEPL_AUTH_KEY is not set` or another `Postprocess failed` message, the Astro build completed but the translation postprocess failed.
+
+#### Production is Czech, but local `dist/` is English
+
+The problem is upload or caching, not translation. Upload the entire `dist/` directory again and force overwrite existing files. Avoid “skip if same size” and similar FTP shortcuts. Then test with a cache-busting URL parameter.
+
+### 11.11 Publishing checklist
+
+Before uploading the web build to FTP:
+
+1. Run `npm run build:web:translate`.
+2. Run `npm run build:web:strict`.
+3. Run `npm run preview`.
+4. Open at least one EN article locally.
+5. Check that the article body is actually English, not only the header and metadata.
+6. Upload the complete `dist/` directory.
+7. Overwrite existing files on the server.
+
+For USB/offline output:
+
+1. Run `npm run build:usb:translate`.
+2. Run `npm run build:usb:strict` or `node scripts/build-usb-strict.mjs`.
+3. Open the generated HTML from disk.
+4. Check CSS, images, internal links, and EN article content.
+
+---
+
+## 12. Deploy
 
 ### 11.1 `dist` structure
 The `dist/` directory contains the finished build intended for publishing.
@@ -581,12 +958,12 @@ The portable build can be used as a file-based snapshot or offline copy. However
 
 ---
 
-## 12. Known issues and solutions
+## 13. Known issues and solutions
 
-### 12.1 YouTube embed in local or file-based mode
+### 13.1 YouTube embed in local or file-based mode
 A YouTube iframe may fail in local or file-based mode with error 153. In that case, it is recommended to account for a fallback opening of the video via an external link.
 
-### 12.2 Sketchfab warnings in the console
+### 13.2 Sketchfab warnings in the console
 The Sketchfab iframe may generate console warnings such as:
 
 - permissions policy violation
@@ -595,15 +972,15 @@ The Sketchfab iframe may generate console warnings such as:
 
 If the viewer works, this is not a project error, but a limitation or behavior of a third party.
 
-### 12.3 Broken CSS or assets with the wrong base model
+### 13.3 Broken CSS or assets with the wrong base model
 If the build uses root-relative paths in an environment where no standard server root is available, styles, images, and internal links may break. For this reason, the portable file-based build is supplemented with the `usb-rewrite.mjs` postprocessing step.
 
-### 12.4 Dev server and new articles
+### 13.4 Dev server and new articles
 If the listing or routes do not match after adding a new `.mdx` file, the recommended first step is to restart the development server.
 
 ---
 
-## 13. Future extensions
+## 14. Future extensions
 
 Possible future directions for the project:
 
@@ -615,7 +992,7 @@ Possible future directions for the project:
 
 ---
 
-## 14. Summary
+## 15. Summary
 
 The project is designed as a file-oriented static website. Content is versioned directly in the repository, and the final published form is produced by the build process. This model makes it easier to archive, restore, and migrate the project without relying on a database runtime.
 

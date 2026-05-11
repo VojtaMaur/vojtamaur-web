@@ -1,0 +1,12 @@
+---
+const { lang, as = "div" } = Astro.props;
+const Tag = as;
+
+if (!lang || !["cs", "en"].includes(String(lang))) {
+  throw new Error('<Lang> requires lang="cs" or lang="en".');
+}
+---
+
+<Tag data-lang-only={lang}>
+  <slot />
+</Tag>

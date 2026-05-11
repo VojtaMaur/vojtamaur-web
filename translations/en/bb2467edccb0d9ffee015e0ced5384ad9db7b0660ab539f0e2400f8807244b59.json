@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "bb2467edccb0d9ffee015e0ced5384ad9db7b0660ab539f0e2400f8807244b59",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-norsko-lofoty-2018/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Norsko - Lofoty 2018",
+  "translatedFragment": "Norway - Lofoten 2018",
+  "createdAt": "2026-05-07T18:14:28.379Z"
+}

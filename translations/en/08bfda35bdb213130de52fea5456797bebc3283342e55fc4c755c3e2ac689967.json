@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "08bfda35bdb213130de52fea5456797bebc3283342e55fc4c755c3e2ac689967",
+  "purpose": "html-region",
+  "page": "/en/vystava-hladina/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Hladina</h1> <p class=\"post-meta\"> 4. 2. 2016 - 3. 4. 2016, Plzeň </p> <p class=\"post-meta\"> Galerie města Plzně: PŘEDTÍM, TEĎ, POTOM </p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<p>O kolik je jiný náš život na síti a v reálném životě? Proč chodit ven, když si všechno můžeme najít na Googlu? Informace z internetu jsou zdeformované a s realitou mají málo společného.<br>\nJsou odrazem toho, co chceme vidět.<br>\nSlunce se odráží v hladině, promítá se na zeď a odráží v zrcadle… Skutečně se k nám dostalo nezměněné?</p>\n<p>Sestřih z výstavy:<br>\n<a href=\"https://www.youtube.com/watch?v=SmsbQt0g9nc\">https://www.youtube.com/watch?v=SmsbQt0g9nc</a></p>\n<p>Více o výstavě na stránkách Galerie města Plzně:<br>\n<a href=\"http://galerie-plzen.cz/vystavy/vystavy-2016/predtim-ted-potom\">http://galerie-plzen.cz/vystavy/vystavy-2016/predtim-ted-potom</a></p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Water Level</h1> <p class=\"post-meta\"> February 4, 2016 – April 3, 2016, Pilsen </p> <p class=\"post-meta\"> Pilsen City Gallery: BEFORE, NOW, AFTER </p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<p>\nHow different is our life online compared to real life? Why go out when we can find everything on Google? Information from the internet is distorted and has little to do with reality.<br>\nIt is a reflection of what we want to see.<br>\nThe sun reflects on the water’s surface, is projected onto a wall, and reflects in a mirror… Has it truly reached us unchanged?</p>\n<p>\nExhibition highlights:<br>\n\n<a href=\"https://www.youtube.com/watch?v=SmsbQt0g9nc\">https://www.youtube.com/watch?v=SmsbQt0g9nc</a></p>\n<p>\nMore about the exhibition on the Pilsen City Gallery website:<br>\n\n<a href=\"http://galerie-plzen.cz/vystavy/vystavy-2016/predtim-ted-potom\">http://galerie-plzen.cz/vystavy/vystavy-2016/predtim-ted-potom</a></p> </div> ",
+  "createdAt": "2026-05-07T18:32:48.747Z"
+}

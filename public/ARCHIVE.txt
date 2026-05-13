@@ -27,6 +27,14 @@ STATIC SNAPSHOTS (built output of the repository, reconstructable):
 	https://archive.org/details/vojtamaur-2026-04
 	https://archive.org/details/vojtamaur-2026-05
 	
+PYTHON CLI PACKAGE (distribution + embedded fallback snapshots):
+	PyPI
+	https://pypi.org/project/vojtamaur/
+	GitHub
+	https://github.com/VojtaMaur/vojtamaur-python
+	Software Heritage (archival ingest of GitHub repository)
+	https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/VojtaMaur/vojtamaur-python
+	
 === ENTRY POINTS END ===
 
 CRAWLED SNAPSHOTS (partial captures):
@@ -260,6 +268,10 @@ CRAWLED SNAPSHOTS (partial captures):
 	https://web.archive.org/web/20260509084550/https://vojtamaur.cz/en/metawebovy-clanek/
 	https://web.archive.org/web/20260509084549/https://vojtamaur.cz/metawebovy-clanek/
 	https://web.archive.org/web/20260509084609/https://vojtamaur.cz/ALL_POSTS.txt
+	https://web.archive.org/web/20260511045056/https://github.com/VojtaMaur/vojtamaur-web
+	https://web.archive.org/web/20260511045140/https://gitlab.com/vojta.maur/vojtamaur-web
+	https://web.archive.org/web/20260511045159/https://codeberg.org/vojta_maur/vojtamaur-web
+	https://archive.org/details/all-posts
 	...
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
@@ -321,6 +333,10 @@ CRAWLED SNAPSHOTS (partial captures):
 	http://archive.today/2026.05.09-084823/https://vojtamaur.cz/en/metawebovy-clanek/
 	http://archive.today/2026.05.09-084846/https://vojtamaur.cz/metawebovy-clanek/
 	http://archive.today/2026.05.09-084848/https://vojtamaur.cz/ALL_POSTS.txt
+	http://archive.today/2026.05.11-045544/https://web.archive.org/web/20260509084609/https://vojtamaur.cz/ALL_POSTS.txt
+	http://archive.today/2026.05.12-081116/https://pypi.org/project/vojtamaur/0.1.3/
+	http://archive.today/2026.05.12-081124/https://pypi.org/project/vojtamaur/
+	http://archive.today/2026.05.12-081129/https://github.com/VojtaMaur/vojtamaur-python
 	Ghost archive
 	https://ghostarchive.org/archive/Aqt05
 	https://ghostarchive.org/archive/POTTj
@@ -335,6 +351,8 @@ CRAWLED SNAPSHOTS (partial captures):
 	https://ghostarchive.org/archive/YM417
 	https://ghostarchive.org/archive/QNRsu
 	https://ghostarchive.org/archive/Ujriy
+	https://ghostarchive.org/archive/qB3bk
+	https://ghostarchive.org/archive/objeh
 	arquivo.pt
 	https://arquivo.pt/wayback/20260509005546/https://vojtamaur.cz/volna-tvorba/
 	https://arquivo.pt/wayback/20260509005652/https://vojtamaur.cz/en/volna-tvorba/

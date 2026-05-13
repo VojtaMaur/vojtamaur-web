@@ -282,7 +282,32 @@ Each article uses:
 - `thumbnail` – path to the thumbnail
 - `thumbnailAlt` – thumbnail alt text
 
-Thumbnails are used in article listings, on the homepage, and in individual sections.
+Thumbnails are used in article listings, on the homepage, and in individual sections.  
+
+### 6.3.1 Image metadata and privacy
+
+Image files may contain embedded metadata such as EXIF, XMP, IPTC, camera information, timestamps, software history, thumbnails, or GPS coordinates.
+
+Because this repository is public and `public/` assets are copied into the build output unchanged, image metadata must be treated as public data once committed. Stripping metadata only during the build is not sufficient, because the original source file may still remain available in the repository, mirrors, releases, archive snapshots, or external copies.
+
+Default rule:
+
+* image files committed to the public repository should have metadata removed before commit
+* original files with full metadata should be kept outside the public repository, if they need to be preserved
+* metadata should only be kept when it is intentionally part of the work itself
+
+For normal image publishing, the recommended workflow is:
+
+1. keep the original file in a private archive, if needed
+2. export or copy a public version of the image
+3. remove metadata from the public version
+4. commit only the cleaned public version into `public/images/`
+
+Example command using ExifTool:
+
+    exiftool -all= -overwrite_original public/images/example.jpg
+
+For files where metadata is intentionally preserved, this should be a conscious exception rather than the default publishing behavior.
 
 ### 6.4 `draft`
 
@@ -772,8 +797,13 @@ The cache is part of the project source, not a public runtime dependency. The pu
 
 `npm run dev` is useful for editing layout and content. The final publishing artifact is still the build output in `dist/`.
 
-If the development server and the final build disagree, the build output is authoritative. Translation, `Lang` filtering, strict checks, and USB path rewriting should be verified through build commands and `npm run preview`, not only through dev mode.
+In some cases, `npm run dev` may correctly display manually translated UI elements and metadata, while article bodies remain untranslated in English routes. This usually means the DeepL postprocess has not been applied to the current output yet.
 
+To verify the real final translated output, use:
+
+    npm run build:web:translate
+    npm run preview
+	
 ### 11.7 Marking content as not translatable
 
 Use `NoTranslate.astro` for MDX content that must remain unchanged.
@@ -1003,5 +1033,6 @@ From a maintenance perspective, the following points are especially important:
 - specialized content is encapsulated in several reusable components
 - the project supports both a standard web build and a portable file-based build
 - when working with new content, it is useful to expect the occasional need to restart the development server
+- image files in the public repository should be checked for embedded metadata before commit, especially GPS and other privacy-sensitive fields
 
 This documentation describes the current architecture and operating model of the project in a form suitable for ongoing maintenance, handoff, or future migration.

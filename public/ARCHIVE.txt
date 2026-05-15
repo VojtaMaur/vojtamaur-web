@@ -272,6 +272,13 @@ CRAWLED SNAPSHOTS (partial captures):
 	https://web.archive.org/web/20260511045140/https://gitlab.com/vojta.maur/vojtamaur-web
 	https://web.archive.org/web/20260511045159/https://codeberg.org/vojta_maur/vojtamaur-web
 	https://archive.org/details/all-posts
+	https://web.archive.org/web/20260515042614/https://www.mfmom.cz/vystavy/obrazy-nad-cisly-i306.html
+	https://web.archive.org/web/20260515042646/https://www.jcted.cz/muzeum-fotografie-v-jindrichove-hradci-otevrelo-vystavu-pocitacovych-grafik/
+	https://web.archive.org/web/20260515042747/https://www.galeriekvary.cz/show-item/karlovarsky-salon-22-2/
+	https://web.archive.org/web/20260515042807/http://web.archive.org/screenshot/https://www.galeriekvary.cz/show-item/karlovarsky-salon-22-2/
+	https://web.archive.org/web/20210925193536/https://www.depo2015.cz/program-depo-ag14/art-a2209
+	https://web.archive.org/web/20260515043504/https://galerie-plzen.cz/vystavy/vystavy-2016/predtim-ted-potom
+	https://web.archive.org/web/20260515043524/http://web.archive.org/screenshot/https://galerie-plzen.cz/vystavy/vystavy-2016/predtim-ted-potom
 	...
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/

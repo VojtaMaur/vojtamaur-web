@@ -284,30 +284,52 @@ Each article uses:
 
 Thumbnails are used in article listings, on the homepage, and in individual sections.  
 
-### 6.3.1 Image metadata and privacy
+### 6.3.1 Public asset metadata and privacy
 
-Image files may contain embedded metadata such as EXIF, XMP, IPTC, camera information, timestamps, software history, thumbnails, or GPS coordinates.
+Files stored in `public/` are copied into the build output unchanged. This includes images in `public/images/` and downloadable or embeddable files in `public/files/`. Embedded metadata in these files must therefore be treated as public data once the files are committed and published.
 
-Because this repository is public and `public/` assets are copied into the build output unchanged, image metadata must be treated as public data once committed. Stripping metadata only during the build is not sufficient, because the original source file may still remain available in the repository, mirrors, releases, archive snapshots, or external copies.
+This applies especially to:
+
+- EXIF camera metadata
+- GPS coordinates
+- XMP and IPTC metadata
+- software and editing history
+- PDF author, creator, producer, and title fields
+- internal document IDs and document lineage metadata
+- embedded comments, captions, keywords, or other hidden text fields
+
+The project uses a separate metadata audit script for checking public assets:
+
+```bash
+python scripts/audit-public-metadata.py --exiftool "D:\Program Files\exiftool\exiftool.exe"
+```
+
+ExifTool path may need to be adjusted depending on the local installation.
+
+The script checks:
+
+- `public/images/`
+- `public/files/`
+
+It reports privacy-relevant metadata such as camera model, GPS data, author fields, software history, PDF metadata, document IDs, and embedded comments.
 
 Default rule:
 
-* image files committed to the public repository should have metadata removed before commit
-* original files with full metadata should be kept outside the public repository, if they need to be preserved
-* metadata should only be kept when it is intentionally part of the work itself
+- files committed to the public repository should not contain unintended metadata
+- original files with full metadata should be kept outside the public repository, if they need to be preserved
+- metadata should only be kept when it is intentionally part of the work itself
+- intentional metadata exceptions should be handled through the script allowlist
 
-For normal image publishing, the recommended workflow is:
+For normal publishing, the recommended workflow is:
 
 1. keep the original file in a private archive, if needed
-2. export or copy a public version of the image
-3. remove metadata from the public version
-4. commit only the cleaned public version into `public/images/`
+2. export or copy a public version of the file
+3. run the metadata audit
+4. strip unintended metadata from the public version
+5. run the metadata audit again
+6. commit only the cleaned public version into `public/`
 
-Example command using ExifTool:
-
-    exiftool -all= -overwrite_original public/images/example.jpg
-
-For files where metadata is intentionally preserved, this should be a conscious exception rather than the default publishing behavior.
+The audit and stripping process is not part of the Astro build. It is a separate maintenance step. This is intentional: metadata should be removed before commit, not only from the generated `dist/` output, because the source repository, mirrors, releases, and archival snapshots may preserve the original files.  
 
 ### 6.4 `draft`
 
@@ -515,6 +537,35 @@ Recommended troubleshooting step:
 Ctrl + C
 npm run dev
 ```
+
+### 9.2.1 Public asset metadata audit
+
+Before publishing new or changed public assets, run the metadata audit:
+
+```bash
+python scripts/audit-public-metadata.py --exiftool "D:\Program Files\exiftool\exiftool.exe"
+```
+
+The script scans `public/images/` and `public/files/` and reports files containing privacy-relevant embedded metadata.
+
+To preview metadata stripping without modifying files:
+
+```bash
+python scripts/audit-public-metadata.py --exiftool "D:\Program Files\exiftool\exiftool.exe" --strip --dry-run
+```
+
+To strip unintended metadata from supported image files:
+
+```bash
+python scripts/audit-public-metadata.py --exiftool "D:\Program Files\exiftool\exiftool.exe" --strip
+```
+
+PDF files are treated more conservatively and are not stripped by default. If PDF metadata needs to be removed, create a checked public copy and verify the output afterwards.
+
+After stripping metadata, run the audit again and check the changed files before committing.
+
+Files with intentional embedded metadata can be kept through the script allowlist. These exceptions should remain explicit, because otherwise hidden metadata becomes indistinguishable from accidental leakage.
+
 
 ### 9.3 Web build
 
@@ -1033,6 +1084,6 @@ From a maintenance perspective, the following points are especially important:
 - specialized content is encapsulated in several reusable components
 - the project supports both a standard web build and a portable file-based build
 - when working with new content, it is useful to expect the occasional need to restart the development server
-- image files in the public repository should be checked for embedded metadata before commit, especially GPS and other privacy-sensitive fields
+- public assets in `public/images/` and `public/files/` should be checked for unintended embedded metadata before commit
 
 This documentation describes the current architecture and operating model of the project in a form suitable for ongoing maintenance, handoff, or future migration.

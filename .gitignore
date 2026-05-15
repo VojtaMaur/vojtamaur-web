@@ -24,3 +24,7 @@ Thumbs.db
 # editor / IDE
 .vscode/
 .idea/
+
+# Metadata audit reports
+metadata-report.json
+metadata-report*.json

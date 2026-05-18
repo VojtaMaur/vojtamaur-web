@@ -36,6 +36,84 @@ jobs:
         env:
           DEEPL_AUTH_KEY: ${{ secrets.DEEPL_AUTH_KEY }}
 
+      - name: Rewrite root paths for GitHub Pages mirror
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+
+          const distDir = path.resolve("dist");
+          const base = "/vojtamaur-web";
+
+          const textExtensions = new Set([
+            ".html",
+            ".css",
+            ".js",
+            ".mjs",
+            ".json",
+            ".webmanifest",
+            ".xml",
+            ".svg"
+          ]);
+
+          function shouldRewrite(filePath) {
+            return textExtensions.has(path.extname(filePath));
+          }
+
+          function rewriteFile(filePath) {
+            let text = fs.readFileSync(filePath, "utf8");
+            const original = text;
+
+            // Rewrites root-relative URLs in HTML/CSS/JS/JSON-like files:
+            // href="/x"        -> href="/vojtamaur-web/x"
+            // src="/x"         -> src="/vojtamaur-web/x"
+            // url(/x)          -> url(/vojtamaur-web/x)
+            // "start_url": "/" -> "start_url": "/vojtamaur-web/"
+            //
+            // Does not touch:
+            // https://...
+            // //cdn...
+            // already rewritten /vojtamaur-web/...
+            text = text.replace(
+              /(["'(=]\s*)\/(?!\/|vojtamaur-web(?:\/|$))/g,
+              `$1${base}/`
+            );
+
+            // Extra pass for srcset values, where later URLs may appear after commas.
+            text = text.replace(/srcset=(["'])(.*?)\1/g, (match, quote, value) => {
+              const rewrittenValue = value.replace(
+                /(^|,\s*)\/(?!\/|vojtamaur-web(?:\/|$))/g,
+                `$1${base}/`
+              );
+              return `srcset=${quote}${rewrittenValue}${quote}`;
+            });
+
+            if (text !== original) {
+              fs.writeFileSync(filePath, text);
+              console.log(`rewritten: ${path.relative(process.cwd(), filePath)}`);
+            }
+          }
+
+          function walk(dir) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const fullPath = path.join(dir, entry.name);
+
+              if (entry.isDirectory()) {
+                walk(fullPath);
+              } else if (shouldRewrite(fullPath)) {
+                rewriteFile(fullPath);
+              }
+            }
+          }
+
+          if (!fs.existsSync(distDir)) {
+            throw new Error("dist directory does not exist");
+          }
+
+          walk(distDir);
+          NODE
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

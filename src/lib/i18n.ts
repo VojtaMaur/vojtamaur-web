@@ -8,7 +8,7 @@ export const ui = {
   cs: {
     siteTitle: "Vojta Maur",
     motto: "Tvořit je můj základní instinkt",
-    showAll: "Zobrazit vše",
+    showAll: "zobrazit vše",
     sections: {
       "volna-tvorba": "Volná tvorba",
       vystavy: "Výstavy",
@@ -75,7 +75,7 @@ export const ui = {
   en: {
     siteTitle: "Vojta Maur",
     motto: "Creating is my basic instinct",
-    showAll: "Show all",
+    showAll: "show all",
     sections: {
       "volna-tvorba": "Personal Work",
       vystavy: "Exhibitions",

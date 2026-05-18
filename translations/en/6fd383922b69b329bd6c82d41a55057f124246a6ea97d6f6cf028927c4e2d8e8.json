@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "6fd383922b69b329bd6c82d41a55057f124246a6ea97d6f6cf028927c4e2d8e8",
+  "purpose": "html-region",
+  "page": "/en/vystavy-kostky-cukru/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Kostky cukru</h1> <p class=\"post-meta\"> 21. 3. 2018 - 30. 4. 2018, Plzeň </p> <p class=\"post-meta\"> DEPO2015: ART3 </p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-2.jpg\" alt=\"\"> </a>  </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-3.jpg\" alt=\"\"> </a>  </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-1.jpg\" alt=\"\"> </a>  </figure>\n<p>Informace o výstavě na stránkách DEPO2015 (archiv):\n<a href=\"https://web.archive.org/web/20210925193536/https://www.depo2015.cz/program-depo-ag14/art-a2209\">https://web.archive.org/web/20210925193536/https://www.depo2015.cz/program-depo-ag14/art-a2209</a></p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Sugar Cubes</h1> <p class=\"post-meta\"> March 21, 2018 – April 30, 2018, Pilsen </p> <p class=\"post-meta\"> DEPO2015: ART3 </p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-2.jpg\" alt=\"\"> </a>  </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-3.jpg\" alt=\"\"> </a>  </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-kostky-cukru-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-kostky-cukru-obr-1.jpg\" alt=\"\"> </a>  </figure>\n<p>Exhibition information on the DEPO2015 website (archive):\n<a href=\"https://web.archive.org/web/20210925193536/https://www.depo2015.cz/program-depo-ag14/art-a2209\">https://web.archive.org/web/20210925193536/https://www.depo2015.cz/program-depo-ag14/art-a2209</a></p> </div> ",
+  "createdAt": "2026-05-15T09:24:46.548Z"
+}

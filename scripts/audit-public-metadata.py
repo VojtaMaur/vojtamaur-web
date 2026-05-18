@@ -10,13 +10,13 @@ Requires:
 Default mode is audit-only. It does NOT modify files.
 
 Run from project root:
-  python scripts/audit-public-metadata.py --exiftool "D:\\Program Files\\exiftool\\exiftool.exe"
+  python scripts/audit-public-metadata.py --exiftool "D:\Programs\exiftool-13.58_64\exiftool.exe"
 
 Strip image metadata from reported files, except allowlisted files:
-  python scripts/audit-public-metadata.py --exiftool "D:\\Program Files\\exiftool\\exiftool.exe" --strip
+  python scripts/audit-public-metadata.py --exiftool "D:\Programs\exiftool-13.58_64\exiftool.exe" --strip
 
 Preview strip targets without modifying anything:
-  python scripts/audit-public-metadata.py --exiftool "D:\\Program Files\\exiftool\\exiftool.exe" --strip --dry-run
+  python scripts/audit-public-metadata.py --exiftool "D:\Programs\exiftool-13.58_64\exiftool.exe" --strip --dry-run
 
 Default allowlist:
   public/images/kurt-godel-rat.jpg

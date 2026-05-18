@@ -37,7 +37,27 @@ PYTHON CLI PACKAGE (distribution + embedded fallback snapshots):
 	
 === ENTRY POINTS END ===
 
-CRAWLED SNAPSHOTS (partial captures):
+VIDEO SNAPSHOTS (YouTube-derived archival copies):
+	Internet archive
+	https://archive.org/details/vojtamaur-rekurze-v-programu-ms-word-video
+	https://archive.org/details/vojtamaur-docasne-entity-video
+	https://archive.org/details/vojtamaur-sachovnicovy-rastr-1-video
+	https://archive.org/details/vojtamaur-sachovnicovy-rastr-2-video
+	https://archive.org/details/vojtamaur-computer-with-random-inputs-video
+	https://archive.org/details/vojtamaur-computer-with-random-inputs-timelapse-video
+	https://archive.org/details/vojtamaur-aplikace-google-video
+	https://archive.org/details/vojtamaur-recamanova-posloupnost-v-zelvi-grafice-video
+	https://archive.org/details/vojtamaur-vzpominky-na-krc-video
+	https://archive.org/details/vojtamaur-naruseni-pravidelneho-rastru-video
+	https://archive.org/details/vojtamaur-z-pohledu-musle-1-puvodni-video
+	https://archive.org/details/vojtamaur-z-pohledu-musle-2-prumerna-barva-rgb-graf
+	https://archive.org/details/vojtamaur-nepravidelny-dech-video
+	https://archive.org/details/vojtamaur-krasnoocko-hromnicke-jezirko-video
+	https://archive.org/details/vojtamaur-krasnoocka-hromnicke-jezirko-video
+	https://archive.org/details/vojtamaur-dva-rytmy-1-cerna-bila-zakladni-koncept
+	https://archive.org/details/vojtamaur-dva-rytmy-2-obrazovy-material
+
+PARTIAL SNAPSHOTS:
 	Internet Archive
 	https://web.archive.org/web/20260420172617/https://vojtamaur.cz/
 	https://web.archive.org/web/20260420172617/https://vojtamaur.cz/volna-tvorba/
@@ -279,6 +299,7 @@ CRAWLED SNAPSHOTS (partial captures):
 	https://web.archive.org/web/20210925193536/https://www.depo2015.cz/program-depo-ag14/art-a2209
 	https://web.archive.org/web/20260515043504/https://galerie-plzen.cz/vystavy/vystavy-2016/predtim-ted-potom
 	https://web.archive.org/web/20260515043524/http://web.archive.org/screenshot/https://galerie-plzen.cz/vystavy/vystavy-2016/predtim-ted-potom
+	https://web.archive.org/web/20260515091830/https://vojtamaur.cz/images/kurt-godel-rat.jpg
 	...
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
@@ -344,6 +365,7 @@ CRAWLED SNAPSHOTS (partial captures):
 	http://archive.today/2026.05.12-081116/https://pypi.org/project/vojtamaur/0.1.3/
 	http://archive.today/2026.05.12-081124/https://pypi.org/project/vojtamaur/
 	http://archive.today/2026.05.12-081129/https://github.com/VojtaMaur/vojtamaur-python
+	http://archive.today/2026.05.15-100928/https://vojtamaur.cz/images/kurt-godel-rat.jpg
 	Ghost archive
 	https://ghostarchive.org/archive/Aqt05
 	https://ghostarchive.org/archive/POTTj
@@ -371,3 +393,4 @@ CRAWLED SNAPSHOTS (partial captures):
 	https://arquivo.pt/wayback/20260509195155/https://vojtamaur.cz/
 	https://arquivo.pt/wayback/20260509195221/https://vojtamaur.cz/en/
 	https://arquivo.pt/wayback/20260509195324/https://vojtamaur.cz/en/vystavy-recamanova-struktura/
+	https://arquivo.pt/wayback/20260515104903/https://vojtamaur.cz/images/kurt-godel-rat.jpg

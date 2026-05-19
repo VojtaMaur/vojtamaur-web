@@ -104,12 +104,18 @@ Helper utilities and shared logic used across the project.
 
 ### `astro.config.mjs`
 
-The project uses two build modes. The configuration switches behavior according to the `BUILD_TARGET` variable. In the standard web build it uses `trailingSlash: "always"` and `build.format: "directory"`. In the portable file-based build it uses `trailingSlash: "never"` and `build.format: "file"`.
+The project uses two Astro build modes. The configuration switches behavior according to the `BUILD_TARGET` variable. In the standard web build it uses `trailingSlash: "always"` and `build.format: "directory"`. In the portable file-based build it uses `trailingSlash: "never"` and `build.format: "file"`.
 
-This produces two different output types:
+This produces two primary Astro output types:
 
 - **web build** – suitable for standard hosting
 - **portable file-based build** – suitable, for example, for offline use, archiving, or transfer on external media
+
+A third deployment artifact is derived from the standard web build:
+
+- **Arweave / Permaweb build** – generated into `dist-arweave/` by copying the finished `dist/` output and rewriting root-relative paths so that the site can work under an Arweave manifest transaction path
+
+The Arweave build is not a separate Astro `BUILD_TARGET`. It is a postprocessed version of the normal web build.
 
 ### `package.json`
 
@@ -123,6 +129,7 @@ npm run build:web:strict
 npm run preview
 npm run build:usb
 npm run build:usb:translate
+npm run build:arweave
 ```
 
 Meaning of the main scripts:
@@ -134,6 +141,7 @@ Meaning of the main scripts:
 - `npm run preview` – local preview of the build
 - `npm run build:usb` – creates a portable file-based build, applies the English postprocess, rewrites paths for offline use, and generates `dist/ALL_POSTS.txt`
 - `npm run build:usb:translate` – creates a portable file-based build, fills missing English translation cache entries, and generates `dist/ALL_POSTS.txt`
+- `npm run build:arweave` – creates the strict standard web build, generates `dist/ALL_POSTS.txt`, and then creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths
 - `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt`, a plain-text export of all article content from the finished build output
 
 ### `content.config.ts`
@@ -656,9 +664,46 @@ Very large code or generated output blocks are omitted when they exceed the conf
 
 The output file is written as UTF-8 with BOM to improve encoding detection in text editors and archival systems.
 
+### 9.7 Arweave / Permaweb build
+
+The Arweave / Permaweb build is created with:
+
+```bash
+npm run build:arweave
+```
+
+This command first runs the strict standard web build and then runs:
+
+```bash
+node scripts/make-arweave-build.mjs
+```
+
+The script creates a separate output directory:
+
+```text
+dist-arweave/
+```
+
+This directory is intended for upload to ArDrive or another Arweave-compatible upload tool.
+
+The Arweave build exists because a normal web build uses root-relative paths such as:
+
+```text
+/_astro/...
+/images/...
+/files/...
+/volna-tvorba/
+```
+
+These paths work on a normal domain root such as `https://vojtamaur.cz/`, but they do not work automatically when the site is served below an Arweave manifest transaction URL.
+
+The Arweave postprocess copies the finished `dist/` output into `dist-arweave/` and rewrites root-relative references into relative paths appropriate for the location of each HTML or CSS file.
+
+The source of truth remains the normal project source. `dist-arweave/` is a generated deployment artifact and should not be edited manually.
+
 ---
 
-## 10. Exact `build:usb` logic
+## 10. Exact special build logic
 
 The `build:usb` script is defined as a USB-targeted Astro build followed by postprocessing. In the current translation-aware workflow, the effective order is:
 
@@ -674,7 +719,7 @@ This implies five steps:
 4. `scripts/usb-rewrite.mjs` rewrites root-based URLs into relative file paths
 5. `scripts/generate-all-posts.mjs` creates `dist/ALL_POSTS.txt` as a plain-text preservation export of the finished build
 
-### 10.1 What `astro.config.mjs` does in this mode
+### 10.1 What `astro.config.mjs` does in USB mode
 
 When `BUILD_TARGET=usb`, the following are used:
 
@@ -713,6 +758,32 @@ Specific rewrites include:
 The script calculates the relative path from each HTML file back to the `dist/` root. This matters because a root-level file such as `dist/about.html` needs `./_astro/...`, while a nested file such as `dist/en/about.html` needs `../_astro/...`.
 
 The purpose of this step is to adjust the HTML so that the output works even outside a standard web server with root-relative URLs.
+
+### 10.3 Exact `build:arweave` logic
+
+The `build:arweave` script is defined as a strict standard web build followed by Arweave-specific postprocessing. The effective order is:
+
+```text
+npm run build:web:strict && node scripts/make-arweave-build.mjs
+```
+
+This implies four main steps:
+
+1. the standard Astro web build is created in `dist/`
+2. `scripts/en-postprocess.mjs` verifies or applies the English translation layer according to the strict build workflow
+3. `scripts/generate-all-posts.mjs` creates `dist/ALL_POSTS.txt`
+4. `scripts/make-arweave-build.mjs` copies `dist/` to `dist-arweave/` and rewrites root-relative paths
+
+The Arweave output keeps the directory-style route model of the normal web build, for example:
+
+```text
+fotogrammetrie/index.html
+en/fotogrammetrie/index.html
+```
+
+This is different from the USB build, which uses a file-based output model.
+
+The purpose of `dist-arweave/` is to create a static folder that can be uploaded to ArDrive and then exposed through an Arweave manifest. The manifest should be created at the level where `index.html`, `_astro/`, `images/`, `files/`, `ALL_POSTS.txt`, and `ARCHIVE.txt` are directly present.
 
 ---
 
@@ -1021,21 +1092,64 @@ For USB/offline output:
 3. Open the generated HTML from disk.
 4. Check CSS, images, internal links, and EN article content.
 
+For Arweave / Permaweb output:
+
+1. Run the metadata audit:
+   `python scripts/audit-public-metadata.py --exiftool "D:\Program Files\exiftool\exiftool.exe"`
+2. Resolve unintended metadata findings before publishing.
+3. Run `npm run build:arweave`.
+4. Verify that the log ends with `Arweave build prepared in dist-arweave`.
+5. Test the build locally under a fake manifest-like subdirectory.
+6. Upload only `dist-arweave/` to ArDrive.
+7. Create the manifest at the level where `index.html` is directly present.
+8. Test the manifest gateway URL.
+9. Check several deep routes, English routes, `ALL_POSTS.txt`, and `ARCHIVE.txt`.
+
 ---
 
 ## 12. Deploy
 
-### 11.1 `dist` structure
+### 12.1 `dist` structure
 The `dist/` directory contains the finished build intended for publishing.
 
-### 11.2 Deployment of the standard web build
+### 12.2 Deployment of the standard web build
 For the production website, the content corresponding to the standard web build is uploaded to the hosting server.
 
-### 11.3 `.htaccess`
+### 12.3 `.htaccess`
 For a static Astro website, a minimalist configuration is appropriate. A typical WordPress rewrite rule to `index.php` is not relevant for this type of project.
 
-### 11.4 Portable build
+### 12.4 Portable build
 The portable build can be used as a file-based snapshot or offline copy. However, it is not identical to normal web hosting, and some external services may behave differently.
+
+### 12.5 Arweave / Permaweb deployment
+For Arweave deployment, do not upload the normal `dist/` directory directly. Use the generated Arweave-specific output:
+
+```text
+dist-arweave/
+```
+
+Recommended workflow:
+
+1. run the public asset metadata audit
+2. run `npm run build:arweave`
+3. optionally test `dist-arweave/` locally under a fake manifest-like subdirectory
+4. upload only `dist-arweave/` to a public ArDrive drive
+5. create an Arweave manifest at the level where `index.html` is directly present
+6. copy the manifest Data TX ID
+7. test the site through an Arweave or ArDrive gateway URL
+
+The manifest must be created inside the uploaded build root, not above it. The correct manifest target level contains:
+
+```text
+index.html
+_astro/
+images/
+files/
+ALL_POSTS.txt
+ARCHIVE.txt
+```
+
+The uploaded Arweave version is immutable. If a mistake is uploaded, the correction must be published as a new upload and a new manifest transaction. The old version remains available.
 
 ---
 
@@ -1054,7 +1168,16 @@ The Sketchfab iframe may generate console warnings such as:
 If the viewer works, this is not a project error, but a limitation or behavior of a third party.
 
 ### 13.3 Broken CSS or assets with the wrong base model
-If the build uses root-relative paths in an environment where no standard server root is available, styles, images, and internal links may break. For this reason, the portable file-based build is supplemented with the `usb-rewrite.mjs` postprocessing step.
+If the build uses root-relative paths in an environment where no standard server root is available, styles, images, and internal links may break.
+
+This affects more than one special output model:
+
+- USB / file-based output
+- Arweave / Permaweb output served below a manifest transaction path
+
+For this reason, the portable file-based build is supplemented with `scripts/usb-rewrite.mjs`, and the Arweave build is supplemented with `scripts/make-arweave-build.mjs`.
+
+If CSS, JavaScript, images, or internal links fail in the Arweave deployment, check whether any root-relative path such as `/_astro/...`, `/images/...`, `/files/...`, or `/slug/` remained in the generated `dist-arweave/` output.
 
 ### 13.4 Dev server and new articles
 If the listing or routes do not match after adding a new `.mdx` file, the recommended first step is to restart the development server.
@@ -1082,7 +1205,7 @@ From a maintenance perspective, the following points are especially important:
 - content is managed as `.mdx` files
 - metadata is validated through content collections
 - specialized content is encapsulated in several reusable components
-- the project supports both a standard web build and a portable file-based build
+- the project supports a standard web build, a portable file-based build, and a derived Arweave / Permaweb deployment build
 - when working with new content, it is useful to expect the occasional need to restart the development server
 - public assets in `public/images/` and `public/files/` should be checked for unintended embedded metadata before commit
 

@@ -19,7 +19,9 @@
 
     "build:usb": "set \"BUILD_TARGET=usb\" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts",
 
-    "build:usb:translate": "set \"BUILD_TARGET=usb\" && set \"EN_TRANSLATE=missing\" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts"
+    "build:usb:translate": "set \"BUILD_TARGET=usb\" && set \"EN_TRANSLATE=missing\" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts",
+	
+	"build:arweave": "npm run build:web:strict && node scripts/make-arweave-build.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",

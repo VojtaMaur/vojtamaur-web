@@ -6,6 +6,10 @@ MAIN SITE (primary live version):
 ALTERNATIVE DEPLOYMENTS:
 	Neocities
 	https://vojtamaur.neocities.org/
+	GitHub Pages
+	https://vojtamaur.github.io/vojtamaur-web/
+	ArDrive / Arweave
+	https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
 
 SOURCE REPOSITORY (canonical source):
 	https://github.com/VojtaMaur/vojtamaur-web
@@ -56,7 +60,16 @@ VIDEO SNAPSHOTS (YouTube-derived archival copies):
 	https://archive.org/details/vojtamaur-krasnoocka-hromnicke-jezirko-video
 	https://archive.org/details/vojtamaur-dva-rytmy-1-cerna-bila-zakladni-koncept
 	https://archive.org/details/vojtamaur-dva-rytmy-2-obrazovy-material
-
+	
+FILE ARTIFACT SNAPSHOTS:
+	Arweave / ArDrive
+	https://app.ardrive.io/#/file/6777b483-0ece-40d1-93c5-80e06bcfb757/view
+	https://arweave.net/wMdvaavAZL1QKGvdkIfh6NCB7u_NCX368IsR48sJP7c
+	https://app.ardrive.io/#/file/1ff99024-312f-499b-8d92-18707866a178/view
+	https://arweave.net/km-NeXucy8QrZjErPSd31cTKpnV95iHiKa14HNBafhU
+	Internet Archive
+	https://archive.org/details/all-posts
+	
 PARTIAL SNAPSHOTS:
 	Internet Archive
 	https://web.archive.org/web/20260420172617/https://vojtamaur.cz/
@@ -291,7 +304,6 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260511045056/https://github.com/VojtaMaur/vojtamaur-web
 	https://web.archive.org/web/20260511045140/https://gitlab.com/vojta.maur/vojtamaur-web
 	https://web.archive.org/web/20260511045159/https://codeberg.org/vojta_maur/vojtamaur-web
-	https://archive.org/details/all-posts
 	https://web.archive.org/web/20260515042614/https://www.mfmom.cz/vystavy/obrazy-nad-cisly-i306.html
 	https://web.archive.org/web/20260515042646/https://www.jcted.cz/muzeum-fotografie-v-jindrichove-hradci-otevrelo-vystavu-pocitacovych-grafik/
 	https://web.archive.org/web/20260515042747/https://www.galeriekvary.cz/show-item/karlovarsky-salon-22-2/
@@ -300,6 +312,14 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260515043504/https://galerie-plzen.cz/vystavy/vystavy-2016/predtim-ted-potom
 	https://web.archive.org/web/20260515043524/http://web.archive.org/screenshot/https://galerie-plzen.cz/vystavy/vystavy-2016/predtim-ted-potom
 	https://web.archive.org/web/20260515091830/https://vojtamaur.cz/images/kurt-godel-rat.jpg
+	https://web.archive.org/web/20260518080120/https://vojtamaur.github.io/vojtamaur-web/
+	https://web.archive.org/web/20260518080131/http://web.archive.org/screenshot/https://vojtamaur.github.io/vojtamaur-web/
+	https://web.archive.org/web/20260518083815/https://vojtamaur.github.io/vojtamaur-web/metawebovy-clanek/
+	https://web.archive.org/web/20260518083709/https://vojtamaur.github.io/vojtamaur-web/ARCHIVE.txt
+	https://web.archive.org/web/20260518083718/https://vojtamaur.github.io/vojtamaur-web/ALL_POSTS.txt
+	https://web.archive.org/web/20260518084022/https://vojtamaur.github.io/vojtamaur-web/documentation/
+	https://web.archive.org/web/20260519075013/https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
+	https://web.archive.org/web/20260519075026/http://web.archive.org/screenshot/https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
 	...
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
@@ -366,6 +386,11 @@ PARTIAL SNAPSHOTS:
 	http://archive.today/2026.05.12-081124/https://pypi.org/project/vojtamaur/
 	http://archive.today/2026.05.12-081129/https://github.com/VojtaMaur/vojtamaur-python
 	http://archive.today/2026.05.15-100928/https://vojtamaur.cz/images/kurt-godel-rat.jpg
+	http://archive.today/2026.05.18-080824/https://vojtamaur.github.io/vojtamaur-web/
+	http://archive.today/2026.05.18-083207/https://vojtamaur.github.io/vojtamaur-web/metawebovy-clanek/
+	http://archive.today/2026.05.18-083223/https://vojtamaur.github.io/vojtamaur-web/ARCHIVE.txt
+	http://archive.today/2026.05.18-083227/https://vojtamaur.github.io/vojtamaur-web/ALL_POSTS.txt
+	http://archive.today/2026.05.18-083240/https://vojtamaur.github.io/vojtamaur-web/documentation/
 	Ghost archive
 	https://ghostarchive.org/archive/Aqt05
 	https://ghostarchive.org/archive/POTTj
@@ -382,6 +407,11 @@ PARTIAL SNAPSHOTS:
 	https://ghostarchive.org/archive/Ujriy
 	https://ghostarchive.org/archive/qB3bk
 	https://ghostarchive.org/archive/objeh
+	https://ghostarchive.org/archive/hxKMb
+	https://ghostarchive.org/archive/1WZbh
+	https://ghostarchive.org/archive/RoxXA
+	https://ghostarchive.org/archive/wUbOp
+	https://ghostarchive.org/archive/O6hkl
 	arquivo.pt
 	https://arquivo.pt/wayback/20260509005546/https://vojtamaur.cz/volna-tvorba/
 	https://arquivo.pt/wayback/20260509005652/https://vojtamaur.cz/en/volna-tvorba/

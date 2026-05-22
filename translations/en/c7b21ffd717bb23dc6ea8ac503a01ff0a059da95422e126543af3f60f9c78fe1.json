@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "c7b21ffd717bb23dc6ea8ac503a01ff0a059da95422e126543af3f60f9c78fe1",
+  "purpose": "html-region",
+  "page": "/en/prizivnici/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Příživníci</h1> <p class=\"post-meta\"> May 2026 </p> </div> <div class=\"post-body\"> <p>Poslední rok několikrát denně vylévám na jedno místo v trávníku v Plzni-Božkově použité sypané čaje i se zbylou vodou, protože nechci ucpat odpad.</p>\n<p>Na tomto místě se začali koncentrovat šneci, kteří čajové lístky žerou.</p>\n<p>Někdy se jich tam najde až tucet, jindy žádný.</p>\n<p>Sdílím s&nbsp;nimi chutě.</p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/prizivnici-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/prizivnici-obr-1.jpg\" alt=\"šneci a čaj\"> </a>  </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Freeloaders</h1> <p class=\"post-meta\"> May 2026 </p> </div> <div class=\"post-body\"> <p>For the past year, several times a day, I’ve been pouring used loose-leaf tea and the remaining water onto a spot on the lawn in Plzeň-Božkov, because I don’t want to clog the drain.</p>\n<p>Snails have started to gather in this spot, eating the tea leaves.</p>\n<p>Sometimes there are as many as a dozen of them there, other times none at all.</p>\n<p>I share their tastes.</p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/prizivnici-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/prizivnici-obr-1.jpg\" alt=\"šneci a čaj\"> </a>  </figure> </div> ",
+  "createdAt": "2026-05-21T15:53:28.289Z"
+}

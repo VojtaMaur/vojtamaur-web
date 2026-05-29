@@ -6,22 +6,16 @@
     "dev": "astro dev",
     "build": "npm run build:web",
     "preview": "astro preview",
-
     "generate:all-posts": "node scripts/generate-all-posts.mjs",
-
-    "build:web": "astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts",
-
-    "build:web:translate": "set \"EN_TRANSLATE=missing\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts",
-
-    "build:web:refresh": "set \"EN_TRANSLATE=refresh\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts",
-
-    "build:web:strict": "set \"EN_STRICT=1\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts",
-
-    "build:usb": "set \"BUILD_TARGET=usb\" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts",
-
-    "build:usb:translate": "set \"BUILD_TARGET=usb\" && set \"EN_TRANSLATE=missing\" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts",
-	
-	"build:arweave": "npm run build:web:strict && node scripts/make-arweave-build.mjs"
+    "build:web": "astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts && npm run generate:integrity",
+    "build:web:translate": "set \"EN_TRANSLATE=missing\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts && npm run generate:integrity",
+    "build:web:refresh": "set \"EN_TRANSLATE=refresh\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts && npm run generate:integrity",
+    "build:web:strict": "set \"EN_STRICT=1\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts && npm run generate:integrity",
+    "build:usb": "set \"BUILD_TARGET=usb\" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts && npm run generate:integrity",
+    "build:usb:translate": "set \"BUILD_TARGET=usb\" && set \"EN_TRANSLATE=missing\" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts && npm run generate:integrity",
+    "build:arweave": "npm run build:web:strict && node scripts/make-arweave-build.mjs && npm run generate:integrity:arweave",
+    "generate:integrity": "node scripts/generate-integrity.mjs",
+    "generate:integrity:arweave": "node scripts/generate-integrity.mjs dist-arweave"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",

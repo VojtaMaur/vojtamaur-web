@@ -40,6 +40,14 @@ Projekt existuje také jako Python CLI balíček distribuovaný přes GitHub a P
 
 ## TEXTOVÝ EXPORT VŠECH ČLÁNKŮ  
 
-Plain-text export všech článků generovaný při buildu webu. Obsahuje textový obsah příspěvků v lineární podobě bez závislosti na CSS, JavaScriptu nebo konkrétní webové technologii. Slouží jako minimální archivní vrstva pro indexaci, offline čtení, fulltextové vyhledávání a dlouhodobou rekonstruovatelnost obsahu i v případě částečného rozpadu původní struktury webu.  
+Plain-text export všech článků generovaný při buildu webu. Obsahuje textový obsah příspěvků v lineární podobě bez závislosti na CSS, JavaScriptu nebo konkrétní webové technologii. Slouží jako minimální archivní vrstva pro indexaci, offline čtení, fulltextové vyhledávání a dlouhodobou rekonstruovatelnost obsahu i v případě částečného rozpadu původní struktury webu. Textový export je vhodný i pro velké jazykové modely.  
 
 [Zobrazit textový export všech článků](/ALL_POSTS.txt)
+
+## INTEGRITA BUILDU
+
+Každý build webu obsahuje kontrolní soubory pro ověření integrity statického výstupu.
+
+[SHA256SUMS.txt](/SHA256SUMS.txt) — seznam SHA-256 checksumů všech souborů buildu  
+[BUILD_SHA256.txt](/BUILD_SHA256.txt) — globální checksum souboru SHA256SUMS  
+[integrity.json](/integrity.json) — strojově čitelný popis integrity buildu

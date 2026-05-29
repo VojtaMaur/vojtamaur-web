@@ -130,19 +130,25 @@ npm run preview
 npm run build:usb
 npm run build:usb:translate
 npm run build:arweave
+npm run generate:all-posts
+npm run generate:integrity
+npm run generate:integrity:arweave
 ```
 
 Meaning of the main scripts:
 
 - `npm run dev` – starts the Astro development server
-- `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, and generates `dist/ALL_POSTS.txt`
-- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, and generates `dist/ALL_POSTS.txt`
-- `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, and generates `dist/ALL_POSTS.txt`
+- `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt`, and writes build integrity files for `dist/`
+- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt`, and writes build integrity files for `dist/`
+- `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt`, and writes build integrity files for `dist/`
 - `npm run preview` – local preview of the build
-- `npm run build:usb` – creates a portable file-based build, applies the English postprocess, rewrites paths for offline use, and generates `dist/ALL_POSTS.txt`
-- `npm run build:usb:translate` – creates a portable file-based build, fills missing English translation cache entries, and generates `dist/ALL_POSTS.txt`
-- `npm run build:arweave` – creates the strict standard web build, generates `dist/ALL_POSTS.txt`, and then creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths
+- `npm run build:usb` – creates a portable file-based build, applies the English postprocess, rewrites paths for offline use, generates `dist/ALL_POSTS.txt`, and writes build integrity files for `dist/`
+- `npm run build:usb:translate` – creates a portable file-based build, fills missing English translation cache entries, rewrites paths for offline use, generates `dist/ALL_POSTS.txt`, and writes build integrity files for `dist/`
+- `npm run build:arweave` – creates the strict standard web build, creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths, and then writes separate build integrity files for `dist-arweave/`
 - `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt`, a plain-text export of all article content from the finished build output
+- `npm run generate:integrity` – generates `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json` for the selected build output directory
+- `npm run generate:integrity:arweave` – generates fresh integrity files for `dist-arweave/` after the Arweave copy-and-rewrite step
+
 
 ### `content.config.ts`
 
@@ -664,6 +670,56 @@ Very large code or generated output blocks are omitted when they exceed the conf
 
 The output file is written as UTF-8 with BOM to improve encoding detection in text editors and archival systems.
 
+### 9.6.1 Build integrity files
+
+During the final post-build phase, the project generates integrity files for the completed static output:
+
+```text
+/SHA256SUMS.txt
+/BUILD_SHA256.txt
+/integrity.json
+```
+
+These files are produced by:
+
+```text
+scripts/generate-integrity.mjs
+```
+
+The script walks through the selected output directory, calculates a SHA-256 checksum for each included file, writes a sorted per-file manifest to `SHA256SUMS.txt`, and then calculates a global build hash from that manifest.
+
+The global build hash is stored in:
+
+```text
+BUILD_SHA256.txt
+```
+
+Machine-readable metadata is stored in:
+
+```text
+integrity.json
+```
+
+The following files are intentionally excluded from the checksum manifest:
+
+```text
+SHA256SUMS.txt
+BUILD_SHA256.txt
+integrity.json
+.DS_Store
+Thumbs.db
+```
+
+This avoids a recursive checksum loop where the checksum files would change the checksum they are trying to describe.
+
+The manifest uses the `.txt` extension intentionally. A bare file named `SHA256SUMS` can be interpreted badly by local preview or static hosting setups that use directory-style routes and `trailingSlash: "always"`. `SHA256SUMS.txt` behaves as a normal downloadable text file.
+
+The integrity files are generated from the final build output, not from the source files. They are intended to verify the published static artifact after Astro build, English postprocessing, generated text exports, path rewriting for portable builds, and any other post-build changes that happen before `scripts/generate-integrity.mjs` runs.
+
+For the normal web build and USB build, the integrity files describe the final contents of `dist/`.
+
+For the Arweave / Permaweb build, integrity is generated again after `dist-arweave/` is created, so the integrity files inside `dist-arweave/` describe the final Arweave deployment artifact rather than the original `dist/` directory.
+
 ### 9.7 Arweave / Permaweb build
 
 The Arweave / Permaweb build is created with:
@@ -672,10 +728,11 @@ The Arweave / Permaweb build is created with:
 npm run build:arweave
 ```
 
-This command first runs the strict standard web build and then runs:
+This command first runs the strict standard web build, then runs the Arweave postprocess, and finally regenerates integrity files for the finished Arweave output:
 
 ```bash
 node scripts/make-arweave-build.mjs
+npm run generate:integrity:arweave
 ```
 
 The script creates a separate output directory:
@@ -699,6 +756,16 @@ These paths work on a normal domain root such as `https://vojtamaur.cz/`, but th
 
 The Arweave postprocess copies the finished `dist/` output into `dist-arweave/` and rewrites root-relative references into relative paths appropriate for the location of each HTML or CSS file.
 
+After this copy-and-rewrite step, the build runs the integrity generator again for `dist-arweave/`. This is necessary because the Arweave postprocess can modify files after the normal web build has already created integrity files for `dist/`.
+
+The integrity files inside `dist-arweave/` belong to the Arweave deployment output itself:
+
+```text
+dist-arweave/SHA256SUMS.txt
+dist-arweave/BUILD_SHA256.txt
+dist-arweave/integrity.json
+```
+
 The source of truth remains the normal project source. `dist-arweave/` is a generated deployment artifact and should not be edited manually.
 
 ---
@@ -708,16 +775,17 @@ The source of truth remains the normal project source. `dist-arweave/` is a gene
 The `build:usb` script is defined as a USB-targeted Astro build followed by postprocessing. In the current translation-aware workflow, the effective order is:
 
 ```text
-set "BUILD_TARGET=usb" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts
+set "BUILD_TARGET=usb" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts && npm run generate:integrity
 ```
 
-This implies five steps:
+This implies six steps:
 
 1. `BUILD_TARGET=usb` is set
 2. the Astro build is run in the mode defined in `astro.config.mjs`
 3. `scripts/en-postprocess.mjs` applies the English translation layer using the available cache
 4. `scripts/usb-rewrite.mjs` rewrites root-based URLs into relative file paths
 5. `scripts/generate-all-posts.mjs` creates `dist/ALL_POSTS.txt` as a plain-text preservation export of the finished build
+6. `scripts/generate-integrity.mjs` creates `dist/SHA256SUMS.txt`, `dist/BUILD_SHA256.txt`, and `dist/integrity.json` for the final static output
 
 ### 10.1 What `astro.config.mjs` does in USB mode
 
@@ -761,18 +829,21 @@ The purpose of this step is to adjust the HTML so that the output works even out
 
 ### 10.3 Exact `build:arweave` logic
 
-The `build:arweave` script is defined as a strict standard web build followed by Arweave-specific postprocessing. The effective order is:
+The `build:arweave` script is defined as a strict standard web build followed by Arweave-specific postprocessing and a second integrity pass for the final Arweave output. The effective order is:
 
 ```text
-npm run build:web:strict && node scripts/make-arweave-build.mjs
+npm run build:web:strict && node scripts/make-arweave-build.mjs && npm run generate:integrity:arweave
 ```
 
-This implies four main steps:
+This implies five main steps:
 
 1. the standard Astro web build is created in `dist/`
 2. `scripts/en-postprocess.mjs` verifies or applies the English translation layer according to the strict build workflow
-3. `scripts/generate-all-posts.mjs` creates `dist/ALL_POSTS.txt`
+3. `scripts/generate-all-posts.mjs` creates `dist/ALL_POSTS.txt` and `scripts/generate-integrity.mjs` creates integrity files for `dist/`
 4. `scripts/make-arweave-build.mjs` copies `dist/` to `dist-arweave/` and rewrites root-relative paths
+5. `scripts/generate-integrity.mjs dist-arweave` creates fresh integrity files for the final Arweave output
+
+The second integrity pass matters. The checksum files created during `build:web:strict` describe `dist/`. After `scripts/make-arweave-build.mjs` rewrites files in `dist-arweave/`, those original checksums would no longer be sufficient for the Arweave output. Therefore `dist-arweave/` gets its own `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json`.
 
 The Arweave output keeps the directory-style route model of the normal web build, for example:
 
@@ -1080,17 +1151,19 @@ Before uploading the web build to FTP:
 1. Run `npm run build:web:translate`.
 2. Run `npm run build:web:strict`.
 3. Run `npm run preview`.
-4. Open at least one EN article locally.
-5. Check that the article body is actually English, not only the header and metadata.
-6. Upload the complete `dist/` directory.
-7. Overwrite existing files on the server.
+4. Check that `dist/SHA256SUMS.txt`, `dist/BUILD_SHA256.txt`, and `dist/integrity.json` exist.
+5. Open at least one EN article locally.
+6. Check that the article body is actually English, not only the header and metadata.
+7. Upload the complete `dist/` directory, including the integrity files.
+8. Overwrite existing files on the server.
 
 For USB/offline output:
 
 1. Run `npm run build:usb:translate`.
 2. Run `npm run build:usb:strict` or `node scripts/build-usb-strict.mjs`.
-3. Open the generated HTML from disk.
-4. Check CSS, images, internal links, and EN article content.
+3. Check that `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json` are present in the generated output.
+4. Open the generated HTML from disk.
+5. Check CSS, images, internal links, and EN article content.
 
 For Arweave / Permaweb output:
 
@@ -1099,11 +1172,12 @@ For Arweave / Permaweb output:
 2. Resolve unintended metadata findings before publishing.
 3. Run `npm run build:arweave`.
 4. Verify that the log ends with `Arweave build prepared in dist-arweave`.
-5. Test the build locally under a fake manifest-like subdirectory.
-6. Upload only `dist-arweave/` to ArDrive.
-7. Create the manifest at the level where `index.html` is directly present.
-8. Test the manifest gateway URL.
-9. Check several deep routes, English routes, `ALL_POSTS.txt`, and `ARCHIVE.txt`.
+5. Verify that `dist-arweave/SHA256SUMS.txt`, `dist-arweave/BUILD_SHA256.txt`, and `dist-arweave/integrity.json` exist.
+6. Test the build locally under a fake manifest-like subdirectory.
+7. Upload only `dist-arweave/` to ArDrive.
+8. Create the manifest at the level where `index.html` is directly present.
+9. Test the manifest gateway URL.
+10. Check several deep routes, English routes, `ALL_POSTS.txt`, `ARCHIVE.txt`, and the integrity files.
 
 ---
 
@@ -1132,11 +1206,12 @@ Recommended workflow:
 
 1. run the public asset metadata audit
 2. run `npm run build:arweave`
-3. optionally test `dist-arweave/` locally under a fake manifest-like subdirectory
-4. upload only `dist-arweave/` to a public ArDrive drive
-5. create an Arweave manifest at the level where `index.html` is directly present
-6. copy the manifest Data TX ID
-7. test the site through an Arweave or ArDrive gateway URL
+3. verify that `dist-arweave/SHA256SUMS.txt`, `dist-arweave/BUILD_SHA256.txt`, and `dist-arweave/integrity.json` exist
+4. optionally test `dist-arweave/` locally under a fake manifest-like subdirectory
+5. upload only `dist-arweave/` to a public ArDrive drive
+6. create an Arweave manifest at the level where `index.html` is directly present
+7. copy the manifest Data TX ID
+8. test the site through an Arweave or ArDrive gateway URL
 
 The manifest must be created inside the uploaded build root, not above it. The correct manifest target level contains:
 
@@ -1147,6 +1222,9 @@ images/
 files/
 ALL_POSTS.txt
 ARCHIVE.txt
+SHA256SUMS.txt
+BUILD_SHA256.txt
+integrity.json
 ```
 
 The uploaded Arweave version is immutable. If a mistake is uploaded, the correction must be published as a new upload and a new manifest transaction. The old version remains available.

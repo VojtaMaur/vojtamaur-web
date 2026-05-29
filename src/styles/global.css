@@ -183,10 +183,14 @@ iframe {
   font-weight: 700;
 }
 
-.page-intro,
+.page-intro {
+  color: var(--muted);
+  margin: 0 0 1.2rem;
+}
+
 .post-meta {
   color: var(--muted);
-  margin: 0 0 1.4rem;
+  margin: 0.2rem 0;
 }
 
 .post-card__meta {

@@ -21,6 +21,8 @@ COPIES OF GITHUB REPOSITORY:
 	https://codeberg.org/vojta_maur/vojtamaur-web
 	Software Heritage (archival ingest of repository)
 	https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/VojtaMaur/vojtamaur-web
+	Internet archive (archival ingest of repository)
+	https://archive.org/details/vojtamaur-web-source-2026-05
 
 STATIC SNAPSHOTS (built output of the repository, reconstructable):
 	GitHub Releases
@@ -320,6 +322,12 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260518084022/https://vojtamaur.github.io/vojtamaur-web/documentation/
 	https://web.archive.org/web/20260519075013/https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
 	https://web.archive.org/web/20260519075026/http://web.archive.org/screenshot/https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
+	https://web.archive.org/web/20260525044253/https://vojtamaur.neocities.org/prizivnici/
+	https://web.archive.org/web/20260525044243/https://vojtamaur.neocities.org/en/prizivnici/
+	https://web.archive.org/web/20260525044658/https://vojtamaur.cz/prizivnici/
+	https://web.archive.org/web/20260525044724/https://vojtamaur.cz/en/prizivnici/
+	https://web.archive.org/web/20260525044957/https://vojtamaur.github.io/vojtamaur-web/en/prizivnici/
+	https://web.archive.org/web/20260525045019/https://vojtamaur.github.io/vojtamaur-web/prizivnici/
 	...
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
@@ -391,6 +399,14 @@ PARTIAL SNAPSHOTS:
 	http://archive.today/2026.05.18-083223/https://vojtamaur.github.io/vojtamaur-web/ARCHIVE.txt
 	http://archive.today/2026.05.18-083227/https://vojtamaur.github.io/vojtamaur-web/ALL_POSTS.txt
 	http://archive.today/2026.05.18-083240/https://vojtamaur.github.io/vojtamaur-web/documentation/
+	http://archive.today/2026.05.25-044409/https://vojtamaur.neocities.org/en/prizivnici/
+	http://archive.today/2026.05.25-044428/https://vojtamaur.neocities.org/prizivnici/
+	http://archive.today/2026.05.25-044626/https://vojtamaur.cz/en/prizivnici/
+	http://archive.today/2026.05.25-044642/https://vojtamaur.cz/prizivnici/
+	http://archive.today/2026.05.25-044906/https://vojtamaur.github.io/vojtamaur-web/en/prizivnici/
+	http://archive.today/2026.05.25-044912/https://vojtamaur.github.io/vojtamaur-web/prizivnici/
+	https://web.archive.org/web/20260525045803/https://vojtamaur.cz/en/kostky-cukru/
+	https://web.archive.org/web/20260525045807/https://vojtamaur.cz/kostky-cukru/
 	Ghost archive
 	https://ghostarchive.org/archive/Aqt05
 	https://ghostarchive.org/archive/POTTj
@@ -424,3 +440,5 @@ PARTIAL SNAPSHOTS:
 	https://arquivo.pt/wayback/20260509195221/https://vojtamaur.cz/en/
 	https://arquivo.pt/wayback/20260509195324/https://vojtamaur.cz/en/vystavy-recamanova-struktura/
 	https://arquivo.pt/wayback/20260515104903/https://vojtamaur.cz/images/kurt-godel-rat.jpg
+	https://arquivo.pt/wayback/20260525045317/https://vojtamaur.cz/prizivnici/
+	https://arquivo.pt/wayback/20260525045345/https://vojtamaur.cz/en/prizivnici/

@@ -69,6 +69,8 @@ FILE ARTIFACT SNAPSHOTS:
 	https://arweave.net/wMdvaavAZL1QKGvdkIfh6NCB7u_NCX368IsR48sJP7c
 	https://app.ardrive.io/#/file/1ff99024-312f-499b-8d92-18707866a178/view
 	https://arweave.net/km-NeXucy8QrZjErPSd31cTKpnV95iHiKa14HNBafhU
+	https://app.ardrive.io/#/file/66d612dc-f6f6-433c-a87e-5f84be24ffe7/view
+	https://arweave.net/6PFPqk0gLwFlvNk55CIpyjGtHvsqBgLJ21RaCvCd3Vc
 	Internet Archive
 	https://archive.org/details/all-posts
 	
@@ -328,6 +330,12 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260525044724/https://vojtamaur.cz/en/prizivnici/
 	https://web.archive.org/web/20260525044957/https://vojtamaur.github.io/vojtamaur-web/en/prizivnici/
 	https://web.archive.org/web/20260525045019/https://vojtamaur.github.io/vojtamaur-web/prizivnici/
+	https://web.archive.org/web/20260525045803/https://vojtamaur.cz/en/kostky-cukru/
+	https://web.archive.org/web/20260525045807/https://vojtamaur.cz/kostky-cukru/
+	https://web.archive.org/web/20260529063931/https://vojtamaur.cz/metawebovy-clanek/
+	https://web.archive.org/web/20260529063939/https://vojtamaur.cz/en/metawebovy-clanek/
+	https://web.archive.org/web/20260529064239/https://vojtamaur.cz/ARCHIVE.txt
+	https://web.archive.org/web/20260529064302/https://vojtamaur.cz/documentation/
 	...
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
@@ -405,8 +413,6 @@ PARTIAL SNAPSHOTS:
 	http://archive.today/2026.05.25-044642/https://vojtamaur.cz/prizivnici/
 	http://archive.today/2026.05.25-044906/https://vojtamaur.github.io/vojtamaur-web/en/prizivnici/
 	http://archive.today/2026.05.25-044912/https://vojtamaur.github.io/vojtamaur-web/prizivnici/
-	https://web.archive.org/web/20260525045803/https://vojtamaur.cz/en/kostky-cukru/
-	https://web.archive.org/web/20260525045807/https://vojtamaur.cz/kostky-cukru/
 	Ghost archive
 	https://ghostarchive.org/archive/Aqt05
 	https://ghostarchive.org/archive/POTTj

@@ -210,6 +210,7 @@ iframe {
 
 .post-body {
   width: 100%;
+  min-width: 0;
 }
 
 .post-body > :first-child {
@@ -245,6 +246,41 @@ iframe {
 .post-body a {
   text-decoration: underline;
   text-decoration-color: rgba(0,0,0,0.3);
+}
+
+/* tabulky v obsahu článků */
+.post-body table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1rem 0;
+  border-spacing: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.post-body th,
+.post-body td {
+  padding: 0.5rem 0.65rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.45;
+}
+
+.post-body th:first-child,
+.post-body td:first-child {
+  border-left: 1px solid var(--border);
+}
+
+.post-body thead tr:first-child th {
+  border-top: 1px solid var(--border);
+}
+
+.post-body th {
+  background: #f5f5f5;
+  font-weight: 600;
 }
 
 .post-grid {

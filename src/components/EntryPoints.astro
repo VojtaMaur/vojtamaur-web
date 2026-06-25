@@ -10,7 +10,22 @@ const match = archive.match(
   /=== ENTRY POINTS START ===([\s\S]*?)=== ENTRY POINTS END ===/
 );
 
-const entryPoints = match ? match[1].trim() : 'Entry points not found.';
+const entryPoints = (
+  match
+    ? match[1].trim()
+    : 'Entry points not found.'
+).replaceAll('\t', '  ');
+
+const parts = entryPoints.split(
+  /(https?:\/\/[^\s<>"']+)/g
+);
+
+const isUrl = (value: string) =>
+  /^https?:\/\/[^\s<>"']+$/.test(value);
 ---
 
-<pre>{entryPoints}</pre>
+<pre class="entry-points">{parts.map((part) =>
+  isUrl(part)
+    ? <a href={part} target="_blank" rel="noopener noreferrer">{part}</a>
+    : part
+)}</pre>

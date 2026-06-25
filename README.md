@@ -25,7 +25,7 @@ The project is designed around a simple preservation model:
 - the English version is generated from the Czech source during the build workflow
 - important outputs can be mirrored across repositories, archive services, and static snapshots
 
-The goal is not only to run a website now, but to keep the content reconstructable later, including in degraded or migrated environments. Because apparently a personal website now needs a disaster-recovery plan. Reasonable era.
+The goal is not only to run a website now, but to keep the content reconstructable later, including in degraded or migrated environments.  
 
 ## Technology
 
@@ -220,7 +220,7 @@ The translation workflow uses a DeepL API key supplied through an environment va
 DEEPL_AUTH_KEY
 ```
 
-The key must not be committed to the repository, embedded in client-side code, or uploaded as a public file. Humanity has already invented enough ways to leak secrets.
+The key must not be committed to the repository, embedded in client-side code, or uploaded as a public file. 
 
 For content that must remain unchanged in the English output, use `NoTranslate.astro` or HTML markers such as:
 

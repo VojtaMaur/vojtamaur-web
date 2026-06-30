@@ -336,6 +336,13 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260529063939/https://vojtamaur.cz/en/metawebovy-clanek/
 	https://web.archive.org/web/20260529064239/https://vojtamaur.cz/ARCHIVE.txt
 	https://web.archive.org/web/20260529064302/https://vojtamaur.cz/documentation/
+	https://web.archive.org/web/20260625065224/https://vojtamaur.cz/metawebovy-clanek/
+	https://web.archive.org/web/20260625065213/https://vojtamaur.github.io/vojtamaur-web/metawebovy-clanek/
+	https://web.archive.org/web/20260625065705/https://vojtamaur.github.io/vojtamaur-web/images/metawebovy-clanek-001-volna-tvotba.jpg
+	https://web.archive.org/web/20260625065743/https://vojtamaur.github.io/vojtamaur-web/images/metawebovy-clanek-002-all_posts.jpg
+	https://web.archive.org/web/20260625065827/https://vojtamaur.cz/images/metawebovy-clanek-001-volna-tvotba.jpg
+	https://web.archive.org/web/20260625065829/https://vojtamaur.cz/images/metawebovy-clanek-002-all_posts.jpg
+	https://web.archive.org/web/20260625070125/https://vojtamaur.cz/en/metawebovy-clanek/
 	...
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
@@ -413,6 +420,8 @@ PARTIAL SNAPSHOTS:
 	http://archive.today/2026.05.25-044642/https://vojtamaur.cz/prizivnici/
 	http://archive.today/2026.05.25-044906/https://vojtamaur.github.io/vojtamaur-web/en/prizivnici/
 	http://archive.today/2026.05.25-044912/https://vojtamaur.github.io/vojtamaur-web/prizivnici/
+	http://archive.today/2026.06.25-065513/https://vojtamaur.cz/metawebovy-clanek/
+	http://archive.today/2026.06.25-065518/https://vojtamaur.github.io/vojtamaur-web/metawebovy-clanek/
 	Ghost archive
 	https://ghostarchive.org/archive/Aqt05
 	https://ghostarchive.org/archive/POTTj
@@ -434,6 +443,8 @@ PARTIAL SNAPSHOTS:
 	https://ghostarchive.org/archive/RoxXA
 	https://ghostarchive.org/archive/wUbOp
 	https://ghostarchive.org/archive/O6hkl
+	https://ghostarchive.org/archive/pswf7
+	https://ghostarchive.org/archive/TflaU
 	arquivo.pt
 	https://arquivo.pt/wayback/20260509005546/https://vojtamaur.cz/volna-tvorba/
 	https://arquivo.pt/wayback/20260509005652/https://vojtamaur.cz/en/volna-tvorba/

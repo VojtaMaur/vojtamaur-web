@@ -75,12 +75,113 @@ function getAttr(html, name) {
   return decodeHtmlEntities(match?.[2] ?? match?.[3] ?? match?.[4] ?? "").trim();
 }
 
+function normalizeInlineText(value) {
+  return String(value ?? "")
+    .replace(/\u00a0/g, " ")
+    .replace(/[ \t\r\n]+/g, " ")
+    .trim();
+}
+
+function escapeTableCell(value) {
+  return normalizeInlineText(value).replace(/\|/g, "\\|");
+}
+
+function inlineHtmlToTableCell(html) {
+  let value = html;
+
+  value = value.replace(/<script[\s\S]*?<\/script>/gi, "");
+  value = value.replace(/<style[\s\S]*?<\/style>/gi, "");
+  value = value.replace(/<svg[\s\S]*?<\/svg>/gi, "[SVG]");
+  value = value.replace(/<br\s*\/?>/gi, " ");
+
+  value = value.replace(/<img\b[^>]*>/gi, (img) => {
+    const src = getAttr(img, "src");
+    const alt = getAttr(img, "alt");
+    const title = getAttr(img, "title");
+    const label = alt || title || "image";
+
+    return src ? `${label} (${src})` : label;
+  });
+
+  value = value.replace(
+    /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi,
+    (_, href, label) => {
+      const text = inlineHtmlToTableCell(label);
+      const decodedHref = decodeHtmlEntities(href).trim();
+
+      if (!decodedHref) return text;
+      if (!text) return decodedHref;
+      if (text === decodedHref) return text;
+
+      return `${text} (${decodedHref})`;
+    }
+  );
+
+  value = value.replace(/<[^>]+>/g, "");
+  value = decodeHtmlEntities(value);
+
+  return escapeTableCell(value);
+}
+
+function tableToPlainText(tableHtml) {
+  const rowMatches = [...tableHtml.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)];
+
+  if (rowMatches.length === 0) return "";
+
+  const rows = rowMatches
+    .map((rowMatch) => {
+      const rowHtml = rowMatch[1];
+      const cells = [];
+
+      for (const cellMatch of rowHtml.matchAll(/<(th|td)\b[^>]*>([\s\S]*?)<\/\1>/gi)) {
+        cells.push(inlineHtmlToTableCell(cellMatch[2]));
+      }
+
+      return cells;
+    })
+    .filter((row) => row.length > 0);
+
+  if (rows.length === 0) return "";
+
+  const width = Math.max(...rows.map((row) => row.length));
+  const normalizedRows = rows.map((row) => [
+    ...row,
+    ...Array(width - row.length).fill(""),
+  ]);
+
+  const firstRowHasHeaders =
+    /<thead\b/i.test(tableHtml) ||
+    /<tr\b[^>]*>[\s\S]*?<th\b/i.test(rowMatches[0][0]);
+
+  const lines = [
+    "[TABLE]",
+    `| ${normalizedRows[0].join(" | ")} |`,
+  ];
+
+  if (firstRowHasHeaders) {
+    lines.push(`| ${Array(width).fill("---").join(" | ")} |`);
+  }
+
+  for (const row of normalizedRows.slice(1)) {
+    lines.push(`| ${row.join(" | ")} |`);
+  }
+
+  lines.push("[/TABLE]");
+
+  return lines.join("\n");
+}
+
 function htmlToPlainText(html) {
   let value = html;
 
   value = value.replace(/<script[\s\S]*?<\/script>/gi, "");
   value = value.replace(/<style[\s\S]*?<\/style>/gi, "");
   value = value.replace(/<svg[\s\S]*?<\/svg>/gi, "[SVG CONTENT OMITTED]");
+
+  value = value.replace(/<table\b[^>]*>[\s\S]*?<\/table>/gi, (table) => {
+    const tableText = tableToPlainText(table);
+    return tableText ? `\n\n${tableText}\n\n` : "\n\n[TABLE]\n[/TABLE]\n\n";
+  });
 
   value = value.replace(/<figure[\s\S]*?<\/figure>/gi, (figure) => {
     const images = [...figure.matchAll(/<img\b[^>]*>/gi)];
@@ -140,22 +241,40 @@ function htmlToPlainText(html) {
   value = value.replace(/<pre\b[^>]*>([\s\S]*?)<\/pre>/gi, (_, rawBlock) => {
     const noTags = rawBlock.replace(/<[^>]+>/g, "");
     const decoded = decodeHtmlEntities(noTags).replace(/\r\n/g, "\n").trimEnd();
-    const lines = decoded ? decoded.split("\n").length : 0;
+    const blockLines = decoded ? decoded.split("\n") : [];
+    const lines = blockLines.length;
     const chars = decoded.length;
 
-    if (lines > MAX_BLOCK_LINES || chars > MAX_BLOCK_CHARS) {
-      return [
-        "",
-        "",
-        "[LONG PROGRAM OUTPUT OMITTED]",
-        `Original post contains a long generated/code/output block with ${lines} lines and ${chars} characters.`,
-        "See the full website source or rendered post for the complete version.",
-        "",
-        "",
-      ].join("\n");
+    const shouldTruncateByLines = lines > MAX_BLOCK_LINES;
+    const shouldTruncateByChars = chars > MAX_BLOCK_CHARS;
+
+    if (!shouldTruncateByLines && !shouldTruncateByChars) {
+      return ["", "", "[CODE BLOCK]", decoded, "[/CODE BLOCK]", "", ""].join("\n");
     }
 
-    return ["", "", "[CODE BLOCK]", decoded, "[/CODE BLOCK]", "", ""].join("\n");
+    let visible = blockLines.slice(0, MAX_BLOCK_LINES).join("\n").trimEnd();
+    let shownLines = Math.min(lines, MAX_BLOCK_LINES);
+
+    if (visible.length > MAX_BLOCK_CHARS) {
+      visible = visible.slice(0, MAX_BLOCK_CHARS).trimEnd();
+      shownLines = visible ? visible.split("\n").length : 0;
+    }
+
+    const omittedLines = Math.max(0, lines - shownLines);
+    const omittedChars = Math.max(0, chars - visible.length);
+
+    return [
+      "",
+      "",
+      "[CODE BLOCK]",
+      visible,
+      "",
+      `[TRUNCATED: original code/output block had ${lines} lines and ${chars} characters; showing first ${shownLines} lines. Omitted ${omittedLines} lines and ${omittedChars} characters.]`,
+      "See the full website source or rendered post for the complete version.",
+      "[/CODE BLOCK]",
+      "",
+      "",
+    ].join("\n");
   });
 
   value = value.replace(/<br\s*\/?>/gi, "\n");
@@ -335,7 +454,7 @@ async function main() {
     "",
     "Notes:",
     "- Media, iframes, PDFs and other non-text content are represented by placeholders.",
-    `- Long code/output blocks over ${MAX_BLOCK_LINES} lines or ${MAX_BLOCK_CHARS} characters are omitted from this export.`,
+    `- Long code/output blocks over ${MAX_BLOCK_LINES} lines or ${MAX_BLOCK_CHARS} characters are truncated in this export, not omitted.`,
     "- For complete content, use the rendered website, source repository, or static snapshots.",
     "",
     "",

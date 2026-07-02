@@ -657,16 +657,21 @@ The file is intended as a minimal preservation layer for:
 
 The export includes metadata for each article, such as title, slug, canonical URL, language, section, date, source file, and built HTML path.
 
-Non-textual content is represented by placeholders instead of being silently removed. For example:
+Non-textual and embedded content is represented by explicit placeholders instead of being silently removed. For example:
 
 ```text
 [MEDIA: image]
 [VIDEO EMBED]
 [INTERACTIVE EMBED]
 [PDF EMBED]
+[SVG CONTENT OMITTED]
 ```
 
-Very large code or generated output blocks are omitted when they exceed the configured size limits. This prevents one unusually large generated block from making the entire text export difficult to read or process. Omitted blocks are replaced with an explicit placeholder explaining that the full version is available in the rendered website or source repository.
+HTML tables are converted into readable plain-text table blocks marked with `[TABLE]` and `[/TABLE]`. Table rows and cells are preserved in a Markdown-like form so that tabular data remains legible in the linear text export.
+
+Code blocks and generated output blocks are preserved as `[CODE BLOCK]` sections. Very large code or generated output blocks are truncated when they exceed the configured size limits. The export keeps the beginning of the block up to the configured line or character limit, then adds an explicit truncation note with the original size and the amount of omitted content.
+
+This prevents one unusually large generated block from making the entire text export difficult to read or process while still preserving a readable sample of the original block. The full version remains available in the rendered website, source repository, or static snapshots.
 
 The output file is written as UTF-8 with BOM to improve encoding detection in text editors and archival systems.
 

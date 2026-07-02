@@ -348,6 +348,12 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260630124440/https://vojtamaur.cz/images/metawebovy-clanek-003-all_posts-venice-edition-note.png
 	https://web.archive.org/web/20260630124617/https://vojtamaur.cz/en/metawebovy-clanek/
 	https://web.archive.org/web/20260630124718/https://vojtamaur.cz/ARCHIVE.txt
+	https://web.archive.org/web/20260701070406/https://vojtamaur.neocities.org/metawebovy-clanek/
+	https://web.archive.org/web/20260701070414/https://vojtamaur.neocities.org/en/metawebovy-clanek/
+	https://web.archive.org/web/20260701070458/https://vojtamaur.neocities.org/images/metawebovy-clanek-003-all_posts-venice-edition.jpg
+	https://web.archive.org/web/20260701070605/https://vojtamaur.github.io/vojtamaur-web/metawebovy-clanek/
+	https://web.archive.org/web/20260701070632/https://vojtamaur.github.io/vojtamaur-web/en/metawebovy-clanek/
+	https://web.archive.org/web/20260701074655/https://vojtamaur.github.io/vojtamaur-web/ALL_POSTS.txt
 	...
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
@@ -450,6 +456,7 @@ PARTIAL SNAPSHOTS:
 	https://ghostarchive.org/archive/O6hkl
 	https://ghostarchive.org/archive/pswf7
 	https://ghostarchive.org/archive/TflaU
+	https://ghostarchive.org/archive/XHWxy
 	arquivo.pt
 	https://arquivo.pt/wayback/20260509005546/https://vojtamaur.cz/volna-tvorba/
 	https://arquivo.pt/wayback/20260509005652/https://vojtamaur.cz/en/volna-tvorba/
@@ -464,3 +471,77 @@ PARTIAL SNAPSHOTS:
 	https://arquivo.pt/wayback/20260515104903/https://vojtamaur.cz/images/kurt-godel-rat.jpg
 	https://arquivo.pt/wayback/20260525045317/https://vojtamaur.cz/prizivnici/
 	https://arquivo.pt/wayback/20260525045345/https://vojtamaur.cz/en/prizivnici/
+	https://arquivo.pt/wayback/20260702060432/https://vojtamaur.cz/en/metawebovy-clanek/
+	https://arquivo.pt/wayback/20260702060718/https://vojtamaur.neocities.org/
+	https://arquivo.pt/wayback/20260702060755/https://vojtamaur.github.io/vojtamaur-web/
+	Megalodon / Web Gyotaku
+	https://megalodon.jp/2026-0702-1329-40/https://vojtamaur.cz:443/
+	https://megalodon.jp/2026-0702-1331-10/https://vojtamaur.cz:443/en/
+	https://megalodon.jp/2026-0702-1332-47/https://vojtamaur.cz:443/metawebovy-clanek/
+	https://megalodon.jp/2026-0702-1333-23/https://vojtamaur.cz:443/en/metawebovy-clanek/
+	https://megalodon.jp/2026-0702-1334-05/https://vojtamaur.cz:443/ARCHIVE.txt
+	https://megalodon.jp/2026-0702-1334-30/https://vojtamaur.cz:443/documentation/
+	https://megalodon.jp/2026-0702-1335-20/https://vojtamaur.cz:443/ALL_POSTS.txt
+	https://megalodon.jp/2026-0702-1335-54/https://vojtamaur.cz:443/volna-tvorba/
+	https://megalodon.jp/2026-0702-1336-47/https://vojtamaur.cz:443/en/volna-tvorba/
+	https://megalodon.jp/2026-0702-1337-56/https://vojtamaur.cz:443/en/lipovy-list/
+	https://megalodon.jp/2026-0702-1338-35/https://vojtamaur.cz:443/prizivnici/
+	https://megalodon.jp/2026-0702-1339-14/https://vojtamaur.cz:443/en/prizivnici/
+	https://megalodon.jp/2026-0702-1339-53/https://vojtamaur.cz:443/images/kurt-godel-rat.jpg
+	https://megalodon.jp/2026-0702-1340-21/https://vojtamaur.cz:443/gate/
+	https://megalodon.jp/2026-0702-1341-47/https://vojtamaur.cz:443/en/gate/
+	https://megalodon.jp/2026-0702-1342-25/https://vojtamaur.cz:443/anti-jazyk/
+	https://megalodon.jp/2026-0702-1343-08/https://vojtamaur.cz:443/en/anti-jazyk/
+	https://megalodon.jp/2026-0702-1343-39/https://vojtamaur.cz:443/en/vystavy-recamanova-struktura/
+	https://megalodon.jp/2026-0702-1344-25/https://vojtamaur.cz:443/en/clipboard-smetiste/
+	https://megalodon.jp/2026-0702-1345-17/https://vojtamaur.cz:443/trajektorie-kurzoru/
+	https://megalodon.jp/2026-0702-1345-58/https://vojtamaur.cz:443/en/trajektorie-kurzoru/
+	https://megalodon.jp/2026-0702-1347-04/https://vojtamaur.cz:443/en/metaprogram/
+	https://megalodon.jp/2026-0702-1347-43/https://vojtamaur.cz:443/en/recamanova-posloupnost-zelvi-grafice/
+	https://megalodon.jp/2026-0702-1348-25/https://vojtamaur.cz:443/en/lychreluv-fraktal/
+	https://megalodon.jp/2026-0702-1349-21/https://vojtamaur.cz:443/en/tank/
+	https://megalodon.jp/2026-0702-1350-04/https://vojtamaur.cz:443/en/zmrtvychvstani/
+	https://megalodon.jp/2026-0702-1350-40/https://vojtamaur.cz:443/en/plisen/
+	https://megalodon.jp/2026-0702-1352-47/https://vojtamaur.cz:443/en/nahodna-cisla-zvolena-clovekem/
+	https://megalodon.jp/2026-0702-1353-20/https://vojtamaur.cz:443/en/lidsky-zrak/
+	https://megalodon.jp/2026-0702-1354-01/https://vojtamaur.cz:443/en/zacyklena-hierarchie-zivota/
+	https://megalodon.jp/2026-0702-1354-30/https://vojtamaur.cz:443/en/pocitac-nahodnymi-vstupy/
+	https://megalodon.jp/2026-0702-1355-09/https://vojtamaur.cz:443/en/zivot-hromnickem-jezirku/
+	https://megalodon.jp/2026-0702-1355-48/https://vojtamaur.cz:443/en/fotogrammetrie/
+	https://megalodon.jp/2026-0702-1356-38/https://vojtamaur.cz:443/en/pseudobasen/
+	https://megalodon.jp/2026-0702-1357-11/https://vojtamaur.cz:443/en/zaznamy-rostlin/
+	https://megalodon.jp/2026-0702-1358-03/https://vojtamaur.cz:443/en/dullgpt/
+	https://megalodon.jp/2026-0702-1358-40/https://vojtamaur.cz:443/en/cerv-epsilon/
+	https://megalodon.jp/2026-0702-1359-11/https://vojtamaur.cz:443/en/genom-theodorove-spirale/
+	https://megalodon.jp/2026-0702-1359-59/https://vojtamaur.cz:443/en/plzen-2026-05-01/
+	https://megalodon.jp/2026-0702-1424-37/https://vojtamaur.cz:443/en/hranice-soukromi/
+	https://megalodon.jp/2026-0702-1425-16/https://vojtamaur.cz:443/en/rekurze-programu-ms-word/
+	https://megalodon.jp/2026-0702-1426-04/https://vojtamaur.cz:443/en/iluze-kontrastu-vertikalnich-horizontalnich-pruhu/
+	https://megalodon.jp/2026-0702-1426-31/https://vojtamaur.cz:443/en/spirala-fibonacciho-slova/
+	https://megalodon.jp/2026-0702-1427-02/https://vojtamaur.cz:443/en/sachovnicovy-rastr/
+	https://megalodon.jp/2026-0702-1427-35/https://vojtamaur.cz:443/en/odraz-a-prostor/
+	https://megalodon.jp/2026-0702-1429-07/https://vojtamaur.cz:443/en/dva-rytmy/
+	https://megalodon.jp/2026-0702-1429-43/https://vojtamaur.cz:443/en/od-mesta-az-po-nahodu/
+	https://megalodon.jp/2026-0702-1434-24/https://vojtamaur.cz:443/en/nezalezi-z-jakeho-kraje-jsi-prisel/
+	https://megalodon.jp/2026-0702-1434-56/https://vojtamaur.cz:443/en/kostky-cukru/
+	https://megalodon.jp/2026-0702-1452-24/https://vojtamaur.cz:443/en/pokriveni-informace/
+	https://megalodon.jp/2026-0702-1453-06/https://vojtamaur.cz:443/en/nepravidelny-dech/
+	https://megalodon.jp/2026-0702-1453-38/https://vojtamaur.cz:443/en/aplikace-google/
+	https://megalodon.jp/2026-0702-1454-13/https://vojtamaur.cz:443/en/barva-tvar-ton/
+	https://megalodon.jp/2026-0702-1455-02/https://vojtamaur.cz:443/en/prvociselne-spiraly/
+	https://megalodon.jp/2026-0702-1455-37/https://vojtamaur.cz:443/en/docasne-entity/
+	https://megalodon.jp/2026-0702-1456-16/https://vojtamaur.cz:443/en/myty-fibonacciho-posloupnosti/
+	https://megalodon.jp/2026-0702-1456-54/https://vojtamaur.cz:443/en/strucna-historie-zivota-zemi/
+	https://megalodon.jp/2026-0702-1457-30/https://vojtamaur.cz:443/en/vlnove-funkce/
+	https://megalodon.jp/2026-0702-1458-08/https://vojtamaur.cz:443/en/autoportret-prakticka-maturitni-prace/
+	Perma.cc
+	https://perma.cc/5W67-Z395
+	https://perma.cc/KHP9-63FL
+	https://perma.cc/HK8A-CQSD
+	https://perma.cc/Q869-X783
+	https://perma.cc/5NZN-BZVX
+	https://perma.cc/TXJ4-BP6E
+	https://perma.cc/VE9T-SQPC
+	https://perma.cc/DJ57-N96F
+	https://perma.cc/F5L2-UEMP
+	https://perma.cc/KTS7-GPSC

@@ -23,6 +23,7 @@ COPIES OF GITHUB REPOSITORY:
 	https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/VojtaMaur/vojtamaur-web
 	Internet archive (archival ingest of repository)
 	https://archive.org/details/vojtamaur-web-source-2026-05
+	https://archive.org/details/vojtamaur-web-complete-sourcebuildgit-2026-07
 
 STATIC SNAPSHOTS (built output of the repository, reconstructable):
 	GitHub Releases

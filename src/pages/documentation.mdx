@@ -98,6 +98,9 @@ Global and optionally other style files.
 #### `src/lib/`
 Helper utilities and shared logic used across the project.
 
+#### `source-bundle/`
+Templates used by `scripts/generate-source-bundle.mjs` when creating the reconstructable source package. This directory contains the Python asset downloader and the reconstruction README that are copied into the generated source ZIP.
+
 ---
 
 ## 3. Key configuration files
@@ -131,6 +134,7 @@ npm run build:usb
 npm run build:usb:translate
 npm run build:arweave
 npm run generate:all-posts
+npm run generate:source-bundle
 npm run generate:integrity
 npm run generate:integrity:arweave
 ```
@@ -138,14 +142,15 @@ npm run generate:integrity:arweave
 Meaning of the main scripts:
 
 - `npm run dev` – starts the Astro development server
-- `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt`, and writes build integrity files for `dist/`
-- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt`, and writes build integrity files for `dist/`
-- `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt`, and writes build integrity files for `dist/`
+- `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`, and writes build integrity files for `dist/`
+- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes build integrity files for `dist/`
+- `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes build integrity files for `dist/`
 - `npm run preview` – local preview of the build
-- `npm run build:usb` – creates a portable file-based build, applies the English postprocess, rewrites paths for offline use, generates `dist/ALL_POSTS.txt`, and writes build integrity files for `dist/`
-- `npm run build:usb:translate` – creates a portable file-based build, fills missing English translation cache entries, rewrites paths for offline use, generates `dist/ALL_POSTS.txt`, and writes build integrity files for `dist/`
+- `npm run build:usb` – creates a portable file-based build, applies the English postprocess, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, rewrites paths for offline use, and writes build integrity files for `dist/`
+- `npm run build:usb:translate` – creates a portable file-based build, fills missing English translation cache entries, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, rewrites paths for offline use, and writes build integrity files for `dist/`
 - `npm run build:arweave` – creates the strict standard web build, creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths, and then writes separate build integrity files for `dist-arweave/`
 - `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt`, a plain-text export of all article content from the finished build output
+- `npm run generate:source-bundle` – generates `dist/source/vojtamaur-web-source.zip`, a small reconstructable source package with a media manifest and an asset downloader
 - `npm run generate:integrity` – generates `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json` for the selected build output directory
 - `npm run generate:integrity:arweave` – generates fresh integrity files for `dist-arweave/` after the Arweave copy-and-rewrite step
 
@@ -589,6 +594,8 @@ npm run build:web
 
 Creates the standard build intended for normal deployment to web hosting. This command uses existing English translation cache entries, but it does not create new DeepL translations.
 
+The web build also creates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`. The link to this package is root-relative in the source content (`/source/vojtamaur-web-source.zip`), which is correct for normal web hosting.
+
 To create missing English translations, use:
 
 ```bash
@@ -616,6 +623,8 @@ npm run build:usb
 ```
 
 This build is suitable, for example, for offline use, archiving, or transfer as a set of files.
+
+The USB build also includes the reconstructable source package. In USB mode, `scripts/usb-rewrite.mjs` must run after the source package has been generated so that `/source/vojtamaur-web-source.zip` is rewritten to a relative `file://`-safe link.
 
 To create missing English translations in the portable build, use:
 
@@ -725,6 +734,54 @@ For the normal web build and USB build, the integrity files describe the final c
 
 For the Arweave / Permaweb build, integrity is generated again after `dist-arweave/` is created, so the integrity files inside `dist-arweave/` describe the final Arweave deployment artifact rather than the original `dist/` directory.
 
+### 9.6.2 Reconstructable source package
+
+During the web and USB builds, the project generates a reconstructable source package:
+
+```text
+/source/vojtamaur-web-source.zip
+```
+
+In the local build output this file is written to:
+
+```text
+dist/source/vojtamaur-web-source.zip
+```
+
+The package is produced by:
+
+```text
+scripts/generate-source-bundle.mjs
+```
+
+This source package is not a full copy of the generated website and it is not intended to duplicate all media files inside the ZIP. It is a compact reconstruction layer: it contains the project source, content, build scripts, `package.json`, `package-lock.json` when available, Astro configuration, selected small files from `public/`, and the files required to reconstruct omitted media.
+
+Large or externally useful media assets from `public/images/` and `public/files/` are omitted from the ZIP and described in `MEDIA_MANIFEST.json` and `MEDIA_SHA256SUMS.txt`. The generated `download-assets.py` script can then restore them from the configured mirrors and verify them using SHA-256.
+
+The `public/demos/` directory is bundled directly into the source ZIP rather than restored through the asset downloader. The demo files are small enough to include, and their HTML can differ between source, web output, USB output, and static mirrors after path rewriting or deployment-specific postprocessing. Treating them as downloadable checksum assets would create false hash mismatches.
+
+The generated package contains the downloader and reconstruction notes both at the ZIP root and inside `source-bundle/`. This allows a reconstructed copy of the project to build the website and then generate a new source package again. In other words, the source package is recursively reconstructable: a source ZIP can produce a rebuilt website, and that rebuilt website can produce another source ZIP.
+
+The default reconstruction flow is:
+
+```bash
+python download-assets.py
+npm install
+npm run build:web:strict
+```
+
+For a portable file-based reconstruction:
+
+```bash
+python download-assets.py
+npm install
+npm run build:usb
+```
+
+The downloader first checks local candidate paths when possible, then uses the configured public mirrors. Files are accepted only when their SHA-256 hash matches the manifest. Hash mismatches are reported and rejected by default rather than silently written into `public/`.
+
+The source package is generated before the final integrity pass. Therefore `SHA256SUMS.txt` includes the source ZIP as part of the final published or portable build artifact.
+
 ### 9.7 Arweave / Permaweb build
 
 The Arweave / Permaweb build is created with:
@@ -823,7 +880,7 @@ The script:
 Specific rewrites include:
 
 - generated Astro assets in `/_astro/`
-- public assets in `/images/`, `/files/`, and `/demos/`
+- public assets in `/images/`, `/files/`, `/demos/`, and `/source/`
 - homepage links to `/`
 - internal links in the form `/slug/`
 - nested English paths such as `/en/slug/`
@@ -1191,6 +1248,18 @@ For Arweave / Permaweb output:
 ### 12.1 `dist` structure
 The `dist/` directory contains the finished build intended for publishing.
 
+Important generated preservation and verification files include:
+
+```text
+dist/ALL_POSTS.txt
+dist/SHA256SUMS.txt
+dist/BUILD_SHA256.txt
+dist/integrity.json
+dist/source/vojtamaur-web-source.zip
+```
+
+The `source/` directory in `dist/` is a generated output directory. It should not be treated as source input or committed as a hand-maintained project directory.
+
 ### 12.2 Deployment of the standard web build
 For the production website, the content corresponding to the standard web build is uploaded to the hosting server.
 
@@ -1199,6 +1268,20 @@ For a static Astro website, a minimalist configuration is appropriate. A typical
 
 ### 12.4 Portable build
 The portable build can be used as a file-based snapshot or offline copy. However, it is not identical to normal web hosting, and some external services may behave differently.
+
+In the portable build, root-relative paths must be rewritten so that the site works from `file://` URLs. This includes the source package link. A correct portable build must link to the source package relatively, for example:
+
+```text
+./source/vojtamaur-web-source.zip
+```
+
+rather than:
+
+```text
+/source/vojtamaur-web-source.zip
+```
+
+The latter would point to the root of the local drive, such as `C:\source\vojtamaur-web-source.zip` on Windows.
 
 ### 12.5 Arweave / Permaweb deployment
 For Arweave deployment, do not upload the normal `dist/` directory directly. Use the generated Arweave-specific output:
@@ -1260,7 +1343,7 @@ This affects more than one special output model:
 
 For this reason, the portable file-based build is supplemented with `scripts/usb-rewrite.mjs`, and the Arweave build is supplemented with `scripts/make-arweave-build.mjs`.
 
-If CSS, JavaScript, images, or internal links fail in the Arweave deployment, check whether any root-relative path such as `/_astro/...`, `/images/...`, `/files/...`, or `/slug/` remained in the generated `dist-arweave/` output.
+If CSS, JavaScript, images, source package links, or internal links fail in the Arweave deployment, check whether any root-relative path such as `/_astro/...`, `/images/...`, `/files/...`, `/source/...`, or `/slug/` remained in the generated `dist-arweave/` output.
 
 ### 13.4 Dev server and new articles
 If the listing or routes do not match after adding a new `.mdx` file, the recommended first step is to restart the development server.
@@ -1289,6 +1372,7 @@ From a maintenance perspective, the following points are especially important:
 - metadata is validated through content collections
 - specialized content is encapsulated in several reusable components
 - the project supports a standard web build, a portable file-based build, and a derived Arweave / Permaweb deployment build
+- web and USB builds generate a recursively reconstructable source package at `/source/vojtamaur-web-source.zip`
 - when working with new content, it is useful to expect the occasional need to restart the development server
 - public assets in `public/images/` and `public/files/` should be checked for unintended embedded metadata before commit
 

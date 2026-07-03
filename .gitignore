@@ -29,3 +29,8 @@ Thumbs.db
 # Metadata audit reports
 metadata-report.json
 metadata-report*.json
+
+# generated source bundle artifacts
+.source-bundle-staging/
+vojtamaur-web-source*.zip
+source/vojtamaur-web-source*.zip

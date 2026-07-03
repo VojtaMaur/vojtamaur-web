@@ -32,17 +32,23 @@ Projekt existuje také jako Python CLI balíček distribuovaný přes GitHub a P
  
 <EntryPoints />
 
-[Zobrazit kompletní mapu archivu](/ARCHIVE.txt)
+[Zobrazit kompletní mapu archivu (ARCHIVE.txt)](/ARCHIVE.txt)
 
 ## TECHNICKÁ DOKUMENTACE
 
 [Zobrazit kompletní technickou dokumentaci tohoto webu](/documentation/)
 
-## TEXTOVÝ EXPORT VŠECH ČLÁNKŮ  
+## ZDROJOVÝ BALÍK K REKONSTRUKCI
 
-Plain-text export všech článků generovaný při buildu webu. Obsahuje textový obsah příspěvků v lineární podobě bez závislosti na CSS, JavaScriptu nebo konkrétní webové technologii. Slouží jako minimální archivní vrstva pro indexaci, offline čtení, fulltextové vyhledávání a dlouhodobou rekonstruovatelnost obsahu i v případě částečného rozpadu původní struktury webu. Textový export je vhodný i pro velké jazykové modely.  
+Zdrojový balík webu vzniká automaticky při buildu. 
 
-[Zobrazit textový export všech článků](/ALL_POSTS.txt)
+Uvnitř balíku je zdrojový kód tohoto webu, manifest assetů, kontrolní součty SHA-256 a Python skript bez externích závislostí. Neobsahuje velké assety z `public/images/`, `public/files/` a `public/demos/`, aby se velikost živého webu zbytečně nezdvojovala. Po rozbalení skript nejdřív zkusí assety zkopírovat lokálně z hotového buildu a teprve potom je stahuje z veřejných mirrorů.
+
+Platí tedy, že ze zdrojový kód generuje build a build generuje zdrojový kód.  
+
+Zdrojový balík je rekurzivně rekonstruovatelný: po stažení assetů a instalaci závislostí lze z něj znovu vygenerovat web i nový zdrojový balík.  
+
+[Stáhnout rekonstruovatelný zdrojový balík webu (vojtamaur-web-source.zip)](/source/vojtamaur-web-source.zip)
 
 ## INTEGRITA BUILDU
 
@@ -51,6 +57,12 @@ Každý build webu obsahuje kontrolní soubory pro ověření integrity statick�
 [SHA256SUMS.txt](/SHA256SUMS.txt) — seznam SHA-256 checksumů všech souborů buildu  
 [BUILD_SHA256.txt](/BUILD_SHA256.txt) — globální checksum souboru SHA256SUMS.txt  
 [integrity.json](/integrity.json) — strojově čitelný popis integrity buildu
+
+## TEXTOVÝ EXPORT VŠECH ČLÁNKŮ  
+
+Plain-text export všech článků generovaný při buildu webu. Obsahuje textový obsah příspěvků v lineární podobě bez závislosti na CSS, JavaScriptu nebo konkrétní webové technologii. Slouží jako minimální archivní vrstva pro indexaci, offline čtení, fulltextové vyhledávání a dlouhodobou rekonstruovatelnost obsahu i v případě částečného rozpadu původní struktury webu. Textový export je vhodný i pro velké jazykové modely.  
+
+[Zobrazit textový export všech článků (ALL_POSTS.txt)](/ALL_POSTS.txt)
 
 ## FYZICKÉ EXEMPLÁŘE
 

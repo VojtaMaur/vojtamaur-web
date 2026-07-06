@@ -129,9 +129,14 @@ npm run dev
 npm run build:web
 npm run build:web:translate
 npm run build:web:strict
+npm run build:web:prune:dry
+npm run build:web:prune
 npm run preview
 npm run build:usb
 npm run build:usb:translate
+npm run build:usb:strict
+npm run build:usb:prune:dry
+npm run build:usb:prune
 npm run build:arweave
 npm run generate:all-posts
 npm run generate:source-bundle
@@ -145,9 +150,14 @@ Meaning of the main scripts:
 - `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`, and writes build integrity files for `dist/`
 - `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes build integrity files for `dist/`
 - `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes build integrity files for `dist/`
+- `npm run build:web:prune:dry` – runs the strict web build and prints unused English translation cache files that would be deleted, without deleting them
+- `npm run build:web:prune` – runs the strict web build and deletes unused, unprotected English translation cache files
 - `npm run preview` – local preview of the build
 - `npm run build:usb` – creates a portable file-based build, applies the English postprocess, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, rewrites paths for offline use, and writes build integrity files for `dist/`
 - `npm run build:usb:translate` – creates a portable file-based build, fills missing English translation cache entries, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, rewrites paths for offline use, and writes build integrity files for `dist/`
+- `npm run build:usb:strict` – creates a strict portable file-based build and fails if an English translation cache entry is missing
+- `npm run build:usb:prune:dry` – runs the strict portable build and prints unused English translation cache files that would be deleted, without deleting them
+- `npm run build:usb:prune` – runs the strict portable build and deletes unused, unprotected English translation cache files
 - `npm run build:arweave` – creates the strict standard web build, creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths, and then writes separate build integrity files for `dist-arweave/`
 - `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt`, a plain-text export of all article content from the finished build output
 - `npm run generate:source-bundle` – generates `dist/source/vojtamaur-web-source.zip`, a small reconstructable source package with a media manifest and an asset downloader
@@ -608,6 +618,18 @@ To verify that no English translation cache entry is missing, use:
 npm run build:web:strict
 ```
 
+To inspect unused English translation cache files without deleting them, use:
+
+```bash
+npm run build:web:prune:dry
+```
+
+To delete unused, unprotected English translation cache files after the dry run looks correct, use:
+
+```bash
+npm run build:web:prune
+```
+
 ### 9.4 Build preview
 
 ```bash
@@ -632,10 +654,22 @@ To create missing English translations in the portable build, use:
 npm run build:usb:translate
 ```
 
-For a strict USB check, use `npm run build:usb:strict` if the alias exists in `package.json`. If it is not registered, run the wrapper directly:
+For a strict USB check, use:
 
 ```bash
-node scripts/build-usb-strict.mjs
+npm run build:usb:strict
+```
+
+To inspect unused English translation cache files while producing the portable build, use:
+
+```bash
+npm run build:usb:prune:dry
+```
+
+To delete unused, unprotected English translation cache files after the dry run looks correct, use:
+
+```bash
+npm run build:usb:prune
 ```
 
 ### 9.6 Plain-text export of all posts
@@ -1003,7 +1037,21 @@ To force a full retranslation, use:
 npm run build:web:refresh
 ```
 
-This should be used carefully because it can change existing English output even if the Czech source text did not change.
+This should be used carefully because it can change existing English output even if the Czech source text did not change. It is not a cache cleanup command.
+
+To inspect unused English translation cache files without deleting them, use:
+
+```bat
+npm run build:web:prune:dry
+```
+
+To delete unused, unprotected English translation cache files, use:
+
+```bat
+npm run build:web:prune
+```
+
+The prune commands run the strict workflow, so they should only be used when the translation cache is already complete.
 
 ### 11.4 USB translation commands
 
@@ -1021,10 +1069,16 @@ For a strict USB check, use:
 npm run build:usb:strict
 ```
 
-If the `build:usb:strict` alias is not present in `package.json`, run the wrapper directly:
+To inspect unused English translation cache files during the USB workflow, use:
 
 ```bat
-node scripts/build-usb-strict.mjs
+npm run build:usb:prune:dry
+```
+
+To delete unused, unprotected English translation cache files during the USB workflow, use:
+
+```bat
+npm run build:usb:prune
 ```
 
 The USB wrapper scripts run `usb-rewrite.mjs` even if the translation postprocess fails. This prevents `dist/` from being left with broken relative CSS and image paths. A rewritten `dist/` is not proof of a successful translation build; the log must still be checked for `[i18n] Postprocess failed:`.
@@ -1044,11 +1098,62 @@ Practical consequences:
 - unchanged content is not sent to DeepL again
 - changed Czech content gets a new cache key
 - changing translation policy can invalidate old cache entries
-- deleting `translations/en/` forces translation generation from scratch
+- old cache entries can remain in `translations/en/` after content changes unless the cache is pruned
+- deleting `translations/en/` forces translation generation from scratch and should not be used as routine cleanup
 
 The cache is part of the project source, not a public runtime dependency. The published site uses the finished HTML in `dist/`.
 
-### 11.6 Development server versus final build
+### 11.6 Translation cache pruning
+
+Translation cache pruning is handled by `scripts/en-postprocess.mjs` when the `EN_PRUNE_CACHE` environment variable is enabled. The script records every cache hash that is actually used while processing the current English build output. After that, it can remove cache files that are no longer used by the current site.
+
+Recommended web workflow:
+
+```bat
+npm run build:web:prune:dry
+npm run build:web:prune
+```
+
+Recommended USB workflow:
+
+```bat
+npm run build:usb:prune:dry
+npm run build:usb:prune
+```
+
+The dry-run command must be checked first. It prints files that would be deleted and reports a summary such as `cache-kept`, `cache-would-delete`, `cache-locked-kept`, and `cache-invalid-kept`. The non-dry command deletes only unused cache files that are not protected.
+
+A cache file is kept during pruning when at least one of these is true:
+
+- its hash is used by the current build
+- the JSON file cannot be read safely
+- the cache entry has `manual: true`
+- the cache entry has `locked: true`
+- the cache entry has `edited: true`
+
+New automatically generated cache entries are marked as not manually edited:
+
+```json
+"manual": false,
+"locked": false,
+"edited": false,
+"editedAt": null,
+"editedBy": null
+```
+
+When a translation is manually corrected, the cache entry can be marked like this:
+
+```json
+"edited": true,
+"editedAt": "2026-07-06",
+"editedBy": "Vojta"
+```
+
+This protects the entry from future pruning even if the current source text changes and the hash is no longer used. `manual: true` and `locked: true` are also respected as stronger preservation markers.
+
+Pruning is meant to keep `translations/en/` searchable and maintainable. It should not change the published HTML except through the normal strict build process. If the goal is only to remove unused cache files, do not use `build:web:refresh`; refresh can retranslate existing content and change manually checked output.
+
+### 11.7 Development server versus final build
 
 `npm run dev` is useful for editing layout and content. The final publishing artifact is still the build output in `dist/`.
 
@@ -1059,7 +1164,7 @@ To verify the real final translated output, use:
     npm run build:web:translate
     npm run preview
 	
-### 11.7 Marking content as not translatable
+### 11.8 Marking content as not translatable
 
 Use `NoTranslate.astro` for MDX content that must remain unchanged.
 
@@ -1094,7 +1199,7 @@ Typical uses:
 - names, labels, or conceptual phrases that should not be normalized by DeepL
 - very large fragments that would otherwise exceed the translation size limit
 
-### 11.8 `notranslate` inside `MediaRow`
+### 11.9 `notranslate` inside `MediaRow`
 
 `MediaRow.astro` is a special case because `type: "text"` items are rendered through `set:html`. That means the `content` value is an HTML string, not an Astro component.
 
@@ -1151,7 +1256,7 @@ The important part is:
 
 The postprocess recognizes this marker, removes the protected block before sending the fragment to DeepL, and restores it afterward.
 
-### 11.9 Large fragments
+### 11.10 Large fragments
 
 The current maximum translated fragment size is `80_000` bytes. If a translated region is larger, the build fails with an error similar to:
 
@@ -1167,7 +1272,7 @@ Preferred solutions:
 
 The size guardrail exists to avoid sending oversized and fragile HTML blobs to DeepL.
 
-### 11.10 Troubleshooting
+### 11.11 Troubleshooting
 
 #### `DEEPL_AUTH_KEY is not set`
 
@@ -1194,6 +1299,16 @@ npm run build:usb:translate
 
 Then run the strict build again.
 
+#### Cache pruning would delete a manually edited translation
+
+First run only the dry-run command:
+
+```bat
+npm run build:web:prune:dry
+```
+
+If an unused cache entry still needs to be preserved, open the corresponding JSON file and add `edited: true`, `manual: true`, or `locked: true`. Then run the dry-run command again and check that the file is counted as `cache-locked-kept` instead of `cache-would-delete`.
+
 #### Header and UI are English, but the article body is Czech
 
 The manual UI dictionary is working, but the automatic content translation did not run or did not have a cache entry. Check the build log and run `build:web:translate`.
@@ -1206,26 +1321,30 @@ Check the end of the build log. If it contains `DEEPL_AUTH_KEY is not set` or an
 
 The problem is upload or caching, not translation. Upload the entire `dist/` directory again and force overwrite existing files. Avoid “skip if same size” and similar FTP shortcuts. Then test with a cache-busting URL parameter.
 
-### 11.11 Publishing checklist
+### 11.12 Publishing checklist
 
 Before uploading the web build to FTP:
 
 1. Run `npm run build:web:translate`.
 2. Run `npm run build:web:strict`.
-3. Run `npm run preview`.
-4. Check that `dist/SHA256SUMS.txt`, `dist/BUILD_SHA256.txt`, and `dist/integrity.json` exist.
-5. Open at least one EN article locally.
-6. Check that the article body is actually English, not only the header and metadata.
-7. Upload the complete `dist/` directory, including the integrity files.
-8. Overwrite existing files on the server.
+3. If translation cache cleanup is needed, run `npm run build:web:prune:dry` and check the summary.
+4. If the dry-run looks correct, run `npm run build:web:prune`.
+5. Run `npm run preview`.
+6. Check that `dist/SHA256SUMS.txt`, `dist/BUILD_SHA256.txt`, and `dist/integrity.json` exist.
+7. Open at least one EN article locally.
+8. Check that the article body is actually English, not only the header and metadata.
+9. Upload the complete `dist/` directory, including the integrity files.
+10. Overwrite existing files on the server.
 
 For USB/offline output:
 
 1. Run `npm run build:usb:translate`.
-2. Run `npm run build:usb:strict` or `node scripts/build-usb-strict.mjs`.
-3. Check that `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json` are present in the generated output.
-4. Open the generated HTML from disk.
-5. Check CSS, images, internal links, and EN article content.
+2. Run `npm run build:usb:strict`.
+3. If translation cache cleanup is needed, run `npm run build:usb:prune:dry` and check the summary.
+4. If the dry-run looks correct, run `npm run build:usb:prune`.
+5. Check that `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json` are present in the generated output.
+6. Open the generated HTML from disk.
+7. Check CSS, images, internal links, and EN article content.
 
 For Arweave / Permaweb output:
 
@@ -1375,5 +1494,6 @@ From a maintenance perspective, the following points are especially important:
 - web and USB builds generate a recursively reconstructable source package at `/source/vojtamaur-web-source.zip`
 - when working with new content, it is useful to expect the occasional need to restart the development server
 - public assets in `public/images/` and `public/files/` should be checked for unintended embedded metadata before commit
+- unused English translation cache entries can be pruned with a dry-run-first workflow, while `manual`, `locked`, and `edited` entries are preserved
 
 This documentation describes the current architecture and operating model of the project in a form suitable for ongoing maintenance, handoff, or future migration.

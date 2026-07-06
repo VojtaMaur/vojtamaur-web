@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile, mkdir } from "node:fs/promises";
+import { readdir, readFile, writeFile, mkdir, unlink } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -9,7 +9,15 @@ const DIST_DIR = process.env.DIST_DIR || "dist";
 const MODE = process.env.EN_TRANSLATE || "off"; // off | missing | refresh
 const STRICT = process.env.EN_STRICT === "1" || process.env.EN_STRICT === "true";
 const AUTH_KEY = process.env.DEEPL_AUTH_KEY;
-const DEEPL_API_URL = process.env.DEEPL_API_URL || (AUTH_KEY?.endsWith(":fx") ? "https://api-free.deepl.com/v2/translate" : "https://api.deepl.com/v2/translate");
+const DEEPL_API_URL =
+  process.env.DEEPL_API_URL ||
+  (AUTH_KEY?.endsWith(":fx")
+    ? "https://api-free.deepl.com/v2/translate"
+    : "https://api.deepl.com/v2/translate");
+
+const PRUNE_CACHE = process.env.EN_PRUNE_CACHE === "1" || process.env.EN_PRUNE_CACHE === "true";
+const PRUNE_DRY_RUN = process.env.EN_PRUNE_CACHE === "dry-run";
+const usedCacheHashes = new Set();
 
 const VALID_MODES = new Set(["off", "missing", "refresh"]);
 if (!VALID_MODES.has(MODE)) {
@@ -79,10 +87,18 @@ async function readCache(hash) {
   return JSON.parse(await readFile(file, "utf8"));
 }
 
+async function readCacheFile(file) {
+  return JSON.parse(await readFile(file, "utf8"));
+}
+
 async function writeCache(hash, entry) {
   await mkdir(i18nConfig.cacheDir, { recursive: true });
   const file = path.join(i18nConfig.cacheDir, `${hash}.json`);
   await writeFile(file, `${JSON.stringify(entry, null, 2)}\n`, "utf8");
+}
+
+function isProtectedCacheEntry(entry) {
+  return entry?.manual === true || entry?.locked === true || entry?.edited === true;
 }
 
 function byteLength(value) {
@@ -230,7 +246,9 @@ async function translateWithCache({ routePath, purpose, source, pageTitle, html 
   const hash = cacheKey({ routePath, purpose, sourceFragment: source });
   let entry = await readCache(hash);
 
-  if (!entry || MODE === "refresh") {
+  if (entry && isProtectedCacheEntry(entry) && MODE === "refresh") {
+    console.warn(`[i18n] Protected cache entry kept during refresh: ${hash}`);
+  } else if (!entry || MODE === "refresh") {
     if (MODE === "off") {
       if (STRICT) {
         throw new Error(`Missing EN translation cache for ${routePath} (${purpose}, ${hash}). Run npm run build:web:translate or disable EN_STRICT.`);
@@ -253,6 +271,11 @@ async function translateWithCache({ routePath, purpose, source, pageTitle, html 
       glossaryRevision: i18nConfig.glossaryRevision,
       deepl: i18nConfig.deepl,
       selectorPolicyRevision: i18nConfig.selectorPolicyRevision,
+      manual: false,
+      locked: false,
+      edited: false,
+      editedAt: null,
+      editedBy: null,
       sourceFragment: source,
       translatedFragment: translated,
       createdAt: new Date().toISOString()
@@ -260,6 +283,7 @@ async function translateWithCache({ routePath, purpose, source, pageTitle, html 
     await writeCache(hash, entry);
   }
 
+  usedCacheHashes.add(hash);
   return { text: entry.translatedFragment, status: "ok", hash };
 }
 
@@ -362,6 +386,79 @@ async function processFile(filePath) {
   return { translated, missing, skipped: 0 };
 }
 
+async function pruneUnusedCache() {
+  if (!PRUNE_CACHE && !PRUNE_DRY_RUN) {
+    return {
+      kept: 0,
+      deleted: 0,
+      wouldDelete: 0,
+      lockedKept: 0,
+      invalidKept: 0
+    };
+  }
+
+  if (!existsSync(i18nConfig.cacheDir)) {
+    return {
+      kept: 0,
+      deleted: 0,
+      wouldDelete: 0,
+      lockedKept: 0,
+      invalidKept: 0
+    };
+  }
+
+  const entries = await readdir(i18nConfig.cacheDir, { withFileTypes: true });
+  let kept = 0;
+  let deleted = 0;
+  let wouldDelete = 0;
+  let lockedKept = 0;
+  let invalidKept = 0;
+
+  for (const entry of entries) {
+    if (!entry.isFile() || !entry.name.endsWith(".json")) continue;
+
+    const hash = entry.name.replace(/\.json$/, "");
+    const file = path.join(i18nConfig.cacheDir, entry.name);
+
+    if (usedCacheHashes.has(hash)) {
+      kept += 1;
+      continue;
+    }
+
+    let cacheEntry;
+    try {
+      cacheEntry = await readCacheFile(file);
+    } catch (error) {
+      invalidKept += 1;
+      console.warn(`[i18n] prune: keeping unreadable cache file ${file}: ${error.message}`);
+      continue;
+    }
+
+    if (isProtectedCacheEntry(cacheEntry)) {
+      lockedKept += 1;
+      console.log(`[i18n] prune: keeping protected cache file ${file}`);
+      continue;
+    }
+
+    if (PRUNE_DRY_RUN) {
+      wouldDelete += 1;
+      console.log(`[i18n] prune dry-run: would delete ${file}`);
+    } else {
+      await unlink(file);
+      deleted += 1;
+      console.log(`[i18n] prune: deleted ${file}`);
+    }
+  }
+
+  return {
+    kept,
+    deleted,
+    wouldDelete,
+    lockedKept,
+    invalidKept
+  };
+}
+
 async function main() {
   const files = await walkHtmlFiles(DIST_DIR);
   let translated = 0;
@@ -380,7 +477,11 @@ async function main() {
     skipped += result.skipped;
   }
 
-  console.log(`[i18n] mode=${MODE}, strict=${STRICT ? "yes" : "no"}, translated/cache-used=${translated}, missing=${missing}, skipped=${skipped}`);
+  const pruneResult = await pruneUnusedCache();
+
+  console.log(
+    `[i18n] mode=${MODE}, strict=${STRICT ? "yes" : "no"}, translated/cache-used=${translated}, missing=${missing}, skipped=${skipped}, cache-kept=${pruneResult.kept}, cache-deleted=${pruneResult.deleted}, cache-would-delete=${pruneResult.wouldDelete}, cache-locked-kept=${pruneResult.lockedKept}, cache-invalid-kept=${pruneResult.invalidKept}`
+  );
 
   if (missing > 0 && !STRICT) {
     console.warn(`[i18n] ${missing} EN item(s) had no cache and were left in source language with noindex on affected pages. Run build:*:translate before publishing.`);

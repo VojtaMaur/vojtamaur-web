@@ -355,6 +355,14 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260701070605/https://vojtamaur.github.io/vojtamaur-web/metawebovy-clanek/
 	https://web.archive.org/web/20260701070632/https://vojtamaur.github.io/vojtamaur-web/en/metawebovy-clanek/
 	https://web.archive.org/web/20260701074655/https://vojtamaur.github.io/vojtamaur-web/ALL_POSTS.txt
+	https://web.archive.org/web/20260703080454/https://vojtamaur.cz/en/metawebovy-clanek/
+	https://web.archive.org/web/20260703080506/https://vojtamaur.cz/metawebovy-clanek/
+	https://web.archive.org/web/20260705161946/https://vojtamaur.cz/metawebovy-clanek/
+	https://web.archive.org/web/20260705162136/https://vojtamaur.cz/images/metawebovy-clanek-003-all_posts-edice-volne-distribuce-1.jpg
+	https://web.archive.org/web/20260705162139/https://vojtamaur.cz/en/metawebovy-clanek/
+	https://web.archive.org/web/20260706105911/https://vojtamaur.cz/cestovani-recko-2020/
+	https://web.archive.org/web/20260706105959/https://vojtamaur.cz/cestovani/
+	https://web.archive.org/web/20260706110143/https://vojtamaur.cz/en/cestovani/
 	...
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
@@ -434,6 +442,15 @@ PARTIAL SNAPSHOTS:
 	http://archive.today/2026.05.25-044912/https://vojtamaur.github.io/vojtamaur-web/prizivnici/
 	http://archive.today/2026.06.25-065513/https://vojtamaur.cz/metawebovy-clanek/
 	http://archive.today/2026.06.25-065518/https://vojtamaur.github.io/vojtamaur-web/metawebovy-clanek/
+	http://archive.today/2026.07.06-023234/https://vojtamaur.cz/metawebovy-clanek/
+	http://archive.today/2026.07.06-023918/https://vojtamaur.cz/ARCHIVE.txt
+	http://archive.today/2026.07.06-024112/https://vojtamaur.cz/SHA256SUMS.txt
+	http://archive.today/2026.07.06-024307/https://vojtamaur.cz/ALL_POSTS.txt
+	http://archive.today/2026.07.06-024702/https://vojtamaur.cz/images/metawebovy-clanek-001-volna-tvotba.jpg
+	http://archive.today/2026.07.06-024838/https://vojtamaur.cz/images/metawebovy-clanek-002-all_posts.jpg
+	http://archive.today/2026.07.06-110303/https://vojtamaur.cz/cestovani-recko-2020/
+	http://archive.today/2026.07.06-110308/https://vojtamaur.cz/en/cestovani-recko-2020/
+	http://archive.today/2026.07.06-110400/https://vojtamaur.cz/
 	Ghost archive
 	https://ghostarchive.org/archive/Aqt05
 	https://ghostarchive.org/archive/POTTj
@@ -475,6 +492,69 @@ PARTIAL SNAPSHOTS:
 	https://arquivo.pt/wayback/20260702060432/https://vojtamaur.cz/en/metawebovy-clanek/
 	https://arquivo.pt/wayback/20260702060718/https://vojtamaur.neocities.org/
 	https://arquivo.pt/wayback/20260702060755/https://vojtamaur.github.io/vojtamaur-web/
+	https://arquivo.pt/wayback/20260705163437/https://vojtamaur.cz/en/metawebovy-clanek/
+	https://arquivo.pt/wayback/20260705163511/https://vojtamaur.cz/ARCHIVE.txt
+	https://arquivo.pt/wayback/20260705163536/https://vojtamaur.cz/ALL_POSTS.txt
+	https://arquivo.pt/wayback/20260705163603/https://vojtamaur.cz/metawebovy-clanek/
+	https://arquivo.pt/wayback/20260705163640/https://vojtamaur.cz/images/metawebovy-clanek-001-volna-tvotba.jpg
+	https://arquivo.pt/wayback/20260705163658/https://vojtamaur.cz/images/metawebovy-clanek-002-all_posts.jpg
+	https://arquivo.pt/wayback/20260705163715/https://vojtamaur.cz/images/metawebovy-clanek-003-all_posts-venice-edition.jpg
+	https://arquivo.pt/wayback/20260705163733/https://vojtamaur.cz/images/metawebovy-clanek-003-all_posts-venice-edition-note.png
+	https://arquivo.pt/wayback/20260705163826/https://vojtamaur.cz/images/metawebovy-clanek-003-all_posts-edice-volne-distribuce-1.jpg
+	https://arquivo.pt/wayback/20260706015738/https://vojtamaur.cz/plzen-2026-05-01/
+	https://arquivo.pt/wayback/20260706015807/https://vojtamaur.cz/clipboard-smetiste/
+	https://arquivo.pt/wayback/20260706015837/https://vojtamaur.cz/docasne-entity/
+	https://arquivo.pt/wayback/20260706015900/https://vojtamaur.cz/genom-theodorove-spirale/
+	https://arquivo.pt/wayback/20260706015930/https://vojtamaur.cz/anti-jazyk/
+	https://arquivo.pt/wayback/20260706015949/https://vojtamaur.cz/cerv-epsilon/
+	https://arquivo.pt/wayback/20260706020011/https://vojtamaur.cz/gate/
+	https://arquivo.pt/wayback/20260706020204/https://vojtamaur.cz/dullgpt/
+	https://arquivo.pt/wayback/20260706020228/https://vojtamaur.cz/hranice-soukromi/
+	https://arquivo.pt/wayback/20260706020300/https://vojtamaur.cz/vlnove-funkce/
+	https://arquivo.pt/wayback/20260706020323/https://vojtamaur.cz/trajektorie-kurzoru/
+	https://arquivo.pt/wayback/20260706020349/https://vojtamaur.cz/zaznamy-rostlin/
+	https://arquivo.pt/wayback/20260706020409/https://vojtamaur.cz/rekurze-programu-ms-word/
+	https://arquivo.pt/wayback/20260706020430/https://vojtamaur.cz/pseudobasen/
+	https://arquivo.pt/wayback/20260706020449/https://vojtamaur.cz/fotogrammetrie/
+	https://arquivo.pt/wayback/20260706020517/https://vojtamaur.cz/autoportret-prakticka-maturitni-prace/
+	https://arquivo.pt/wayback/20260706020618/https://vojtamaur.cz/strucna-historie-zivota-zemi/
+	https://arquivo.pt/wayback/20260706020635/https://vojtamaur.cz/zivot-hromnickem-jezirku/
+	https://arquivo.pt/wayback/20260706020716/https://vojtamaur.cz/uvaha-hranicich-fantazie/
+	https://arquivo.pt/wayback/20260706020739/https://vojtamaur.cz/zvysene-vnimani-rozdilu-svetlosti/
+	https://arquivo.pt/wayback/20260706020811/https://vojtamaur.cz/teoremy-zivota/
+	https://arquivo.pt/wayback/20260706020831/https://vojtamaur.cz/pocitac-nahodnymi-vstupy/
+	https://arquivo.pt/wayback/20260706021005/https://vojtamaur.cz/zacyklena-hierarchie-zivota/
+	https://arquivo.pt/wayback/20260706021026/https://vojtamaur.cz/odraz-a-prostor/
+	https://arquivo.pt/wayback/20260706021051/https://vojtamaur.cz/myty-fibonacciho-posloupnosti/
+	https://arquivo.pt/wayback/20260706021108/https://vojtamaur.cz/metaprogram/
+	https://arquivo.pt/wayback/20260706021132/https://vojtamaur.cz/recamanova-posloupnost-zelvi-grafice/
+	https://arquivo.pt/wayback/20260706021153/https://vojtamaur.cz/lychreluv-fraktal/
+	https://arquivo.pt/wayback/20260706021217/https://vojtamaur.cz/lipovy-list/
+	https://arquivo.pt/wayback/20260706021237/https://vojtamaur.cz/prvociselne-spiraly/
+	https://arquivo.pt/wayback/20260706021254/https://vojtamaur.cz/iluze-kontrastu-vertikalnich-horizontalnich-pruhu/
+	https://arquivo.pt/wayback/20260706021317/https://vojtamaur.cz/spirala-fibonacciho-slova/
+	https://arquivo.pt/wayback/20260706021344/https://vojtamaur.cz/barva-tvar-ton/
+	https://arquivo.pt/wayback/20260706021359/https://vojtamaur.cz/lidsky-zrak/
+	https://arquivo.pt/wayback/20260706021421/https://vojtamaur.cz/portret-osobnosti/
+	https://arquivo.pt/wayback/20260706021442/https://vojtamaur.cz/sachovnicovy-rastr/
+	https://arquivo.pt/wayback/20260706021507/https://vojtamaur.cz/pokriveni-informace/
+	https://arquivo.pt/wayback/20260706021523/https://vojtamaur.cz/dva-rytmy/
+	https://arquivo.pt/wayback/20260706021550/https://vojtamaur.cz/nahodna-cisla-zvolena-clovekem/
+	https://arquivo.pt/wayback/20260706021606/https://vojtamaur.cz/nepravidelny-dech/
+	https://arquivo.pt/wayback/20260706021622/https://vojtamaur.cz/z-pohledu-musle/
+	https://arquivo.pt/wayback/20260706021646/https://vojtamaur.cz/plisen/
+	https://arquivo.pt/wayback/20260706021701/https://vojtamaur.cz/naruseni-pravidelneho-rastru/
+	https://arquivo.pt/wayback/20260706021722/https://vojtamaur.cz/zmrtvychvstani/
+	https://arquivo.pt/wayback/20260706021736/https://vojtamaur.cz/barevny-prumer/
+	https://arquivo.pt/wayback/20260706021754/https://vojtamaur.cz/tank/
+	https://arquivo.pt/wayback/20260706021816/https://vojtamaur.cz/kostky-cukru/
+	https://arquivo.pt/wayback/20260706021837/https://vojtamaur.cz/street-art-knihovna/
+	https://arquivo.pt/wayback/20260706021907/https://vojtamaur.cz/od-mesta-az-po-nahodu/
+	https://arquivo.pt/wayback/20260706021936/https://vojtamaur.cz/aplikace-google/
+	https://arquivo.pt/wayback/20260706022134/https://vojtamaur.cz/nezalezi-z-jakeho-kraje-jsi-prisel/
+	https://arquivo.pt/wayback/20260706022038/https://vojtamaur.cz/cestovani/
+	https://arquivo.pt/wayback/20260706110749/https://vojtamaur.cz/en/cestovani-recko-2020/
+	https://arquivo.pt/wayback/20260706110810/https://vojtamaur.cz/cestovani-recko-2020/
 	Megalodon / Web Gyotaku
 	https://megalodon.jp/2026-0702-1329-40/https://vojtamaur.cz:443/
 	https://megalodon.jp/2026-0702-1331-10/https://vojtamaur.cz:443/en/
@@ -535,6 +615,16 @@ PARTIAL SNAPSHOTS:
 	https://megalodon.jp/2026-0702-1456-54/https://vojtamaur.cz:443/en/strucna-historie-zivota-zemi/
 	https://megalodon.jp/2026-0702-1457-30/https://vojtamaur.cz:443/en/vlnove-funkce/
 	https://megalodon.jp/2026-0702-1458-08/https://vojtamaur.cz:443/en/autoportret-prakticka-maturitni-prace/
+	https://megalodon.jp/2026-0706-0124-46/https://vojtamaur.cz:443/en/metawebovy-clanek/
+	https://megalodon.jp/2026-0706-0125-31/https://vojtamaur.cz:443/images/metawebovy-clanek-001-volna-tvotba.jpg
+	https://megalodon.jp/2026-0706-0126-03/https://vojtamaur.cz:443/images/metawebovy-clanek-002-all_posts.jpg
+	https://megalodon.jp/2026-0706-0126-34/https://vojtamaur.cz:443/images/metawebovy-clanek-003-all_posts-venice-edition.jpg
+	https://megalodon.jp/2026-0706-0132-01/https://vojtamaur.cz:443/pseudobasen/
+	https://megalodon.jp/2026-0706-0133-14/https://vojtamaur.cz:443/images/metawebovy-clanek-003-all_posts-venice-edition-note.png
+	https://megalodon.jp/2026-0706-0133-50/https://vojtamaur.cz:443/ALL_POSTS.txt
+	https://megalodon.jp/2026-0706-2008-42/https://vojtamaur.cz:443/cestovani-recko-2020/
+	https://megalodon.jp/2026-0706-2009-30/https://vojtamaur.cz:443/en/cestovani-recko-2020/
+	https://megalodon.jp/2026-0706-2010-50/https://vojtamaur.cz:443/cestovani/
 	Perma.cc
 	https://perma.cc/5W67-Z395
 	https://perma.cc/KHP9-63FL

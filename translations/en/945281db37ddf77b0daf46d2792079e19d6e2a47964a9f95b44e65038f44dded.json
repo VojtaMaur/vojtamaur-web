@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "945281db37ddf77b0daf46d2792079e19d6e2a47964a9f95b44e65038f44dded",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-recko-2020/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": "Řecko 2020",
+  "translatedFragment": "Greece 2020",
+  "createdAt": "2026-07-06T10:37:29.598Z"
+}

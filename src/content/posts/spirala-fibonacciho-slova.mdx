@@ -36,5 +36,136 @@ Fibonacciho slovo je specifická posloupnost binárních číslic (nebo obecněj
 **Co je Ulamova spirála?**  
 [Ulamova spirála](https://cs.wikipedia.org/wiki/Ulamova_spir%C3%A1la), nebo také prvočíselná spirála, je obrázek, který vznikne seřazením přirozených čísel do spirály a zvýrazněním prvočísel. Byla objevena matematikem Stanisławem Ulamem v roce 1963. Ulam si napsal přirozená čísla do obdélníkové sítě, jedničku doprostřed a další čísla spirálovitě směrem ven.  
 
+**Zdrojový kód projektu**  
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Spirála Fibonacciho slova</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    #container {
+      text-align: center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      padding: 20px;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background-color: white;
+    }
+
+    #point {
+      color: black;
+      background-color: white;
+      border:none;
+      position: absolute;
+      font-size:11px;
+      text-align:center;
+      margin: 0;
+      padding: 10px;
+      width:20px;
+      height:20px;
+    }
+
+    #point2 {
+      color: white;
+      background-color: black;
+      position: absolute;
+      font-size:11px;
+      text-align:center;
+      border:none;
+      margin: 0;
+      padding: 10px;
+      width:20px;
+      height:20px;
+    }
+  </style>
+</head>
+<body>
+  <main id='container'>
+  </main>
+
+  <script>
+    /* FUNKCE SPIRALY */
+    function spiral(n) {
+      if (n === 0) return [0, 0, r];
+      --n;
+
+      var r = Math.floor((Math.sqrt(n + 1) - 1) / 2) + 1;
+      var p = (8 * r * (r - 1)) / 2;
+      var en = r * 2;
+      var a = (1 + n - p) % (r * 8);
+      var pos = [0, 0, r];
+
+      switch (Math.floor(a / (r * 2))) {
+        case 0:
+          {
+            pos[0] = a - r;
+            pos[1] = -r;
+          }
+          break;
+        case 1:
+          {
+            pos[0] = r;
+            pos[1] = (a % en) - r;
+          }
+          break;
+        case 2:
+          {
+            pos[0] = r - (a % en);
+            pos[1] = r;
+          }
+          break;
+        case 3:
+          {
+            pos[0] = -r;
+            pos[1] = r - (a % en);
+          }
+          break;
+      }
+
+      return pos;
+    }
+
+    /* FIBONACCIHO SLOVA */
+    container = document.getElementById("container");
+    var var0 = "<div id='point'></div>";
+    var var1 = "<div id='point2'></div>";
+    var var3;
+    var text = "";
+    var i;
+
+    /* ITERACE NEFUNGUJE PO JEDNOM CTVERECKU ALE PO KAZDEM SOUCTU JEDNICEK A NUL */
+    for (var i = 0; i < 22; i++) {
+      var3 = var0 + var1;
+      var1 = var0;
+      var0 = var3;
+
+      text += var3;
+      container.innerHTML = text;
+    }
+
+    /* VOLANI FUNKCE SPIRALY */
+    var cislo = document.getElementById('container').getElementsByTagName("div");
+
+    for(var i=0; i<cislo.length; i++) {
+      cislo[i].setAttribute("class", "jedno");
+
+      var pos = spiral(i);
+
+      cislo[i].style.right = 300 + 40 * pos[0] + "px";
+      cislo[i].style.top = 300 + 40 * pos[1] + "px";
+    }
+  </script>
+</body>
+</html>
+
+```
+
 *Autor myšlenky: Vojta Maur*  
-*Autor JavaScript kódu: Pavel Burda*
+*Autor kódu: Pavel Burda*

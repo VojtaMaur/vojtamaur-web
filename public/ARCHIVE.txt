@@ -12,6 +12,7 @@ ALTERNATIVE DEPLOYMENTS:
 	https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
 
 SOURCE REPOSITORY (canonical source):
+	GitHub
 	https://github.com/VojtaMaur/vojtamaur-web
 
 COPIES OF GITHUB REPOSITORY:
@@ -24,6 +25,8 @@ COPIES OF GITHUB REPOSITORY:
 	Internet archive (archival ingest of repository)
 	https://archive.org/details/vojtamaur-web-source-2026-05
 	https://archive.org/details/vojtamaur-web-complete-sourcebuildgit-2026-07
+	Permanent.org
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r9
 
 STATIC SNAPSHOTS (built output of the repository, reconstructable):
 	GitHub Releases
@@ -33,6 +36,9 @@ STATIC SNAPSHOTS (built output of the repository, reconstructable):
 	Internet Archive
 	https://archive.org/details/vojtamaur-2026-04
 	https://archive.org/details/vojtamaur-2026-05
+	Permanent.org
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r7
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r8
 	
 PYTHON CLI PACKAGE (distribution + embedded fallback snapshots):
 	PyPI
@@ -74,6 +80,9 @@ FILE ARTIFACT SNAPSHOTS:
 	https://arweave.net/6PFPqk0gLwFlvNk55CIpyjGtHvsqBgLJ21RaCvCd3Vc
 	Internet Archive
 	https://archive.org/details/all-posts
+	Permanent.org
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0007
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0006
 	
 PARTIAL SNAPSHOTS:
 	Internet Archive
@@ -451,7 +460,7 @@ PARTIAL SNAPSHOTS:
 	http://archive.today/2026.07.06-110303/https://vojtamaur.cz/cestovani-recko-2020/
 	http://archive.today/2026.07.06-110308/https://vojtamaur.cz/en/cestovani-recko-2020/
 	http://archive.today/2026.07.06-110400/https://vojtamaur.cz/
-	Ghost archive
+	Ghost Archive
 	https://ghostarchive.org/archive/Aqt05
 	https://ghostarchive.org/archive/POTTj
 	https://ghostarchive.org/archive/PM4oE
@@ -475,7 +484,7 @@ PARTIAL SNAPSHOTS:
 	https://ghostarchive.org/archive/pswf7
 	https://ghostarchive.org/archive/TflaU
 	https://ghostarchive.org/archive/XHWxy
-	arquivo.pt
+	Arquivo.pt
 	https://arquivo.pt/wayback/20260509005546/https://vojtamaur.cz/volna-tvorba/
 	https://arquivo.pt/wayback/20260509005652/https://vojtamaur.cz/en/volna-tvorba/
 	https://arquivo.pt/wayback/20260509090637/https://vojtamaur.cz/ALL_POSTS.txt
@@ -555,6 +564,7 @@ PARTIAL SNAPSHOTS:
 	https://arquivo.pt/wayback/20260706022038/https://vojtamaur.cz/cestovani/
 	https://arquivo.pt/wayback/20260706110749/https://vojtamaur.cz/en/cestovani-recko-2020/
 	https://arquivo.pt/wayback/20260706110810/https://vojtamaur.cz/cestovani-recko-2020/
+	https://arquivo.pt/wayback/20260707030750/https://colab.research.google.com/drive/18y4hUsNv-aEZHtXVp67ygHGGpMBkByxD?usp=sharing
 	Megalodon / Web Gyotaku
 	https://megalodon.jp/2026-0702-1329-40/https://vojtamaur.cz:443/
 	https://megalodon.jp/2026-0702-1331-10/https://vojtamaur.cz:443/en/

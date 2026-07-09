@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 2,
+  "hash": "c6df859a42d2ff47ec1ac9bab305749efd6f33daee48e36df9fe35e68e2c057d",
+  "purpose": "html-region",
+  "page": "/en/cestovani-polsko-mazury-2026/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Polsko - Mazury 2026</h1> <p class=\"post-meta\">Video</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Poland - Masuria 2026</h1> <p class=\"post-meta\">Video</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "createdAt": "2026-07-08T04:21:06.773Z"
+}

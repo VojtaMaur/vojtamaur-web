@@ -24,10 +24,66 @@ Místo výběru z horní části distribuce (nejpravděpodobnější tokeny) se 
 Tím se odkryjí „spodní vrstvy“ modelu: vzácné výrazy, jazykové fragmenty a jiné artefakty, které model normálně potlačuje.  
 
 **Kód**  
-Zde můžete vidět nebo spustit kód projektu:    
+Kód je možné spustit v Google Colabu:  
 https://colab.research.google.com/drive/18y4hUsNv-aEZHtXVp67ygHGGpMBkByxD?usp=sharing  
 
-Je možné přenastavit parametry jako **bottom_k** (ovlivňuje z kolika nejméně pravděpodobných tokenů se vybírá), **max_new_tokens** (počet výstupních tokenů) a **tokenizer/model** (mění model a tokenizer, 'gpt2' doporučuji pro rychlý test, ale je možné experimentovat i s většími modely, jako jsou 'gpt2-medium', 'gpt2-large', 'gpt2-xl','EleutherAI/gpt-neo-1.3B', …).  
+Colab zde slouží hlavně jako běhové prostředí. Není to primární archivní kopie kódu.  
+Proto je stejný postup uložený i níže přímo v článku.  
+
+Kód je rozdělený do tří samostatných bloků stejně jako v notebooku. První načte model, druhý generuje text a třetí uloží poslední výstup.  
+
+**1. Načtení modelu a tokenizeru**  
+Tento blok stačí spustit jednou. Načte model GPT-2 a tokenizer.  
+
+```python
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+tokenizer = AutoTokenizer.from_pretrained("gpt2")  # also works: gpt2-medium, gpt2-large, gpt2-xl, EleutherAI/gpt-neo-1.3B
+model = AutoModelForCausalLM.from_pretrained("gpt2")
+model.eval()
+```
+
+**2. Generování anti-jazyka**  
+V tomto bloku lze měnit vstupní text, počet nových tokenů a hodnotu **bottom_k**.  
+Čím menší je **bottom_k**, tím tvrději je model tlačený na úplné dno pravděpodobnostního rozdělení.  
+
+```python
+prompt = "This is "
+input_ids = tokenizer.encode(prompt, return_tensors="pt")
+
+max_new_tokens = 50
+bottom_k = 5
+
+with torch.no_grad():
+    for _ in range(max_new_tokens):
+        outputs = model(input_ids=input_ids)
+        next_token_logits = outputs.logits[0, -1, :]
+
+        probs = torch.softmax(next_token_logits, dim=-1)
+
+        bottom_probs, bottom_indices = torch.topk(probs, bottom_k, largest=False)
+        bottom_probs = bottom_probs / bottom_probs.sum()
+
+        chosen_index = torch.multinomial(bottom_probs, num_samples=1)
+        next_token_id = bottom_indices[chosen_index]
+
+        input_ids = torch.cat([input_ids, next_token_id.unsqueeze(0)], dim=-1)
+
+generated_text = tokenizer.decode(input_ids.squeeze(), skip_special_tokens=True)
+print(generated_text)
+```
+
+**3. Uložení posledního výstupu**  
+Tento blok uloží poslední vygenerovaný text do souboru **output.txt**.  
+
+```python
+with open("output.txt", "w", encoding="utf-8") as f:
+    f.write(generated_text)
+```
+
+Modelové váhy GPT-2 nejsou součástí webu. Při spuštění se stahují z externího zdroje.  
+Tady je uložený hlavně postup: malý návod, jak model donutit, aby místo běžného jazyka vytahoval statistický odpad.  
 
 **Ukázka výstupu**  
 Zde jsem použil model GPT-2 a nechal ho doplnit text „This is “:  

@@ -1,0 +1,36 @@
+# Vojta Maur
+
+> Static personal archival website of Vojta Maur. The site contains artistic projects, exhibition documentation, travel records, machine-readable text exports, archive metadata, and technical documentation for preserving or reconstructing the website.
+
+This website is built as a static Astro project. The Czech content is the source of truth. English pages are generated as a derived static artifact after the build. If exact wording, titles, dates, or conceptual phrasing matter, prefer the Czech originals. Use English pages for general orientation when available.
+
+This file intentionally uses relative links so the same build can work on the main domain, mirrors, and archival copies.
+
+## Primary sources
+
+* [Documentation](/documentation/): Technical documentation of the website architecture, project structure, Astro build modes, content model, translation workflow, public asset handling, deployment, and reconstruction logic.
+* [All posts text export](/ALL_POSTS.txt): Plain-text export of article content. Best first source for LLM reading, full-text search, indexing, offline reading, and textual recovery if HTML, CSS, JavaScript, or the original build system becomes unusable.
+* [Archive metadata](/ARCHIVE.txt): Archive metadata, entry points, mirrors, snapshots, source locations, build information, and preservation-related records.
+* [Sitemap](/sitemap-index.xml): Canonical sitemap for the main public website. On mirrors, this file may still contain canonical `vojtamaur.cz` URLs.
+
+## Main website sections
+
+* [Homepage](/): Main entry point of the website.
+* [Volná tvorba](/volna-tvorba/): Free artistic work, experiments, systems, structures, and conceptual projects.
+* [Výstavy](/vystavy/): Exhibition documentation and related works.
+* [Cestování](/cestovani/): Travel records, photographs, and videos.
+* [English homepage](/en/): Generated English version of the website.
+* [Technical documentation](/documentation/): Main technical reference for understanding, rebuilding, and preserving the project.
+
+## Interpretation notes
+
+* The website contains text, images, PDFs, videos, embedded media, and standalone demos.
+* Non-textual material may be represented only by placeholders in `/ALL_POSTS.txt`; use the rendered website or source repository for the full media context.
+* Some older legacy dates may be technically normalized during migration and should not always be interpreted as exact historical publication dates.
+* Archive and mirror information should be read from `/ARCHIVE.txt` instead of being duplicated here.
+* The website is designed for long-term preservation, redundancy, migration, and reconstruction rather than only ordinary web presentation.
+
+## Optional
+
+* [Metawebový článek](/metawebovy-clanek/): Conceptual article related to the website as an archival and self-documenting system.
+* [Propagační videa](https://www.youtube.com/playlist?list=PLQ5DFp2teh9ZCZmGgdapAWEz19cdN095t): External YouTube playlist connected to promotional video work.

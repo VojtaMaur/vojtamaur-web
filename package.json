@@ -6,29 +6,26 @@
     "dev": "astro dev",
     "build": "npm run build:web",
     "preview": "astro preview",
-
     "generate:all-posts": "node scripts/generate-all-posts.mjs",
     "generate:source-bundle": "node scripts/generate-source-bundle.mjs",
     "generate:integrity": "node scripts/generate-integrity.mjs",
     "generate:integrity:arweave": "node scripts/generate-integrity.mjs dist-arweave",
-
     "build:web": "astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts && npm run generate:source-bundle && npm run generate:integrity",
     "build:web:translate": "set \"EN_TRANSLATE=missing\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts && npm run generate:source-bundle && npm run generate:integrity",
     "build:web:refresh": "set \"EN_TRANSLATE=refresh\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts && npm run generate:source-bundle && npm run generate:integrity",
     "build:web:strict": "set \"EN_STRICT=1\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts && npm run generate:source-bundle && npm run generate:integrity",
     "build:web:prune:dry": "set \"EN_PRUNE_CACHE=dry-run\" && npm run build:web:strict",
     "build:web:prune": "set \"EN_PRUNE_CACHE=1\" && npm run build:web:strict",
-
     "build:usb": "set \"BUILD_TARGET=usb\" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts && npm run generate:source-bundle && node scripts/usb-rewrite.mjs && npm run generate:integrity",
     "build:usb:translate": "node scripts/build-usb-translate.mjs",
     "build:usb:strict": "node scripts/build-usb-strict.mjs",
     "build:usb:prune:dry": "set \"EN_PRUNE_CACHE=dry-run\" && node scripts/build-usb-strict.mjs",
     "build:usb:prune": "set \"EN_PRUNE_CACHE=1\" && node scripts/build-usb-strict.mjs",
-
     "build:arweave": "npm run build:web:strict && node scripts/make-arweave-build.mjs && npm run generate:integrity:arweave"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",
+    "@astrojs/sitemap": "^3.7.3",
     "astro": "^5.0.0",
     "cheerio": "^1.2.0"
   },

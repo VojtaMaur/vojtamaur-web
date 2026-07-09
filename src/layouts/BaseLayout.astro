@@ -39,7 +39,10 @@ const enUrl = pathForEn ? new URL(pathForEn, Astro.site) : null;
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex,follow" />}
+    <meta
+      name="robots"
+      content={noindex ? "noindex,follow" : "index,follow,max-image-preview:large"}
+    />
 
     <link rel="canonical" href={canonicalUrl.href} />
     <link rel="alternate" hreflang="cs" href={csUrl.href} />

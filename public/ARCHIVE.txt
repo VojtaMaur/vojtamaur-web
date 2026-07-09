@@ -372,6 +372,8 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260706105911/https://vojtamaur.cz/cestovani-recko-2020/
 	https://web.archive.org/web/20260706105959/https://vojtamaur.cz/cestovani/
 	https://web.archive.org/web/20260706110143/https://vojtamaur.cz/en/cestovani/
+	https://web.archive.org/web/20260709075651/https://vojtamaur.cz/metawebovy-clanek/
+	https://web.archive.org/web/20260709075922/https://vojtamaur.cz/en/metawebovy-clanek/
 	...
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/

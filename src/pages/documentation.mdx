@@ -142,6 +142,7 @@ npm run generate:all-posts
 npm run generate:source-bundle
 npm run generate:integrity
 npm run generate:integrity:arweave
+npm run export:pdf
 ```
 
 Meaning of the main scripts:
@@ -163,6 +164,7 @@ Meaning of the main scripts:
 - `npm run generate:source-bundle` – generates `dist/source/vojtamaur-web-source.zip`, a small reconstructable source package with a media manifest and an asset downloader
 - `npm run generate:integrity` – generates `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json` for the selected build output directory
 - `npm run generate:integrity:arweave` – generates fresh integrity files for `dist-arweave/` after the Arweave copy-and-rewrite step
+- `npm run export:pdf` – manually exports article pages from the finished `dist/` build to archival PDF files; this command is not part of the normal build pipeline
 
 
 ### `content.config.ts`
@@ -815,6 +817,108 @@ npm run build:usb
 The downloader first checks local candidate paths when possible, then uses the configured public mirrors. Files are accepted only when their SHA-256 hash matches the manifest. Hash mismatches are reported and rejected by default rather than silently written into `public/`.
 
 The source package is generated before the final integrity pass. Therefore `SHA256SUMS.txt` includes the source ZIP as part of the final published or portable build artifact.
+
+### 9.6.3 Manual PDF export
+
+The project includes a separate manual PDF export tool:
+
+```text
+scripts/export-site-pdf.py
+```
+
+The exporter is intentionally not run by any normal web, USB, or Arweave build. PDF generation is comparatively slow and can create large output files, so it is started only when an archival or reading copy is needed.
+
+The script reads the finished static HTML from `dist/`, not the source `.mdx` files. This is necessary because English article pages are finalized by `scripts/en-postprocess.mjs` after the Astro build. The PDF export therefore reflects the same rendered Czech and English pages that exist in the finished build.
+
+Before the first use, install the Python dependencies and the Playwright Chromium browser:
+
+```bash
+python -m pip install -r requirements-pdf-export.txt
+python -m playwright install chromium
+```
+
+The standard command is:
+
+```bash
+npm run export:pdf
+```
+
+Equivalently, the script can be called directly:
+
+```bash
+python scripts/export-site-pdf.py
+```
+
+The default export:
+
+- includes all non-draft articles from all article sections
+- includes both Czech and English routes
+- creates one combined A4 PDF
+- adds a generated cover and article index
+- adds PDF outline entries for the included pages
+- writes `pdf-export-manifest.json` with article metadata, output file sizes, and SHA-256 hashes
+
+The generated files are written to:
+
+```text
+pdf-export/
+```
+
+This directory is a generated output and is excluded through `.gitignore`. The exporter script and `requirements-pdf-export.txt` remain versioned source files.
+
+Useful selection options include:
+
+```bash
+python scripts/export-site-pdf.py --lang cs
+python scripts/export-site-pdf.py --lang en
+python scripts/export-site-pdf.py --lang both
+python scripts/export-site-pdf.py --section cestovani
+python scripts/export-site-pdf.py --section volna-tvorba,vystavy
+python scripts/export-site-pdf.py --separate
+```
+
+`--section` can be repeated or supplied as a comma-separated list. `--separate` creates one PDF for each article/language page instead of one combined file.
+
+The script normally expects an existing `dist/` directory. A build can be requested explicitly for a particular run:
+
+```bash
+python scripts/export-site-pdf.py --build-command "npm run build:web:strict"
+```
+
+This does not change the normal project build scripts; it only runs the supplied command before that individual PDF export.
+
+By default, the exporter keeps Chromium's original PDF output unchanged:
+
+```text
+--pdf-quality archive
+```
+
+This mode does not require Ghostscript. Optional PDF compression and image downsampling use Ghostscript as a second post-processing stage. A practical medium-quality export is:
+
+```bash
+python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75
+```
+
+The available quality presets are:
+
+```text
+archive
+printer
+ebook
+screen
+```
+
+The `archive` preset preserves the original output. The other presets require Ghostscript and may be further adjusted with `--image-dpi` and `--jpeg-quality`. If Ghostscript is not detected automatically, its executable can be supplied explicitly:
+
+```bash
+python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "C:\Program Files\gs\gs10.07.1\bin\gswin64c.exe"
+```
+
+`--keep-uncompressed` preserves the original uncompressed PDF alongside the compressed result.
+
+For English pages, the index title is read from the rendered HTML rather than copied from Czech MDX frontmatter. If the English postprocess marked a page as incomplete, the cover index and manifest label it as `Incomplete / Czech fallback`. An `/en/` route can therefore exist even when some or all of its article content remains Czech.
+
+The PDF is a paginated visual snapshot, not a lossless replacement for the website or source repository. Wide tables, long source-code lines, and other horizontally overflowing content can be clipped, wrapped differently, or extend beyond the printable area. The generated cover includes this limitation explicitly. The archived HTML, source files, repository, `ALL_POSTS.txt`, and other preservation layers remain the authoritative complete versions.
 
 ### 9.7 Arweave / Permaweb build
 

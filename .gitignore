@@ -34,3 +34,6 @@ metadata-report*.json
 .source-bundle-staging/
 vojtamaur-web-source*.zip
 source/vojtamaur-web-source*.zip
+
+# generated PDF exports
+pdf-export/

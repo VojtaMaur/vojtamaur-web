@@ -21,7 +21,9 @@
     "build:usb:strict": "node scripts/build-usb-strict.mjs",
     "build:usb:prune:dry": "set \"EN_PRUNE_CACHE=dry-run\" && node scripts/build-usb-strict.mjs",
     "build:usb:prune": "set \"EN_PRUNE_CACHE=1\" && node scripts/build-usb-strict.mjs",
-    "build:arweave": "npm run build:web:strict && node scripts/make-arweave-build.mjs && npm run generate:integrity:arweave"
+    "build:arweave": "npm run build:web:strict && node scripts/make-arweave-build.mjs && npm run generate:integrity:arweave",
+	"export:pdf": "python scripts/export-site-pdf.py",
+    "export:pdf:build": "python scripts/export-site-pdf.py --build-command \"npm run build:web:strict\""
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",

@@ -78,6 +78,8 @@ FILE ARTIFACT SNAPSHOTS:
 	https://arweave.net/km-NeXucy8QrZjErPSd31cTKpnV95iHiKa14HNBafhU
 	https://app.ardrive.io/#/file/66d612dc-f6f6-433c-a87e-5f84be24ffe7/view
 	https://arweave.net/6PFPqk0gLwFlvNk55CIpyjGtHvsqBgLJ21RaCvCd3Vc
+	https://app.ardrive.io/#/file/e8b41773-52b4-4f48-affa-722e793e1410/view
+	https://arweave.net/VKUOvzKC7SDh1JS41csWBX1JFlhtM-2Ia3GXnNWWjR8
 	Internet Archive
 	https://archive.org/details/all-posts
 	https://archive.org/details/vojtamaur-web-export-all-cs-en-2026-07-10
@@ -376,6 +378,7 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260706110143/https://vojtamaur.cz/en/cestovani/
 	https://web.archive.org/web/20260709075651/https://vojtamaur.cz/metawebovy-clanek/
 	https://web.archive.org/web/20260709075922/https://vojtamaur.cz/en/metawebovy-clanek/
+	https://web.archive.org/web/20260710214324/https://megalodon.jp/2026-0711-0642-18/https://vojtamaur.cz:443/metawebovy-clanek/
 	...
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
@@ -650,3 +653,5 @@ PARTIAL SNAPSHOTS:
 	https://perma.cc/DJ57-N96F
 	https://perma.cc/F5L2-UEMP
 	https://perma.cc/KTS7-GPSC
+	Webarchiv / National Library of the Czech Republic (Captures can be viewed at the National Library of the Czech Republic.)
+	https://wayback.webarchiv.cz/wayback/*/https://vojtamaur.cz/

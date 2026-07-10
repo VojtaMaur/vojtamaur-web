@@ -80,9 +80,11 @@ FILE ARTIFACT SNAPSHOTS:
 	https://arweave.net/6PFPqk0gLwFlvNk55CIpyjGtHvsqBgLJ21RaCvCd3Vc
 	Internet Archive
 	https://archive.org/details/all-posts
+	https://archive.org/details/vojtamaur-web-export-all-cs-en-2026-07-10
 	Permanent.org
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0007
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0006
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00rb
 	
 PARTIAL SNAPSHOTS:
 	Internet Archive

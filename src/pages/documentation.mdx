@@ -826,7 +826,7 @@ The project includes a separate manual PDF export tool:
 scripts/export-site-pdf.py
 ```
 
-The exporter is intentionally not run by any normal web, USB, or Arweave build. PDF generation is comparatively slow and can create large output files, so it is started only when an archival or reading copy is needed.
+The exporter is intentionally not run by any normal web, usb, or Arweave build. PDF generation is comparatively slow and can create large output files, so it is started only when an archival or reading copy is needed.
 
 The script reads the finished static HTML from `dist/`, not the source `.mdx` files. This is necessary because English article pages are finalized by `scripts/en-postprocess.mjs` after the Astro build. The PDF export therefore reflects the same rendered Czech and English pages that exist in the finished build.
 

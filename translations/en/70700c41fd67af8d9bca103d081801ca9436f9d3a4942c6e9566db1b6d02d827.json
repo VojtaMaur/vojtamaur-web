@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "hash": "70700c41fd67af8d9bca103d081801ca9436f9d3a4942c6e9566db1b6d02d827",
+  "purpose": "html-region",
+  "page": "/en/genom-theodorove-spirale/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "add1dfc20d8352f2a4e504e328cbb510e423fc74147c44fd605dcd453720e196",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Genom v Theodorově spirále</h1> <p class=\"post-meta\"> January 2026 </p> </div> <div class=\"post-body\"> <p>Tato vizualizace převádí lineární genetickou informaci (DNA/RNA) do souvislé 2D <a href=\"https://en.wikipedia.org/wiki/Spiral_of_Theodorus\">Theodorovy spirály</a>.</p>\n<p>Každý bod na spirále odpovídá jedné bázi v pořadí, v jakém skutečně existuje v sekvenci. Začátek sekvence je ve středu spirály. Barva bodu reprezentuje typ báze.</p>\n<p>Tato spirála umožňuje zobrazit dlouhé 1D data na relativně malé 2D ploše, aniž by se přerušil tok informace. Nevznikají umělá přerušení, například návraty na začátek řádku, která jsou běžná u textových reprezentací.</p>\n<p>Jako příklad jsem vizualizoval genomy tří organismů s různou délkou. Všechny mají lineární genom, který je pro tuto formu vizualizace nejvhodnější.</p>\n<p><a href=\"https://www.ncbi.nlm.nih.gov/nuccore/170878295\"><strong>HIV-1:</strong></a></p>\n<figure class=\"figure figure--half figure--left \"> <a href=\"/images/genom-theodorove-spirale-obr-1.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/genom-theodorove-spirale-obr-1.png\" alt=\"\"> </a>  </figure>\n<p><a href=\"https://www.ncbi.nlm.nih.gov/nuccore/10313991?utm_\"><strong>Ebola virus:</strong></a></p>\n<figure class=\"figure figure--half figure--left \"> <a href=\"/images/genom-theodorove-spirale-obr-2.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/genom-theodorove-spirale-obr-2.png\" alt=\"\"> </a>  </figure>\n<p><a href=\"https://www.ncbi.nlm.nih.gov/nuccore/OM065388.1\"><strong>SaRS-CoV-2:</strong></a></p>\n<figure class=\"figure figure--half figure--left \"> <a href=\"/images/genom-theodorove-spirale-obr-3.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/genom-theodorove-spirale-obr-3.png\" alt=\"\"> </a>  </figure>\n<p><strong>Zdrojový kód</strong><br>\nZdrojový Python kód pro tento projekt je dostupný zde:</p>\n<span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">The Genome in Theodor’s Spiral</h1> <p class=\"post-meta\"> January 2026 </p> </div> <div class=\"post-body\"> <p>This visualization transforms linear genetic information (DNA/RNA) into <a href=\"https://en.wikipedia.org/wiki/Spiral_of_Theodorus\">a</a> continuous 2D <a href=\"https://en.wikipedia.org/wiki/Spiral_of_Theodorus\">Theodor spiral</a>.</p>\n<p>Each point on the spiral corresponds to a single base in the order in which it actually appears in the sequence. The beginning of the sequence is at the center of the spiral. The color of each point represents the base type.</p>\n<p>This spiral allows long 1D data to be displayed on a relatively small 2D area without interrupting the flow of information. There are no artificial breaks, such as returns to the beginning of a line, which are common in text-based representations.</p>\n<p>As an example, I visualized the genomes of three organisms of varying lengths. All have linear genomes, which are best suited for this form of visualization.</p>\n<p><a href=\"https://www.ncbi.nlm.nih.gov/nuccore/170878295\"><strong>HIV-1:</strong></a></p>\n<figure class=\"figure figure--half figure--left \"> <a href=\"/images/genom-theodorove-spirale-obr-1.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/genom-theodorove-spirale-obr-1.png\" alt=\"\"> </a>  </figure>\n<p><a href=\"https://www.ncbi.nlm.nih.gov/nuccore/10313991?utm_\"><strong>Ebola virus:</strong></a></p>\n<figure class=\"figure figure--half figure--left \"> <a href=\"/images/genom-theodorove-spirale-obr-2.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/genom-theodorove-spirale-obr-2.png\" alt=\"\"> </a>  </figure>\n<p><a href=\"https://www.ncbi.nlm.nih.gov/nuccore/OM065388.1\"><strong>SARS-CoV-2:</strong></a></p>\n<figure class=\"figure figure--half figure--left \"> <a href=\"/images/genom-theodorove-spirale-obr-3.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/genom-theodorove-spirale-obr-3.png\" alt=\"\"> </a>  </figure>\n<p><strong>Source Code</strong><br>\nThe Python source code for this project is available here:</p>\n<span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "createdAt": "2026-07-11T10:54:09.658Z"
+}

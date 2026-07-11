@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "77a489af29e1a00142887f39bc56a2eb2435b1b103904edda04de8dd4859986f",
+  "purpose": "html-region",
+  "page": "/en/vystavy-generator-nahodnych-cisel/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "a747ebf333cee0b8b093fbe0a990d379c694fff3c1f7d4dde873976a1a0be870",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Generátor náhodných čísel</h1> <p class=\"post-meta\"> 3. 5. 2017 - 18. 6. 2017, Domažlice </p> <p class=\"post-meta\"> Galerie bratří Špillarů: KONKRET 2017 </p> </div> <div class=\"post-body\"> <div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-3.jpg\" alt=\"\"> </a>   </div> </div>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-4.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-4.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-5.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-5.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-6.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-6.jpg\" alt=\"\"> </a>   </div> </div>\n<div class=\"embed embed--pdf\"><span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span></div>\n<p>Jak jsem se k náhodě dostal aneb od města až po náhodu:<br>\n<a href=\"http://vojtamaur.cz/od-mesta-az-po-nahodu/\">http://vojtamaur.cz/od-mesta-az-po-nahodu/</a></p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Random Number Generator</h1> <p class=\"post-meta\"> May 3, 2017 – June 18, 2017, Domažlice </p> <p class=\"post-meta\"> The Špillar Brothers Gallery: KONKRET 2017 </p> </div> <div class=\"post-body\"> <div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-3.jpg\" alt=\"\"> </a>   </div> </div>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-4.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-4.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-5.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-5.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/vystavy-generator-nahodnych-cisel-obr-6.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-generator-nahodnych-cisel-obr-6.jpg\" alt=\"\"> </a>   </div> </div>\n<div class=\"embed embed--pdf\"><span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span></div>\n<p>\nHow I Came to Chance, or From the City to Randomness:<br>\n\n<a href=\"http://vojtamaur.cz/od-mesta-az-po-nahodu/\">http://vojtamaur.cz/od-mesta-az-po-nahodu/</a></p> </div> ",
+  "createdAt": "2026-07-11T11:06:24.659Z"
+}

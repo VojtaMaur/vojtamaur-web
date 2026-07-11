@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "hash": "d89cf230dd7669e8d7bfb43358914976637531eae55e7b754c23fe15441c7b01",
+  "purpose": "html-region",
+  "page": "/en/cestovani-maroko-2016/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "add1dfc20d8352f2a4e504e328cbb510e423fc74147c44fd605dcd453720e196",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Maroko 2016</h1> <p class=\"post-meta\">Video, fotografie</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-1.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-1.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-2.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-2.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-3.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-3.png\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-maroko-2016-obr-4.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-4.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-5.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-5.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-6.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-6.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-7.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-7.png\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-maroko-2016-obr-8.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-8.png\" alt=\"\"> </a>  </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Morocco 2016</h1> <p class=\"post-meta\">Video, photos</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-1.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-1.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-2.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-2.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-3.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-3.png\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-maroko-2016-obr-4.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-4.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-5.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-5.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-6.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-6.png\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-maroko-2016-obr-7.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-7.png\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-maroko-2016-obr-8.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-maroko-2016-obr-8.png\" alt=\"\"> </a>  </figure> </div> ",
+  "createdAt": "2026-07-11T10:54:02.813Z"
+}

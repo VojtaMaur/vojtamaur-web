@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "hash": "6ccce963458eebb30737b9a7ed1b16d302f05a413ff64da7045ef2b56e2c1364",
+  "purpose": "html-region",
+  "page": "/en/cestovani-izrael-2012/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "add1dfc20d8352f2a4e504e328cbb510e423fc74147c44fd605dcd453720e196",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Izrael 2012</h1> <p class=\"post-meta\">Fotografie</p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-izrael-2012-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-izrael-2012-obr-1.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-izrael-2012-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-izrael-2012-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-izrael-2012-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-izrael-2012-obr-3.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-izrael-2012-obr-4.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-izrael-2012-obr-4.jpg\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-izrael-2012-obr-5.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-izrael-2012-obr-5.jpg\" alt=\"\"> </a>  </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Israel 2012</h1> <p class=\"post-meta\">Photos</p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-izrael-2012-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-izrael-2012-obr-1.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-izrael-2012-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-izrael-2012-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-izrael-2012-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-izrael-2012-obr-3.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-izrael-2012-obr-4.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-izrael-2012-obr-4.jpg\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-izrael-2012-obr-5.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/cestovani-izrael-2012-obr-5.jpg\" alt=\"\"> </a>  </figure> </div> ",
+  "createdAt": "2026-07-11T10:54:01.480Z"
+}

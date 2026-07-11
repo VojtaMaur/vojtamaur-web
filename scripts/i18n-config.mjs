@@ -34,11 +34,25 @@ export const i18nConfig = {
     tagHandlingVersion: "v2",
     splitSentences: "nonewlines",
     preserveFormatting: true,
+    // Deliberately conservative. DeepL returns 429 when too many requests arrive
+    // in a short period, so translation calls are paced and retried with backoff.
+    minRequestIntervalMs: 1200,
+    retryAttempts: 8,
+    retryBaseDelayMs: 2000,
+    retryMaxDelayMs: 60000,
     // Leave undefined for EN-US. Some DeepL target languages reject formality.
     formality: undefined
   },
 
+  // The TSV file is the canonical glossary source. Its SHA-256 hash is used
+  // automatically as the glossary/cache revision, so no manual v1/v2 bump.
+  glossary: {
+    enabled: true,
+    name: "vojtamaur.cz CS-EN",
+    sourceFile: "translations/glossary-cs-en.tsv",
+    stateFile: "translations/glossary-cs-en.state.json"
+  },
+
   hashSchemaVersion: 2,
-  selectorPolicyRevision: 2,
-  glossaryRevision: "none"
+  selectorPolicyRevision: 2
 };

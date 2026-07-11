@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "hash": "1aaf73a42a59d7cc3e5f7da60f54890c9ee7c89d2e546843ab34bde74a5b377e",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-polsko-mazury-2026/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "add1dfc20d8352f2a4e504e328cbb510e423fc74147c44fd605dcd453720e196",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": "Polsko - Mazury 2026",
+  "translatedFragment": "Poland - Masuria 2026",
+  "createdAt": "2026-07-11T10:54:05.043Z"
+}

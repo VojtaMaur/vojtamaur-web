@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "hash": "af76cbdca0ae30d0b44ce5f6e08ad77d0b4dd694ee62991ffeab0e6c37e9d640",
+  "purpose": "html-region",
+  "page": "/en/dva-rytmy/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "add1dfc20d8352f2a4e504e328cbb510e423fc74147c44fd605dcd453720e196",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Dva rytmy</h1> <p class=\"post-meta\"> April 2018 </p> </div> <div class=\"post-body\"> <p>První video se skládá ze dvou rytmů: vizuální blikání a akustické cvakání. Tyto dva rytmy mají nepatrně odlišnou dobu trvání. Touto drobnou odchylkou dosáhne video v určité části silného zneklidnění.\nV druhém videu jsem k tomuto základnímu konceptu přidal obrazový materiál zaměřený na protiválečnou tématiku.</p>\n<span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/dva-rytmy-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/dva-rytmy-obr-1.jpg\" alt=\"základní koncept\"> </a> <figcaption>Dva rytmy 1 - černá x bílá, základní koncept</figcaption> </figure>\n<span data-i18n-protected=\"p2\" translate=\"no\" class=\"notranslate\"></span>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/dva-rytmy-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/dva-rytmy-obr-2.jpg\" alt=\"uplatnění základního konceptu\"> </a> <figcaption>Dva rytmy 2 - uplatnění základního konceptu na obrazovém materiálu</figcaption> </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Two Rhythms</h1> <p class=\"post-meta\"> April 2018 </p> </div> <div class=\"post-body\"> <p>The first video consists of two rhythms: visual flickering and acoustic clicking. These two rhythms have slightly different durations. This slight deviation creates a strong sense of unease in a certain part of the video.\nIn the second video, I added visual material focused on anti-war themes to this basic concept.</p>\n<span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/dva-rytmy-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/dva-rytmy-obr-1.jpg\" alt=\"základní koncept\"> </a> <figcaption>Two Rhythms 1 – Black x White, Basic Concept</figcaption> </figure>\n<span data-i18n-protected=\"p2\" translate=\"no\" class=\"notranslate\"></span>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/dva-rytmy-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/dva-rytmy-obr-2.jpg\" alt=\"uplatnění základního konceptu\"> </a> <figcaption>Two Rhythms 2 – Application of the Basic Concept to Visual Material</figcaption> </figure> </div> ",
+  "createdAt": "2026-07-11T10:54:08.607Z"
+}

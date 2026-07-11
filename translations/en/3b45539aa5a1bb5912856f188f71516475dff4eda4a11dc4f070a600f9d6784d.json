@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "hash": "3b45539aa5a1bb5912856f188f71516475dff4eda4a11dc4f070a600f9d6784d",
+  "purpose": "html-region",
+  "page": "/en/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "add1dfc20d8352f2a4e504e328cbb510e423fc74147c44fd605dcd453720e196",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-grid\"> <a class=\"post-card \" href=\"https://youtu.be/m9N6GJkMea4\" target=\"_blank\" rel=\"noopener noreferrer\"> <div class=\"post-card__thumb\"> <img src=\"/images/video-1.jpg\" alt=\"Milan Maur: NEJISTÉ SEKVENCE DĚJE (1. díl komentované prohlídky)\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Milan Maur: NEJISTÉ SEKVENCE DĚJE (1. díl komentované prohlídky)</div> </a><a class=\"post-card \" href=\"https://youtu.be/FSdHm9TWzW4\" target=\"_blank\" rel=\"noopener noreferrer\"> <div class=\"post-card__thumb\"> <img src=\"/images/video-2.jpg\" alt=\"MilanMilan Maur: ZÁZNAMY (komentovaná online prohlídka)\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Milan Maur: ZÁZNAMY (komentovaná online prohlídka)</div> </a><a class=\"post-card \" href=\"https://youtu.be/BtUxClicxY0\" target=\"_blank\" rel=\"noopener noreferrer\"> <div class=\"post-card__thumb\"> <img src=\"/images/video-3.jpg\" alt=\"Martin Zet: OLOVO\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Martin Zet: OLOVO</div> </a><a class=\"post-card post-card--more\" href=\"https://www.youtube.com/playlist?list=PLQ5DFp2teh9ZCZmGgdapAWEz19cdN095t\" target=\"_blank\" rel=\"noopener noreferrer\"> <div class=\"post-card__thumb\"> <div class=\"post-card__more-text\">show all</div> </div>  </a> </div> ",
+  "translatedFragment": " <div class=\"post-grid\"> <a class=\"post-card \" href=\"https://youtu.be/m9N6GJkMea4\" target=\"_blank\" rel=\"noopener noreferrer\"> <div class=\"post-card__thumb\"> <img src=\"/images/video-1.jpg\" alt=\"Milan Maur: NEJISTÉ SEKVENCE DĚJE (1. díl komentované prohlídky)\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Milan Maur: UNCERTAIN SEQUENCES OF THE PLOT (Part 1 of the guided tour)</div> </a><a class=\"post-card \" href=\"https://youtu.be/FSdHm9TWzW4\" target=\"_blank\" rel=\"noopener noreferrer\"> <div class=\"post-card__thumb\"> <img src=\"/images/video-2.jpg\" alt=\"MilanMilan Maur: ZÁZNAMY (komentovaná online prohlídka)\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Milan Maur: RECORDINGS (Guided Online Tour)</div> </a><a class=\"post-card \" href=\"https://youtu.be/BtUxClicxY0\" target=\"_blank\" rel=\"noopener noreferrer\"> <div class=\"post-card__thumb\"> <img src=\"/images/video-3.jpg\" alt=\"Martin Zet: OLOVO\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Martin Zet: LEAD</div> </a><a class=\"post-card post-card--more\" href=\"https://www.youtube.com/playlist?list=PLQ5DFp2teh9ZCZmGgdapAWEz19cdN095t\" target=\"_blank\" rel=\"noopener noreferrer\"> <div class=\"post-card__thumb\"> <div class=\"post-card__more-text\">show all</div> </div>  </a> </div> ",
+  "createdAt": "2026-07-11T10:54:11.946Z"
+}

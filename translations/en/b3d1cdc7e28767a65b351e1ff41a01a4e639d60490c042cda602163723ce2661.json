@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "hash": "b3d1cdc7e28767a65b351e1ff41a01a4e639d60490c042cda602163723ce2661",
+  "purpose": "html-region",
+  "page": "/en/cestovani-thaisko-2024/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "add1dfc20d8352f2a4e504e328cbb510e423fc74147c44fd605dcd453720e196",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Thaisko 2024</h1> <p class=\"post-meta\">3D skeny</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<span data-i18n-protected=\"p2\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Thailand 2024</h1> <p class=\"post-meta\">3D scans</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<span data-i18n-protected=\"p2\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "createdAt": "2026-07-11T10:54:06.631Z"
+}

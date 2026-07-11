@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "hash": "fe380c6a56b310e672eb6448bfdc19a0dbbfb47d71a571ee3ac7459feba0cbd3",
+  "purpose": "html-region",
+  "page": "/en/iluze-kontrastu-vertikalnich-horizontalnich-pruhu/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "add1dfc20d8352f2a4e504e328cbb510e423fc74147c44fd605dcd453720e196",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Iluze kontrastu vertikálních a horizontálních pruhů</h1> <p class=\"post-meta\"> August 2019 </p> </div> <div class=\"post-body\"> <figure class=\"figure figure--half figure--center \"> <a href=\"/images/iluze-kontrastu-vertikalnich-horizontalnich-pruhu-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/iluze-kontrastu-vertikalnich-horizontalnich-pruhu-obr-1.jpg\" alt=\"\"> </a>  </figure>\n<p>Horizontální pruhy na obrázku výše se při pohledu zdálky jeví méně kontrastní, než vertikální pruhy. Ve skutečnosti  jsou ovšem totožné, jak lze při pohledu zblízka vidět. Při otočení hlavou doleva či doprava o 45° tato iluze zmizí. Při otočení hlavou doleva či doprava o 90° se z horizontálních pruhů stanou vertikální, a proto se ony jeví kontrastnější.\nTéto iluze jsem si všiml na obrázku <a href=\"https://vojtamaur.cz/spirala-fibonacciho-slova/\">spirály Fibonacciho slova</a>. Tento čtvercový obrázek vypadá jakoby byl tvořen čtyřmi trojúhelníky - dva vyplněné horizontálními pruhy a dva vyplněné vertikálními pruhy. Domnívám se, že tato iluze funguje na podobném principu jako <a href=\"https://en.wikipedia.org/wiki/Vertical%E2%80%93horizontal_illusion\">vertikální-horizontální iluze</a>. Také se domnívám, že to souvisí s reakcí určitých skupin neuronů na různé podněty. Neurony totiž reagují rozdílně na různé podněty jako jsou právě vertikální pruhy, diagonální pruhy, horizontální pruhy atd (viz kniha Gödel, Escher, Bach, kapitola 11). Pozoruhodné je, že tato iluze funguje na každého jinak intenzivně - někdo jí vidí naprosto jasně a na někoho nefunguje vůbec. Ještě více je tato iluze patrná na obrázku níže.</p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/iluze-kontrastu-vertikalnich-horizontalnich-pruhu-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/iluze-kontrastu-vertikalnich-horizontalnich-pruhu-obr-2.jpg\" alt=\"\"> </a>  </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">The Illusion of Contrast Between Vertical and Horizontal Stripes</h1> <p class=\"post-meta\"> August 2019 </p> </div> <div class=\"post-body\"> <figure class=\"figure figure--half figure--center \"> <a href=\"/images/iluze-kontrastu-vertikalnich-horizontalnich-pruhu-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/iluze-kontrastu-vertikalnich-horizontalnich-pruhu-obr-1.jpg\" alt=\"\"> </a>  </figure>\n<p>The horizontal stripes in the image above appear less contrasting than the vertical stripes when viewed from a distance. In reality, however, they are identical, as can be seen when viewed up close. If you turn your head 45° to the left or right, this illusion disappears. If you turn your head 90° to the left or right, the horizontal stripes become vertical, and therefore appear more contrasting.\nI noticed this illusion in an image <a href=\"https://vojtamaur.cz/spirala-fibonacciho-slova/\">of the Fibonacci spiral</a>. This square image looks as if it were made up of four triangles—two filled with horizontal stripes and two filled with vertical stripes. I believe this illusion works on a similar principle as <a href=\"https://en.wikipedia.org/wiki/Vertical%E2%80%93horizontal_illusion\">the vertical-horizontal illusion</a>. I also believe it is related to the response of certain groups of neurons to different stimuli. Neurons react differently to various stimuli, such as vertical stripes, diagonal stripes, horizontal stripes, etc. (see the book *Gödel, Escher, Bach*, Chapter 11). It is remarkable that this illusion affects everyone with varying intensity—some people see it very clearly, while for others it does not work at all. This illusion is even more evident in the image below.</p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/iluze-kontrastu-vertikalnich-horizontalnich-pruhu-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/iluze-kontrastu-vertikalnich-horizontalnich-pruhu-obr-2.jpg\" alt=\"\"> </a>  </figure> </div> ",
+  "createdAt": "2026-07-11T10:54:10.985Z"
+}

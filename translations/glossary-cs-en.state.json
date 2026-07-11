@@ -1,0 +1,8 @@
+{
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "name": "vojtamaur.cz CS-EN",
+  "sourceLang": "cs",
+  "targetLang": "en",
+  "sourceFile": "translations/glossary-cs-en.tsv",
+  "revision": "9d7b066e5491720a22b7d67921a85dd447c002b5146b4ddea8e4984d4929a329"
+}

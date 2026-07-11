@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "81e0351d433f7c4a1834697b7cdf72febe92cd5778b46e0354dff42c2b70387b",
+  "purpose": "html-region",
+  "page": "/en/barevny-prumer/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "78c58f2a402b2cd71cc12b43b5d64aa310393c30f47805ace7c30f603a65275f",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Barevný průměr</h1> <p class=\"post-meta\"> April 2017 </p> </div> <div class=\"post-body\"> <p>V levé části obrazu je umístěno 1156 fotografií v rastru 34x34 px. Každý barevný pixel reprezentuje průměrnou barvu jednotlivé fotografie z daného státu.\nNa pravé části obrazu je průměrná barva všech pixelů z levé části, tedy průměrná barva všech fotografií z daného státu.</p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/barevny-prumer-obr-1.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/barevny-prumer-obr-1.png\" alt=\"Česká republika\"> </a> <figcaption>Česká republika</figcaption> </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/barevny-prumer-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/barevny-prumer-obr-2.jpg\" alt=\"Čína\"> </a> <figcaption>Čína</figcaption> </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/barevny-prumer-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/barevny-prumer-obr-3.jpg\" alt=\"Ekvádor\"> </a> <figcaption>Ekvádor</figcaption> </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/barevny-prumer-obr-4.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/barevny-prumer-obr-4.jpg\" alt=\"Kenya\"> </a> <figcaption>Kenya</figcaption> </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/barevny-prumer-obr-5.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/barevny-prumer-obr-5.jpg\" alt=\"Mexiko\"> </a> <figcaption>Mexiko</figcaption> </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Color Average</h1> <p class=\"post-meta\"> April 2017 </p> </div> <div class=\"post-body\"> <p>The left side of the image contains 1,156 photographs arranged in a 34x34-pixel grid. Each colored pixel represents the average color of a single photograph from a given country.\nOn the right side of the image is the average color of all pixels from the left side—that is, the average color of all photographs from a given country.</p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/barevny-prumer-obr-1.png\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/barevny-prumer-obr-1.png\" alt=\"Česká republika\"> </a> <figcaption>Czech Republic</figcaption> </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/barevny-prumer-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/barevny-prumer-obr-2.jpg\" alt=\"Čína\"> </a> <figcaption>China</figcaption> </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/barevny-prumer-obr-3.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/barevny-prumer-obr-3.jpg\" alt=\"Ekvádor\"> </a> <figcaption>Ecuador</figcaption> </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/barevny-prumer-obr-4.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/barevny-prumer-obr-4.jpg\" alt=\"Kenya\"> </a> <figcaption>Kenya</figcaption> </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/barevny-prumer-obr-5.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/barevny-prumer-obr-5.jpg\" alt=\"Mexiko\"> </a> <figcaption>Mexico</figcaption> </figure> </div> ",
+  "createdAt": "2026-07-11T11:19:17.057Z"
+}

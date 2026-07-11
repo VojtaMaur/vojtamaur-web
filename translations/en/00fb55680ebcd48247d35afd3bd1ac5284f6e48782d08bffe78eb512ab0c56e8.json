@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "00fb55680ebcd48247d35afd3bd1ac5284f6e48782d08bffe78eb512ab0c56e8",
+  "purpose": "html-region",
+  "page": "/en/aplikace-google/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "c3db629006faa66de835f9f8a955c2f9739373e5160ed8eefe76b894c2ea7368",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Aplikace Google</h1> <p class=\"post-meta\"> November 2016 </p> </div> <div class=\"post-body\"> <p>Toto krátké video je reference na nesmyslné oprávnění mobilní aplikace Google (aplikace je předinstalovaná nejen v telefonech Samsung a dokonce tato aplikace nejde odinstalovat). Přehled oprávnění lze najít v telefonu vybaveném operačním systémem Android v <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>.</p>\n<span data-i18n-protected=\"p1\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Google App</h1> <p class=\"post-meta\"> November 2016 </p> </div> <div class=\"post-body\"> <p>This short video highlights the nonsensical permissions of the Google App (the app comes preinstalled not only on Samsung phones, and it cannot even be uninstalled). An overview of permissions can be found on Android phones at <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>.</p>\n<span data-i18n-protected=\"p1\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "createdAt": "2026-07-11T11:01:24.545Z"
+}

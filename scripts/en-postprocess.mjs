@@ -9,15 +9,25 @@ const DIST_DIR = process.env.DIST_DIR || "dist";
 const MODE = process.env.EN_TRANSLATE || "off"; // off | missing | refresh
 const STRICT = process.env.EN_STRICT === "1" || process.env.EN_STRICT === "true";
 const AUTH_KEY = process.env.DEEPL_AUTH_KEY;
-const DEEPL_API_URL =
-  process.env.DEEPL_API_URL ||
-  (AUTH_KEY?.endsWith(":fx")
-    ? "https://api-free.deepl.com/v2/translate"
-    : "https://api.deepl.com/v2/translate");
+const DEEPL_API_BASE = AUTH_KEY?.endsWith(":fx")
+  ? "https://api-free.deepl.com"
+  : "https://api.deepl.com";
+const DEEPL_API_URL = process.env.DEEPL_API_URL || `${DEEPL_API_BASE}/v2/translate`;
+const DEEPL_GLOSSARY_API_URL =
+  process.env.DEEPL_GLOSSARY_API_URL || `${DEEPL_API_BASE}/v3/glossaries`;
 
 const PRUNE_CACHE = process.env.EN_PRUNE_CACHE === "1" || process.env.EN_PRUNE_CACHE === "true";
 const PRUNE_DRY_RUN = process.env.EN_PRUNE_CACHE === "dry-run";
 const usedCacheHashes = new Set();
+const glossaryRuntime = {
+  enabled: false,
+  entries: "",
+  entryPairs: [],
+  revision: "none",
+  glossaryId: null,
+  readyPromise: null
+};
+let nextTranslationRequestAt = 0;
 
 const VALID_MODES = new Set(["off", "missing", "refresh"]);
 if (!VALID_MODES.has(MODE)) {
@@ -64,14 +74,37 @@ function sha256(input) {
   return createHash("sha256").update(input).digest("hex");
 }
 
-function cacheKey({ routePath, purpose, sourceFragment }) {
+function normalizeMatchText(value) {
+  return String(value || "")
+    .normalize("NFC")
+    .toLocaleLowerCase("cs")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function glossaryRevisionForSource(sourceFragment) {
+  if (!glossaryRuntime.enabled || glossaryRuntime.entryPairs.length === 0) return "none";
+
+  const $$ = cheerio.load(`<div id="__i18n_match_root__">${sourceFragment}</div>`, {
+    decodeEntities: false
+  });
+  const visibleText = normalizeMatchText($$("#__i18n_match_root__").text());
+  const matchingEntries = glossaryRuntime.entryPairs.filter(({ normalizedSource }) =>
+    visibleText.includes(normalizedSource)
+  );
+
+  if (matchingEntries.length === 0) return "none";
+  return sha256(matchingEntries.map(({ line }) => line).join("\n"));
+}
+
+function cacheKey({ routePath, purpose, sourceFragment, glossaryRevision }) {
   const cfg = i18nConfig;
   return sha256([
     `schema:${cfg.hashSchemaVersion}`,
     `purpose:${purpose}`,
     `route:${routePath}`,
     `${cfg.sourceLang}->${cfg.targetLang}`,
-    `glossary:${cfg.glossaryRevision}`,
+    `glossary:${glossaryRevision}`,
     `tag:${cfg.deepl.tagHandling}:${cfg.deepl.tagHandlingVersion}`,
     `split:${cfg.deepl.splitSentences}`,
     `preserve:${cfg.deepl.preserveFormatting}`,
@@ -176,13 +209,284 @@ function markNoIndex($) {
   else head.append('\n<meta name="robots" content="noindex,follow">\n');
 }
 
+function glossaryLanguage(language) {
+  return String(language || "").split("-")[0].toLowerCase();
+}
+
+function normalizeGlossaryEntries(raw) {
+  return String(raw || "")
+    .replace(/^\uFEFF/, "")
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .filter((line) => line.length > 0)
+    .join("\n");
+}
+
+function validateGlossaryEntries(entries, sourceFile) {
+  const seen = new Set();
+  const lines = entries.split("\n");
+
+  if (lines.length === 0 || !entries.trim()) {
+    throw new Error(`DeepL glossary ${sourceFile} is empty.`);
+  }
+
+  for (const [index, line] of lines.entries()) {
+    const firstTab = line.indexOf("\t");
+    const lastTab = line.lastIndexOf("\t");
+    const lineNumber = index + 1;
+
+    if (firstTab <= 0 || firstTab !== lastTab || firstTab === line.length - 1) {
+      throw new Error(
+        `Invalid glossary row ${sourceFile}:${lineNumber}. Use exactly: Czech phrase<TAB>English phrase.`
+      );
+    }
+
+    const source = line.slice(0, firstTab);
+    const target = line.slice(firstTab + 1);
+
+    if (source !== source.trim() || target !== target.trim()) {
+      throw new Error(
+        `Invalid leading/trailing whitespace in glossary row ${sourceFile}:${lineNumber}.`
+      );
+    }
+
+    if (seen.has(source)) {
+      throw new Error(`Duplicate glossary source phrase ${JSON.stringify(source)} in ${sourceFile}.`);
+    }
+    seen.add(source);
+  }
+}
+
+async function loadGlossarySource() {
+  const config = i18nConfig.glossary;
+  if (!config?.enabled) return;
+
+  if (!existsSync(config.sourceFile)) {
+    throw new Error(`DeepL glossary source file not found: ${config.sourceFile}`);
+  }
+
+  const entries = normalizeGlossaryEntries(await readFile(config.sourceFile, "utf8"));
+  validateGlossaryEntries(entries, config.sourceFile);
+
+  glossaryRuntime.enabled = true;
+  glossaryRuntime.entries = entries;
+  glossaryRuntime.entryPairs = entries.split("\n").map((line) => {
+    const tab = line.indexOf("\t");
+    const source = line.slice(0, tab);
+    const target = line.slice(tab + 1);
+    return {
+      line,
+      source,
+      target,
+      normalizedSource: normalizeMatchText(source)
+    };
+  });
+  glossaryRuntime.revision = sha256(entries);
+  console.log(
+    `[i18n] Local glossary source loaded: ${glossaryRuntime.entryPairs.length} entr${glossaryRuntime.entryPairs.length === 1 ? "y" : "ies"}.`
+  );
+}
+
+async function readGlossaryState() {
+  const file = i18nConfig.glossary?.stateFile;
+  if (!file || !existsSync(file)) return null;
+
+  try {
+    return JSON.parse(await readFile(file, "utf8"));
+  } catch (error) {
+    throw new Error(`Cannot read DeepL glossary state ${file}: ${error.message}`);
+  }
+}
+
+async function writeGlossaryState(state) {
+  const file = i18nConfig.glossary.stateFile;
+  await mkdir(path.dirname(file), { recursive: true });
+  await writeFile(file, `${JSON.stringify(state, null, 2)}\n`, "utf8");
+}
+
+async function glossaryApiRequest(url, { method = "GET", json } = {}) {
+  if (!AUTH_KEY) throw new Error("DEEPL_AUTH_KEY is not set.");
+
+  return withRetry(async () => {
+    const response = await fetch(url, {
+      method,
+      headers: {
+        "authorization": `DeepL-Auth-Key ${AUTH_KEY}`,
+        ...(json ? { "content-type": "application/json" } : {})
+      },
+      body: json ? JSON.stringify(json) : undefined
+    });
+
+    const raw = await response.text().catch(() => "");
+    if (!response.ok) {
+      const error = new Error(`DeepL glossary HTTP ${response.status}: ${raw}`);
+      error.status = response.status;
+      error.retryAfterMs = parseRetryAfterMs(response.headers.get("retry-after"));
+      throw error;
+    }
+
+    return raw ? JSON.parse(raw) : null;
+  }, { label: `DeepL glossary ${method} ${new URL(url).pathname}` });
+}
+
+function glossaryHasPair(glossary, sourceLang, targetLang) {
+  return Boolean(
+    glossary?.dictionaries?.some(
+      (dictionary) =>
+        String(dictionary.source_lang).toLowerCase() === sourceLang &&
+        String(dictionary.target_lang).toLowerCase() === targetLang
+    )
+  );
+}
+
+async function findGlossaryByName(name, sourceLang, targetLang) {
+  const data = await glossaryApiRequest(DEEPL_GLOSSARY_API_URL);
+  const matches = data?.glossaries?.filter((glossary) => glossary.name === name) || [];
+  return (
+    matches.find((glossary) => glossaryHasPair(glossary, sourceLang, targetLang)) ||
+    matches[0] ||
+    null
+  );
+}
+
+async function getGlossaryById(glossaryId) {
+  try {
+    return await glossaryApiRequest(
+      `${DEEPL_GLOSSARY_API_URL}/${encodeURIComponent(glossaryId)}`
+    );
+  } catch (error) {
+    if (error?.status === 404) return null;
+    throw error;
+  }
+}
+
+async function getGlossaryEntries(glossaryId, sourceLang, targetLang) {
+  const params = new URLSearchParams({
+    source_lang: sourceLang,
+    target_lang: targetLang
+  });
+
+  try {
+    const data = await glossaryApiRequest(
+      `${DEEPL_GLOSSARY_API_URL}/${encodeURIComponent(glossaryId)}/entries?${params}`
+    );
+    return normalizeGlossaryEntries(data?.dictionaries?.[0]?.entries || "");
+  } catch (error) {
+    if (error?.status === 404) return "";
+    throw error;
+  }
+}
+
+async function ensureGlossaryReady() {
+  if (!glossaryRuntime.enabled) return null;
+  if (glossaryRuntime.readyPromise) return glossaryRuntime.readyPromise;
+
+  glossaryRuntime.readyPromise = (async () => {
+    const config = i18nConfig.glossary;
+    const sourceLang = glossaryLanguage(i18nConfig.sourceLang);
+    const targetLang = glossaryLanguage(i18nConfig.targetLang);
+    const state = await readGlossaryState();
+
+    let glossary = state?.glossaryId
+      ? await getGlossaryById(state.glossaryId)
+      : null;
+
+    if (!glossary) {
+      glossary = await findGlossaryByName(config.name, sourceLang, targetLang);
+    }
+
+    let glossaryId = glossary?.glossary_id || null;
+
+    if (!glossaryId) {
+      const created = await glossaryApiRequest(DEEPL_GLOSSARY_API_URL, {
+        method: "POST",
+        json: {
+          name: config.name,
+          dictionaries: [
+            {
+              source_lang: sourceLang,
+              target_lang: targetLang,
+              entries: glossaryRuntime.entries,
+              entries_format: "tsv"
+            }
+          ]
+        }
+      });
+
+      glossaryId = created?.glossary_id;
+      if (!glossaryId) throw new Error("DeepL created a glossary without returning glossary_id.");
+      console.log(
+        `[i18n] Remote DeepL glossary created from local TSV: ${config.name} (${glossaryId})`
+      );
+    } else {
+      const remoteEntries = glossaryHasPair(glossary, sourceLang, targetLang)
+        ? await getGlossaryEntries(glossaryId, sourceLang, targetLang)
+        : "";
+      const remoteRevision = remoteEntries ? sha256(remoteEntries) : "none";
+
+      if (remoteRevision !== glossaryRuntime.revision) {
+        await glossaryApiRequest(
+          `${DEEPL_GLOSSARY_API_URL}/${encodeURIComponent(glossaryId)}/dictionaries`,
+          {
+            method: "PUT",
+            json: {
+              source_lang: sourceLang,
+              target_lang: targetLang,
+              entries: glossaryRuntime.entries,
+              entries_format: "tsv"
+            }
+          }
+        );
+        console.log(`[i18n] DeepL glossary updated: ${config.name} (${glossaryId})`);
+      }
+    }
+
+    glossaryRuntime.glossaryId = glossaryId;
+    await writeGlossaryState({
+      glossaryId,
+      name: config.name,
+      sourceLang,
+      targetLang,
+      sourceFile: config.sourceFile,
+      revision: glossaryRuntime.revision
+    });
+
+    return glossaryId;
+  })();
+
+  return glossaryRuntime.readyPromise;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function parseRetryAfterMs(value) {
+  if (!value) return 0;
+  const seconds = Number(value);
+  if (Number.isFinite(seconds)) return Math.max(0, seconds * 1000);
+
+  const date = Date.parse(value);
+  if (Number.isFinite(date)) return Math.max(0, date - Date.now());
+  return 0;
+}
+
+async function waitForTranslationSlot() {
+  const interval = Math.max(0, Number(i18nConfig.deepl.minRequestIntervalMs || 0));
+  const waitMs = Math.max(0, nextTranslationRequestAt - Date.now());
+  if (waitMs > 0) await sleep(waitMs);
+  nextTranslationRequestAt = Date.now() + interval;
+}
+
 async function deeplRequest(text, routePath, pageTitle, { html = true } = {}) {
   if (!AUTH_KEY) throw new Error("DEEPL_AUTH_KEY is not set.");
 
+  const glossaryId = await ensureGlossaryReady();
   const body = new URLSearchParams();
   body.set("text", text);
   body.set("source_lang", i18nConfig.sourceLang);
   body.set("target_lang", i18nConfig.targetLang);
+  if (glossaryId) body.set("glossary_id", glossaryId);
 
   if (html) {
     body.set("tag_handling", i18nConfig.deepl.tagHandling);
@@ -199,6 +503,7 @@ async function deeplRequest(text, routePath, pageTitle, { html = true } = {}) {
   body.set("context", context);
 
   const data = await withRetry(async () => {
+    await waitForTranslationSlot();
     const response = await fetch(DEEPL_API_URL, {
       method: "POST",
       headers: {
@@ -212,30 +517,45 @@ async function deeplRequest(text, routePath, pageTitle, { html = true } = {}) {
       const message = await response.text().catch(() => "");
       const error = new Error(`DeepL HTTP ${response.status}: ${message}`);
       error.status = response.status;
+      error.retryAfterMs = parseRetryAfterMs(response.headers.get("retry-after"));
       throw error;
     }
 
     return response.json();
-  });
+  }, { label: `DeepL translate ${routePath}` });
 
   const translated = data?.translations?.[0]?.text;
   if (!translated || !translated.trim()) throw new Error(`DeepL returned empty translation for ${routePath}.`);
   return translated;
 }
 
-async function withRetry(fn) {
+async function withRetry(fn, { label = "DeepL request" } = {}) {
+  const attempts = Math.max(1, Number(i18nConfig.deepl.retryAttempts || 8));
+  const baseDelayMs = Math.max(250, Number(i18nConfig.deepl.retryBaseDelayMs || 2000));
+  const maxDelayMs = Math.max(baseDelayMs, Number(i18nConfig.deepl.retryMaxDelayMs || 60000));
   let lastError;
-  for (let attempt = 0; attempt < 4; attempt++) {
+
+  for (let attempt = 0; attempt < attempts; attempt++) {
     try {
       return await fn();
     } catch (error) {
       lastError = error;
       const status = error?.statusCode || error?.status || error?.code;
-      const retryable = status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
-      if (!retryable || attempt === 3) break;
-      const delay = 750 * 2 ** attempt;
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      const retryable = [429, 500, 502, 503, 504].includes(Number(status));
+      if (!retryable || attempt === attempts - 1) break;
+
+      const exponentialDelay = Math.min(maxDelayMs, baseDelayMs * 2 ** attempt);
+      const delayMs = Math.max(error?.retryAfterMs || 0, exponentialDelay) + Math.floor(Math.random() * 500);
+      console.warn(
+        `[i18n] ${label} returned HTTP ${status}; retry ${attempt + 2}/${attempts} in ${Math.ceil(delayMs / 1000)}s.`
+      );
+      await sleep(delayMs);
     }
+  }
+
+  if (Number(lastError?.status) === 429) {
+    lastError.message +=
+      " DeepL is still rate-limiting requests. Re-run the same build; translations completed before the failure are already cached.";
   }
   throw lastError;
 }
@@ -243,7 +563,13 @@ async function withRetry(fn) {
 async function translateWithCache({ routePath, purpose, source, pageTitle, html }) {
   if (!source || !source.trim()) return { text: source, status: "empty" };
 
-  const hash = cacheKey({ routePath, purpose, sourceFragment: source });
+  const glossaryRevision = glossaryRevisionForSource(source);
+  const hash = cacheKey({
+    routePath,
+    purpose,
+    sourceFragment: source,
+    glossaryRevision
+  });
   let entry = await readCache(hash);
 
   if (entry && isProtectedCacheEntry(entry) && MODE === "refresh") {
@@ -268,7 +594,8 @@ async function translateWithCache({ routePath, purpose, source, pageTitle, html 
       page: routePath,
       sourceLang: i18nConfig.sourceLang,
       targetLang: i18nConfig.targetLang,
-      glossaryRevision: i18nConfig.glossaryRevision,
+      glossaryRevision,
+      glossaryId: glossaryRuntime.glossaryId,
       deepl: i18nConfig.deepl,
       selectorPolicyRevision: i18nConfig.selectorPolicyRevision,
       manual: false,
@@ -460,6 +787,7 @@ async function pruneUnusedCache() {
 }
 
 async function main() {
+  await loadGlossarySource();
   const files = await walkHtmlFiles(DIST_DIR);
   let translated = 0;
   let missing = 0;

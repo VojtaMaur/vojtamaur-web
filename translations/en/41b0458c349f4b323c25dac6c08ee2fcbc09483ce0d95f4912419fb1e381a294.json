@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "hash": "41b0458c349f4b323c25dac6c08ee2fcbc09483ce0d95f4912419fb1e381a294",
+  "purpose": "meta-description",
+  "page": "/en/cestovani/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "add1dfc20d8352f2a4e504e328cbb510e423fc74147c44fd605dcd453720e196",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": "List of articles in the Travel section.",
+  "translatedFragment": "List of articles in the Travel section.",
+  "createdAt": "2026-07-11T10:53:59.384Z"
+}

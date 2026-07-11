@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "hash": "335e56aabc8f491386b43c3ab2c61b84d79ebb7c44a3271cef9b677bc9a582a1",
+  "purpose": "html-region",
+  "page": "/en/nepravidelny-dech/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "add1dfc20d8352f2a4e504e328cbb510e423fc74147c44fd605dcd453720e196",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Nepravidelný dech</h1> <p class=\"post-meta\"> March 2018 </p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<p>V této čtyřminutové zvukové stopě se nachází záznam umírajícího kocoura. V nahrávce jsou slyšet dva hlavní zvuky: nepravidelný dech a méně nápadný zvuk tlukotu srdce.</p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Irregular Breathing</h1> <p class=\"post-meta\"> March 2018 </p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<p>This four-minute audio track features a recording of a dying cat. Two main sounds can be heard in the recording: irregular breathing and the less noticeable sound of a heartbeat.</p> </div> ",
+  "createdAt": "2026-07-11T10:54:17.443Z"
+}

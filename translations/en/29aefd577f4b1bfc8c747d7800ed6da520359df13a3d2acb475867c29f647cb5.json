@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 2,
+  "hash": "29aefd577f4b1bfc8c747d7800ed6da520359df13a3d2acb475867c29f647cb5",
+  "purpose": "html-region",
+  "page": "/en/cerv-epsilon/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "add1dfc20d8352f2a4e504e328cbb510e423fc74147c44fd605dcd453720e196",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Červ ε</h1> <p class=\"post-meta\"> September 2025 </p> </div> <div class=\"post-body\"> <p><strong>Definice:</strong><br>\nZákladem je open-source neuronová síť červa C. elegans. Každá váha <strong>wᵢ′</strong> je upravena:<br>\n<strong>wᵢ′ = wᵢ + εᵢ</strong><br>\nkde <strong>εᵢ</strong> je nezávislá náhodná veličina s rovnoměrným rozdělením na intervalu [−10⁻⁴,10⁻⁴].</p>\n<p><strong>Motivace:</strong><br>\nPřidání malého nevyčíslitelného čísla εᵢ neslouží ke zlepšení modelu. Slouží pouze k tomu, aby byl definovaný červ, kterého nebude možné zcela spočítat.\nTo je jeho jediný účel.</p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Worm ε</h1> <p class=\"post-meta\"> September 2025 </p> </div> <div class=\"post-body\"> <p><strong>Definition:</strong><br>\n\nThe basis is an open-source neural network of the C. elegans worm. Each weight <strong>wᵢ′</strong>\nis adjusted as follows:<br>\n\n<strong>wᵢ′ = wᵢ + εᵢ</strong><br>\n\nwhere <strong>εᵢ</strong>\nis an independent random variable with a uniform distribution on the interval [−10⁻⁴, 10⁻⁴].</p>\n<p><strong>Motivation:</strong><br>\nAdding a small, incalculable number εᵢ does not serve to improve the model. It serves only to define a worm that cannot be fully computed.\nThat is its sole purpose.</p> </div> ",
+  "createdAt": "2026-07-11T10:53:58.507Z"
+}

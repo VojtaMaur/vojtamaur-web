@@ -1087,6 +1087,55 @@ Important values:
 
 The translation postprocess protects code, embeds, scripts, styles, SVG, canvas, iframes, and anything marked as `notranslate` or `translate="no"`. Image `alt` text and `thumbnailAlt` metadata are not automatically translated. Captions are translated when they are normal HTML text inside a translated region.
 
+### 11.1.1 Translation glossary and terminology preservation
+
+Project-specific terminology used by the automatic translation layer is stored in:
+
+```text
+translations/glossary-cs-en.tsv
+```
+
+The TSV file is the canonical source of the glossary. Each non-empty line contains exactly one Czech source term, one tab character, and one English target term:
+
+```tsv
+Volná tvorba	Personal Work
+```
+
+The tab must be a real tab character, not a sequence of spaces. Duplicate Czech source terms, empty values, extra columns, and leading or trailing whitespace cause the translation postprocess to fail instead of silently accepting an ambiguous glossary.
+
+The glossary serves two related purposes:
+
+- **translation consistency** – project-specific names and concepts are translated according to the intended terminology rather than according to a generic literal interpretation
+- **semantic and archival documentation** – the repository preserves how the author intended a Czech term to be understood in English
+
+For example, `Volná tvorba` is mapped to `Personal Work`, not the superficially literal `Free Creation`. The TSV file therefore documents part of the conceptual structure of the project, not merely a temporary setting for an external translation service. Because it is stored and versioned with the source code, this intended terminology remains available in archived repository copies even if DeepL or the current build environment is no longer available.
+
+The glossary integration is configured in `scripts/i18n-config.mjs`:
+
+```js
+glossary: {
+  enabled: true,
+  name: "vojtamaur.cz CS-EN",
+  sourceFile: "translations/glossary-cs-en.tsv",
+  stateFile: "translations/glossary-cs-en.state.json"
+}
+```
+
+During a `build:*:translate` run, `scripts/en-postprocess.mjs`:
+
+1. loads and validates the local TSV file
+2. reuses the remote DeepL glossary ID recorded in `translations/glossary-cs-en.state.json` when possible
+3. otherwise searches the DeepL account for a glossary with the configured name
+4. creates the remote glossary if no matching glossary exists
+5. updates the remote glossary when its entries differ from the local TSV source
+6. stores the resulting remote ID and local revision in the state file
+
+The remote glossary ID does not need to be set manually as an environment variable. Only `DEEPL_AUTH_KEY` is required. The state JSON file is operational metadata and a reusable pointer to the remote DeepL object; it is not the authoritative glossary content. If the state file is missing, it can be recreated from the TSV and the DeepL account. If the TSV is missing, the intended terminology is no longer reliably reconstructable from the project source.
+
+Glossary-aware cache invalidation is selective. For each translated fragment, only glossary rows whose Czech source phrase occurs in that fragment contribute to its glossary revision. Changing one glossary entry therefore invalidates translations that use that term without forcing unrelated pages to be translated again.
+
+Translation requests are paced and retried with exponential backoff to reduce DeepL rate-limit failures. If DeepL still returns HTTP `429`, translations completed before the failure remain cached and the same translate command can be run again.
+
 ### 11.2 DeepL API key
 
 The DeepL key is not stored in the repository. It is provided through the `DEEPL_AUTH_KEY` environment variable.
@@ -1195,13 +1244,15 @@ Translation cache files are stored in:
 translations/en/
 ```
 
-Each cache entry contains the original source fragment, the translated fragment, and metadata about the translation configuration. The cache key is derived from the route, purpose, source fragment, language direction, DeepL options, and selector policy revision.
+Each cache entry contains the original source fragment, the translated fragment, and metadata about the translation configuration. The cache key is derived from the route, purpose, source fragment, language direction, DeepL options, selector policy revision, and any glossary rows that apply to the fragment.
 
 Practical consequences:
 
 - unchanged content is not sent to DeepL again
 - changed Czech content gets a new cache key
-- changing translation policy can invalidate old cache entries
+- changing a glossary entry invalidates fragments that contain its Czech source term
+- changing an unrelated glossary entry does not invalidate every translated page
+- changing other translation policy can invalidate old cache entries
 - old cache entries can remain in `translations/en/` after content changes unless the cache is pruned
 - deleting `translations/en/` forces translation generation from scratch and should not be used as routine cleanup
 
@@ -1402,6 +1453,26 @@ npm run build:usb:translate
 ```
 
 Then run the strict build again.
+
+#### `Remote DeepL glossary created from local TSV`
+
+This is an informational message, not an error. The TSV file in the repository is the local source of glossary entries, while DeepL requires a separate remote glossary object in the account. The message means that no reusable remote object was found through the saved state ID or configured glossary name, so the script created one and stored its ID in:
+
+```text
+translations/glossary-cs-en.state.json
+```
+
+If this message appears on every translate build, check whether the state file is being deleted, whether a different DeepL account or API key is being used, or whether the remote glossary was removed.
+
+#### `DeepL HTTP 429`
+
+DeepL is rate-limiting translation requests. The script spaces requests apart, retries temporary failures with exponential backoff, and respects the `Retry-After` response header when provided. If all retries still fail, run the same translate command again:
+
+```bat
+npm run build:web:translate
+```
+
+Translations completed before the failure are already stored in `translations/en/`. Do not delete the translation cache or glossary state file merely because a `429` occurred; that would discard useful progress and create more requests.
 
 #### Cache pruning would delete a manually edited translation
 

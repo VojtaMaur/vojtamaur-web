@@ -37,3 +37,6 @@ source/vojtamaur-web-source*.zip
 
 # generated PDF exports
 pdf-export/
+
+# generated filtered text exports
+exports/

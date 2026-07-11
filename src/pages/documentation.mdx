@@ -720,6 +720,55 @@ This prevents one unusually large generated block from making the entire text ex
 
 The output file is written as UTF-8 with BOM to improve encoding detection in text editors and archival systems.
 
+#### Manual filtered and compact exports
+
+The generated `dist/ALL_POSTS.txt` can be filtered manually with:
+
+```text
+scripts/filter-all-posts.py
+```
+
+This Python script is a separate post-processing tool. It is not called by `npm run build:web`, `npm run build:usb`, `npm run build:arweave`, `npm run generate:all-posts`, or any other normal build command. It reads an already generated `dist/ALL_POSTS.txt` and does not modify the source export.
+
+The script has no external Python dependencies. When it is stored in `scripts/`, the default input is resolved automatically as `dist/ALL_POSTS.txt`. Available languages, sections, metadata fields, and current article counts can be inspected with:
+
+```bash
+python scripts/filter-all-posts.py --list-values
+```
+
+Article selection can be restricted by language, section, or an inclusive date range. Multiple languages or sections can be supplied by repeating an option or by separating values with commas. For example:
+
+```bash
+python scripts/filter-all-posts.py --language cs --section volna-tvorba,vystavy --format structured --metadata full
+python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
+python scripts/filter-all-posts.py --from-date 2020-01-01 --to-date 2026-12-31 --format structured
+```
+
+Two output formats are available:
+
+- `--format structured` is the default. It retains the delimited article-block structure and can preserve all metadata or use the `full`, `archive`, `minimal`, or `none` metadata profiles. Exact metadata fields can also be selected with `--metadata-fields`, for example `--metadata-fields TITLE,URL,DATE`.
+- `--format compact` creates a reading and transfer copy based on the compact structure used for the Memory of Mankind edition. Long separator lines and repeated article metadata blocks are removed. Each article starts with `[rendered title|YYYY-MM]`; image references are reduced to records such as `[img:filename|ALT: ...|CAPTION: ...]`; and video, PDF, and interactive embeds use equivalent one-line records. Redundant blank lines and generic embed notes are omitted.
+
+Compact output and structured output with `--metadata none` are intentionally not intended as inputs for another filtering pass because the metadata required for reliable filtering has been removed. Use structured output with sufficient metadata when another filtering step may be needed later.
+
+The default output directory is:
+
+```text
+exports/
+```
+
+Output filenames describe the selected language, section, date range, format, and metadata profile. A different path can be supplied with `--output`. The `exports/` directory is generated and excluded through `.gitignore`, while `scripts/filter-all-posts.py` remains a versioned source file.
+
+Filtered exports are written outside `dist/` by default so that they do not silently change the contents described by the existing build integrity manifests. If an explicit `--output` path is placed inside `dist/`, the script prints a warning because the existing `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json` do not cover the newly created file.
+
+A selection can be fully parsed and validated without writing a file:
+
+```bash
+python scripts/filter-all-posts.py --language cs --section volna-tvorba --format structured --metadata full --dry-run
+```
+
+The script refuses to overwrite its input, rejects unknown language or section values, and rejects an empty selection unless `--allow-empty` is supplied explicitly. It reports the selected article count, output path, and SHA-256 hash after processing. Like the source export, written output uses UTF-8 with BOM.
+
 ### 9.6.1 Build integrity files
 
 During the final post-build phase, the project generates integrity files for the completed static output:

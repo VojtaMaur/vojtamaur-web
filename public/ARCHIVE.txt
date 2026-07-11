@@ -25,7 +25,7 @@ COPIES OF GITHUB REPOSITORY:
 	Internet archive (archival ingest of repository)
 	https://archive.org/details/vojtamaur-web-source-2026-05
 	https://archive.org/details/vojtamaur-web-complete-sourcebuildgit-2026-07
-	Permanent.org
+	Permanent.org(archival ingest of repository)
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r9
 
 STATIC SNAPSHOTS (built output of the repository, reconstructable):
@@ -379,7 +379,7 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260709075651/https://vojtamaur.cz/metawebovy-clanek/
 	https://web.archive.org/web/20260709075922/https://vojtamaur.cz/en/metawebovy-clanek/
 	https://web.archive.org/web/20260710214324/https://megalodon.jp/2026-0711-0642-18/https://vojtamaur.cz:443/metawebovy-clanek/
-	...
+	https://web.archive.org/web/20260711054429/https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/

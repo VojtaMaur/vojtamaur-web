@@ -65,3 +65,39 @@ Jak lze zpozorovat vpravo níže, tato jednoduchá pravidla vytvořila nečekan�
 Tato struktura mně zaujala natolik, že jsem se rozhodl nechat program spuštěný 3 dny. Po této době vygeneroval program přes 3 000 000 členů Recamánovy posloupnosti a struktura byla velká natolik, že jsem se rozhodl vytvořit o ní video (viz níže).
 
 <Embed src="https://www.youtube-nocookie.com/embed/bfn9x_3-C4M?start=10" ratio="16/9" />
+
+Jednoduchý ukázkový zdrojový Python kód tohoto projektu je dostupný níže.
+
+```python
+import turtle
+
+t = turtle.Turtle()
+ts = turtle.Screen()
+
+while True:
+  t.speed(0)
+  t.up()
+  t.left(270)
+  t.setx(0)
+  t.sety(0)
+  t.down()
+  recaman = [0]
+  
+  scale = 8 # set size
+  n = 3500 # set how many iterations
+  
+  for i in range(1, n):
+    if recaman[-1] - i > 0 and recaman[-1] - i not in recaman:
+      recaman.append(recaman[-1] - i)
+      t.left(recaman[-1])
+      t.forward(scale)
+  
+    else:
+      recaman.append(recaman[-1] + i)
+      t.left(recaman[-1])
+      t.forward(scale)
+      
+  turtle.Screen().reset()
+
+turtle.done()
+```

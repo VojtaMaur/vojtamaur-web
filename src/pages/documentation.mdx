@@ -747,7 +747,7 @@ python scripts/filter-all-posts.py --from-date 2020-01-01 --to-date 2026-12-31 -
 Two output formats are available:
 
 - `--format structured` is the default. It retains the delimited article-block structure and can preserve all metadata or use the `full`, `archive`, `minimal`, or `none` metadata profiles. Exact metadata fields can also be selected with `--metadata-fields`, for example `--metadata-fields TITLE,URL,DATE`.
-- `--format compact` creates a reading and transfer copy based on the compact structure used for the Memory of Mankind edition. Long separator lines and repeated article metadata blocks are removed. Each article starts with `[rendered title|YYYY-MM]`; image references are reduced to records such as `[img:filename|ALT: ...|CAPTION: ...]`; and video, PDF, and interactive embeds use equivalent one-line records. Redundant blank lines and generic embed notes are omitted.
+- `--format compact creates a compact reading and transfer copy. Long separator lines and repeated article metadata blocks are removed. Each article starts with [rendered title|YYYY-MM]; image references are reduced to records such as [img:filename|ALT: ...|CAPTION: ...]; and video, PDF, and interactive embeds use equivalent one-line records. Redundant blank lines and generic embed notes are omitted.
 
 Compact output and structured output with `--metadata none` are intentionally not intended as inputs for another filtering pass because the metadata required for reliable filtering has been removed. Use structured output with sufficient metadata when another filtering step may be needed later.
 
@@ -910,10 +910,10 @@ The default export:
 The generated files are written to:
 
 ```text
-pdf-export/
+exports/
 ```
 
-This directory is a generated output and is excluded through `.gitignore`. The exporter script and `requirements-pdf-export.txt` remain versioned source files.
+This is the same generated output directory used by `scripts/filter-all-posts.py`, so manually created text and PDF exports are kept together outside `dist/`. The `exports/` directory is excluded through `.gitignore`. The exporter script and `requirements-pdf-export.txt` remain versioned source files.
 
 Useful selection options include:
 

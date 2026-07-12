@@ -58,7 +58,7 @@ TRANSLATION_LABELS = {
 
 SECTION_ORDER = ["volna-tvorba", "vystavy", "cestovani"]
 VALID_LANGS = {"cs", "en"}
-SCRIPT_VERSION = "3.0.0-language-aware"
+SCRIPT_VERSION = "3.0.1-shared-exports"
 
 
 @dataclasses.dataclass(frozen=True)
@@ -120,8 +120,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--output-dir",
-        default="pdf-export",
-        help="Output directory, relative to project root unless absolute. Default: pdf-export",
+        default="exports",
+        help="Output directory, relative to project root unless absolute. Default: exports",
     )
     parser.add_argument(
         "--output",

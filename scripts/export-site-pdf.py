@@ -9,11 +9,20 @@ Intended workflow:
 The script reads article metadata from src/content/posts/*.mdx, but renders PDF
 from the finished static output in dist/. This matters because the English pages
 are generated after Astro build by the EN postprocess.
+
+Before Ghostscript compression, rendered iframes are replaced with linked PNG
+snapshots. This avoids pdfwrite rendering corruption while keeping access to
+the original embedded video, scan, map, PDF, or interactive content.
+
+Before every PDF render, local preview links are rewritten to their public site
+URLs. Article images and other directly rendered media are linked to their
+public source when the page did not already provide a link.
 """
 
 from __future__ import annotations
 
 import argparse
+import base64
 import contextlib
 import dataclasses
 import datetime as dt
@@ -33,7 +42,7 @@ import time
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Iterable
-from urllib.parse import quote
+from urllib.parse import quote, urljoin, urlsplit, urlunsplit
 from urllib.request import urlopen
 
 
@@ -58,7 +67,8 @@ TRANSLATION_LABELS = {
 
 SECTION_ORDER = ["volna-tvorba", "vystavy", "cestovani"]
 VALID_LANGS = {"cs", "en"}
-SCRIPT_VERSION = "3.0.1-shared-exports"
+DEFAULT_SITE_URL = "https://vojtamaur.cz"
+SCRIPT_VERSION = "3.2.1-public-media-links"
 
 
 @dataclasses.dataclass(frozen=True)
@@ -117,6 +127,14 @@ def parse_args() -> argparse.Namespace:
         "--posts-dir",
         default="src/content/posts",
         help="Posts content directory, relative to project root unless absolute. Default: src/content/posts",
+    )
+    parser.add_argument(
+        "--site-url",
+        default=DEFAULT_SITE_URL,
+        help=(
+            "Public site root used for hyperlinks embedded in the PDF. "
+            f"Default: {DEFAULT_SITE_URL}"
+        ),
     )
     parser.add_argument(
         "--output-dir",
@@ -212,6 +230,7 @@ def parse_args() -> argparse.Namespace:
         default="archive",
         help=(
             "Optional Ghostscript post-processing preset. "
+            "Compressed modes replace iframes with linked PNG snapshots before processing. "
             "archive keeps the original Chromium PDF unchanged. Default: archive"
         ),
     )
@@ -251,6 +270,26 @@ def resolve_path(project_root: Path, value: str) -> Path:
     if path.is_absolute():
         return path
     return project_root / path
+
+
+def normalize_site_url(value: str) -> str:
+    value = value.strip()
+    parsed = urlsplit(value)
+    if parsed.scheme.lower() not in {"http", "https"} or not parsed.netloc:
+        raise SystemExit(
+            "--site-url must be an absolute HTTP(S) site root, "
+            "for example https://vojtamaur.cz"
+        )
+    if parsed.path not in {"", "/"} or parsed.query or parsed.fragment:
+        raise SystemExit(
+            "--site-url must contain only the scheme and host, without a path, "
+            "query, or fragment."
+        )
+    return urlunsplit((parsed.scheme.lower(), parsed.netloc, "/", "", ""))
+
+
+def make_public_page_url(site_url: str, url_path: str) -> str:
+    return urljoin(site_url, url_path.lstrip("/"))
 
 
 def split_csv(values: Iterable[str]) -> list[str]:
@@ -575,6 +614,26 @@ html {
 img, svg, video, canvas, iframe {
   max-width: 100% !important;
 }
+.pdf-iframe-snapshot-link {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+  text-decoration: none !important;
+}
+.pdf-iframe-snapshot {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+}
+.pdf-public-media-link {
+  color: inherit !important;
+  max-width: 100% !important;
+  text-decoration: none !important;
+}
 a[href]::after {
   content: "" !important;
 }
@@ -600,7 +659,341 @@ def scroll_page(page, wait_ms: int) -> None:
         page.wait_for_timeout(wait_ms)
 
 
-def render_url_to_pdf(browser, url: str, output_path: Path, args: argparse.Namespace) -> None:
+def iframe_link_url(src: str) -> str:
+    if not re.match(r"^https?://", src, flags=re.IGNORECASE):
+        return ""
+
+    youtube_match = re.match(
+        r"^https?://(?:www\.)?(?:youtube\.com|youtube-nocookie\.com)/embed/([^/?#]+)",
+        src,
+        flags=re.IGNORECASE,
+    )
+    if youtube_match:
+        video_id = quote(youtube_match.group(1), safe="")
+        return f"https://www.youtube.com/watch?v={video_id}"
+
+    return src
+
+
+def replace_iframes_with_linked_snapshots(
+    page,
+    public_page_url: str,
+    public_site_url: str,
+) -> int:
+    iframe_locator = page.locator("iframe")
+    total = iframe_locator.count()
+    replaced = 0
+
+    # Process from the end so replacing one iframe does not change the indexes
+    # of the remaining locators.
+    for index in range(total - 1, -1, -1):
+        iframe = page.locator("iframe").nth(index)
+        try:
+            metadata = iframe.evaluate(
+                """
+                (element, payload) => {
+                  const rect = element.getBoundingClientRect();
+                  const rawSrc = element.getAttribute("src") || "";
+                  const localUrl = new URL(window.location.href);
+                  const explicitScheme = /^[a-z][a-z0-9+.-]*:/i;
+                  const normalizeHost = (hostname) => hostname.replace("[", "").replace("]", "").toLowerCase();
+                  const isUInt8 = (part) => (
+                    part.length > 0
+                    && [...part].every((char) => char >= "0" && char <= "9")
+                    && Number(part) <= 255
+                  );
+                  const isIPv4Loopback = (host) => {
+                    const parts = host.split(".");
+                    return parts.length === 4
+                      && parts[0] === "127"
+                      && parts.slice(1).every(isUInt8);
+                  };
+                  const isLoopbackHost = (hostname) => {
+                    const host = normalizeHost(hostname);
+                    return host === "localhost"
+                      || host === "::1"
+                      || isIPv4Loopback(host);
+                  };
+                  const isLocalPreviewUrl = (url) => (
+                    url.origin === localUrl.origin
+                    || (
+                      isLoopbackHost(url.hostname)
+                      && isLoopbackHost(localUrl.hostname)
+                      && url.port === localUrl.port
+                    )
+                  );
+                  let publicSrc = "";
+                  try {
+                    if (!explicitScheme.test(rawSrc) && !rawSrc.startsWith("//")) {
+                      publicSrc = new URL(rawSrc, payload.publicPageUrl).href;
+                    } else {
+                      const resolved = new URL(rawSrc, window.location.href);
+                      publicSrc = isLocalPreviewUrl(resolved)
+                        ? new URL(
+                            `${resolved.pathname}${resolved.search}${resolved.hash}`,
+                            payload.publicSiteUrl
+                          ).href
+                        : resolved.href;
+                    }
+                  } catch (_) {
+                    publicSrc = rawSrc;
+                  }
+                  return {
+                    src: publicSrc,
+                    title: element.getAttribute("title") || "Embedded content",
+                    width: rect.width,
+                    height: rect.height
+                  };
+                }
+                """,
+                {
+                    "publicPageUrl": public_page_url,
+                    "publicSiteUrl": public_site_url,
+                },
+            )
+            if metadata["width"] <= 0 or metadata["height"] <= 0:
+                raise RuntimeError("iframe has no visible area")
+
+            screenshot = iframe.screenshot(type="png", animations="disabled")
+            image_data_url = "data:image/png;base64," + base64.b64encode(screenshot).decode("ascii")
+            link_url = iframe_link_url(str(metadata.get("src", "")))
+
+            iframe.evaluate(
+                """
+                (element, payload) => {
+                  const image = document.createElement("img");
+                  image.className = "pdf-iframe-snapshot";
+                  image.src = payload.imageDataUrl;
+                  image.alt = payload.alt;
+
+                  const replacement = payload.linkUrl
+                    ? document.createElement("a")
+                    : document.createElement("span");
+                  replacement.className = "pdf-iframe-snapshot-link";
+                  replacement.style.aspectRatio = `${payload.width} / ${payload.height}`;
+
+                  if (payload.linkUrl) {
+                    replacement.href = payload.linkUrl;
+                    replacement.target = "_blank";
+                    replacement.rel = "noopener noreferrer";
+                    replacement.title = `Open original embedded content: ${payload.linkUrl}`;
+                  }
+
+                  replacement.appendChild(image);
+                  element.replaceWith(replacement);
+                }
+                """,
+                {
+                    "imageDataUrl": image_data_url,
+                    "linkUrl": link_url,
+                    "alt": str(metadata.get("title", "Embedded content")),
+                    "width": metadata["width"],
+                    "height": metadata["height"],
+                },
+            )
+            replaced += 1
+        except Exception as exc:
+            print(
+                f"[warn] Could not replace iframe {index + 1}/{total} with a snapshot: {exc}",
+                file=sys.stderr,
+            )
+
+    if total:
+        print(f"[snapshot] Replaced {replaced}/{total} iframe(s) with linked images.")
+    page.evaluate("window.scrollTo(0, 0)")
+    return replaced
+
+
+def prepare_public_pdf_links(
+    page,
+    public_page_url: str,
+    public_site_url: str,
+) -> tuple[int, int]:
+    result = page.evaluate(
+        r"""
+        (payload) => {
+          const publicPageUrl = new URL(payload.publicPageUrl);
+          const publicSiteUrl = new URL(payload.publicSiteUrl);
+          const localUrl = new URL(window.location.href);
+          const explicitScheme = /^[a-z][a-z0-9+.-]*:/i;
+          const ignoredScheme = /^(?:mailto|tel|sms|javascript|data|blob|about):/i;
+          const normalizeHost = (hostname) => hostname.replace("[", "").replace("]", "").toLowerCase();
+          const isUInt8 = (part) => (
+            part.length > 0
+            && [...part].every((char) => char >= "0" && char <= "9")
+            && Number(part) <= 255
+          );
+          const isIPv4Loopback = (host) => {
+            const parts = host.split(".");
+            return parts.length === 4
+              && parts[0] === "127"
+              && parts.slice(1).every(isUInt8);
+          };
+          const isLoopbackHost = (hostname) => {
+            const host = normalizeHost(hostname);
+            return host === "localhost"
+              || host === "::1"
+              || isIPv4Loopback(host);
+          };
+          const isLocalPreviewUrl = (url) => (
+            url.origin === localUrl.origin
+            || (
+              isLoopbackHost(url.hostname)
+              && isLoopbackHost(localUrl.hostname)
+              && url.port === localUrl.port
+            )
+          );
+
+          const firstSrcsetUrl = (value) => {
+            const raw = String(value || "").trim();
+            if (!raw) {
+              return "";
+            }
+            const firstCandidate = raw.split(",")[0]?.trim() || "";
+            return firstCandidate.split(/\s+/)[0] || "";
+          };
+
+          const rawImageSource = (image) => (
+            image.getAttribute("src")
+            || firstSrcsetUrl(image.getAttribute("srcset"))
+            || firstSrcsetUrl(
+              image.parentElement?.querySelector("source[srcset]")?.getAttribute("srcset")
+            )
+            || image.parentElement?.querySelector("source[src]")?.getAttribute("src")
+            || image.getAttribute("data-src")
+            || image.getAttribute("data-original")
+            || image.currentSrc
+            || ""
+          );
+
+          const rawMediaSource = (media) => (
+            media.getAttribute("src")
+            || media.getAttribute("data")
+            || media.querySelector("source[src]")?.getAttribute("src")
+            || firstSrcsetUrl(media.querySelector("source[srcset]")?.getAttribute("srcset"))
+            || media.getAttribute("data-src")
+            || media.currentSrc
+            || ""
+          );
+
+          const toPublicUrl = (rawValue) => {
+            const raw = String(rawValue || "").trim();
+            if (!raw || raw.startsWith("#") || ignoredScheme.test(raw)) {
+              return raw;
+            }
+
+            try {
+              if (!explicitScheme.test(raw) && !raw.startsWith("//")) {
+                return new URL(raw, publicPageUrl).href;
+              }
+
+              const resolved = new URL(raw, window.location.href);
+              if (!/^https?:$/.test(resolved.protocol)) {
+                return raw;
+              }
+              if (isLocalPreviewUrl(resolved)) {
+                return new URL(
+                  `${resolved.pathname}${resolved.search}${resolved.hash}`,
+                  publicSiteUrl
+                ).href;
+              }
+              return resolved.href;
+            } catch (_) {
+              return raw;
+            }
+          };
+
+          let rewrittenLinks = 0;
+          for (const link of document.querySelectorAll("a[href], area[href]")) {
+            const rawHref = link.getAttribute("href") || "";
+            const publicHref = toPublicUrl(rawHref);
+            if (publicHref && publicHref !== rawHref) {
+              link.setAttribute("href", publicHref);
+              rewrittenLinks += 1;
+            }
+          }
+
+          let linkedMedia = 0;
+          const seen = new Set();
+          const addMediaLink = (media, rawSource) => {
+            if (!media || seen.has(media)) {
+              return;
+            }
+            seen.add(media);
+
+            if (media.classList?.contains("pdf-iframe-snapshot")) {
+              return;
+            }
+
+            const targetNode = media.tagName === "IMG" && media.parentElement?.tagName === "PICTURE"
+              ? media.parentElement
+              : media;
+            if (
+              targetNode.closest("a[href]")
+              || targetNode.closest("button, input, select, textarea, summary")
+              || !targetNode.parentNode
+            ) {
+              return;
+            }
+
+            const publicSource = toPublicUrl(rawSource);
+            if (!/^https?:\/\//i.test(publicSource)) {
+              return;
+            }
+
+            const link = document.createElement("a");
+            link.className = "pdf-public-media-link";
+            link.href = publicSource;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.title = `Open original media: ${publicSource}`;
+
+            const display = window.getComputedStyle(targetNode).display;
+            link.style.display = ["block", "flex", "grid"].includes(display)
+              ? "block"
+              : "inline-block";
+
+            targetNode.parentNode.insertBefore(link, targetNode);
+            link.appendChild(targetNode);
+            linkedMedia += 1;
+          };
+
+          for (const image of document.querySelectorAll("main img, article img")) {
+            addMediaLink(image, rawImageSource(image));
+          }
+
+          for (const media of document.querySelectorAll(
+            "main video, article video, main audio, article audio, "
+            + "main object[data], article object[data], main embed[src], article embed[src]"
+          )) {
+            addMediaLink(media, rawMediaSource(media));
+          }
+
+          return { rewrittenLinks, linkedMedia };
+        }
+        """,
+        {
+            "publicPageUrl": public_page_url,
+            "publicSiteUrl": public_site_url,
+        },
+    )
+    rewritten = int(result.get("rewrittenLinks", 0))
+    linked_media = int(result.get("linkedMedia", 0))
+    if rewritten or linked_media:
+        print(
+            f"[links] Rewrote {rewritten} link(s); "
+            f"linked {linked_media} unlinked media item(s)."
+        )
+    return rewritten, linked_media
+
+
+def render_url_to_pdf(
+    browser,
+    url: str,
+    public_page_url: str,
+    output_path: Path,
+    args: argparse.Namespace,
+) -> None:
     page = browser.new_page()
     try:
         page.set_default_timeout(args.timeout_ms)
@@ -610,6 +1003,13 @@ def render_url_to_pdf(browser, url: str, output_path: Path, args: argparse.Names
             page.wait_for_load_state("networkidle", timeout=min(args.timeout_ms, 8000))
         page.add_style_tag(content=css_escape())
         scroll_page(page, args.wait_ms)
+        if args.pdf_quality != "archive":
+            replace_iframes_with_linked_snapshots(
+                page,
+                public_page_url,
+                args.site_url,
+            )
+        prepare_public_pdf_links(page, public_page_url, args.site_url)
         page.pdf(
             path=str(output_path),
             format=args.paper,
@@ -650,6 +1050,7 @@ def cover_html(jobs: list[PdfJob], args: argparse.Namespace, dist_dir: Path) -> 
     now = dt.datetime.now().astimezone().isoformat(timespec="seconds")
     rows = []
     for index, job in enumerate(jobs, start=1):
+        public_url = make_public_page_url(args.site_url, job.url_path)
         rows.append(
             "<tr>"
             f"<td>{index}</td>"
@@ -658,7 +1059,7 @@ def cover_html(jobs: list[PdfJob], args: argparse.Namespace, dist_dir: Path) -> 
             f"<td>{html.escape(job.post.date)}</td>"
             f"<td>{html.escape(job.translation_label)}</td>"
             f"<td>{html.escape(job.display_title)}</td>"
-            f"<td><code>{html.escape(job.url_path)}</code></td>"
+            f'<td><a href="{html.escape(public_url, quote=True)}"><code>{html.escape(job.url_path)}</code></a></td>'
             "</tr>"
         )
 
@@ -893,6 +1294,7 @@ def write_manifest(
         "language": args.lang,
         "sections": split_csv(args.section),
         "pdf_quality": args.pdf_quality,
+        "site_url": args.site_url,
         "image_dpi": args.image_dpi,
         "jpeg_quality": args.jpeg_quality,
         "keep_uncompressed": args.keep_uncompressed,
@@ -920,6 +1322,7 @@ def write_manifest(
                 "source_file": str(job.post.source_file),
                 "built_html": str(job.html_file),
                 "url_path": job.url_path,
+                "public_url": make_public_page_url(args.site_url, job.url_path),
             }
             for job in jobs
         ],
@@ -930,6 +1333,7 @@ def write_manifest(
 
 def main() -> int:
     args = parse_args()
+    args.site_url = normalize_site_url(args.site_url)
     project_root = Path(args.project_root).resolve()
     dist_dir = resolve_path(project_root, args.dist).resolve()
     posts_dir = resolve_path(project_root, args.posts_dir).resolve()
@@ -999,14 +1403,15 @@ def main() -> int:
                             section_dir.mkdir(parents=True, exist_ok=True)
                             out = section_dir / f"{safe_filename(job.post.slug)}.pdf"
                             url = base_url + quote(job.url_path, safe="/%")
+                            public_url = make_public_page_url(args.site_url, job.url_path)
                             print(f"[{index}/{len(jobs)}] {job.label}")
 
                             if args.pdf_quality == "archive":
-                                render_url_to_pdf(browser, url, out, args)
+                                render_url_to_pdf(browser, url, public_url, out, args)
                                 outputs.append(out)
                             else:
                                 raw = tmp_dir / f"{index:04d}-{job.lang}-{safe_filename(job.post.slug)}.pdf"
-                                render_url_to_pdf(browser, url, raw, args)
+                                render_url_to_pdf(browser, url, public_url, raw, args)
                                 finalize_pdf(raw, out, args, ghostscript, outputs)
                 else:
                     with tempfile.TemporaryDirectory(prefix="pdf-export-") as tmp:
@@ -1021,8 +1426,9 @@ def main() -> int:
                         for index, job in enumerate(jobs, start=1):
                             part_path = tmp_dir / f"{index:04d}-{job.lang}-{safe_filename(job.post.slug)}.pdf"
                             url = base_url + quote(job.url_path, safe="/%")
+                            public_url = make_public_page_url(args.site_url, job.url_path)
                             print(f"[{index}/{len(jobs)}] {job.label}")
-                            render_url_to_pdf(browser, url, part_path, args)
+                            render_url_to_pdf(browser, url, public_url, part_path, args)
                             parts.append((part_path, job.label))
 
                         if args.output:

@@ -965,6 +965,16 @@ python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-qua
 
 `--keep-uncompressed` preserves the original uncompressed PDF alongside the compressed result.
 
+The exporter renders pages through a temporary local server, but hyperlinks written into the PDF are converted to their public equivalents under `https://vojtamaur.cz/`. This prevents relative article, image, PDF, download, and other media links from pointing to a temporary address such as `http://127.0.0.1:54321/`. Loopback preview aliases such as `localhost` and `127.0.0.1` on the export server port are treated as the same temporary server. Existing external links remain external. Article images and other directly rendered media that do not already have a link are linked to their public source file, using the original HTML source attributes where possible rather than browser-resolved local preview URLs. The generated cover index also links each built route to the corresponding public article page.
+
+If the same exporter is used for another deployed domain, the public root can be overridden:
+
+```bash
+python scripts/export-site-pdf.py --site-url https://example.com
+```
+
+In the Ghostscript-compressed modes (`printer`, `ebook`, and `screen`), iframes are replaced before printing by PNG snapshots. Each snapshot links to the original public embed target. YouTube embed URLs are converted to normal YouTube watch URLs; local PDF, scan, map, and other iframe sources link to their corresponding public file or page. The `archive` mode keeps Chromium's original iframe rendering unchanged while still correcting normal page and media hyperlinks.
+
 For English pages, the index title is read from the rendered HTML rather than copied from Czech MDX frontmatter. If the English postprocess marked a page as incomplete, the cover index and manifest label it as `Incomplete / Czech fallback`. An `/en/` route can therefore exist even when some or all of its article content remains Czech.
 
 The PDF is a paginated visual snapshot, not a lossless replacement for the website or source repository. Wide tables, long source-code lines, and other horizontally overflowing content can be clipped, wrapped differently, or extend beyond the printable area. The generated cover includes this limitation explicitly. The archived HTML, source files, repository, `ALL_POSTS.txt`, and other preservation layers remain the authoritative complete versions.

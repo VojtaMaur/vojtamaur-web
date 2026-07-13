@@ -6,6 +6,10 @@ const { items = [], bordered = false, link = true } = Astro.props;
 
 <div class={`media-row ${bordered ? "media-row--bordered" : ""}`}>
   {items.map((item) => {
+    if (item.type === "empty") {
+      return <div class="media-row__item media-row__item--empty" aria-hidden="true"></div>;
+    }
+
     const resolvedSrc = item.src ? asset(item.src) : "";
 
     return (

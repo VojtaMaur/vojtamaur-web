@@ -483,14 +483,68 @@ A component for arranging multiple items in a row. Supports the following types:
 - `image`
 - `pdf`
 - `text`
+- `empty`
 
 Use cases:
 
 - galleries with multiple images
 - combinations of images and PDFs
 - combinations of visual and text blocks in a single grid
+- intentional empty cells used to keep a row layout without creating fake media
 
 The component also supports a bordered variant.
+
+Image items support `alt` text. The value is rendered directly into the image `alt` attribute. If `alt` is omitted, the component renders an empty `alt` attribute.
+
+Example:
+
+```mdx
+<MediaRow
+  bordered
+  items={[
+    {
+      type: "image",
+      src: "/images/example-1.jpg",
+      alt: "Popis prvního obrázku"
+    },
+    {
+      type: "image",
+      src: "/images/example-2.jpg",
+      alt: "Popis druhého obrázku"
+    },
+    {
+      type: "pdf",
+      src: "/files/example.pdf"
+    },
+    {
+      type: "text",
+      content: "Textový blok v řádku médií."
+    }
+  ]}
+/>
+```
+
+The `alt` value applies only to `type: "image"` items. It is not automatically translated by the English postprocess.
+
+Use `type: "empty"` when a row should keep an intentionally blank cell. Do not create placeholder image items with an empty `src`, because that produces broken media in the rendered HTML and can also leak into preservation exports such as `ALL_POSTS.txt`.
+
+Example with one image and two empty cells:
+
+```mdx
+<MediaRow
+  items={[
+    {
+      type: "image",
+      src: "/images/nahodna-cisla-zvolena-clovekem-obr-1.jpg",
+      alt: "Graf náhodných čísel zvolených počítačem"
+    },
+    { type: "empty" },
+    { type: "empty" }
+  ]}
+/>
+```
+
+Empty items render only an empty `.media-row__item` cell marked with `aria-hidden="true"`. They do not render an image, link, iframe, or text block.
 
 ### 7.3 `Embed.astro`
 

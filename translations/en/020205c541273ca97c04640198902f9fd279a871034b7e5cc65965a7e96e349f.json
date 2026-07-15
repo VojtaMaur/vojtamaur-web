@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "020205c541273ca97c04640198902f9fd279a871034b7e5cc65965a7e96e349f",
+  "purpose": "html-region",
+  "page": "/en/teoremy-zivota/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Teorémy života</h1> <p class=\"post-meta\"> October 2020 </p> </div> <div class=\"post-body\"> <p>Instagramová stránka obsahující fotografie života na Zemi různých velikostních úrovní.<br>\n<strong><a href=\"http://www.instagram.com/vojta_maur_zivot\">www.instagram.com/vojta_maur_zivot</a></strong></p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/teoremy-zivota-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/teoremy-zivota-obr-1.jpg\" alt=\"screenshot Instagramové stránky\"> </a>  </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Theorems of Life</h1> <p class=\"post-meta\"> October 2020 </p> </div> <div class=\"post-body\"> <p>\nAn Instagram page featuring photographs of life on Earth at various scales.<br>\n\n<strong><a href=\"http://www.instagram.com/vojta_maur_zivot\">www.instagram.com/vojta_maur_zivot</a></strong></p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/teoremy-zivota-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/teoremy-zivota-obr-1.jpg\" alt=\"screenshot Instagramové stránky\"> </a>  </figure> </div> ",
+  "createdAt": "2026-07-15T04:25:11.617Z"
+}

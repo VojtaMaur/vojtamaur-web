@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "0f04aecd056ae84192dc99a4182470611134433606396ccb159ee962b13857aa",
+  "purpose": "html-region",
+  "page": "/en/prizivnici/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "6cfa0773b189cbb2d978480ccd978a931e660c210373d86ca27becbd76ca1cac",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Příživníci</h1> <p class=\"post-meta\"> May 2026 </p> </div> <div class=\"post-body\"> <p>Poslední rok několikrát denně vylévám na jedno místo v trávníku v Plzni-Božkově použité sypané čaje i se zbylou vodou, protože nechci ucpat odpad.</p>\n<p>Na tomto místě se začali koncentrovat šneci, kteří čajové lístky žerou.</p>\n<p>Někdy se jich tam najde až tucet, jindy žádný.</p>\n<p>Sdílím s nimi chutě.</p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/prizivnici-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/prizivnici-obr-1.jpg\" alt=\"šneci a čaj\"> </a>  </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Freeloaders</h1> <p class=\"post-meta\"> May 2026 </p> </div> <div class=\"post-body\"> <p>For the past year, several times a day, I’ve been pouring used loose-leaf tea and the remaining water onto a spot on the lawn in Plzeň-Božkov because I don’t want to clog the drain.</p>\n<p>Snails have started to gather in this spot, eating the tea leaves.</p>\n<p>Sometimes there are as many as a dozen of them there, other times none at all.</p>\n<p>I share their tastes.</p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/prizivnici-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/prizivnici-obr-1.jpg\" alt=\"šneci a čaj\"> </a>  </figure> </div> ",
+  "createdAt": "2026-07-15T04:24:34.494Z"
+}

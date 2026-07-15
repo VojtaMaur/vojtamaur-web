@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "b02f0081365f2c8f9d800f75b6a5877d29c264d8ba9467c6e3c28886fe790ab6",
+  "purpose": "html-region",
+  "page": "/en/tank/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Tank</h1> <p class=\"post-meta\"> April 2017 </p> </div> <div class=\"post-body\"> <div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/tank-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/tank-obr-1.jpg\" alt=\"původní nezměněná fotografie\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/tank-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/tank-obr-2.jpg\" alt=\"fotografie po úpravě ANSI\"> </a>   </div><div class=\"media-row__item\">  <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>  </div> </div>\n<p>V prosinci 2012 jsem v Izraeli v Negevské poušti vyfotil bojový tank. V ANSI kódu fotografie jsem změnil všechny hvězdičky (*) na křížky (†). Takto pozměněnou fotografii jsem znovu uložil.</p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Tank</h1> <p class=\"post-meta\"> April 2017 </p> </div> <div class=\"post-body\"> <div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/tank-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/tank-obr-1.jpg\" alt=\"původní nezměněná fotografie\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/tank-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/tank-obr-2.jpg\" alt=\"fotografie po úpravě ANSI\"> </a>   </div><div class=\"media-row__item\">  <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>  </div> </div>\n<p>In December 2012, I photographed a battle tank in the Negev Desert in Israel. In the ANSI code of the photo, I replaced all asterisks (*) with crosses (†). I then saved the modified photo.</p> </div> ",
+  "createdAt": "2026-07-15T04:24:38.923Z"
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "a5e57866d3c41fe37af729d10762168d61923cb006d00755ec96d8d01fe8fd7b",
+  "purpose": "html-region",
+  "page": "/en/zmrtvychvstani/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Zmrtvýchvstání</h1> <p class=\"post-meta\"> April 2017 </p> </div> <div class=\"post-body\"> <div class=\"media-row \"> <div class=\"media-row__item\"> <a href=\"/images/zmrtvychvstani-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zmrtvychvstani-obr-1.jpg\" alt=\"původní nezměněná fotografie\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/zmrtvychvstani-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zmrtvychvstani-obr-2.jpg\" alt=\"fotografie po úpravě ANSI\"> </a>   </div> </div>\n<p>V květnu 2016 jsem v Maroku vyfotil místní hřbitov. V ANSI kódu fotografie jsem změnil všechny křížky (†) na hvězdičky (*). Takto pozměněnou fotografii jsem znovu uložil.</p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Resurrection</h1> <p class=\"post-meta\"> April 2017 </p> </div> <div class=\"post-body\"> <div class=\"media-row \"> <div class=\"media-row__item\"> <a href=\"/images/zmrtvychvstani-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zmrtvychvstani-obr-1.jpg\" alt=\"původní nezměněná fotografie\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/zmrtvychvstani-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/zmrtvychvstani-obr-2.jpg\" alt=\"fotografie po úpravě ANSI\"> </a>   </div> </div>\n<p>In May 2016, I took a photo of a local cemetery in Morocco. In the ANSI code of the photo, I replaced all the crosses (†) with asterisks (*). I then saved the modified photo.</p> </div> ",
+  "createdAt": "2026-07-15T04:25:21.654Z"
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "44c799cbc2ce0607d8b1aec70aecd48fe42e409954ca1fcebd66417b35b6e4c5",
+  "purpose": "html-region",
+  "page": "/en/spirala-fibonacciho-slova/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Spirála Fibonacciho slova</h1> <p class=\"post-meta\"> August 2019 </p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/spirala-fibonacciho-slova-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/spirala-fibonacciho-slova-obr-1.jpg\" alt=\"Spirála Fibonacciho slova: výstup programu Pavla Burdy\"> </a>  </figure>\n<p>Pro vykreslení tohoto obrazce jsem dosadil <a href=\"https://cs.wikipedia.org/wiki/Fibonacciho_slovo\">Fibonacciho slovo</a> do spirály stejným způsobem, jako jsou dosazena přirozená čísla do Ulamovi spirály. Jednotlivá čísla v této spirále jsem označil dle pravidla: 0 = černý čtverec, 1 = bílý čtverec (tento postup je znázorněn v animaci níže). Pro zefektivnění tohoto postupu byl využit skriptovací jazyk JavaScript.</p>\n<figure class=\"figure figure--one-third figure--center \"> <a href=\"/images/spirala-fibonacciho-slova-obr-2.gif\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/spirala-fibonacciho-slova-obr-2.gif\" alt=\"animovaná ukázka postupu\"> </a>  </figure>\n<p><strong>Co je Fibonacciho slovo?</strong><br>\nFibonacciho slovo je specifická posloupnost binárních číslic (nebo obecněji jakýchkoliv dvou symbolů). Získáme ho podobně jako <a href=\"https://cs.wikipedia.org/wiki/Fibonacciho_posloupnost\">Fibonacciho posloupnost</a>, pouze namísto sčítání použijeme zřetězení slov. Počáteční dva členy jsou definované: S0 = 0, S1 = 01. Další člen vzniklý zřetězením (tedy přidáním předposledního členu za poslední člen) bude  S2 = 010.  Posloupnost několika prvních číslic z Fibonacciho slov by tedy vypadala takto: 0100101001001010010100100101001001…</p>\n<p><strong>Co je Ulamova spirála?</strong><br>\n<a href=\"https://cs.wikipedia.org/wiki/Ulamova_spir%C3%A1la\">Ulamova spirála</a>, nebo také prvočíselná spirála, je obrázek, který vznikne seřazením přirozených čísel do spirály a zvýrazněním prvočísel. Byla objevena matematikem Stanisławem Ulamem v roce 1963. Ulam si napsal přirozená čísla do obdélníkové sítě, jedničku doprostřed a další čísla spirálovitě směrem ven.</p>\n<p><strong>Zdrojový kód projektu</strong></p>\n<span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<p><em>Autor myšlenky: Vojta Maur</em><br>\n<em>Autor kódu: Pavel Burda</em></p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">The Fibonacci Word Spiral</h1> <p class=\"post-meta\"> August 2019 </p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/spirala-fibonacciho-slova-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/spirala-fibonacciho-slova-obr-1.jpg\" alt=\"Spirála Fibonacciho slova: výstup programu Pavla Burdy\"> </a>  </figure>\n<p>To draw this figure, I placed <a href=\"https://cs.wikipedia.org/wiki/Fibonacciho_slovo\">the Fibonacci sequence</a> into the spiral in the same way that natural numbers are placed into the Ulam spiral. I labeled the individual numbers in this spiral according to the following rule: 0 = black square, 1 = white square (this process is illustrated in the animation below). To streamline this process, I used the JavaScript scripting language.</p>\n<figure class=\"figure figure--one-third figure--center \"> <a href=\"/images/spirala-fibonacciho-slova-obr-2.gif\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/spirala-fibonacciho-slova-obr-2.gif\" alt=\"animovaná ukázka postupu\"> </a>  </figure>\n<p><strong>What is a Fibonacci word?</strong><br>\nA Fibonacci word is a specific sequence of binary digits (or, more generally, any two symbols). We obtain it in a similar way to <a href=\"https://cs.wikipedia.org/wiki/Fibonacciho_posloupnost\">the Fibonacci sequence</a>, except that instead of addition, we use word concatenation. The first two terms are defined: S0 = 0, S1 = 01. The next term, formed by concatenation (i.e., adding the penultimate term to the last term), will be S2 = 010.  The sequence of the first few digits of the Fibonacci words would therefore look like this: 0100101001001010010100100101001001…</p>\n<p><strong>What is the Ulam spiral?</strong><br>\n\n<a href=\"https://cs.wikipedia.org/wiki/Ulamova_spir%C3%A1la\">The Ulam spiral</a>\n, also known as the prime number spiral, is a diagram created by arranging natural numbers in a spiral and highlighting the prime numbers. It was discovered by mathematician Stanisław Ulam in 1963. Ulam wrote the natural numbers into a rectangular grid, placing the number 1 in the center and the other numbers spiraling outward.</p>\n<p><strong>Project source code</strong></p>\n<span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<p><em>Concept by: Vojta Maur</em><br><em>Code by: Pavel Burda</em></p> </div> ",
+  "createdAt": "2026-07-15T04:24:36.680Z"
+}

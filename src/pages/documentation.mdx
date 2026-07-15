@@ -1670,6 +1670,18 @@ The `source/` directory in `dist/` is a generated output directory. It should no
 ### 12.2 Deployment of the standard web build
 For the production website, the content corresponding to the standard web build is uploaded to the hosting server.
 
+#### 12.2.1 Neocities mirror limitation
+
+The current Neocities mirror is subject to Neocities file-type restrictions, which reject `.zip` uploads. The following generated file is therefore not present on that mirror:
+
+```text
+dist/source/vojtamaur-web-source.zip
+```
+
+Because the source-package link in the published content is root-relative, the link resolves on the Neocities mirror to `/source/vojtamaur-web-source.zip`. That URL is a known dead link on the Neocities deployment.
+
+The source package remains part of the complete local `dist/` output and other deployments that accept ZIP files. The Neocities deployment must therefore be treated as a partial hosting mirror rather than a byte-for-byte copy of `dist/`. Integrity files generated from the complete build may still list the source ZIP even though Neocities rejected it; this is a known deployment-specific omission, not evidence that the local build is corrupted.
+
 ### 12.3 `.htaccess`
 For a static Astro website, a minimalist configuration is appropriate. A typical WordPress rewrite rule to `index.php` is not relevant for this type of project.
 

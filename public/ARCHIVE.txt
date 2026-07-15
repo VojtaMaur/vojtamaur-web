@@ -4,10 +4,12 @@ MAIN SITE (primary live version):
 	https://vojtamaur.cz/
 	
 ALTERNATIVE DEPLOYMENTS:
-	Neocities
-	https://vojtamaur.neocities.org/
 	GitHub Pages
 	https://vojtamaur.github.io/vojtamaur-web/
+	Neocities
+	https://vojtamaur.neocities.org/
+	Netlify
+	https://vojtamaur.netlify.app/
 	ArDrive / Arweave
 	https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
 
@@ -93,6 +95,10 @@ FILE ARTIFACT SNAPSHOTS:
 	https://paste.rs/EfqUS
 	https://paste.rs/f8rti
 	https://paste.rs/C34H3
+	Proton.me
+	https://drive.proton.me/urls/JTESD1FQX0#xs4RdNrb4puf
+	https://drive.proton.me/urls/SAWJ54KHQ8#Bgom5zhtJ3f5
+	https://drive.proton.me/urls/XSSNEPYP0C#5GNRUzLI77j1
 	
 PARTIAL SNAPSHOTS:
 	Internet Archive (additional snapshots may exist)

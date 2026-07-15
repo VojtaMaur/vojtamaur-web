@@ -1,12 +1,10 @@
 image: node:22
 
-pages:
+deploy-pages:
   script:
     - npm ci
     - npm run build:web
-    - mv dist public
-  artifacts:
-    paths:
-      - public
-  only:
-    - main
+  pages:
+    publish: dist
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'

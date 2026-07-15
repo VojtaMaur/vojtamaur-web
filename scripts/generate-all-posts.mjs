@@ -174,13 +174,24 @@ function tableToPlainText(tableHtml) {
 function htmlToPlainText(html) {
   let value = html;
 
+  const blockBreakToken = "\uE000ALL_POSTS_BLOCK_BREAK\uE001";
+  const protectedBlocks = [];
+
+  const protectBlock = (content) => {
+    const token = `\uE000ALL_POSTS_BLOCK_${protectedBlocks.length}\uE001`;
+    protectedBlocks.push({ token, content });
+    return `\n${blockBreakToken}\n${token}\n${blockBreakToken}\n`;
+  };
+
   value = value.replace(/<script[\s\S]*?<\/script>/gi, "");
   value = value.replace(/<style[\s\S]*?<\/style>/gi, "");
-  value = value.replace(/<svg[\s\S]*?<\/svg>/gi, "[SVG CONTENT OMITTED]");
+  value = value.replace(/<svg[\s\S]*?<\/svg>/gi, () =>
+    protectBlock("[SVG CONTENT OMITTED]")
+  );
 
   value = value.replace(/<table\b[^>]*>[\s\S]*?<\/table>/gi, (table) => {
     const tableText = tableToPlainText(table);
-    return tableText ? `\n\n${tableText}\n\n` : "\n\n[TABLE]\n[/TABLE]\n\n";
+    return protectBlock(tableText || "[TABLE]\n[/TABLE]");
   });
 
   value = value.replace(/<figure[\s\S]*?<\/figure>/gi, (figure) => {
@@ -192,7 +203,7 @@ function htmlToPlainText(html) {
       : "";
 
     if (images.length === 0) {
-      return caption ? `\n\n[FIGURE]\nCAPTION: ${caption}\n\n` : "\n\n[FIGURE]\n\n";
+      return protectBlock(caption ? `[FIGURE]\nCAPTION: ${caption}` : "[FIGURE]");
     }
 
     const blocks = images.map((img) => {
@@ -207,18 +218,18 @@ function htmlToPlainText(html) {
       ].filter(Boolean).join("\n");
     });
 
-    return `\n\n${blocks.join("\n\n")}\n\n`;
+    return protectBlock(blocks.join("\n\n"));
   });
 
   value = value.replace(/<img\b[^>]*>/gi, (img) => {
     const src = getAttr(img, "src");
     const alt = getAttr(img, "alt");
 
-    return "\n\n" + [
+    return protectBlock([
       "[MEDIA: image]",
       src ? `FILE: ${src}` : "",
       alt ? `ALT: ${alt}` : "",
-    ].filter(Boolean).join("\n") + "\n\n";
+    ].filter(Boolean).join("\n"));
   });
 
   value = value.replace(/<iframe\b[^>]*><\/iframe>/gi, (iframe) => {
@@ -230,12 +241,12 @@ function htmlToPlainText(html) {
       src.toLowerCase().includes("youtube") || src.toLowerCase().includes("youtu.be") ? "[VIDEO EMBED]" :
       "[INTERACTIVE EMBED]";
 
-    return "\n\n" + [
+    return protectBlock([
       type,
       src ? `SOURCE: ${src}` : "",
       title ? `TITLE: ${title}` : "",
       "NOTE: Embedded or binary content is not represented in this plain-text export.",
-    ].filter(Boolean).join("\n") + "\n\n";
+    ].filter(Boolean).join("\n"));
   });
 
   value = value.replace(/<pre\b[^>]*>([\s\S]*?)<\/pre>/gi, (_, rawBlock) => {
@@ -249,7 +260,7 @@ function htmlToPlainText(html) {
     const shouldTruncateByChars = chars > MAX_BLOCK_CHARS;
 
     if (!shouldTruncateByLines && !shouldTruncateByChars) {
-      return ["", "", "[CODE BLOCK]", decoded, "[/CODE BLOCK]", "", ""].join("\n");
+      return protectBlock(["[CODE BLOCK]", decoded, "[/CODE BLOCK]"].join("\n"));
     }
 
     let visible = blockLines.slice(0, MAX_BLOCK_LINES).join("\n").trimEnd();
@@ -263,23 +274,22 @@ function htmlToPlainText(html) {
     const omittedLines = Math.max(0, lines - shownLines);
     const omittedChars = Math.max(0, chars - visible.length);
 
-    return [
-      "",
-      "",
+    return protectBlock([
       "[CODE BLOCK]",
       visible,
       "",
       `[TRUNCATED: original code/output block had ${lines} lines and ${chars} characters; showing first ${shownLines} lines. Omitted ${omittedLines} lines and ${omittedChars} characters.]`,
       "See the full website source or rendered post for the complete version.",
       "[/CODE BLOCK]",
-      "",
-      "",
-    ].join("\n");
+    ].join("\n"));
   });
 
   value = value.replace(/<br\s*\/?>/gi, "\n");
 
-  value = value.replace(/<\/(p|div|section|article|main|header|footer|blockquote|ul|ol|li|h1|h2|h3|h4|h5|h6|table|tr)>/gi, "\n\n");
+  value = value.replace(/<h([2-6])\b[^>]*>/gi, `\n${blockBreakToken}\n`);
+  value = value.replace(/<\/h([2-6])>/gi, `\n${blockBreakToken}\n`);
+
+  value = value.replace(/<\/(p|div|section|article|main|header|footer|blockquote|ul|ol|li|h1|table|tr)>/gi, "\n");
 
   value = value.replace(/<li\b[^>]*>/gi, "- ");
 
@@ -293,7 +303,10 @@ function htmlToPlainText(html) {
       return `${text}\n[PDF DOCUMENT: ${decodedHref}]`;
     }
 
-    return text;
+    if (!text) return decodedHref;
+    if (text === decodedHref) return text;
+
+    return `${text} [${decodedHref}]`;
   });
 
   value = value.replace(/<[^>]+>/g, "");
@@ -303,11 +316,20 @@ function htmlToPlainText(html) {
   value = value
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n[ \t]+/g, "\n")
-    .replace(/\n{4,}/g, "\n\n\n")
+    .replace(/\n+/g, "\n")
     .replace(/[ \t]{2,}/g, " ")
     .trim();
 
-  return value;
+  value = value
+    .replaceAll(blockBreakToken, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  for (const { token, content } of protectedBlocks) {
+    value = value.replaceAll(token, () => content);
+  }
+
+  return value.trim();
 }
 
 function extractMainContent(html) {
@@ -468,9 +490,7 @@ async function main() {
     if (en) chunks.push(en);
   }
 
-  const finalText = chunks
-    .join("\n")
-    .replace(/\n{5,}/g, "\n\n\n\n");
+  const finalText = chunks.join("\n");
 
   await fs.writeFile(OUTPUT_FILE, "\uFEFF" + finalText, "utf8");
 

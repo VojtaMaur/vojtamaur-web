@@ -87,9 +87,15 @@ FILE ARTIFACT SNAPSHOTS:
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0007
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0006
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00rb
+	paste.rs (additional equivalent copies exist)
+	https://paste.rs/s1c6U
+	https://paste.rs/DHEs7
+	https://paste.rs/EfqUS
+	https://paste.rs/f8rti
+	https://paste.rs/C34H3
 	
 PARTIAL SNAPSHOTS:
-	Internet Archive
+	Internet Archive (additional snapshots may exist)
 	https://web.archive.org/web/20260420172617/https://vojtamaur.cz/
 	https://web.archive.org/web/20260420172617/https://vojtamaur.cz/volna-tvorba/
 	https://web.archive.org/web/20260420173149/https://vojtamaur.cz/nezalezi-z-jakeho-kraje-jsi-prisel/
@@ -380,6 +386,9 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260709075922/https://vojtamaur.cz/en/metawebovy-clanek/
 	https://web.archive.org/web/20260710214324/https://megalodon.jp/2026-0711-0642-18/https://vojtamaur.cz:443/metawebovy-clanek/
 	https://web.archive.org/web/20260711054429/https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361
+	https://web.archive.org/web/20260715095906/https://www.ncbi.nlm.nih.gov/nuccore/170878295
+	https://web.archive.org/web/20260715095917/https://www.ncbi.nlm.nih.gov/nuccore/10313991?utm_
+	https://web.archive.org/web/20260715100041/https://www.ncbi.nlm.nih.gov/nuccore/OM065388.1
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/
@@ -467,6 +476,9 @@ PARTIAL SNAPSHOTS:
 	http://archive.today/2026.07.06-110303/https://vojtamaur.cz/cestovani-recko-2020/
 	http://archive.today/2026.07.06-110308/https://vojtamaur.cz/en/cestovani-recko-2020/
 	http://archive.today/2026.07.06-110400/https://vojtamaur.cz/
+	http://archive.today/2026.07.15-100254/https://www.ncbi.nlm.nih.gov/nuccore/170878295
+	http://archive.today/2026.07.15-100256/https://www.ncbi.nlm.nih.gov/nuccore/10313991?utm_
+	http://archive.today/2026.07.15-100304/https://www.ncbi.nlm.nih.gov/nuccore/OM065388.1
 	Ghost Archive
 	https://ghostarchive.org/archive/Aqt05
 	https://ghostarchive.org/archive/POTTj

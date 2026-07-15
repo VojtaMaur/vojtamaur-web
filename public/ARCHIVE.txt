@@ -6,10 +6,10 @@ MAIN SITE (primary live version):
 ALTERNATIVE DEPLOYMENTS:
 	GitHub Pages
 	https://vojtamaur.github.io/vojtamaur-web/
-	Neocities
-	https://vojtamaur.neocities.org/
 	Netlify
 	https://vojtamaur.netlify.app/
+	Neocities
+	https://vojtamaur.neocities.org/
 	ArDrive / Arweave
 	https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
 

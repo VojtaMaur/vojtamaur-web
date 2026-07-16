@@ -8,6 +8,8 @@ ALTERNATIVE DEPLOYMENTS:
 	https://vojtamaur.github.io/vojtamaur-web/
 	Netlify
 	https://vojtamaur.netlify.app/
+	GitLab Pages
+	https://vojtamaur-web-a22b59.gitlab.io/
 	Neocities
 	https://vojtamaur.neocities.org/
 	ArDrive / Arweave

@@ -563,6 +563,17 @@ Supported parameters:
 - `width`
 - `align`
 
+For YouTube embeds, prefer the privacy-enhanced `youtube-nocookie.com` domain instead of the standard `youtube.com` embed URL:
+
+```mdx
+<Embed
+  src="https://www.youtube-nocookie.com/embed/6wDN62Xq3pA"
+  kind="youtube"
+/>
+```
+
+This reduces unnecessary YouTube cookie use, although the iframe still loads content from a third-party service.
+
 ### 7.4 Edge cases
 
 #### PDF in `MediaRow`

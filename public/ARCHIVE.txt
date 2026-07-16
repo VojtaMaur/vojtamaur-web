@@ -9,7 +9,9 @@ ALTERNATIVE DEPLOYMENTS:
 	Netlify
 	https://vojtamaur.netlify.app/
 	GitLab Pages
-	https://vojtamaur-web-a22b59.gitlab.io/
+	https://vojtamaur-web-a22b59.gitlab.io/ 
+	Codeberg Pages:
+	https://vojta_maur.codeberg.page/
 	Neocities
 	https://vojtamaur.neocities.org/
 	ArDrive / Arweave
@@ -397,6 +399,8 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260715095906/https://www.ncbi.nlm.nih.gov/nuccore/170878295
 	https://web.archive.org/web/20260715095917/https://www.ncbi.nlm.nih.gov/nuccore/10313991?utm_
 	https://web.archive.org/web/20260715100041/https://www.ncbi.nlm.nih.gov/nuccore/OM065388.1
+	https://web.archive.org/web/20260716055239/https://vojtamaur.netlify.app/
+	https://web.archive.org/web/20260716055556/https://vojtamaur-web-a22b59.gitlab.io/
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/

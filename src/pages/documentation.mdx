@@ -1693,6 +1693,89 @@ Because the source-package link in the published content is root-relative, the l
 
 The source package remains part of the complete local `dist/` output and other deployments that accept ZIP files. The Neocities deployment must therefore be treated as a partial hosting mirror rather than a byte-for-byte copy of `dist/`. Integrity files generated from the complete build may still list the source ZIP even though Neocities rejected it; this is a known deployment-specific omission, not evidence that the local build is corrupted.
 
+#### 12.2.2 Codeberg Pages deployment
+
+The Codeberg repository is named `pages` and is available at:
+
+```text
+https://codeberg.org/vojta_maur/pages
+```
+
+It contains two different branches with separate purposes:
+
+- `main` – the normal project source, pushed together with the GitHub and GitLab copies
+- `pages` – the generated contents of `dist/`, used only by Codeberg Pages
+
+The published website is available at:
+
+```text
+https://vojta_maur.codeberg.page/
+```
+
+The repository name is intentionally `pages`. The normal web build contains root-relative URLs such as `/_astro/...`, `/images/...`, and `/slug/`. If the same build were served from a repository subpath such as `/vojtamaur-web/`, CSS, images, the web manifest, and internal links would resolve against the domain root and return `404`. Using the special `pages` repository exposes the build at the user-domain root and preserves the same URL model as the production website and the other root-hosted mirrors.
+
+Codeberg Pages is triggered by a repository webhook with the following relevant settings:
+
+```text
+Target URL: https://vojta_maur.codeberg.page/
+Event: push
+Branch filter: pages
+Content type: application/json
+```
+
+The local setup uses two Git worktrees so that the source branch and generated deployment branch can remain checked out at the same time:
+
+```text
+G:\vojtamaur-web    -> main
+G:\vojtamaur-pages  -> pages
+```
+
+The deployment helper is:
+
+```text
+deploy-codeberg-pages.bat
+```
+
+It is intended to be stored in the project root. The script:
+
+1. verifies the expected directories, branches, and the `codeberg` remote
+2. refuses to deploy while the `main` worktree contains uncommitted changes
+3. runs `npm run build` in `G:\vojtamaur-web`
+4. resets and cleans only the `pages` worktree
+5. copies the finished `dist/` contents into `G:\vojtamaur-pages`
+6. creates a deployment commit only when the generated output changed
+7. pushes only the `pages` branch to Codeberg
+
+The script does not commit, modify, or push `main`. The normal source publishing workflow therefore remains separate:
+
+```bat
+git status
+git add .
+git commit -m "Commit message"
+
+git push origin main
+git push gitlab main
+git push codeberg main
+
+deploy-codeberg-pages.bat
+```
+
+An optional deployment commit message can be passed as an argument:
+
+```bat
+deploy-codeberg-pages.bat "Deploy updated website"
+```
+
+On a fresh workstation, the `pages` worktree can be recreated after configuring the `codeberg` remote and fetching the remote deployment branch:
+
+```bat
+git remote add codeberg https://codeberg.org/vojta_maur/pages.git
+git fetch codeberg pages
+git worktree add -b pages G:\vojtamaur-pages codeberg/pages
+```
+
+If a local `pages` branch already exists, omit `-b pages` and attach the worktree to that existing branch instead. The deployment branch is generated output and should not be merged into `main`.
+
 ### 12.3 `.htaccess`
 For a static Astro website, a minimalist configuration is appropriate. A typical WordPress rewrite rule to `index.php` is not relevant for this type of project.
 
@@ -1801,6 +1884,7 @@ From a maintenance perspective, the following points are especially important:
 - metadata is validated through content collections
 - specialized content is encapsulated in several reusable components
 - the project supports a standard web build, a portable file-based build, and a derived Arweave / Permaweb deployment build
+- Codeberg Pages is deployed separately from the generated `pages` branch through the `deploy-codeberg-pages.bat` worktree workflow
 - web and USB builds generate a recursively reconstructable source package at `/source/vojtamaur-web-source.zip`
 - when working with new content, it is useful to expect the occasional need to restart the development server
 - public assets in `public/images/` and `public/files/` should be checked for unintended embedded metadata before commit

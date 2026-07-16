@@ -6,6 +6,8 @@ MAIN SITE (primary live version):
 ALTERNATIVE DEPLOYMENTS:
 	GitHub Pages
 	https://vojtamaur.github.io/vojtamaur-web/
+	Cloudflare Pages
+	https://vojtamaur-web.pages.dev/
 	Netlify
 	https://vojtamaur.netlify.app/
 	GitLab Pages
@@ -25,7 +27,7 @@ COPIES OF GITHUB REPOSITORY:
 	GitLab
 	https://gitlab.com/vojta.maur/vojtamaur-web
 	Codeberg
-	https://codeberg.org/vojta_maur/vojtamaur-web
+	https://codeberg.org/vojta_maur/pages
 	Software Heritage (archival ingest of repository)
 	https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/VojtaMaur/vojtamaur-web
 	Internet archive (archival ingest of repository)
@@ -401,6 +403,8 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260715100041/https://www.ncbi.nlm.nih.gov/nuccore/OM065388.1
 	https://web.archive.org/web/20260716055239/https://vojtamaur.netlify.app/
 	https://web.archive.org/web/20260716055556/https://vojtamaur-web-a22b59.gitlab.io/
+	https://web.archive.org/web/20260716115625/https://vojta_maur.codeberg.page/
+	https://web.archive.org/web/20260716131452/https://vojtamaur-web.pages.dev/
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/

@@ -10,6 +10,8 @@ ALTERNATIVE DEPLOYMENTS:
 	https://vojtamaur-web.pages.dev/
 	Netlify
 	https://vojtamaur.netlify.app/
+	Vercel
+	https://vojtamaur-web.vercel.app/
 	GitLab Pages
 	https://vojtamaur-web-a22b59.gitlab.io/ 
 	Codeberg Pages:
@@ -95,6 +97,7 @@ FILE ARTIFACT SNAPSHOTS:
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0007
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0006
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00rb
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00rd
 	paste.rs (additional equivalent copies exist)
 	https://paste.rs/s1c6U
 	https://paste.rs/DHEs7

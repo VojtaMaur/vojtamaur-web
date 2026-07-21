@@ -20,8 +20,13 @@ const BUNDLED_PUBLIC_DIRS = [
 const MIRROR_BASES = [
   "https://vojtamaur.cz",
   "https://vojtamaur.github.io/vojtamaur-web",
+  "https://vojtamaur-web.pages.dev",
   "https://vojtamaur.netlify.app",
+  "https://vojtamaur-web.vercel.app",
+  "https://vojtamaur-977c1.web.app",
+  "https://vojtamaur-977c1.firebaseapp.com",
   "https://vojtamaur-web-a22b59.gitlab.io",
+  "https://vojta_maur.codeberg.page",
   "https://vojtamaur.neocities.org",
   "https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs",
 ];

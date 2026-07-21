@@ -12,9 +12,12 @@ ALTERNATIVE DEPLOYMENTS:
 	https://vojtamaur.netlify.app/
 	Vercel
 	https://vojtamaur-web.vercel.app/
+	Firebase Hosting
+	https://vojtamaur-977c1.web.app/
+	https://vojtamaur-977c1.firebaseapp.com/
 	GitLab Pages
 	https://vojtamaur-web-a22b59.gitlab.io/ 
-	Codeberg Pages:
+	Codeberg Pages
 	https://vojta_maur.codeberg.page/
 	Neocities
 	https://vojtamaur.neocities.org/

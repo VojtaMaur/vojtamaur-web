@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "7a4e016148a8b72391824e3d8a9195cfde904dc6e92f391a3f9572b9e9f36f84",
+  "purpose": "html-region",
+  "page": "/en/plevel/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Plevel</h1> <p class=\"post-meta\"> May 2008 </p> </div> <div class=\"post-body\"> <p>Práce z mateřské školky.</p>\n<p>Zadání bylo vystřihovat z barevného papíru kvetoucí květiny a složit z nich obrázek.</p>\n<p>Místo květin jsem vytvořil plevel.</p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/plevel-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/plevel-obr-1.jpg\" alt=\"plevel\"> </a>  </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Weeds</h1> <p class=\"post-meta\"> May 2008 </p> </div> <div class=\"post-body\"> <p>A project from preschool.</p>\n<p>The assignment was to cut out blooming flowers from colored paper and assemble them into a picture.</p>\n<p>Instead of flowers, I created weeds.</p>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/plevel-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/plevel-obr-1.jpg\" alt=\"plevel\"> </a>  </figure> </div> ",
+  "createdAt": "2026-07-21T16:44:54.356Z"
+}

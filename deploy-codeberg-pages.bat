@@ -3,17 +3,16 @@ setlocal EnableExtensions EnableDelayedExpansion
 
 rem ------------------------------------------------------------
 rem Deploy the current Astro build to Codeberg Pages.
-rem Expected layout next to this script:
-rem   deploy-codeberg-pages.bat
-rem   vojtamaur-web\   (branch main)
+rem Expected layout:
+rem   vojtamaur-web\   (branch main; contains this BAT file)
 rem   vojtamaur-pages\ (branch pages)
 rem This script does not commit or push main.
 rem ------------------------------------------------------------
 
 rem Resolve both worktrees relative to this BAT file. This keeps the
 rem script independent of the USB drive letter and current directory.
-for %%I in ("%~dp0vojtamaur-web") do set "MAIN=%%~fI"
-for %%I in ("%~dp0vojtamaur-pages") do set "PAGES=%%~fI"
+for %%I in ("%~dp0.") do set "MAIN=%%~fI"
+for %%I in ("%~dp0..\vojtamaur-pages") do set "PAGES=%%~fI"
 set "MESSAGE=Deploy Codeberg Pages"
 
 if not "%~1"=="" set "MESSAGE=%~1"

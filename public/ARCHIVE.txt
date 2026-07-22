@@ -411,6 +411,11 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260716055556/https://vojtamaur-web-a22b59.gitlab.io/
 	https://web.archive.org/web/20260716115625/https://vojta_maur.codeberg.page/
 	https://web.archive.org/web/20260716131452/https://vojtamaur-web.pages.dev/
+	https://web.archive.org/web/20260722032411/https://vojtamaur.cz/plevel/
+	https://web.archive.org/web/20260722032411/https://vojtamaur.cz/en/plevel/
+	https://web.archive.org/web/20260722032554/https://vojtamaur-977c1.firebaseapp.com/plevel/
+	https://web.archive.org/web/20260722032557/https://vojtamaur-977c1.firebaseapp.com/en/plevel/
+	https://web.archive.org/web/20260722032936/https://vojtamaur.cz/volna-tvorba/
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/
@@ -501,6 +506,8 @@ PARTIAL SNAPSHOTS:
 	http://archive.today/2026.07.15-100254/https://www.ncbi.nlm.nih.gov/nuccore/170878295
 	http://archive.today/2026.07.15-100256/https://www.ncbi.nlm.nih.gov/nuccore/10313991?utm_
 	http://archive.today/2026.07.15-100304/https://www.ncbi.nlm.nih.gov/nuccore/OM065388.1
+	http://archive.today/2026.07.22-032423/https://vojtamaur.cz/plevel/
+	http://archive.today/2026.07.22-032424/https://vojtamaur.cz/en/plevel/
 	Ghost Archive
 	https://ghostarchive.org/archive/Aqt05
 	https://ghostarchive.org/archive/POTTj
@@ -525,6 +532,7 @@ PARTIAL SNAPSHOTS:
 	https://ghostarchive.org/archive/pswf7
 	https://ghostarchive.org/archive/TflaU
 	https://ghostarchive.org/archive/XHWxy
+	https://ghostarchive.org/archive/sbFqy
 	Arquivo.pt
 	https://arquivo.pt/wayback/20260509005546/https://vojtamaur.cz/volna-tvorba/
 	https://arquivo.pt/wayback/20260509005652/https://vojtamaur.cz/en/volna-tvorba/
@@ -606,6 +614,7 @@ PARTIAL SNAPSHOTS:
 	https://arquivo.pt/wayback/20260706110749/https://vojtamaur.cz/en/cestovani-recko-2020/
 	https://arquivo.pt/wayback/20260706110810/https://vojtamaur.cz/cestovani-recko-2020/
 	https://arquivo.pt/wayback/20260707030750/https://colab.research.google.com/drive/18y4hUsNv-aEZHtXVp67ygHGGpMBkByxD?usp=sharing
+	https://arquivo.pt/wayback/20260722032730/https://vojtamaur.cz/en/plevel/
 	Megalodon / Web Gyotaku
 	https://megalodon.jp/2026-0702-1329-40/https://vojtamaur.cz:443/
 	https://megalodon.jp/2026-0702-1331-10/https://vojtamaur.cz:443/en/
@@ -676,6 +685,7 @@ PARTIAL SNAPSHOTS:
 	https://megalodon.jp/2026-0706-2008-42/https://vojtamaur.cz:443/cestovani-recko-2020/
 	https://megalodon.jp/2026-0706-2009-30/https://vojtamaur.cz:443/en/cestovani-recko-2020/
 	https://megalodon.jp/2026-0706-2010-50/https://vojtamaur.cz:443/cestovani/
+	https://megalodon.jp/2026-0722-1228-48/https://vojtamaur.cz:443/en/plevel/
 	Perma.cc
 	https://perma.cc/5W67-Z395
 	https://perma.cc/KHP9-63FL

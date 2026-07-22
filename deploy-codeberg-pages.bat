@@ -3,13 +3,17 @@ setlocal EnableExtensions EnableDelayedExpansion
 
 rem ------------------------------------------------------------
 rem Deploy the current Astro build to Codeberg Pages.
-rem Source worktree: G:\vojtamaur-web   (branch main)
-rem Pages worktree:  G:\vojtamaur-pages (branch pages)
+rem Expected layout next to this script:
+rem   deploy-codeberg-pages.bat
+rem   vojtamaur-web\   (branch main)
+rem   vojtamaur-pages\ (branch pages)
 rem This script does not commit or push main.
 rem ------------------------------------------------------------
 
-set "MAIN=G:\vojtamaur-web"
-set "PAGES=G:\vojtamaur-pages"
+rem Resolve both worktrees relative to this BAT file. This keeps the
+rem script independent of the USB drive letter and current directory.
+for %%I in ("%~dp0vojtamaur-web") do set "MAIN=%%~fI"
+for %%I in ("%~dp0vojtamaur-pages") do set "PAGES=%%~fI"
 set "MESSAGE=Deploy Codeberg Pages"
 
 if not "%~1"=="" set "MESSAGE=%~1"
@@ -24,6 +28,15 @@ if not exist "%MAIN%\.git" (
 
 if not exist "%PAGES%\.git" (
     echo ERROR: Pages worktree not found at "%PAGES%".
+    exit /b 1
+)
+
+rem Linked Git worktrees also contain absolute paths internally. Repair them
+rem after the USB drive letter or parent directory has changed.
+echo Repairing Git worktree links...
+git -C "%MAIN%" worktree repair "%PAGES%"
+if errorlevel 1 (
+    echo ERROR: Could not repair the Git worktree links.
     exit /b 1
 )
 

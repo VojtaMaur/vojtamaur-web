@@ -1,0 +1,84 @@
+---
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import type { Lang } from "../lib/i18n";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const keysDirectory = resolve(process.cwd(), "public", "keys");
+
+const openPgpPublicKey = readFileSync(
+  resolve(keysDirectory, "vojta-maur-openpgp.asc"),
+  "utf8"
+).trim();
+
+const openPgpFingerprint = readFileSync(
+  resolve(keysDirectory, "vojta-maur-openpgp-fingerprint.txt"),
+  "utf8"
+)
+  .trim()
+  .replace(/\s+/g, " ");
+
+const copy =
+  lang === "cs"
+    ? {
+        intro: "Pro šifrovanou komunikaci použijte můj veřejný OpenPGP klíč.",
+        fingerprint: "Fingerprint:",
+        publicKey: "Veřejný OpenPGP klíč:",
+      }
+    : {
+        intro: "For encrypted communication, use my public OpenPGP key.",
+        fingerprint: "Fingerprint:",
+        publicKey: "Public OpenPGP key:",
+      };
+---
+
+<div class="openpgp-contact">
+  <p class="openpgp-intro">{copy.intro}</p>
+
+  <p class="openpgp-fingerprint">
+    {copy.fingerprint}<br />
+    <code translate="no">{openPgpFingerprint}</code>
+  </p>
+
+  <p class="openpgp-key-label">{copy.publicKey}</p>
+  <pre class="openpgp-key" translate="no"><code>{openPgpPublicKey}</code></pre>
+</div>
+
+<style>
+  .openpgp-contact {
+    margin-top: 1.5rem;
+  }
+
+  .openpgp-contact code {
+    overflow-wrap: anywhere;
+  }
+
+  .openpgp-intro {
+    margin-bottom: 1rem;
+  }
+
+  .openpgp-fingerprint {
+    margin-top: 0;
+  }
+
+  .openpgp-fingerprint code {
+    display: block;
+    margin-top: 0.25rem;
+  }
+
+  .openpgp-key-label {
+    margin-bottom: 0.5rem;
+  }
+
+  .openpgp-key {
+    max-width: 100%;
+    margin-top: 0;
+    overflow-x: auto;
+    font-size: 0.75rem;
+    white-space: pre;
+  }
+</style>

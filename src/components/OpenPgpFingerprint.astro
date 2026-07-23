@@ -1,0 +1,32 @@
+---
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+interface Props {
+  label?: string;
+}
+
+const { label = "OpenPGP fingerprint:" } = Astro.props;
+const openPgpFingerprint = readFileSync(
+  resolve(
+    process.cwd(),
+    "public",
+    "keys",
+    "vojta-maur-openpgp-fingerprint.txt"
+  ),
+  "utf8"
+)
+  .trim()
+  .replace(/\s+/g, " ");
+---
+
+<p class="openpgp-fingerprint">
+  {label}<br />
+  <code translate="no">{openPgpFingerprint}</code>
+</p>
+
+<style>
+  .openpgp-fingerprint code {
+    overflow-wrap: anywhere;
+  }
+</style>

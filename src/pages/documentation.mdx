@@ -46,6 +46,7 @@ public/
   demos/
   files/
   images/
+  keys/
 
 src/
   components/
@@ -66,6 +67,7 @@ Contains static files that are simply copied into the output during the build:
 - `public/images/` – article images, thumbnails, and other visual content
 - `public/files/` – PDFs and other downloadable or embeddable files
 - `public/demos/` – standalone HTML/JS demos and legacy static pages
+- `public/keys/` – public OpenPGP material copied unchanged into the build, including the public key and its fingerprint
 
 #### `src/content/`
 Project content files. In the current configuration, the following are mainly used:
@@ -80,6 +82,8 @@ Reusable components for working with content and listings:
 - `MediaRow.astro`
 - `Embed.astro`
 - `PostTileGrid.astro`
+- `OpenPgpContact.astro`
+- `OpenPgpFingerprint.astro`
 - `Header.astro`
 
 #### `src/layouts/`
@@ -127,44 +131,64 @@ Basic project workflow:
 ```bash
 npm run dev
 npm run build:web
+npm run build:web:signed
 npm run build:web:translate
+npm run build:web:translate:signed
+npm run build:translate:signed
 npm run build:web:strict
+npm run build:web:strict:signed
 npm run build:web:prune:dry
 npm run build:web:prune
 npm run preview
 npm run build:usb
+npm run build:usb:signed
 npm run build:usb:translate
 npm run build:usb:strict
+npm run build:usb:strict:signed
 npm run build:usb:prune:dry
 npm run build:usb:prune
 npm run build:arweave
+npm run build:arweave:signed
 npm run generate:all-posts
 npm run generate:source-bundle
 npm run generate:integrity
 npm run generate:integrity:arweave
+npm run sign:build
+npm run sign:build:arweave
 npm run export:pdf
 ```
 
 Meaning of the main scripts:
 
 - `npm run dev` – starts the Astro development server
-- `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`, and writes build integrity files for `dist/`
-- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes build integrity files for `dist/`
-- `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes build integrity files for `dist/`
+- `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`, and writes unsigned build integrity metadata for `dist/`
+- `npm run build:web:signed` – runs the standard web build and then creates and verifies the detached OpenPGP signature for `dist/SHA256SUMS.txt`
+- `npm run build:signed` – alias for `npm run build:web:signed`
+- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes unsigned build integrity metadata for `dist/`
+- `npm run build:web:translate:signed` – runs the translating web build and then signs and verifies its checksum manifest
+- `npm run build:translate:signed` – alias for `npm run build:web:translate:signed`
+- `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes unsigned build integrity metadata for `dist/`
+- `npm run build:web:strict:signed` – runs the strict web build and then signs and verifies its checksum manifest
 - `npm run build:web:prune:dry` – runs the strict web build and prints unused English translation cache files that would be deleted, without deleting them
 - `npm run build:web:prune` – runs the strict web build and deletes unused, unprotected English translation cache files
 - `npm run preview` – local preview of the build
-- `npm run build:usb` – creates a portable file-based build, applies the English postprocess, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, rewrites paths for offline use, and writes build integrity files for `dist/`
-- `npm run build:usb:translate` – creates a portable file-based build, fills missing English translation cache entries, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, rewrites paths for offline use, and writes build integrity files for `dist/`
+- `npm run build:usb` – creates a portable file-based build, applies the English postprocess, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, rewrites paths for offline use, and writes unsigned build integrity metadata for `dist/`
+- `npm run build:usb:signed` – runs the portable build and then signs and verifies its checksum manifest
+- `npm run build:usb:translate` – creates a portable file-based build, fills missing English translation cache entries, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, rewrites paths for offline use, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:usb:strict` – creates a strict portable file-based build and fails if an English translation cache entry is missing
+- `npm run build:usb:strict:signed` – runs the strict portable build and then signs and verifies its checksum manifest
 - `npm run build:usb:prune:dry` – runs the strict portable build and prints unused English translation cache files that would be deleted, without deleting them
 - `npm run build:usb:prune` – runs the strict portable build and deletes unused, unprotected English translation cache files
-- `npm run build:arweave` – creates the strict standard web build, creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths, and then writes separate build integrity files for `dist-arweave/`
+- `npm run build:arweave` – creates the strict standard web build, creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths, and then writes separate unsigned build integrity metadata for `dist-arweave/`
+- `npm run build:arweave:signed` – runs the Arweave build and then signs and verifies `dist-arweave/SHA256SUMS.txt`
 - `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt`, a plain-text export of all article content from the finished build output
 - `npm run generate:source-bundle` – generates `dist/source/vojtamaur-web-source.zip`, a small reconstructable source package with a media manifest and an asset downloader
-- `npm run generate:integrity` – generates `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json` for the selected build output directory
-- `npm run generate:integrity:arweave` – generates fresh integrity files for `dist-arweave/` after the Arweave copy-and-rewrite step
+- `npm run generate:integrity` – generates `SHA256SUMS.txt`, `BUILD_SHA256.txt`, `integrity.json`, and an unsigned `SIGNING_STATUS.txt` for `dist/`; any stale detached signature is removed
+- `npm run generate:integrity:arweave` – performs the same integrity pass for `dist-arweave/` after the Arweave copy-and-rewrite step
+- `npm run sign:build` – signs the existing `dist/SHA256SUMS.txt`, verifies the detached signature immediately, and updates the informational signing status and JSON metadata
+- `npm run sign:build:arweave` – performs the same explicit local signing step for `dist-arweave/`
 - `npm run export:pdf` – manually exports article pages from the finished `dist/` build to archival PDF files; this command is not part of the normal build pipeline
+
 
 
 ### `content.config.ts`
@@ -608,7 +632,26 @@ Section headings on the homepage are clickable and serve as quick navigation to 
 The homepage also contains specialized content blocks outside the standard article system:
 
 - an O mně block with text and a Sketchfab iframe
-- a Kontakt block with phone number and email
+- a Kontakt block with phone number, email, and the public OpenPGP identity
+
+### 8.6 OpenPGP contact block
+
+Both homepage variants use the shared component:
+
+```astro
+<OpenPgpContact lang={lang} />
+```
+
+The component is rendered from both `src/pages/index.astro` and `src/pages/en/index.astro`. It provides short Czech or English labels while keeping the cryptographic material shared between both language versions.
+
+The component reads these files during the Astro build:
+
+```text
+public/keys/vojta-maur-openpgp.asc
+public/keys/vojta-maur-openpgp-fingerprint.txt
+```
+
+`OpenPgpContact.astro` therefore does not duplicate the armored public key or fingerprint inside either homepage file. The public key remains directly visible in the rendered HTML, while the fingerprint is normalized to a single space-separated line. Both values are marked with `translate="no"` so that the translation postprocess cannot modify them.
 
 ---
 
@@ -812,7 +855,7 @@ python scripts/filter-all-posts.py --from-date 2020-01-01 --to-date 2026-12-31 -
 Two output formats are available:
 
 - `--format structured` is the default. It retains the delimited article-block structure and can preserve all metadata or use the `full`, `archive`, `minimal`, or `none` metadata profiles. Exact metadata fields can also be selected with `--metadata-fields`, for example `--metadata-fields TITLE,URL,DATE`.
-- `--format compact creates a compact reading and transfer copy. Long separator lines and repeated article metadata blocks are removed. Each article starts with [rendered title|YYYY-MM]; image references are reduced to records such as [img:filename|ALT: ...|CAPTION: ...]; and video, PDF, and interactive embeds use equivalent one-line records. Redundant blank lines and generic embed notes are omitted.
+- `--format compact` creates a compact reading and transfer copy. Long separator lines and repeated article metadata blocks are removed. Each article starts with [rendered title|YYYY-MM]; image references are reduced to records such as [img:filename|ALT: ...|CAPTION: ...]; and video, PDF, and interactive embeds use equivalent one-line records. Redundant blank lines and generic embed notes are omitted.
 
 Compact output and structured output with `--metadata none` are intentionally not intended as inputs for another filtering pass because the metadata required for reliable filtering has been removed. Use structured output with sufficient metadata when another filtering step may be needed later.
 
@@ -834,14 +877,15 @@ python scripts/filter-all-posts.py --language cs --section volna-tvorba --format
 
 The script refuses to overwrite its input, rejects unknown language or section values, and rejects an empty selection unless `--allow-empty` is supplied explicitly. It reports the selected article count, output path, and SHA-256 hash after processing. Like the source export, written output uses UTF-8 with BOM.
 
-### 9.6.1 Build integrity files
+### 9.6.1 Build integrity and OpenPGP signatures
 
-During the final post-build phase, the project generates integrity files for the completed static output:
+During the final post-build phase, the project generates integrity metadata for the completed static output:
 
 ```text
 /SHA256SUMS.txt
 /BUILD_SHA256.txt
 /integrity.json
+/SIGNING_STATUS.txt
 ```
 
 These files are produced by:
@@ -858,23 +902,28 @@ The global build hash is stored in:
 BUILD_SHA256.txt
 ```
 
-Machine-readable metadata is stored in:
+Machine-readable informational metadata is stored in:
 
 ```text
 integrity.json
 ```
+
+Every ordinary integrity pass starts in an unsigned state. It removes any stale `SHA256SUMS.txt.asc`, writes `SIGNING_STATUS.txt` as unsigned, and records `openPgp.present: false` in `integrity.json`. This prevents a detached signature from an older build from surviving after the manifest has changed.
 
 The following files are intentionally excluded from the checksum manifest:
 
 ```text
 SHA256SUMS.txt
+SHA256SUMS
 BUILD_SHA256.txt
 integrity.json
+SHA256SUMS.txt.asc
+SIGNING_STATUS.txt
 .DS_Store
 Thumbs.db
 ```
 
-This avoids a recursive checksum loop where the checksum files would change the checksum they are trying to describe.
+The checksum and signing metadata files cannot describe themselves without creating a recursive dependency. In particular, `integrity.json` and `SIGNING_STATUS.txt` are informational and are not cryptographic proof that a build is signed.
 
 The manifest uses the `.txt` extension intentionally. A bare file named `SHA256SUMS` can be interpreted badly by local preview or static hosting setups that use directory-style routes and `trailingSlash: "always"`. `SHA256SUMS.txt` behaves as a normal downloadable text file.
 
@@ -883,6 +932,112 @@ The integrity files are generated from the final build output, not from the sour
 For the normal web build and USB build, the integrity files describe the final contents of `dist/`.
 
 For the Arweave / Permaweb build, integrity is generated again after `dist-arweave/` is created, so the integrity files inside `dist-arweave/` describe the final Arweave deployment artifact rather than the original `dist/` directory.
+
+The public OpenPGP identity used for signed build artifacts is published separately in the static build:
+
+```text
+/keys/vojta-maur-openpgp.asc
+/keys/vojta-maur-openpgp-fingerprint.txt
+```
+
+SHA-256 verifies whether the files match a particular manifest. The detached OpenPGP signature authenticates that exact manifest as one signed by the holder of the corresponding private key. Publishing the public key alone does not authenticate a deployment.
+
+The explicit signing step is implemented by:
+
+```text
+scripts/sign-build.mjs
+```
+
+It reads the expected primary-key fingerprint from `public/keys/vojta-maur-openpgp-fingerprint.txt`, locates the private key through `GNUPGHOME`, creates the armored detached signature:
+
+```text
+/SHA256SUMS.txt.asc
+```
+
+and immediately verifies the new signature against `SHA256SUMS.txt`. Only after successful verification does it write a signed `SIGNING_STATUS.txt` and update the informational `openPgp` object in `integrity.json`.
+
+If signing fails, the script removes `SHA256SUMS.txt.asc`, writes a failed unsigned status where possible, records `openPgp.present: false`, and exits with a non-zero status. A build is therefore signed only when the detached signature is present and verifies successfully.
+
+When `GNUPGHOME` is already set, the script validates that directory and confirms that it contains the requested secret key. When it is not set and an interactive terminal is available, the script asks for the GnuPG home directory. In a non-interactive environment, `GNUPGHOME` must be set explicitly.
+
+A Windows CMD example is:
+
+```bat
+set "GNUPGHOME=C:\path\to\gnupg"
+npm run build:web:signed
+```
+
+The private signing key is never stored in the repository, copied into `public/`, included in the build, or provided to third-party CI systems.
+
+The available signed build commands are:
+
+```bash
+npm run build:web:signed
+npm run build:translate:signed
+npm run build:web:strict:signed
+npm run build:usb:signed
+npm run build:usb:strict:signed
+npm run build:arweave:signed
+```
+
+The signing step can also be applied to an already generated output:
+
+```bash
+npm run sign:build
+npm run sign:build:arweave
+```
+
+#### Verifying a signed build
+
+Download the public key, checksum manifest, and detached signature into the same directory:
+
+```text
+vojta-maur-openpgp.asc
+SHA256SUMS.txt
+SHA256SUMS.txt.asc
+```
+
+Import the public key:
+
+```bash
+gpg --import vojta-maur-openpgp.asc
+```
+
+Display its fingerprint:
+
+```bash
+gpg --fingerprint C5F5B3905220BE59
+```
+
+The primary-key fingerprint must match exactly:
+
+```text
+57E9 D455 FB10 A228 F66E 18AE C5F5 B390 5220 BE59
+```
+
+The fingerprint should also be compared with a copy obtained from an independent trusted source or archive. Downloading the public key, manifest, and signature from the same compromised mirror would not by itself establish the author's identity.
+
+Verify the detached signature:
+
+```bash
+gpg --verify SHA256SUMS.txt.asc SHA256SUMS.txt
+```
+
+A valid result includes a message similar to:
+
+```text
+Good signature from "Vojta Maur vojtamaur.cz"
+```
+
+A trust label such as `[unknown]` concerns the local GnuPG trust assigned to the identity. It does not mean that the mathematical signature verification failed. The important results are a good signature and an independently confirmed primary-key fingerprint.
+
+Verifying the OpenPGP signature authenticates `SHA256SUMS.txt`. To check the complete downloaded build against that authenticated manifest, run this command from the build root:
+
+```bash
+sha256sum -c SHA256SUMS.txt
+```
+
+The last command requires `sha256sum`. It is normally available on Linux, through GNU coreutils on macOS, and on Windows through environments such as Git Bash or WSL.
 
 ### 9.6.2 Reconstructable source package
 
@@ -1188,7 +1343,7 @@ The project has an English version generated at build time. The Czech MDX files 
 
 There are two separate translation layers:
 
-- **Manual UI translation** – stable interface text is kept in `src/lib/i18n.ts`. This covers the header, section names, homepage text, and other short visible strings.
+- **Manual UI translation** – stable interface text is kept in `src/lib/i18n.ts`. This covers the header, section names, homepage text, and other short visible strings. The small Czech/English labels inside `OpenPgpContact.astro` are a deliberate local exception because the component shares one cryptographic payload between both homepage variants.
 - **Automatic content translation** – article body regions are translated after `astro build` by `scripts/en-postprocess.mjs`. The translated fragments are cached in `translations/en/`.
 
 This separation is intentional. UI text is small and highly visible, so it is translated manually. Article content is larger and less convenient to maintain twice, so it is translated automatically.
@@ -1673,6 +1828,10 @@ dist/ALL_POSTS.txt
 dist/SHA256SUMS.txt
 dist/BUILD_SHA256.txt
 dist/integrity.json
+dist/SIGNING_STATUS.txt
+dist/SHA256SUMS.txt.asc       # only after an explicit signed build
+dist/keys/vojta-maur-openpgp.asc
+dist/keys/vojta-maur-openpgp-fingerprint.txt
 dist/source/vojtamaur-web-source.zip
 ```
 
@@ -1775,6 +1934,16 @@ git worktree add -b pages G:\vojtamaur-pages codeberg/pages
 ```
 
 If a local `pages` branch already exists, omit `-b pages` and attach the worktree to that existing branch instead. The deployment branch is generated output and should not be merged into `main`.
+
+#### 12.2.3 OpenPGP signing policy
+
+Only build artifacts explicitly produced and signed in the author's controlled local environment are OpenPGP-signed. The private signing key is kept on the author's local storage and is never committed to the repository, copied into the build, or uploaded as a CI secret.
+
+Automated or provider-side deployments that do not run the explicit local signing step are intentionally unsigned. They may still publish the public key and fingerprint because those are public identity material, but their presence does not authenticate that particular build.
+
+A valid signature belongs only to the exact `SHA256SUMS.txt` that was signed. A provider-side rebuild is a different artifact even when it was produced from the same source revision. Generated timestamps and deployment-specific rewriting can also make otherwise equivalent builds byte-wise different.
+
+A mirror that receives an already completed locally signed build without rebuilding or modifying it can preserve the same signature. The absence of `SHA256SUMS.txt.asc` on an automated deployment therefore does not indicate failed checksum generation; it indicates that the explicit private-key operation was not performed.
 
 ### 12.3 `.htaccess`
 For a static Astro website, a minimalist configuration is appropriate. A typical WordPress rewrite rule to `index.php` is not relevant for this type of project.

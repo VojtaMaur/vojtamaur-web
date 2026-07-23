@@ -10,15 +10,31 @@ const MANIFEST_FILE = "SHA256SUMS.txt";
 const OLD_MANIFEST_FILE = "SHA256SUMS";
 const BUILD_HASH_FILE = "BUILD_SHA256.txt";
 const JSON_FILE = "integrity.json";
+const SIGNATURE_FILE = "SHA256SUMS.txt.asc";
+const SIGNING_STATUS_FILE = "SIGNING_STATUS.txt";
 
 const EXCLUDED = new Set([
   MANIFEST_FILE,
   OLD_MANIFEST_FILE,
   BUILD_HASH_FILE,
   JSON_FILE,
+  SIGNATURE_FILE,
+  SIGNING_STATUS_FILE,
   ".DS_Store",
   "Thumbs.db"
 ]);
+
+const UNSIGNED_STATUS = `OPENPGP BUILD SIGNATURE STATUS
+
+This build is not OpenPGP signed.
+
+SHA256SUMS.txt.asc is created only for builds explicitly signed locally
+by the author. The private signing key is never provided to third-party
+CI or deployment services.
+
+This file is informational. A build is signed only when
+SHA256SUMS.txt.asc is present and its signature verifies successfully.
+`;
 
 function sha256(buffer) {
   return createHash("sha256").update(buffer).digest("hex");
@@ -60,7 +76,9 @@ async function removeOldIntegrityFiles() {
     fs.rm(path.join(TARGET_DIR, MANIFEST_FILE), { force: true }),
     fs.rm(path.join(TARGET_DIR, OLD_MANIFEST_FILE), { force: true }),
     fs.rm(path.join(TARGET_DIR, BUILD_HASH_FILE), { force: true }),
-    fs.rm(path.join(TARGET_DIR, JSON_FILE), { force: true })
+    fs.rm(path.join(TARGET_DIR, JSON_FILE), { force: true }),
+    fs.rm(path.join(TARGET_DIR, SIGNATURE_FILE), { force: true }),
+    fs.rm(path.join(TARGET_DIR, SIGNING_STATUS_FILE), { force: true })
   ]);
 }
 
@@ -105,9 +123,22 @@ async function main() {
       buildHash: manifestHash,
       fileCount: files.length,
       excluded: [...EXCLUDED],
+      openPgp: {
+        signedFile: MANIFEST_FILE,
+        signatureFile: SIGNATURE_FILE,
+        statusFile: SIGNING_STATUS_FILE,
+        present: false,
+        note: "Informational metadata. Verify the detached signature directly."
+      },
       generatedAt: new Date().toISOString(),
       note: "Global build hash is the SHA-256 hash of the sorted per-file checksum manifest."
     }, null, 2) + "\n",
+    "utf8"
+  );
+
+  await fs.writeFile(
+    path.join(TARGET_DIR, SIGNING_STATUS_FILE),
+    UNSIGNED_STATUS,
     "utf8"
   );
 
@@ -116,6 +147,7 @@ async function main() {
   console.log(`[integrity] ${MANIFEST_FILE}`);
   console.log(`[integrity] ${BUILD_HASH_FILE}: ${manifestHash}`);
   console.log(`[integrity] ${JSON_FILE}`);
+  console.log(`[integrity] ${SIGNING_STATUS_FILE}: unsigned`);
 }
 
 main().catch((error) => {

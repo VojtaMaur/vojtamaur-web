@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PostTileGrid from "../../components/PostTileGrid.astro";
+import OpenPgpContact from "../../components/OpenPgpContact.astro";
 import { page, section } from "../../lib/urls";
 import { canonicalHomePath, ui, type Lang } from "../../lib/i18n";
 
@@ -192,6 +193,8 @@ const headScanUrl =
             <a href="tel:+420722264202">+420 722 264 202</a><br />
             <a href="mailto:vojta.maur@gmail.com">vojta.maur@gmail.com</a>
           </p>
+
+          <OpenPgpContact lang={lang} />
         </div>
       </div>
     </section>

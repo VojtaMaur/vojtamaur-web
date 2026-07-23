@@ -10,6 +10,7 @@ draft: false
 ---
 
 import EntryPoints from '../../components/EntryPoints.astro';
+import OpenPgpFingerprint from '../../components/OpenPgpFingerprint.astro';
 
 
 ## MANIFEST
@@ -54,13 +55,20 @@ Zdrojový balík je rekurzivně rekonstruovatelný: po stažení assetů a insta
 
 [Stáhnout rekonstruovatelný zdrojový balík webu (vojtamaur-web-source.zip)](/source/vojtamaur-web-source.zip)
 
-## INTEGRITA BUILDU
+## INTEGRITA A IDENTITA BUILDU
 
-Každý build webu obsahuje kontrolní soubory pro ověření integrity statického výstupu.
+SHA-256 ověřuje, zda se soubory buildu nezměnily. OpenPGP podpis navíc umožňuje ověřit, že manifest kontrolních součtů podepsal autor tohoto webu.
 
-[SHA256SUMS.txt](/SHA256SUMS.txt) — seznam SHA-256 checksumů všech souborů buildu  
-[BUILD_SHA256.txt](/BUILD_SHA256.txt) — globální checksum souboru SHA256SUMS.txt  
-[integrity.json](/integrity.json) — strojově čitelný popis integrity buildu
+[SHA256SUMS.txt](/SHA256SUMS.txt) — seznam SHA-256 kontrolních součtů souborů buildu  
+[SHA256SUMS.txt.asc](/SHA256SUMS.txt.asc) — oddělený OpenPGP podpis souboru `SHA256SUMS.txt`  
+[BUILD_SHA256.txt](/BUILD_SHA256.txt) — SHA-256 kontrolní součet souboru `SHA256SUMS.txt`  
+[integrity.json](/integrity.json) — strojově čitelný informativní popis integrity buildu  
+[SIGNING_STATUS.txt](/SIGNING_STATUS.txt) — informativní stav podepsání konkrétního buildu  
+[vojta-maur-openpgp.asc](/keys/vojta-maur-openpgp.asc) — veřejný OpenPGP klíč pro ověření podpisu
+
+<OpenPgpFingerprint label="Fingerprint hlavního OpenPGP klíče:" />
+
+Ne každý deployment musí být podepsaný. Podepsaný build musí obsahovat soubor `SHA256SUMS.txt.asc` a jeho podpis se musí úspěšně ověřit. Samotné tvrzení v `integrity.json` nebo `SIGNING_STATUS.txt` není důkazem platného podpisu; tyto soubory jsou pouze informativní.
 
 ## TEXTOVÝ EXPORT VŠECH ČLÁNKŮ  
 

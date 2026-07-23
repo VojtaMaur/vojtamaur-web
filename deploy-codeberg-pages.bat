@@ -13,6 +13,11 @@ rem Resolve both worktrees relative to this BAT file. This keeps the
 rem script independent of the USB drive letter and current directory.
 for %%I in ("%~dp0.") do set "MAIN=%%~fI"
 for %%I in ("%~dp0..\vojtamaur-pages") do set "PAGES=%%~fI"
+
+rem Keep the private key outside the repository. If GNUPGHOME is already
+rem set, the signing script uses it. Otherwise it asks for the GnuPG home
+rem directory interactively instead of guessing a private-key location.
+
 set "MESSAGE=Deploy Codeberg Pages"
 
 if not "%~1"=="" set "MESSAGE=%~1"
@@ -69,7 +74,7 @@ if not errorlevel 1 (
 echo [3/7] Building website...
 
 pushd "%MAIN%" || exit /b 1
-call npm run build
+call npm run build:web:signed
 if errorlevel 1 (
     popd
     echo ERROR: Website build failed.

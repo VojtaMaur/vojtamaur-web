@@ -46,6 +46,8 @@ STATIC SNAPSHOTS (built output of the repository, reconstructable):
 	https://github.com/VojtaMaur/vojtamaur-web/releases/
 	Zenodo
 	https://zenodo.org/records/19691321
+	Figshare
+	https://doi.org/10.6084/m9.figshare.33077810
 	Internet Archive
 	https://archive.org/details/vojtamaur-2026-04
 	https://archive.org/details/vojtamaur-2026-05

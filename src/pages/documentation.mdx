@@ -1099,6 +1099,8 @@ The exporter is intentionally not run by any normal web, usb, or Arweave build. 
 
 The script reads the finished static HTML from `dist/`, not the source `.mdx` files. This is necessary because English article pages are finalized by `scripts/en-postprocess.mjs` after the Astro build. The PDF export therefore reflects the same rendered Czech and English pages that exist in the finished build.
 
+Before running the PDF exporter, create a standard web build (`npm run build:web` or another web-build variant), not a portable USB build. USB-rewritten paths in `dist/` may produce invalid hyperlinks in the exported PDF.
+
 Before the first use, install the Python dependencies and the Playwright Chromium browser:
 
 ```bash

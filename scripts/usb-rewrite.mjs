@@ -61,6 +61,17 @@ function rewriteHtml(html, file) {
     return `href="${prefix}${slug}.html"`;
   });
 
+  // Any remaining root-relative href/src points to a file or asset that was
+  // not covered above, for example /SHA256SUMS.txt or /keys/public-key.asc.
+  // Convert it relative to the current HTML file so the build remains
+  // portable when opened through file:// from any directory or drive.
+  for (const attr of ["href", "src"]) {
+    out = out.replace(
+      new RegExp(`(${attr})="/(?!/)([^"]+)"`, "g"),
+      `$1="${prefix}$2"`,
+    );
+  }
+
   return out;
 }
 

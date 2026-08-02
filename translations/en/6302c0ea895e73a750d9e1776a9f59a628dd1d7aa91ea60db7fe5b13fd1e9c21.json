@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "6302c0ea895e73a750d9e1776a9f59a628dd1d7aa91ea60db7fe5b13fd1e9c21",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-italie-benatky-2026/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": "Itálie - Benátky 2026",
+  "translatedFragment": "Italy - Venice 2026",
+  "createdAt": "2026-08-02T14:24:36.288Z"
+}

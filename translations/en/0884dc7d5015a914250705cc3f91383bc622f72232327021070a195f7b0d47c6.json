@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "0884dc7d5015a914250705cc3f91383bc622f72232327021070a195f7b0d47c6",
+  "purpose": "html-region",
+  "page": "/en/cestovani-italie-benatky-2026/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Itálie - Benátky 2026</h1> <p class=\"post-meta\">Video</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Italy - Venice 2026</h1> <p class=\"post-meta\">Video</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span> </div> ",
+  "createdAt": "2026-08-02T14:24:35.268Z"
+}

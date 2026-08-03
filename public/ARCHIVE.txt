@@ -23,6 +23,9 @@ ALTERNATIVE DEPLOYMENTS:
 	https://vojtamaur.neocities.org/
 	ArDrive / Arweave
 	https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
+	Pollux.casa (Gemini capsule + HTTPS gateway)
+	https://vojta.pollux.casa/
+	gemini://vojta.pollux.casa/
 
 SOURCE REPOSITORY (canonical source):
 	GitHub

@@ -45,6 +45,12 @@ const vystavyTiles = buildSectionTiles(vystavy, section("vystavy", lang));
 const cestovaniTiles = buildSectionTiles(cestovani, section("cestovani", lang));
 
 const allVideos = (await getCollection("videos", ({ data }) => !data.draft))
+  .sort((a, b) =>
+    a.id.localeCompare(b.id, undefined, {
+      numeric: true,
+      sensitivity: "base",
+    })
+  )
   .slice(0, 3);
 
 const promoVideoTiles: any[] = allVideos.map((v) => ({

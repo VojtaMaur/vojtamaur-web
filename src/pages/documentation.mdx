@@ -25,6 +25,7 @@ The architecture is based on the following components:
 - **Content Collections** for metadata validation and typing
 - **Components** for reusable content blocks and layouts
 - **Static assets in `public/`** for images, PDFs, demos, and other files
+- **A generated Gemini capsule in `dist-gemini/`** as a text-oriented hypertext edition of the finished website
 
 This model makes it easier to version content, archive build outputs, and potentially migrate the project to another environment without relying on a database runtime.
 
@@ -58,6 +59,16 @@ src/
   pages/
   styles/
 ```
+
+Generated output directories are kept outside the source tree:
+
+```text
+dist/           # normal web or portable build output
+dist-arweave/   # derived Arweave / Permaweb deployment output
+dist-gemini/    # generated Gemini capsule
+```
+
+These directories are build artifacts and should not be edited as source content.
 
 ### 2.2 Meaning of the main directories
 
@@ -124,6 +135,12 @@ A third deployment artifact is derived from the standard web build:
 
 The Arweave build is not a separate Astro `BUILD_TARGET`. It is a postprocessed version of the normal web build.
 
+A fourth publication artifact is also derived from the finished standard web build:
+
+- **Gemini capsule** – generated into `dist-gemini/` by `scripts/generate-gemini-capsule.mjs`
+
+The Gemini capsule is not an Astro `BUILD_TARGET` and is not placed inside `dist/`. It reads the finished HTML in `dist/` so that the English postprocess is already reflected in the exported content, while article frontmatter remains available for section membership, dates, slugs, and ordering.
+
 ### `package.json`
 
 Basic project workflow:
@@ -150,6 +167,8 @@ npm run build:usb:prune
 npm run build:arweave
 npm run build:arweave:signed
 npm run generate:all-posts
+npm run generate:gemini
+npm run build:gemini
 npm run generate:source-bundle
 npm run generate:integrity
 npm run generate:integrity:arweave
@@ -164,8 +183,8 @@ Meaning of the main scripts:
 - `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:web:signed` – runs the standard web build and then creates and verifies the detached OpenPGP signature for `dist/SHA256SUMS.txt`
 - `npm run build:signed` – alias for `npm run build:web:signed`
-- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes unsigned build integrity metadata for `dist/`
-- `npm run build:web:translate:signed` – runs the translating web build and then signs and verifies its checksum manifest
+- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, writes unsigned build integrity metadata for `dist/`, and then generates the Gemini capsule in `dist-gemini/`
+- `npm run build:web:translate:signed` – runs the translating web build, including Gemini capsule generation, and then signs and verifies the checksum manifest for `dist/`; the detached signature does not cover the separate `dist-gemini/` directory
 - `npm run build:translate:signed` – alias for `npm run build:web:translate:signed`
 - `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:web:strict:signed` – runs the strict web build and then signs and verifies its checksum manifest
@@ -182,6 +201,8 @@ Meaning of the main scripts:
 - `npm run build:arweave` – creates the strict standard web build, creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths, and then writes separate unsigned build integrity metadata for `dist-arweave/`
 - `npm run build:arweave:signed` – runs the Arweave build and then signs and verifies `dist-arweave/SHA256SUMS.txt`
 - `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt`, a plain-text export of all article content from the finished build output
+- `npm run generate:gemini` – replaces `dist-gemini/` with a freshly generated bilingual Gemini capsule based on the existing finished `dist/` build and the post frontmatter
+- `npm run build:gemini` – runs the strict standard web build and then generates `dist-gemini/`; this is the standalone complete Gemini build command
 - `npm run generate:source-bundle` – generates `dist/source/vojtamaur-web-source.zip`, a small reconstructable source package with a media manifest and an asset downloader
 - `npm run generate:integrity` – generates `SHA256SUMS.txt`, `BUILD_SHA256.txt`, `integrity.json`, and an unsigned `SIGNING_STATUS.txt` for `dist/`; any stale detached signature is removed
 - `npm run generate:integrity:arweave` – performs the same integrity pass for `dist-arweave/` after the Arweave copy-and-rewrite step
@@ -652,6 +673,20 @@ public/keys/vojta-maur-openpgp-fingerprint.txt
 ```
 
 `OpenPgpContact.astro` therefore does not duplicate the armored public key or fingerprint inside either homepage file. The public key remains directly visible in the rendered HTML, while the fingerprint is normalized to a single space-separated line. Both values are marked with `translate="no"` so that the translation postprocess cannot modify them.
+
+### 8.7 Gemini homepage parity
+
+The generated Gemini homepage intentionally follows the content logic of the HTML homepage rather than reducing the capsule to a single archive dump.
+
+For **Volná tvorba / Personal Work**, **Výstavy / Exhibitions**, and **Cestování / Travel**, the capsule shows the latest nine entries in the same order as the built homepage. If the HTML homepage contains its final “show all” tile, the Gemini homepage appends an uppercase `ZOBRAZIT VŠE` or `SHOW ALL` link after those entries.
+
+The remaining sections are handled differently:
+
+- **Propagační videa / Promotional Videos** lists the individual external video links directly on the homepage and ends with `ZOBRAZIT VŠE` or `SHOW ALL` pointing directly to the YouTube playlist.
+- **O mně / About Me** is rendered directly on the Gemini homepage, including the external link to the Sketchfab model.
+- **Kontakt / Contact** is rendered directly on the Gemini homepage, including active `tel:`, `mailto:`, and OpenPGP material links or blocks.
+
+No separate Gemini section pages are created for Promotional Videos, About Me, or Contact. English is the capsule root language at `/index.gmi`; Czech is available under `/cs/index.gmi`.
 
 ---
 
@@ -1201,6 +1236,123 @@ For English pages, the index title is read from the rendered HTML rather than co
 
 The PDF is a paginated visual snapshot, not a lossless replacement for the website or source repository. Wide tables, long source-code lines, and other horizontally overflowing content can be clipped, wrapped differently, or extend beyond the printable area. The generated cover includes this limitation explicitly. The archived HTML, source files, repository, `ALL_POSTS.txt`, and other preservation layers remain the authoritative complete versions.
 
+### 9.6.4 Gemini capsule generation
+
+The project generates a separate bilingual Gemini capsule with:
+
+```bash
+npm run generate:gemini
+```
+
+The generator is:
+
+```text
+scripts/generate-gemini-capsule.mjs
+```
+
+The output directory is a sibling of the normal web build:
+
+```text
+dist/
+dist-gemini/
+```
+
+`generate:gemini` requires an existing finished `dist/` directory. It does not run Astro or the English translation postprocess by itself. For a complete build from source, use:
+
+```bash
+npm run build:gemini
+```
+
+This command runs the strict standard web build first and then generates the capsule.
+
+The translating production workflow also generates the capsule automatically. Therefore:
+
+```bash
+npm run build:web:translate:signed
+```
+
+builds and translates the normal website, generates `dist-gemini/`, and then signs the checksum manifest belonging to `dist/`.
+
+The Gemini capsule is deliberately generated from the finished HTML rather than directly from the MDX body. This preserves the actual postprocessed English output and the rendered behavior of shared Astro components. The generator also reads article frontmatter from `src/content/posts/` for stable slugs, section membership, dates, draft filtering, and ordering.
+
+The default output structure is:
+
+```text
+dist-gemini/
+  index.gmi
+  favicon.txt
+  keys/
+  personal-work/
+    index.gmi
+    article-slug.gmi
+  exhibitions/
+    index.gmi
+    article-slug.gmi
+  travel/
+    index.gmi
+    article-slug.gmi
+  cs/
+    index.gmi
+    volna-tvorba/
+      index.gmi
+      article-slug.gmi
+    vystavy/
+      index.gmi
+      article-slug.gmi
+    cestovani/
+      index.gmi
+      article-slug.gmi
+```
+
+English is intentionally the default language at the capsule root. Czech pages are stored below `/cs/`. Each article page includes navigation back to the homepage and section, a link to the counterpart language when available, and a link to the full HTTPS web version.
+
+The Gemini homepage contains:
+
+- the site title and motto
+- a language switch
+- a short description of the capsule
+- a thank-you to Adële for hosting the capsule
+- the latest nine items for Personal Work, Exhibitions, and Travel
+- `SHOW ALL` / `ZOBRAZIT VŠE` after the previews where the HTML homepage exposes that action
+- promotional video links followed by a direct link to the YouTube playlist
+- the full About Me and Contact content directly on the homepage
+
+The generator converts the built HTML into Gemtext using the following rules:
+
+- headings become Gemtext headings, limited to the three heading levels supported by Gemtext
+- paragraphs remain paragraphs
+- explicit HTML `<br>` elements remain line breaks instead of being collapsed into spaces
+- unordered and ordered lists become Gemtext list items
+- blockquotes become `>` lines
+- `<pre>` and code blocks become Gemtext preformatted blocks
+- HTML tables become tab-separated preformatted blocks
+- horizontal rules become plain separator lines
+- images become active links to the canonical HTTPS asset URL
+- image ALT text or captions are retained when useful, and the visible link label also includes the target URL so that the destination remains explicit
+- PDF, video, map, Sketchfab, and interactive-demo embeds become external links
+- local demo paths such as `/demos/example/example.html` become complete links under `https://vojtamaur.cz/`
+- internal article and section links are rewritten to local Gemini routes when a corresponding generated page exists
+- unknown internal routes remain HTTPS links to the main website instead of becoming broken Gemini paths
+- `mailto:` and `tel:` references remain active Gemtext links without duplicated plain-text copies
+- generic embeds without a useful title use their URL as the visible label rather than the meaningless text “Embedded content”
+
+The output is written as UTF-8. One client-specific workaround is applied during final writing: a literal Unicode replacement character `U+FFFD` (`�`) is serialized as the visible text `\uFFFD`. The original MDX and HTML remain unchanged. This exists because the tested Lagrange renderer stops drawing the remainder of a line immediately after a literal `U+FFFD`, even though the character is valid UTF-8.
+
+The generator copies `favicon.txt` and the public `keys/` directory from `dist/`, or falls back to `public/` when necessary. Binary article media are not copied into `dist-gemini/`; they remain available through stable HTTPS links to the main website.
+
+Before generation, the existing output directory is removed and recreated. The script contains safety checks that refuse to delete the project root, the normal `dist/` directory, the filesystem root, or an output directory whose name does not contain `gemini`.
+
+Available command-line overrides are:
+
+```text
+--dist <dir>
+--output <dir>
+--content <dir>
+--site-url <url>
+```
+
+Because `dist-gemini/` is outside `dist/`, the existing web integrity and signing commands do not cover it. Even when the capsule is produced during `build:web:translate:signed`, the resulting detached signature authenticates only `dist/SHA256SUMS.txt`. A separate checksum or signing workflow for `dist-gemini/` has not been implemented.
+
 ### 9.7 Arweave / Permaweb build
 
 The Arweave / Permaweb build is created with:
@@ -1336,6 +1488,37 @@ en/fotogrammetrie/index.html
 This is different from the USB build, which uses a file-based output model.
 
 The purpose of `dist-arweave/` is to create a static folder that can be uploaded to ArDrive and then exposed through an Arweave manifest. The manifest should be created at the level where `index.html`, `_astro/`, `images/`, `files/`, `ALL_POSTS.txt`, and `ARCHIVE.txt` are directly present.
+
+### 10.4 Exact Gemini build logic
+
+The standalone Gemini build is effectively:
+
+```text
+npm run build:web:strict && npm run generate:gemini
+```
+
+This creates or verifies the strict bilingual HTML build in `dist/` and then replaces `dist-gemini/` with the generated capsule.
+
+For rapid iteration on only the converter, the existing HTML build can be reused:
+
+```bash
+npm run generate:gemini
+```
+
+This avoids rebuilding Astro or rerunning translation checks after every parser change.
+
+The translating signed production command reaches the Gemini generator through the underlying translating web build. Its relevant order is:
+
+```text
+Astro build
+-> English postprocess with missing translations enabled
+-> ALL_POSTS and source-bundle generation
+-> integrity generation for dist/
+-> Gemini capsule generation in dist-gemini/
+-> detached OpenPGP signing of dist/SHA256SUMS.txt
+```
+
+The final signing step remains scoped to the normal web build. `dist-gemini/` is generated in the same workflow but is a separate unsigned artifact.
 
 ---
 
@@ -1839,6 +2022,8 @@ dist/source/vojtamaur-web-source.zip
 
 The `source/` directory in `dist/` is a generated output directory. It should not be treated as source input or committed as a hand-maintained project directory.
 
+The Gemini capsule is not part of this tree. It is generated separately as the sibling directory `dist-gemini/`, and it is not included in the checksum manifest or detached signature stored in `dist/`.
+
 ### 12.2 Deployment of the standard web build
 For the production website, the content corresponding to the standard web build is uploaded to the hosting server.
 
@@ -2001,6 +2186,31 @@ integrity.json
 
 The uploaded Arweave version is immutable. If a mistake is uploaded, the correction must be published as a new upload and a new manifest transaction. The old version remains available.
 
+### 12.6 Gemini capsule deployment
+
+For Gemini deployment, use the generated directory:
+
+```text
+dist-gemini/
+```
+
+The Gemini server document root should correspond to the contents of this directory so that `index.gmi` is the English capsule homepage. The Czech homepage remains available at:
+
+```text
+/cs/index.gmi
+```
+
+A typical update consists of:
+
+1. generating a fresh capsule with `npm run build:gemini`, or generating it through the translating production workflow
+2. previewing representative `.gmi` files locally in a Gemini client
+3. uploading the contents of `dist-gemini/` through the hosting account's supported transfer method, such as SFTP or FTPS
+4. verifying the homepage, language switch, section indexes, several article pages, the YouTube playlist link, direct media links, demo links, and the OpenPGP block
+
+The capsule itself contains text and links. Images, PDFs, videos, maps, 3D models, and interactive HTML demonstrations remain on the normal HTTPS website and are opened through absolute URLs. The Gemini deployment therefore depends on the continued availability of `https://vojtamaur.cz/` for non-text media, while article text and capsule navigation remain native Gemtext.
+
+The capsule can be updated independently by rerunning `npm run generate:gemini` against an existing current `dist/`. However, publishing from stale HTML would also publish stale translated content, so the complete build command should be preferred for normal releases.
+
 ---
 
 ## 13. Known issues and solutions
@@ -2032,6 +2242,18 @@ If CSS, JavaScript, images, source package links, or internal links fail in the 
 ### 13.4 Dev server and new articles
 If the listing or routes do not match after adding a new `.mdx` file, the recommended first step is to restart the development server.
 
+### 13.5 Lagrange and the Unicode replacement character
+
+A tested Lagrange client stops rendering the remainder of a normal text line immediately after a literal Unicode replacement character `U+FFFD` (`�`). The source `.gmi` remains valid UTF-8, and the same character is allowed by Unicode; this is treated as a client rendering defect rather than malformed Gemtext.
+
+The Gemini generator works around the issue only in the generated capsule by converting each literal `U+FFFD` to the visible ASCII sequence:
+
+```text
+\uFFFD
+```
+
+This preserves the information that the replacement character occurred while preventing the client from truncating the rest of the line. The original MDX, rendered HTML, and other Unicode characters are not modified.
+
 ---
 
 ## 14. Future extensions
@@ -2054,7 +2276,9 @@ From a maintenance perspective, the following points are especially important:
 - content is managed as `.mdx` files
 - metadata is validated through content collections
 - specialized content is encapsulated in several reusable components
-- the project supports a standard web build, a portable file-based build, and a derived Arweave / Permaweb deployment build
+- the project supports a standard web build, a portable file-based build, a derived Arweave / Permaweb deployment build, and a generated bilingual Gemini capsule in `dist-gemini/`
+- the Gemini capsule uses English at the root, Czech under `/cs/`, native Gemtext navigation, and HTTPS links for binary media and interactive content
+- `build:web:translate:signed` generates the Gemini capsule but signs only the normal `dist/` checksum manifest; `dist-gemini/` is currently a separate unsigned artifact
 - Codeberg Pages is deployed separately from the generated `pages` branch through the `deploy-codeberg-pages.bat` worktree workflow
 - web and USB builds generate a recursively reconstructable source package at `/source/vojtamaur-web-source.zip`
 - when working with new content, it is useful to expect the occasional need to restart the development server

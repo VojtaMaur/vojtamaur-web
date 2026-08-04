@@ -2254,6 +2254,12 @@ The Gemini generator works around the issue only in the generated capsule by con
 
 This preserves the information that the replacement character occurred while preventing the client from truncating the rest of the line. The original MDX, rendered HTML, and other Unicode characters are not modified.
 
+### 13.6 Lagrange indentation after intentional line breaks
+
+When several normal Gemtext lines originate from intentional `<br>` line breaks inside one HTML paragraph (the equivalent of Shift+Enter), Lagrange may render the later lines with paragraph-like indentation. Kristall renders the same `.gmi` content without this indentation. This is a client-specific rendering difference, not an error in the Gemini generator.
+
+Where the source text genuinely contains separate paragraphs, replacing `<br>` with separate MDX paragraphs improves both HTML and Gemini output. Intentional hard line breaks should remain unchanged if converting them to paragraphs would alter the intended HTML structure.
+
 ---
 
 ## 14. Future extensions

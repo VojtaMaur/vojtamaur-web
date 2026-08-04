@@ -548,20 +548,78 @@ function inlineContent($, node, context) {
   return result;
 }
 
+function linkLabelScore(label, href) {
+  const normalized = normalizeInlineText(label);
+  if (!normalized || isGenericDeadLinkLabel(normalized)) return 0;
+
+  const lower = normalized.toLocaleLowerCase("en-US");
+  if (["a", "an", "the"].includes(lower)) return 1;
+  if (isDisplayedTargetSameAsHref(normalized, href)) return 10;
+
+  return 100 + Math.min(normalized.length, 200);
+}
+
 function dedupeLinks(links) {
-  const seen = new Set();
   const output = [];
+  const byHref = new Map();
 
   for (const link of links) {
     if (!link?.href) continue;
-    const label = normalizeInlineText(link.label) || link.href;
-    const key = `${link.href}\u0000${label}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    output.push({ href: link.href, label });
+
+    const href = normalizeInlineText(link.href);
+    const label = normalizeInlineText(link.label) || href;
+    const existingIndex = byHref.get(href);
+
+    if (existingIndex === undefined) {
+      byHref.set(href, output.length);
+      output.push({ href, label });
+      continue;
+    }
+
+    const existing = output[existingIndex];
+    if (linkLabelScore(label, href) > linkLabelScore(existing.label, href)) {
+      existing.label = label;
+    }
   }
 
   return output;
+}
+
+function addInlineLinkReferences(text, links) {
+  let annotated = text;
+  const referencedLinks = [];
+  const searchOffsets = new Map();
+
+  for (const link of links) {
+    const label = normalizeInlineText(link.label);
+
+    if (
+      !label ||
+      isGenericDeadLinkLabel(label) ||
+      isDisplayedTargetSameAsHref(label, link.href) ||
+      /^(?:mailto|tel):/i.test(link.href)
+    ) {
+      referencedLinks.push({ ...link, reference: null });
+      continue;
+    }
+
+    const searchFrom = searchOffsets.get(label) || 0;
+    const index = annotated.indexOf(label, searchFrom);
+
+    if (index === -1) {
+      referencedLinks.push({ ...link, reference: null });
+      continue;
+    }
+
+    const reference = referencedLinks.filter((item) => item.reference !== null).length + 1;
+    const marker = ` [${reference}]`;
+    const end = index + label.length;
+    annotated = `${annotated.slice(0, end)}${marker}${annotated.slice(end)}`;
+    searchOffsets.set(label, end + marker.length);
+    referencedLinks.push({ ...link, reference });
+  }
+
+  return { text: annotated, links: referencedLinks };
 }
 
 function renderInlineBlock($, element, context, prefix = "") {
@@ -581,9 +639,17 @@ function renderInlineBlock($, element, context, prefix = "") {
     return `${prefix}=> ${links[0].href} ${links[0].label}`.trimStart();
   }
 
+  const referenced = addInlineLinkReferences(text, links);
   const blocks = [];
-  if (text) blocks.push(`${prefix}${text}`);
-  for (const link of links) blocks.push(`=> ${link.href} ${link.label}`);
+  if (referenced.text) blocks.push(`${prefix}${referenced.text}`);
+
+  for (const link of referenced.links) {
+    const label = link.reference === null
+      ? link.label
+      : `[${link.reference}] ${link.label}`;
+    blocks.push(`=> ${link.href} ${label}`);
+  }
+
   return blocks.join("\n");
 }
 
@@ -952,8 +1018,8 @@ async function generateHomepage(lang, homepage, outputDir, siteUrl, routeMap, st
     `=> ${homepageCapsulePath(otherLang)} ${otherLang === "cs" ? "Čeština" : "English"}`,
     "",
     lang === "cs"
-      ? "Textová Gemini verze osobního webu. Obrázky, PDF, videa a interaktivní ukázky zůstávají dostupné přes odkazy na hlavní web. Děkuji Adële za poskytnutí prostoru pro tuto Gemini kapsli."
-      : "Text-oriented Gemini edition of the personal website. Images, PDFs, videos and interactive demonstrations remain available through links to the main website. Special thanks to Adële for hosting this Gemini capsule.",
+      ? "Toto je zjednodušená Gemini verze osobního webu Vojty Maura. Obrázky, PDF, videa a interaktivní ukázky zůstávají dostupné přes odkazy na hlavní web.\n\nDěkuji Adële za poskytnutí prostoru pro tuto Gemini kapsli."
+      : "This is a simplified Gemini version of Vojta Maur\'s personal website. Images, PDFs, videos and interactive demonstrations remain available through links to the main website.\n\nSpecial thanks to Adële for providing space for this Gemini capsule.",
   ];
 
   for (const sectionKey of SECTION_ORDER) {
@@ -1029,8 +1095,7 @@ async function generatePostSectionIndex(lang, sectionKey, posts, homepage, outpu
   const relevantPosts = posts.filter((post) => post.sectionKey === sectionKey && post.languages[lang]);
   for (const post of relevantPosts) {
     const page = post.languages[lang];
-    const dateSuffix = post.date ? ` — ${post.date}` : "";
-    lines.push(`=> ${articleCapsulePath(lang, sectionKey, post.slug)} ${page.title}${dateSuffix}`);
+    lines.push(`=> ${articleCapsulePath(lang, sectionKey, post.slug)} ${page.title}`);
   }
 
   if (relevantPosts.length === 0) {

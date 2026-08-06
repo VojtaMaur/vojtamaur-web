@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "5c18d45f2c7880ad4505b2ab25ff3a16d7a8faef32e61f97416e31e6501ae3ec",
+  "purpose": "html-region",
+  "page": "/en/vystavy-stavebni-pozemky-1/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Stavební pozemky</h1> <p class=\"post-meta\"> 19. 10. 2022 - 14. 1. 2023, Brno </p> <p class=\"post-meta\"> Fait Gallery: Milan Maur: Nejisté sekvence děje </p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-stavebni-pozemky-1-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-stavebni-pozemky-1-obr-1.jpg\" alt=\"Popisek obrazu: Kupujeme stavební pozemky a vracíme je přírodě. Podzim 2022, Vojta Maur, Milan Maur\"> </a>  </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-stavebni-pozemky-1-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-stavebni-pozemky-1-obr-2.jpg\" alt=\"Fotodokumentace výstavy\"> </a>  </figure>\n<p>Informace o výstavě na stránkách Fait Gallery:<br>\n<a href=\"https://www.faitgallery.com/tiskovky/items/2014.html\">https://www.faitgallery.com/tiskovky/items/2014.html</a></p> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Building Lots</h1> <p class=\"post-meta\"> October 19, 2022 – January 14, 2023, Brno </p> <p class=\"post-meta\"> Fait Gallery: Milan Maur: Uncertain Sequences of Action </p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-stavebni-pozemky-1-obr-1.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-stavebni-pozemky-1-obr-1.jpg\" alt=\"Popisek obrazu: Kupujeme stavební pozemky a vracíme je přírodě. Podzim 2022, Vojta Maur, Milan Maur\"> </a>  </figure>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/vystavy-stavebni-pozemky-1-obr-2.jpg\" target=\"_blank\" rel=\"noopener noreferrer\"> <img src=\"/images/vystavy-stavebni-pozemky-1-obr-2.jpg\" alt=\"Fotodokumentace výstavy\"> </a>  </figure>\n<p>\nExhibition information on the Fait Gallery website:<br>\n\n<a href=\"https://www.faitgallery.com/tiskovky/items/2014.html\">https://www.faitgallery.com/tiskovky/items/2014.html</a></p> </div> ",
+  "createdAt": "2026-08-06T09:35:04.556Z"
+}

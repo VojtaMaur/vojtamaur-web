@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "e709fb4e09a0c07afcae5cb1bd6d845dbf27713511fc733441c92947f9dc4bf9",
+  "purpose": "meta-description",
+  "page": "/en/vystavy-stavebni-pozemky-1/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": "Stavební pozemky",
+  "translatedFragment": "Building Lots",
+  "createdAt": "2026-08-06T09:28:24.225Z"
+}

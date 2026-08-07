@@ -421,6 +421,9 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260722032554/https://vojtamaur-977c1.firebaseapp.com/plevel/
 	https://web.archive.org/web/20260722032557/https://vojtamaur-977c1.firebaseapp.com/en/plevel/
 	https://web.archive.org/web/20260722032936/https://vojtamaur.cz/volna-tvorba/
+	https://web.archive.org/web/20260806114631/https://www.faitgallery.com/tiskovky/items/2014.html
+	https://web.archive.org/web/20260806114817/https://vojtamaur.cz/en/vystavy-stavebni-pozemky-1/
+	https://web.archive.org/web/20260806114812/https://vojtamaur.cz/vystavy-stavebni-pozemky-1/
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/
@@ -513,6 +516,7 @@ PARTIAL SNAPSHOTS:
 	http://archive.today/2026.07.15-100304/https://www.ncbi.nlm.nih.gov/nuccore/OM065388.1
 	http://archive.today/2026.07.22-032423/https://vojtamaur.cz/plevel/
 	http://archive.today/2026.07.22-032424/https://vojtamaur.cz/en/plevel/
+	http://archive.today/2026.08.06-114700/https://www.faitgallery.com/tiskovky/items/2014.html
 	Ghost Archive
 	https://ghostarchive.org/archive/Aqt05
 	https://ghostarchive.org/archive/POTTj

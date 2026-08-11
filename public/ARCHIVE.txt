@@ -21,6 +21,8 @@ ALTERNATIVE DEPLOYMENTS:
 	https://vojta_maur.codeberg.page/
 	Neocities
 	https://vojtamaur.neocities.org/
+	ChatGPT Sites
+	https://vojtamaur.vojtam.chatgpt.site/
 	ArDrive / Arweave
 	https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
 	Pollux.casa (Gemini capsule + HTTPS gateway)
@@ -116,6 +118,9 @@ FILE ARTIFACT SNAPSHOTS:
 	https://drive.proton.me/urls/JTESD1FQX0#xs4RdNrb4puf
 	https://drive.proton.me/urls/SAWJ54KHQ8#Bgom5zhtJ3f5
 	https://drive.proton.me/urls/XSSNEPYP0C#5GNRUzLI77j1
+	GitHub:
+	https://raw.githubusercontent.com/VojtaMaur/vojtamaur-web/0896fceee5cf9de4d0d3f49a77a3bd6b21ead9ce/public/ARCHIVE.txt
+	https://raw.githubusercontent.com/VojtaMaur/vojtamaur-web/main/public/images/kurt-godel-rat.jpg
 	
 PARTIAL SNAPSHOTS:
 	Internet Archive (additional snapshots may exist)

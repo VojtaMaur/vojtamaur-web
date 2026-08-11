@@ -21,8 +21,9 @@ The project is designed around a simple preservation model:
 - articles are written in MDX
 - images, PDFs, demos, and other assets live in `public/`
 - the final website is generated as static HTML
-- the same source can produce both a normal web build and a portable file-based build
+- the same source can produce a normal web build, a portable file-based build, an Arweave-compatible build, and a separate Gemini capsule
 - the English version is generated from the Czech source during the build workflow
+- finished builds include machine-readable integrity metadata, and selected builds can be signed with OpenPGP
 - important outputs can be mirrored across repositories, archive services, and static snapshots
 
 The goal is not only to run a website now, but to keep the content reconstructable later, including in degraded or migrated environments.  
@@ -64,6 +65,12 @@ Build the web version and create missing English translation cache entries:
 npm run build:web:translate
 ```
 
+Build the translating production version and sign the finished checksum manifest:
+
+```bash
+npm run build:web:translate:signed
+```
+
 Check that the web build has no missing English translation cache entries:
 
 ```bash
@@ -88,6 +95,73 @@ Build the portable version and create missing English translation cache entries:
 npm run build:usb:translate
 ```
 
+Build the Gemini capsule from a strict web build:
+
+```bash
+npm run build:gemini
+```
+
+Build the Arweave / Permaweb deployment output:
+
+```bash
+npm run build:arweave
+```
+
+The complete command list and exact build semantics are documented at:
+
+https://vojtamaur.cz/documentation/
+
+## Maintainer quick workflow
+
+This is the normal local Windows CMD workflow used when publishing source changes to the repository mirrors and updating Codeberg Pages.
+
+Set local-only environment variables. Never commit the actual DeepL key or private OpenPGP key material:
+
+```bat
+set "DEEPL_AUTH_KEY=YOUR_DEEPL_KEY"
+set "GNUPGHOME=G:\vojtamaur-secrets\PGP\gnupg"
+```
+
+Audit public assets **before** building, committing, or pushing:
+
+```bat
+python scripts/audit-public-metadata.py --exiftool "D:\Program Files\exiftool\exiftool.exe"
+```
+
+If unintended metadata is found, preview the strip first, then strip and audit again:
+
+```bat
+python scripts/audit-public-metadata.py --exiftool "D:\Program Files\exiftool\exiftool.exe" --strip --dry-run
+python scripts/audit-public-metadata.py --exiftool "D:\Program Files\exiftool\exiftool.exe" --strip
+python scripts/audit-public-metadata.py --exiftool "D:\Program Files\exiftool\exiftool.exe"
+```
+
+Create the translating signed production build:
+
+```bat
+npm run build:web:translate:signed
+```
+
+Commit and push the canonical source and repository copies:
+
+```bat
+git status
+git add .
+git commit -m "Commit message"
+
+git push origin main
+git push gitlab main
+git push codeberg main
+```
+
+Deploy the generated web output to the Codeberg Pages `pages` branch:
+
+```bat
+deploy-codeberg-pages.bat
+```
+
+The Codeberg deployment helper performs its own signed web rebuild from the committed `main` worktree before copying `dist/` into the separate `pages` worktree.
+
 ## Project structure
 
 ```text
@@ -95,6 +169,7 @@ public/
   demos/        standalone HTML/JS demos and legacy static pages
   files/        PDFs and other downloadable or embeddable files
   images/       article images, thumbnails, and visual assets
+  keys/         public OpenPGP key and fingerprint
 
 src/
   components/   reusable Astro components
@@ -104,9 +179,16 @@ src/
   pages/        Astro routes
   styles/       global styles
 
-scripts/        build, translation, and portable-output utilities
+scripts/        build, translation, signing, export, and deployment utilities
+source-bundle/  templates for the reconstructable source package
 translations/   cached generated English content
+
+dist/           generated standard web or portable output
+dist-arweave/   generated Arweave / Permaweb deployment output
+dist-gemini/    generated Gemini capsule
 ```
+
+Generated output directories are build artifacts and are not source content.
 
 ## Routing model
 
@@ -230,6 +312,12 @@ For content that must remain unchanged in the English output, use `NoTranslate.a
 </div>
 ```
 
+## Preservation and verification outputs
+
+Important files in the finished standard build include `ALL_POSTS.txt`, `ARCHIVE.txt`, the reconstructable `source/vojtamaur-web-source.zip`, the public OpenPGP material under `keys/`, and build-integrity files such as `SHA256SUMS.txt`, `BUILD_SHA256.txt`, `integrity.json`, and `SIGNING_STATUS.txt`.
+
+Signed builds additionally create `SHA256SUMS.txt.asc`. The Gemini capsule is generated separately in `dist-gemini/` and is not covered by the `dist/` checksum manifest or its detached signature. The Arweave / Permaweb workflow uses a separate `dist-arweave/` output with its own integrity metadata.
+
 ## Portable build
 
 The portable build is intended for offline use, file-based snapshots, archival copies, and transfer on external media.
@@ -252,22 +340,33 @@ The portable build is not identical to normal hosting. External embeds and third
 
 ## Publishing checklist
 
-Before publishing the web build:
+Before publishing new or changed public assets, run the metadata audit and resolve unintended metadata **before committing**. Files under `public/` are copied into builds unchanged, while repository mirrors and archival ingests may preserve committed files permanently.
 
-1. Run `npm run build:web:translate`.
-2. Run `npm run build:web:strict`.
+Before uploading the web build:
+
+1. Run the translating build, preferably the signed production variant when a signed release is intended: `npm run build:web:translate:signed`.
+2. Run `npm run build:web:strict` if a final cache-completeness check is needed.
 3. Run `npm run preview`.
-4. Open at least one Czech article and one English article locally.
-5. Check that the English article body is actually translated, not only the header and metadata.
-6. Upload the complete `dist/` directory.
-7. Overwrite existing files on the server instead of relying on partial FTP shortcuts.
+4. Check that `dist/SHA256SUMS.txt`, `dist/BUILD_SHA256.txt`, and `dist/integrity.json` exist.
+5. For a signed build, also verify that `dist/SHA256SUMS.txt.asc` exists and that `SIGNING_STATUS.txt` reports a successful signature.
+6. Open at least one Czech article and one English article locally.
+7. Check that the English article body is actually translated, not only the header and metadata.
+8. Upload the complete `dist/` directory, including preservation and integrity artifacts.
+9. Overwrite existing files on the server instead of relying on partial FTP shortcuts.
 
 For portable/offline output:
 
 1. Run `npm run build:usb:translate`.
-2. Run the strict USB check if available in `package.json`, or use the documented wrapper script.
-3. Open the generated HTML directly from disk.
-4. Check CSS, images, internal links, local demos, and English article content.
+2. Run `npm run build:usb:strict`.
+3. Check that `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json` are present in the generated output.
+4. Open the generated HTML directly from disk.
+5. Check CSS, images, internal links, local demos, and English article content.
+
+## Repository and archive topology
+
+GitHub is the canonical source repository. GitLab and Codeberg contain repository copies, while Software Heritage preserves an archival ingest of the GitHub origin. Static snapshots and other preservation layers are maintained separately.
+
+The current archive entry points and mirror topology are intentionally maintained outside this README so that they do not become a stale duplicated list. See the Metaweb article and `ARCHIVE.txt` for the current map.
 
 ## Documentation
 

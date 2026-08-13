@@ -1236,7 +1236,102 @@ For English pages, the index title is read from the rendered HTML rather than co
 
 The PDF is a paginated visual snapshot, not a lossless replacement for the website or source repository. Wide tables, long source-code lines, and other horizontally overflowing content can be clipped, wrapped differently, or extend beyond the printable area. The generated cover includes this limitation explicitly. The archived HTML, source files, repository, `ALL_POSTS.txt`, and other preservation layers remain the authoritative complete versions.
 
-### 9.6.4 Gemini capsule generation
+### 9.6.4 Ultra-compact PDF export
+
+The project also includes a second PDF exporter designed for high-density archival copies:
+
+```text
+scripts/export-site-pdf-ultra.py
+```
+
+Unlike `scripts/export-site-pdf.py`, this exporter does not reproduce the visual design of each web page. It reads the existing `dist/ALL_POSTS.txt`, reuses the compact serialization implemented by `scripts/filter-all-posts.py`, and lays the selected content out as a dense A4 document. The tool is intended for cases where page count and storage size matter, while images and links should still remain present and usable.
+
+The ultra-compact export:
+
+- uses four text columns and 4 pt body text by default
+- starts every article title on a new line
+- includes aggressively resized image thumbnails while preserving their natural aspect ratios
+- keeps consecutive image groups in regular rows of up to three images
+- uses incomplete image rows efficiently by allowing a complete following paragraph to occupy the remaining width, rather than leaving an isolated sentence fragment beside the images
+- writes video, PDF, and interactive-media targets as compact clickable text URLs instead of large embed cards
+- keeps links clickable without visually underlining them
+- omits unrecoverable image placeholders from the PDF and reports their count on the command line
+- omits duplicate media by default when the same media occurs in both language versions
+- writes an adjacent JSON manifest containing the selection, layout settings, media statistics, output size, page count, link count, and SHA-256 hash
+
+The exporter is manual and is not called by the normal web, USB, Arweave, Gemini, or integrity build workflows. It expects a current standard web build containing:
+
+```text
+dist/ALL_POSTS.txt
+dist/images/
+dist/files/
+dist/demos/
+```
+
+Create or refresh that input before exporting, for example with:
+
+```bash
+npm run build:web:strict
+```
+
+The Python packages used by the exporter are Playwright, pypdf, and Pillow. Playwright also requires its Chromium browser:
+
+```bash
+python -m pip install playwright pypdf Pillow
+python -m playwright install chromium
+```
+
+The recommended high-resolution Czech export is:
+
+```bash
+python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
+```
+
+The default output is:
+
+```text
+exports/vojtamaur-web-export-ultra.pdf
+```
+
+The adjacent manifest is written as:
+
+```text
+exports/vojtamaur-web-export-ultra.manifest.json
+```
+
+Language and section selection work in the same style as the normal PDF exporter:
+
+```bash
+python scripts/export-site-pdf-ultra.py --lang cs
+python scripts/export-site-pdf-ultra.py --lang en
+python scripts/export-site-pdf-ultra.py --lang both
+python scripts/export-site-pdf-ultra.py --section cestovani
+python scripts/export-site-pdf-ultra.py --section volna-tvorba,vystavy
+python scripts/export-site-pdf-ultra.py --lang cs --section cestovani
+python scripts/export-site-pdf-ultra.py --separate
+```
+
+`--section` can be repeated or supplied as a comma-separated list. Date selection is available through `--from-date YYYY-MM-DD` and `--to-date YYYY-MM-DD`. `--separate` creates one compact PDF for each selected article and language under `exports/ultra-media-separate/` instead of creating one combined document.
+
+Image quality can be adjusted independently from the physical thumbnail size:
+
+```bash
+python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 300 --jpeg-quality 80
+```
+
+The default thumbnail raster resolution is 240 DPI and the default JPEG quality is 70. Higher values generally produce sharper images and a larger PDF. `--thumbnail-width-mm` and `--thumbnail-height-mm` control the maximum physical thumbnail box; images are fitted inside that box without changing their original proportions.
+
+The page format, column count, text size, spacing, margins, and page numbers can also be adjusted. All available options and their current defaults can be displayed with:
+
+```bash
+python scripts/export-site-pdf-ultra.py --help
+```
+
+The script detects the project root from its own location, so it can be launched from the repository root or directly from the `scripts/` directory. `--project-root` remains available when the script is stored or invoked from another location.
+
+This output is a compact preservation and reading layer, not a lossless replacement for the website, source repository, original media, or `ALL_POSTS.txt`. Text is deliberately very small, images are downsampled, interactive media is represented by links, and missing built assets cannot be embedded. The source files and normal build artifacts remain the authoritative complete versions.
+
+### 9.6.5 Gemini capsule generation
 
 The project generates a separate bilingual Gemini capsule with:
 
@@ -2273,7 +2368,47 @@ Possible future directions for the project:
 
 ---
 
-## 15. Summary
+## 15. Archival operations
+
+### 15.1 Preservation priority under constraints
+
+When storage capacity or snapshot quotas make it impossible to preserve the complete site, archive these artifacts in the following order:
+
+1. `ALL_POSTS.txt` – the smallest practical content-preservation layer
+2. `ARCHIVE.txt` – the map of repositories, mirrors, snapshots, and archive entry points
+3. this technical documentation (`/documentation/` or its source file, `src/pages/documentation.mdx`)
+
+This priority is especially useful for storage-constrained deposits such as Memory of Mankind and for services such as Perma.cc where the number of available snapshots may be limited.
+
+### 15.2 Manual mirror updates
+
+The ChatGPT Sites deployment does not update automatically when the canonical repository changes. To refresh it, ask ChatGPT in the Sites chat to load the current state of the canonical repository, save or build a new version, and deploy that version explicitly.
+
+Codeberg Pages is updated separately through `deploy-codeberg-pages.bat`; the complete worktree-based procedure is documented in section 12.2.2.
+
+### 15.3 External web archives
+
+As an operating assumption, newly published article URLs and mirror URLs should be submitted to the Internet Archive. Seeding the archive with these URLs is expected to improve discovery and may lead to later automatic recrawling, but it is not a guarantee that every URL or later version will be captured.
+
+The Czech Webarchiv likely captured `https://vojtamaur.cz/` after a manual preservation request. Searching for the root URL currently returns the following access notice:
+
+> Tuto stránku Webarchiv nemůže zobrazit. Z důvodu autorského zákona nemůžeme tuto stránku zpřístupnit online. Archivované verze této stránky jsou dostupné pouze z Referenčního centra NK ČR.
+
+This indicates restricted archived holdings rather than public online access; it does not by itself establish the completeness or capture dates of those holdings.
+
+### 15.4 YouTube video archiving
+
+YouTube videos are downloaded from Windows Command Prompt with `yt-dlp`. Put the video URLs in `urls.txt`, one URL per line, then run:
+
+```bat
+yt-dlp --write-info-json --write-thumbnail --write-description --write-subs --write-auto-subs --sub-langs "cs,en" --embed-metadata --download-archive downloaded.txt -f "bv*+ba/b" -o "%(title).200B [%(id)s]/%(title).200B [%(id)s].%(ext)s" -a urls.txt
+```
+
+The `downloaded.txt` archive prevents already recorded videos from being downloaded again.
+
+---
+
+## 16. Summary
 
 The project is designed as a file-oriented static website. Content is versioned directly in the repository, and the final published form is produced by the build process. This model makes it easier to archive, restore, and migrate the project without relying on a database runtime.
 

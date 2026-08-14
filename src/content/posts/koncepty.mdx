@@ -1,0 +1,47 @@
+---
+title: "Koncepty"
+slug: "koncepty"
+section: "volna-tvorba"
+date: 2026-08-14
+thumbnail: "/images/koncepty-nahled.jpg"
+thumbnailAlt: "Koncepty"
+excerpt: ""
+draft: false
+---
+
+Zápisky níže jsou průběžným záznamem nápadů a postřehů, které se u mě v průběhu času objevily.
+Nejsou často domyšlené ani realizované, i když v budoucnu mohou být. A nebo nemusí, na některé myšlenky je dostatečná forma poznámky. Některé jsou slepé uličky a tak nemá cenu je dál rozvíjet. Ale i tak mohou stát za záznam. 
+
+**2026-01-31: SIMULACE PINHOLE KAMERY**  
+Zkoušel jsem v Pythonu vytvořit jednoduchou funkční pinhole kameru. Kdysi na střední škole jsem již vytvořil skutečnou fyzickou, ale připadalo mi, že když jí nasimuluju, pochopím lépe její fungování, protože nestačí jen udělat dírku do krabice, vložit světlocitný papír, ten pak po expozici vyvolat a nechat fyziku udělat svou práci (ať už funguje jakkoliv). Tady se naopak musí simulovat i fyzika.  
+Měl jsem snahu udělat simulaci algoritmicky co nejrealističtější, i když limitem samozřejmě zůstávají moje znalosti a dostupný výpočetní výkon. Program například využívá forward ray tracing, tedy sledování světla od zdroje směrem ke scéně a kameře, namísto běžnějšího backward ray tracingu, který sleduje paprsky od kamery zpět do scény. Forward přístup je bližší fyzickému směru šíření světla, ale bývá výpočetně velmi neefektivní.  
+Příklady nastavení programu a vysvětlení parametrů: [koncepty-2026-01-31-simulace-pinhole-nastaveni.txt](/files/koncepty-2026-01-31-simulace-pinhole-nastaveni.txt)  
+Zdrojový kód: [koncepty-2026-01-31-simulace-pinhole.py](/files/koncepty-2026-01-31-simulace-pinhole.py)
+
+**2026-03-02: TŘÍDĚNÍ PIXELŮ FOTEK**  
+Pokusil jsem se pomocí algoritmu roztřídit pixely fotografií. Idea byla přibližně třídit pixely podle HUE a světlosti: na jednu osu (třeba x) řadit pixely podle HUE a na druhou osu (třeba y) podle světlosti. Tím se pixely fotografie přeskupí, ale žádný nezmizí ani nevznikne nový. Přesto výstupní fotografie ztrácejí původní význam, ale zachovávají si barevnou atmosféru.  
+Zdrojový kód: [koncepty-2026-03-02-trideni-pixelu-fotek.py](/files/koncepty-2026-03-02-trideni-pixelu-fotek.py)
+
+**2026-04-13: NÁHODNÁ EXPLORACE INTERNETU**  
+Asi dva týdny jsem se věnoval náhodné exploraci internetu, protože mě zajímalo, jak vypadá, když ho nedoporučují algoritmy. Zkoušel jsem různé přístupy.  
+Tím prvním (naivním) bylo vytvoření programu na zadávání a otvírání URL, které jsou náhodně generované. To bylo samozřejmě extrémně neefektivní, prostor možných URL je příliš velký a ty existující jsou zastoupené řídce.  
+Druhý přístup byl postavit si vlastní crawler a dát mu nějakou bizarní seed URL (třeba web [kdomivolal.cz](https://www.kdomivolal.cz/)). Výsledky jsem se pak snažil filtrovat pomocí LLM a následně se dívat jen na ty zajímavé (dle nějakých definovaných kritérií). Našel jsem tak hodně bizárů k pobavení, ale nic převratného.  
+Třetí přístup byl mnohem plodnější a zábavnější. Objevil jsem totiž, že existuje Certstream. Je to šikovná služba, která živě vysílá aktuálně vystavené bezpečnostní certifikáty po celém světě. Takže to zobrazuje URL webů, které buď nově vznikají, nebo obnovují svůj certifikát.  
+Zdrojový kód: [koncepty-2026-04-13-certstream-listener.py](/files/koncepty-2026-04-13-certstream-listener.py)  
+Strávil jsem náhodným proklikáváním těchto URL několik dní. Nejčastěji jsem narazil na podvody (kryptoměnové atd.), porno, AI, AI porno, návody na to, jak vyrobit AI porno, gambling, přihlašovací rozhraní systémů, rodící se weby (které mají placeholder obsah nebo hlášky „pracujeme na tom“).  
+Díky tomuto procesu jsem narazil na web [treeyo.my](https://treeyo.my/), který mi utkvěl v paměti svou minimalistickou podobou a nulovou optimalizací na pozornost diváka. Taky jsem zjistil, že ten web je opravdu okrajová část internetu, protože ho zatím neindexoval ani Google. Internet Archive na něj sice přišel, ale z CT logů, stejně jako já. Kvůli tomuto webu to hledání stálo za to.
+
+**2026-05-06: VÝSTAVA V PACIFIKU**  
+Napadlo mě vytvořit 360° panoramatické fotky Pacifiku generované pomocí AI. Pak do nich vložit QR kód pomocí AI (něco ve stylu Illusion Diffusion), který odkazuje na nějaké umění. Následně by do nich šli vložit falešná metadata polohy (třeba GPS souřadnice uprostřed Pacifiku) a nahrát na Google Maps. Alternativně by šlo vzít nějaká reálná místa nafocená 360° kamerou, třeba z jednoho města, pak jim všem posunout GPS pozice do Pacifiku. Důvod, proč mluvím jen o 360° fotkách je ten, že u nich Google doteď dovoluje upload na přesné GPS pozice pomocí metadat. Zatímco normální fotky musí být přiřazeny k existujícímu místu.
+
+**2026-06-04: PIGMENTOVÉ LÉZE**  
+Tento projekt jsem se snažil realizovat, ale z důvodu časové náročnosti jsem ho nedokončil. Zdokumentoval jsem zatím pouze ruce, oříznul nafocené pihy (transparentní pozadí), zachoval jejich měřítko a vytvořil program na jejich seřazení v mřížce. Nicméně tohle je text, který měl koncept vysvětlit:  
+„V roce 2026 jsem zdokumentoval každý viditelný kožní nádor nebo cévní anomálii na povrchu svého těla. U každého objektu bylo zachováno měřítko. Následně byly jednotlivé léze digitálně vyříznuty a seřazeny do pravidelné mřížky. “
+
+**2026-06-21: SEBE-MODIFIKUJÍCÍ INTELIGENTNÍ PROGRAM**  
+Zkoušel jsem vytvořit program, který využívá OpenAI API a jejich LLMs. Program má za úkol modifikovat sám sebe a pak se znovu spustit. A mě zajímalo, kam to povede.  
+Bohužel, model často odmítl zadání, protože ho považoval za nebezpečné. Nebo ho splnil, ale jeho následovník už ne. Atraktorem bylo prostě vždy odmítnutí z důvodu bezpečnosti. Ani se nikdy nedostal k čtvrté iteraci.  
+Zdrojový kód: [koncepty-2026-06-21-sebe-modifikujici-inteligentni-program.py](/files/koncepty-2026-06-21-sebe-modifikujici-inteligentni-program.py)
+
+**2026-08-14: ODPADKY**  
+Co kdybych vyfotil úplně každý odpadek, který házím do koše? Dalo by se ho nafotit s měřítkem, odpadky pak oříznout od pozadí a v odpovídajících velikostních poměrech je poskládat do pravidelné mřížky. 

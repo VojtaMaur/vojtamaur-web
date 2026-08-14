@@ -1,0 +1,28 @@
+﻿PŘÍKLADY:
+python camera_obscura.py --preview --preview-mode wide
+python camera_obscura.py --preview --preview-mode close
+python camera_obscura.py --aperture-radius 0.0006 --paths 600000 --iso 800
+python camera_obscura.py --aperture-radius 0.002 --paths 200000 --iso 400
+python camera_obscura.py --aperture-radius 0.005 --paths 2000000 --iso 100 --exposure 5
+python camera_obscura.py --aperture-radius 0.002 --paths 2000000 --iso 100 --exposure 30
+python camera_obscura.py --aperture-radius 0.001 --paths 2000000 --iso 100 --exposure 200
+python camera_obscura.py --aperture-radius 0.0005 --paths 2000000 --iso 200 --exposure 500
+python camera_obscura.py --aperture-radius 0.0002 --paths 2000000 --iso 300 --exposure 1000
+python camera_obscura.py --aperture-radius 0.0002 --paths 2000000 --iso 300 --exposure 2000 --shape "triangle"
+python camera_obscura.py --aperture-radius 0.0002 --paths 20000000 --iso 300 --exposure 5000
+python camera_obscura.py --aperture-radius 0.0003 --paths 500000 --iso 400 --exposure 5000
+python camera_obscura.py --aperture-radius 0.0003 --paths 500000 --iso 300 --exposure 8000 --sensor-dist 0.1 --sensor-w 0.03 --sensor-h 0.03 --res-w 800 --res-h 800
+python camera_obscura.py --aperture-radius 0.0003 --paths 500000 --iso 300 --exposure 8000 --sensor-dist 0.025
+python camera_obscura.py --aperture-radius 0.0003 --paths 50000 --iso 300 --exposure 8000 --bounces 2
+python camera_obscura.py --aperture-radius 0.0003 --paths 2000000 --iso 100 --exposure 3000 --bounces 3
+
+PARAMETRY:
+vzdálenost čipu od dírky (--sensor-dist)
+velikost dírky (--aperture-radius)
+tvar dírky (--shape circle|triangle|square|pentagon|hexagon|octagon)
+ISO gain + šum (zjednodušeně, ale použitelně)
+čas expozice (--exposure) jako škálování energie
+RGB nebo BW (--bw)
+náhled scény (--preview)
+mód náhledu scény (--preview-mode wide, --preview-mode close)
+seed pro trojúhelníky (-seed 123)

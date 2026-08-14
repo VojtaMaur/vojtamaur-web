@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "056d5078fd27e340b72c91e088d530a4033cbce0553373357f88ce3cb2c622e8",
+  "purpose": "html-region",
+  "page": "/en/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "4aef54955161857f5f18569689022c034fa527f181b0f5caa0cb26f00918db7b",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-grid\"> <a class=\"post-card \" href=\"/en/koncepty/\"> <div class=\"post-card__thumb\"> <img src=\"/images/koncepty-nahled.jpg\" alt=\"Koncepty\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Koncepty</div> </a><a class=\"post-card \" href=\"/en/masky/\"> <div class=\"post-card__thumb\"> <img src=\"/images/masky-nahled.jpg\" alt=\"Masky\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Masky</div> </a><a class=\"post-card \" href=\"/en/prizivnici/\"> <div class=\"post-card__thumb\"> <img src=\"/images/prizivnici-nahled.jpg\" alt=\"Příživníci\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Příživníci</div> </a><a class=\"post-card \" href=\"/en/plzen-2026-05-01/\"> <div class=\"post-card__thumb\"> <img src=\"/images/plzen-2026-05-01-nahled.jpg\" alt=\"Plzeň, 2026-05-01\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Plzeň, 2026-05-01</div> </a><a class=\"post-card \" href=\"/en/metawebovy-clanek/\"> <div class=\"post-card__thumb\"> <img src=\"/images/metawebovy-clanek-nahled.jpg\" alt=\"Metawebový článek\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Metawebový článek</div> </a><a class=\"post-card \" href=\"/en/clipboard-smetiste/\"> <div class=\"post-card__thumb\"> <img src=\"/images/clipboard-smetiste-nahled.jpg\" alt=\"Clipboard smetiště\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Clipboard smetiště</div> </a><a class=\"post-card \" href=\"/en/docasne-entity/\"> <div class=\"post-card__thumb\"> <img src=\"/images/docasne-entity-nahled.jpg\" alt=\"Dočasné entity\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Dočasné entity</div> </a><a class=\"post-card \" href=\"/en/genom-theodorove-spirale/\"> <div class=\"post-card__thumb\"> <img src=\"/images/genom-theodorove-spirale-nahled.png\" alt=\"Genom v Theodorově spirále\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Genom v Theodorově spirále</div> </a><a class=\"post-card \" href=\"/en/anti-jazyk/\"> <div class=\"post-card__thumb\"> <img src=\"/images/anti-jazyk-nahled.png\" alt=\"Anti-jazyk\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Anti-jazyk</div> </a><a class=\"post-card post-card--more\" href=\"/en/volna-tvorba/\"> <div class=\"post-card__thumb\"> <div class=\"post-card__more-text\">show all</div> </div>  </a> </div> ",
+  "translatedFragment": " <div class=\"post-grid\"> <a class=\"post-card \" href=\"/en/koncepty/\"> <div class=\"post-card__thumb\"> <img src=\"/images/koncepty-nahled.jpg\" alt=\"Koncepty\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Concepts</div> </a><a class=\"post-card \" href=\"/en/masky/\"> <div class=\"post-card__thumb\"> <img src=\"/images/masky-nahled.jpg\" alt=\"Masky\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Masks</div> </a><a class=\"post-card \" href=\"/en/prizivnici/\"> <div class=\"post-card__thumb\"> <img src=\"/images/prizivnici-nahled.jpg\" alt=\"Příživníci\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Freeloaders</div> </a><a class=\"post-card \" href=\"/en/plzen-2026-05-01/\"> <div class=\"post-card__thumb\"> <img src=\"/images/plzen-2026-05-01-nahled.jpg\" alt=\"Plzeň, 2026-05-01\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Pilsen, 2026-05-01</div> </a><a class=\"post-card \" href=\"/en/metawebovy-clanek/\"> <div class=\"post-card__thumb\"> <img src=\"/images/metawebovy-clanek-nahled.jpg\" alt=\"Metawebový článek\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Metaweb Article</div> </a><a class=\"post-card \" href=\"/en/clipboard-smetiste/\"> <div class=\"post-card__thumb\"> <img src=\"/images/clipboard-smetiste-nahled.jpg\" alt=\"Clipboard smetiště\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Clipboard Dump</div> </a><a class=\"post-card \" href=\"/en/docasne-entity/\"> <div class=\"post-card__thumb\"> <img src=\"/images/docasne-entity-nahled.jpg\" alt=\"Dočasné entity\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Temporary Entities</div> </a><a class=\"post-card \" href=\"/en/genom-theodorove-spirale/\"> <div class=\"post-card__thumb\"> <img src=\"/images/genom-theodorove-spirale-nahled.png\" alt=\"Genom v Theodorově spirále\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Genome in Theodor’s Spiral</div> </a><a class=\"post-card \" href=\"/en/anti-jazyk/\"> <div class=\"post-card__thumb\"> <img src=\"/images/anti-jazyk-nahled.png\" alt=\"Anti-jazyk\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Anti-language</div> </a><a class=\"post-card post-card--more\" href=\"/en/volna-tvorba/\"> <div class=\"post-card__thumb\"> <div class=\"post-card__more-text\">show all</div> </div>  </a> </div> ",
+  "createdAt": "2026-08-14T12:13:30.917Z"
+}

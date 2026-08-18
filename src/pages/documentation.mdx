@@ -2482,6 +2482,27 @@ yt-dlp --write-info-json --write-thumbnail --write-description --write-subs --wr
 
 The `downloaded.txt` archive prevents already recorded videos from being downloaded again.
 
+### 15.5 Arweave gateway entry points
+
+An Arweave manifest Data TX ID identifies the archived deployment independently of the HTTP gateway used to retrieve it. The current archived deployment uses this manifest Data TX ID:
+
+```text
+GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs
+```
+
+`ARCHIVE.txt` and other preservation records should list at least these two entry points to the same manifest:
+
+```text
+https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
+https://arweave.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/
+```
+
+These URLs are not separate archived copies. They are two HTTP gateway routes to the same manifest and the same underlying Arweave data. If one gateway returns intermittent `404` or `504` responses, or loads HTML while failing to load CSS or other assets, test the identical manifest path through the other gateway before concluding that archived data is missing.
+
+On 2026-08-18, the ArDrive gateway was observed returning alternating `404` and `200` responses for the same immutable CSS path, while the corresponding `arweave.net` path returned `200` consistently. The failing ArDrive responses reported `X-Cache-Status: UPDATING`. This behavior indicates a gateway cache or retrieval failure rather than a change to the permanent stored data.
+
+The manifest Data TX ID is the authoritative archival identifier. Gateway URLs are replaceable access routes and additional gateway entry points may be recorded without uploading the deployment again.
+
 ---
 
 ## 16. Summary

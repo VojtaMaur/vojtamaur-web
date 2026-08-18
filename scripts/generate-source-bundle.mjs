@@ -28,7 +28,10 @@ const MIRROR_BASES = [
   "https://vojtamaur-web-a22b59.gitlab.io",
   "https://vojta_maur.codeberg.page",
   "https://vojtamaur.neocities.org",
+  "https://vojtamaur.vojtam.chatgpt.site",
+  "https://vojtamaur.envs.net",
   "https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs",
+  "https://arweave.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs",
 ];
 
 const EXCLUDED_ROOT_DIRS = new Set([

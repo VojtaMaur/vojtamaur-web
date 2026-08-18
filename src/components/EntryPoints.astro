@@ -17,15 +17,24 @@ const entryPoints = (
 ).replaceAll('\t', '  ');
 
 const parts = entryPoints.split(
-  /(https?:\/\/[^\s<>"']+)/g
+  /((?:https?|gemini|gopher):\/\/[^\s<>"']+)/gi
 );
 
 const isUrl = (value: string) =>
-  /^https?:\/\/[^\s<>"']+$/.test(value);
+  /^(?:https?|gemini|gopher):\/\/[^\s<>"']+$/.test(value);
+
+const isHttpUrl = (value: string) =>
+  /^https?:\/\//i.test(value);
 ---
 
 <pre class="entry-points">{parts.map((part) =>
   isUrl(part)
-    ? <a href={part} target="_blank" rel="noopener noreferrer">{part}</a>
+    ? (
+      <a
+        href={part}
+        target={isHttpUrl(part) ? '_blank' : undefined}
+        rel={isHttpUrl(part) ? 'noopener noreferrer' : undefined}
+      >{part}</a>
+    )
     : part
 )}</pre>

@@ -24,18 +24,24 @@ Zdrojový kód: [koncepty-2026-03-02-trideni-pixelu-fotek.py](/files/koncepty-20
 
 **2026-04-13: NÁHODNÁ EXPLORACE INTERNETU**  
 Asi dva týdny jsem se věnoval náhodné exploraci internetu, protože mě zajímalo, jak vypadá, když ho nedoporučují algoritmy. Zkoušel jsem různé přístupy.  
+
 Tím prvním (naivním) bylo vytvoření programu na zadávání a otvírání URL, které jsou náhodně generované. To bylo samozřejmě extrémně neefektivní, prostor možných URL je příliš velký a ty existující jsou zastoupené řídce.  
+
 Druhý přístup byl postavit si vlastní crawler a dát mu nějakou bizarní seed URL (třeba web [kdomivolal.cz](https://www.kdomivolal.cz/)). Výsledky jsem se pak snažil filtrovat pomocí LLM a následně se dívat jen na ty zajímavé (dle nějakých definovaných kritérií). Našel jsem tak hodně bizárů k pobavení, ale nic převratného.  
+
 Třetí přístup byl mnohem plodnější a zábavnější. Objevil jsem totiž, že existuje Certstream. Je to šikovná služba, která živě vysílá aktuálně vystavené bezpečnostní certifikáty po celém světě. Takže to zobrazuje URL webů, které buď nově vznikají, nebo obnovují svůj certifikát.  
 Zdrojový kód: [koncepty-2026-04-13-certstream-listener.py](/files/koncepty-2026-04-13-certstream-listener.py)  
 Strávil jsem náhodným proklikáváním těchto URL několik dní. Nejčastěji jsem narazil na podvody (kryptoměnové atd.), porno, AI, AI porno, návody na to, jak vyrobit AI porno, gambling, přihlašovací rozhraní systémů, rodící se weby (které mají placeholder obsah nebo hlášky „pracujeme na tom“).  
 Díky tomuto procesu jsem narazil na web [treeyo.my](https://treeyo.my/), který mi utkvěl v paměti svou minimalistickou podobou a nulovou optimalizací na pozornost diváka. Taky jsem zjistil, že ten web je opravdu okrajová část internetu, protože ho zatím neindexoval ani Google. Internet Archive na něj sice přišel, ale z CT logů, stejně jako já. Kvůli tomuto webu to hledání stálo za to.
 
 **2026-05-06: VÝSTAVA V PACIFIKU**  
-Napadlo mě vytvořit 360° panoramatické fotky Pacifiku generované pomocí AI. Pak do nich vložit QR kód pomocí AI (něco ve stylu Illusion Diffusion), který odkazuje na nějaké umění. Následně by do nich šli vložit falešná metadata polohy (třeba GPS souřadnice uprostřed Pacifiku) a nahrát na Google Maps. Alternativně by šlo vzít nějaká reálná místa nafocená 360° kamerou, třeba z jednoho města, pak jim všem posunout GPS pozice do Pacifiku. Důvod, proč mluvím jen o 360° fotkách je ten, že u nich Google doteď dovoluje upload na přesné GPS pozice pomocí metadat. Zatímco normální fotky musí být přiřazeny k existujícímu místu.
+Napadlo mě vytvořit 360° panoramatické fotky Pacifiku generované pomocí AI. Pak do nich vložit QR kód pomocí AI (něco ve stylu Illusion Diffusion), který odkazuje na nějaké umění. Následně by do nich šli vložit falešná metadata polohy (třeba GPS souřadnice uprostřed Pacifiku) a nahrát na Google Maps. 
+
+Alternativně by šlo vzít nějaká reálná místa nafocená 360° kamerou, třeba z jednoho města, pak jim všem posunout GPS pozice do Pacifiku. Důvod, proč mluvím jen o 360° fotkách je ten, že u nich Google doteď dovoluje upload na přesné GPS pozice pomocí metadat. Zatímco normální fotky musí být přiřazeny k existujícímu místu.
 
 **2026-06-04: PIGMENTOVÉ LÉZE**  
 Tento projekt jsem se snažil realizovat, ale z důvodu časové náročnosti jsem ho nedokončil. Zdokumentoval jsem zatím pouze ruce, oříznul nafocené pihy (transparentní pozadí), zachoval jejich měřítko a vytvořil program na jejich seřazení v mřížce. Nicméně tohle je text, který měl koncept vysvětlit:  
+
 „V roce 2026 jsem zdokumentoval každý viditelný kožní nádor nebo cévní anomálii na povrchu svého těla. U každého objektu bylo zachováno měřítko. Následně byly jednotlivé léze digitálně vyříznuty a seřazeny do pravidelné mřížky. “
 
 **2026-06-21: SEBE-MODIFIKUJÍCÍ INTELIGENTNÍ PROGRAM**  

@@ -25,7 +25,7 @@ The architecture is based on the following components:
 - **Content Collections** for metadata validation and typing
 - **Components** for reusable content blocks and layouts
 - **Static assets in `public/`** for images, PDFs, demos, and other files
-- **A generated Gemini capsule in `dist-gemini/`** as a text-oriented hypertext edition of the finished website
+- **A generated Gemini/Gopher text edition in `dist-gemini/`** as a text-oriented hypertext edition of the finished website, usable as both a Gemini capsule and a Gopher directory tree
 
 This model makes it easier to version content, archive build outputs, and potentially migrate the project to another environment without relying on a database runtime.
 
@@ -137,9 +137,9 @@ The Arweave build is not a separate Astro `BUILD_TARGET`. It is a postprocessed 
 
 A fourth publication artifact is also derived from the finished standard web build:
 
-- **Gemini capsule** – generated into `dist-gemini/` by `scripts/generate-gemini-capsule.mjs`
+- **Gemini/Gopher text edition** – generated into `dist-gemini/` by `scripts/generate-gemini-capsule.mjs`
 
-The Gemini capsule is not an Astro `BUILD_TARGET` and is not placed inside `dist/`. It reads the finished HTML in `dist/` so that the English postprocess is already reflected in the exported content, while article frontmatter remains available for section membership, dates, slugs, and ordering.
+The Gemini/Gopher text edition is not an Astro `BUILD_TARGET` and is not placed inside `dist/`. It reads the finished HTML in `dist/` so that the English postprocess is already reflected in the exported content, while article frontmatter remains available for section membership, dates, slugs, and ordering.
 
 ### `package.json`
 
@@ -183,8 +183,8 @@ Meaning of the main scripts:
 - `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:web:signed` – runs the standard web build and then creates and verifies the detached OpenPGP signature for `dist/SHA256SUMS.txt`
 - `npm run build:signed` – alias for `npm run build:web:signed`
-- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, writes unsigned build integrity metadata for `dist/`, and then generates the Gemini capsule in `dist-gemini/`
-- `npm run build:web:translate:signed` – runs the translating web build, including Gemini capsule generation, and then signs and verifies the checksum manifest for `dist/`; the detached signature does not cover the separate `dist-gemini/` directory
+- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, writes unsigned build integrity metadata for `dist/`, and then generates the Gemini/Gopher text edition in `dist-gemini/`
+- `npm run build:web:translate:signed` – runs the translating web build, including Gemini/Gopher text-edition generation, and then signs and verifies the checksum manifest for `dist/`; the detached signature does not cover the separate `dist-gemini/` directory
 - `npm run build:translate:signed` – alias for `npm run build:web:translate:signed`
 - `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:web:strict:signed` – runs the strict web build and then signs and verifies its checksum manifest
@@ -201,8 +201,8 @@ Meaning of the main scripts:
 - `npm run build:arweave` – creates the strict standard web build, creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths, and then writes separate unsigned build integrity metadata for `dist-arweave/`
 - `npm run build:arweave:signed` – runs the Arweave build and then signs and verifies `dist-arweave/SHA256SUMS.txt`
 - `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt`, a plain-text export of all article content from the finished build output
-- `npm run generate:gemini` – replaces `dist-gemini/` with a freshly generated bilingual Gemini capsule based on the existing finished `dist/` build and the post frontmatter
-- `npm run build:gemini` – runs the strict standard web build and then generates `dist-gemini/`; this is the standalone complete Gemini build command
+- `npm run generate:gemini` – replaces `dist-gemini/` with a freshly generated bilingual Gemini/Gopher text edition based on the existing finished `dist/` build and the post frontmatter
+- `npm run build:gemini` – runs the strict standard web build and then generates `dist-gemini/`; this is the standalone complete Gemini/Gopher text-edition build command
 - `npm run generate:source-bundle` – generates `dist/source/vojtamaur-web-source.zip`, a small reconstructable source package with a media manifest and an asset downloader
 - `npm run generate:integrity` – generates `SHA256SUMS.txt`, `BUILD_SHA256.txt`, `integrity.json`, and an unsigned `SIGNING_STATUS.txt` for `dist/`; any stale detached signature is removed
 - `npm run generate:integrity:arweave` – performs the same integrity pass for `dist-arweave/` after the Arweave copy-and-rewrite step
@@ -1331,9 +1331,9 @@ The script detects the project root from its own location, so it can be launched
 
 This output is a compact preservation and reading layer, not a lossless replacement for the website, source repository, original media, or `ALL_POSTS.txt`. Text is deliberately very small, images are downsampled, interactive media is represented by links, and missing built assets cannot be embedded. The source files and normal build artifacts remain the authoritative complete versions.
 
-### 9.6.5 Gemini capsule generation
+### 9.6.5 Gemini capsule and Gopher map generation
 
-The project generates a separate bilingual Gemini capsule with:
+The project generates a separate bilingual Gemini capsule and a Gopher-compatible map layer with:
 
 ```bash
 npm run generate:gemini
@@ -1358,9 +1358,9 @@ dist-gemini/
 npm run build:gemini
 ```
 
-This command runs the strict standard web build first and then generates the capsule.
+This command runs the strict standard web build first and then generates the text edition.
 
-The translating production workflow also generates the capsule automatically. Therefore:
+The translating production workflow also generates the text edition automatically. Therefore:
 
 ```bash
 npm run build:web:translate:signed
@@ -1368,45 +1368,64 @@ npm run build:web:translate:signed
 
 builds and translates the normal website, generates `dist-gemini/`, and then signs the checksum manifest belonging to `dist/`.
 
-The Gemini capsule is deliberately generated from the finished HTML rather than directly from the MDX body. This preserves the actual postprocessed English output and the rendered behavior of shared Astro components. The generator also reads article frontmatter from `src/content/posts/` for stable slugs, section membership, dates, draft filtering, and ordering.
+The Gemini/Gopher text edition is deliberately generated from the finished HTML rather than directly from the MDX body. This preserves the actual postprocessed English output and the rendered behavior of shared Astro components. The generator also reads article frontmatter from `src/content/posts/` for stable slugs, section membership, dates, draft filtering, and ordering.
 
 The default output structure is:
 
 ```text
 dist-gemini/
   index.gmi
+  gophermap
   favicon.txt
   keys/
   personal-work/
     index.gmi
+    gophermap
     article-slug.gmi
   exhibitions/
     index.gmi
+    gophermap
     article-slug.gmi
   travel/
     index.gmi
+    gophermap
     article-slug.gmi
   cs/
     index.gmi
+    gophermap
     volna-tvorba/
       index.gmi
+      gophermap
       article-slug.gmi
     vystavy/
       index.gmi
+      gophermap
       article-slug.gmi
     cestovani/
       index.gmi
+      gophermap
       article-slug.gmi
 ```
 
 English is intentionally the default language at the capsule root. Czech pages are stored below `/cs/`. Each article page includes navigation back to the homepage and section, a link to the counterpart language when available, and a link to the full HTTPS web version.
+
+For envs.net, the Gemini capsule is published below the user path rather than directly at the host root. Internal generated Gemini links therefore use the configured prefix `/~vojtamaur` so that links resolve under `gemini://envs.net/~vojtamaur/...` instead of incorrectly resolving under `gemini://envs.net/...`. If the capsule is moved to a host where it is served directly from the Gemini host root, this prefix must be changed or removed in the generator.
+
+The same `dist-gemini/` output can also be uploaded to `public_gopher/`. Gemini clients ignore `gophermap` files as ordinary unrelated files, while the Gopher server uses them as directory menus. The intended envs.net deployment mapping is:
+
+```text
+dist-gemini/  ->  public_gemini/   ->  gemini://envs.net/~vojtamaur/
+dist-gemini/  ->  public_gopher/   ->  gopher://envs.net/1/~vojtamaur
+```
+
+Gopher item types matter in the generated maps. Directory/menu links use type `1`; plain text or Gemtext files use type `0`; informational separator or label lines use type `i`. Some Gopher clients or web gateways may visibly show the leading `i` on informational lines. For this reason, `gophermap` should remain a thin navigation layer, while the real page content stays in `.gmi` files. Clients such as Lagrange can still display those `.gmi` files as Gemtext after opening them through Gopher.
 
 The Gemini homepage contains:
 
 - the site title and motto
 - a language switch
 - a short description of the capsule
-- a thank-you to Adële for hosting the capsule
+- a provider-neutral capsule description without host-specific acknowledgements
 - the latest nine items for Personal Work, Exhibitions, and Travel
 - `SHOW ALL` / `ZOBRAZIT VŠE` after the previews where the HTML homepage exposes that action
 - promotional video links followed by a direct link to the YouTube playlist
@@ -1446,7 +1465,7 @@ Available command-line overrides are:
 --site-url <url>
 ```
 
-Because `dist-gemini/` is outside `dist/`, the existing web integrity and signing commands do not cover it. Even when the capsule is produced during `build:web:translate:signed`, the resulting detached signature authenticates only `dist/SHA256SUMS.txt`. A separate checksum or signing workflow for `dist-gemini/` has not been implemented.
+Because `dist-gemini/` is outside `dist/`, the existing web integrity and signing commands do not cover it. Even when the capsule is produced during `build:web:translate:signed`, the resulting detached signature authenticates only `dist/SHA256SUMS.txt`. A separate checksum or signing workflow for `dist-gemini/` has not been implemented. This applies to both the Gemini files and the generated Gopher map layer.
 
 ### 9.7 Arweave / Permaweb build
 

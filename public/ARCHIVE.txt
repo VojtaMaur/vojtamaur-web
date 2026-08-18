@@ -28,6 +28,10 @@ ALTERNATIVE DEPLOYMENTS:
 	Pollux.casa (Gemini capsule + HTTPS gateway)
 	https://vojta.pollux.casa/
 	gemini://vojta.pollux.casa/
+	envs.net (HTTPS hosting + Gemini capsule + Gopherhole)
+	https://vojtamaur.envs.net/
+	gemini://envs.net/~vojtamaur/
+	gopher://envs.net/1/~vojtamaur
 
 SOURCE REPOSITORY (canonical source):
 	GitHub
@@ -430,6 +434,7 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260806114817/https://vojtamaur.cz/en/vystavy-stavebni-pozemky-1/
 	https://web.archive.org/web/20260806114812/https://vojtamaur.cz/vystavy-stavebni-pozemky-1/
 	https://web.archive.org/web/20260811111443/https://vojtamaur.vojtam.chatgpt.site/
+	https://web.archive.org/web/20260818044335/https://vojtamaur.envs.net/
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/

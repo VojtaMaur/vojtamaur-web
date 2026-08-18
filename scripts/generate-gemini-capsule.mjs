@@ -8,6 +8,10 @@ const DEFAULT_DIST_DIR = path.join(ROOT, "dist");
 const DEFAULT_OUTPUT_DIR = path.join(ROOT, "dist-gemini");
 const DEFAULT_CONTENT_DIR = path.join(ROOT, "src", "content", "posts");
 const DEFAULT_SITE_URL = "https://vojtamaur.cz";
+const GEMINI_CAPSULE_PREFIX = "/~vojtamaur";
+const GOPHER_HOST = "envs.net";
+const GOPHER_PORT = "70";
+const GOPHER_SELECTOR_PREFIX = GEMINI_CAPSULE_PREFIX;
 
 const SECTION_DEFINITIONS = {
   personalWork: {
@@ -196,8 +200,8 @@ function sectionDirectory(lang, sectionKey) {
   if (!definition) throw new Error(`Unknown section key: ${sectionKey}`);
 
   return lang === "cs"
-    ? `/cs/${definition.cs.dir}/`
-    : `/${definition.en.dir}/`;
+    ? `cs/${definition.cs.dir}/`
+    : `${definition.en.dir}/`;
 }
 
 function sectionRoot(lang, sectionKey) {
@@ -218,7 +222,42 @@ function articleOutputPath(outputDir, lang, sectionKey, slug) {
 }
 
 function homepageCapsulePath(lang) {
-  return lang === "cs" ? "/cs/index.gmi" : "/index.gmi";
+  return lang === "cs" ? "cs/index.gmi" : "index.gmi";
+}
+
+function normalizeCapsulePath(value) {
+  return String(value || "")
+    .replace(/^\/+/, "")
+    .replace(/\\/g, "/");
+}
+
+function capsuleHref(toCapsulePath, fromCapsulePath = null) {
+  const to = normalizeCapsulePath(toCapsulePath) || "index.gmi";
+
+  if (!fromCapsulePath) return `${GEMINI_CAPSULE_PREFIX}/${to}`;
+
+  const from = normalizeCapsulePath(fromCapsulePath) || "index.gmi";
+  const fromDirectory = from.endsWith("/") ? from : path.posix.dirname(from);
+  const relativeFrom = fromDirectory === "." ? "" : fromDirectory;
+  const relative = path.posix.relative(relativeFrom, to);
+
+  return relative || path.posix.basename(to) || "index.gmi";
+}
+
+function gopherSelector(toCapsulePath) {
+  const to = normalizeCapsulePath(toCapsulePath);
+  return to ? `${GOPHER_SELECTOR_PREFIX}/${to}` : `${GOPHER_SELECTOR_PREFIX}/`;
+}
+
+function gopherDirectorySelector(toCapsulePath) {
+  const to = normalizeCapsulePath(toCapsulePath);
+
+  if (!to || to === "index.gmi") return `${GOPHER_SELECTOR_PREFIX}/`;
+  if (to.endsWith("/index.gmi")) {
+    return `${GOPHER_SELECTOR_PREFIX}/${to.slice(0, -"index.gmi".length)}`;
+  }
+
+  return gopherSelector(to);
 }
 
 function normalizeWebPathname(pathname) {
@@ -351,8 +390,8 @@ function buildRouteMap(posts, homepageData, siteUrl) {
     }
   };
 
-  add("/", "/cs/");
-  add("/en/", "/");
+  add("/", homepageCapsulePath("cs"));
+  add("/en/", homepageCapsulePath("en"));
 
   for (const post of posts) {
     for (const lang of ["cs", "en"]) {
@@ -414,10 +453,13 @@ function rewriteHref(rawHref, context) {
 
   const normalizedPath = normalizeWebPathname(resolved.pathname);
   const mapped = context.routeMap.get(normalizedPath);
-  if (mapped) return `${mapped}${resolved.hash || ""}`;
+  if (mapped) {
+    return `${capsuleHref(mapped, context.currentCapsulePath)}${resolved.hash || ""}`;
+  }
 
   if (resolved.pathname.toLowerCase().startsWith("/keys/")) {
-    return `${resolved.pathname}${resolved.search}${resolved.hash}`;
+    const keyPath = resolved.pathname.replace(/^\/+/, "");
+    return `${capsuleHref(keyPath, context.currentCapsulePath)}${resolved.search}${resolved.hash}`;
   }
 
   if (isLikelyMediaPath(resolved.pathname)) return resolved.toString();
@@ -929,13 +971,17 @@ async function readHomepage(distDir, lang, siteUrl, warnings) {
   };
 }
 
-function pageNavigation(lang, sectionKey = null, counterpart = null) {
-  const lines = [`=> ${homepageCapsulePath(lang)} ${lang === "cs" ? "Domů" : "Home"}`];
+function pageNavigation(lang, sectionKey = null, counterpart = null, currentCapsulePath = null) {
+  const lines = [
+    `=> ${capsuleHref(homepageCapsulePath(lang), currentCapsulePath)} ${lang === "cs" ? "Domů" : "Home"}`,
+  ];
   if (sectionKey) {
-    lines.push(`=> ${sectionRoot(lang, sectionKey)} ${SECTION_DEFINITIONS[sectionKey][lang].title}`);
+    lines.push(
+      `=> ${capsuleHref(sectionRoot(lang, sectionKey), currentCapsulePath)} ${SECTION_DEFINITIONS[sectionKey][lang].title}`,
+    );
   }
   if (counterpart) {
-    lines.push(`=> ${counterpart.href} ${counterpart.label}`);
+    lines.push(`=> ${capsuleHref(counterpart.href, currentCapsulePath)} ${counterpart.label}`);
   }
   return lines.join("\n");
 }
@@ -964,17 +1010,19 @@ async function generateArticles(posts, outputDir, siteUrl, routeMap, stats) {
           }
         : null;
 
+      const currentCapsulePath = articleCapsulePath(lang, post.sectionKey, post.slug);
       const context = {
         siteUrl,
         routeMap,
         currentWebUrl: page.canonicalUrl,
+        currentCapsulePath,
       };
 
       let body = renderArticleHtml(page.html, context);
       body = ensurePageHeading(body, page.title);
 
       const content = [
-        pageNavigation(lang, post.sectionKey, counterpart),
+        pageNavigation(lang, post.sectionKey, counterpart, currentCapsulePath),
         body,
         originalWebsiteLink(lang, page.canonicalUrl),
       ].filter(Boolean).join("\n\n");
@@ -1004,10 +1052,12 @@ function routeHomepageItems(items, context) {
 
 async function generateHomepage(lang, homepage, outputDir, siteUrl, routeMap, stats) {
   const otherLang = lang === "en" ? "cs" : "en";
+  const currentCapsulePath = homepageCapsulePath(lang);
   const context = {
     siteUrl,
     routeMap,
     currentWebUrl: homepage?.canonicalUrl || (lang === "en" ? `${siteUrl}/en/` : `${siteUrl}/`),
+    currentCapsulePath,
   };
   const showAllLabel = lang === "cs" ? "ZOBRAZIT VŠE" : "SHOW ALL";
 
@@ -1015,11 +1065,11 @@ async function generateHomepage(lang, homepage, outputDir, siteUrl, routeMap, st
     "# Vojta Maur",
     homepage?.motto || (lang === "cs" ? "Tvořit je můj základní instinkt" : "Creating is my basic instinct"),
     "",
-    `=> ${homepageCapsulePath(otherLang)} ${otherLang === "cs" ? "Čeština" : "English"}`,
+    `=> ${capsuleHref(homepageCapsulePath(otherLang), currentCapsulePath)} ${otherLang === "cs" ? "Čeština" : "English"}`,
     "",
     lang === "cs"
-      ? "Toto je zjednodušená Gemini verze osobního webu Vojty Maura. Obrázky, PDF, videa a interaktivní ukázky zůstávají dostupné přes odkazy na hlavní web.\n\nDěkuji Adële za poskytnutí prostoru pro tuto Gemini kapsli."
-      : "This is a simplified Gemini version of Vojta Maur\'s personal website. Images, PDFs, videos and interactive demonstrations remain available through links to the main website.\n\nSpecial thanks to Adële for providing space for this Gemini capsule.",
+      ? "Toto je zjednodušená Gemini verze osobního webu Vojty Maura. Obrázky, PDF, videa a interaktivní ukázky zůstávají dostupné přes odkazy na hlavní web."
+      : "This is a simplified Gemini version of Vojta Maur\'s personal website. Images, PDFs, videos and interactive demonstrations remain available through links to the main website.",
   ];
 
   for (const sectionKey of SECTION_ORDER) {
@@ -1035,7 +1085,9 @@ async function generateHomepage(lang, homepage, outputDir, siteUrl, routeMap, st
       for (const item of items) lines.push(`=> ${item.href} ${item.title}`);
 
       if (sectionData?.moreHref) {
-        lines.push(`=> ${sectionRoot(lang, sectionKey)} ${showAllLabel}`);
+        lines.push(
+          `=> ${capsuleHref(sectionRoot(lang, sectionKey), currentCapsulePath)} ${showAllLabel}`,
+        );
       }
       continue;
     }
@@ -1081,11 +1133,12 @@ async function generatePostSectionIndex(lang, sectionKey, posts, homepage, outpu
   const sectionData = homepage?.sections?.[sectionKey];
   const title = sectionData?.title || definition[lang].title;
   const description = sectionData?.description || "";
+  const currentCapsulePath = sectionRoot(lang, sectionKey);
   const lines = [
     pageNavigation(lang, null, {
       href: sectionRoot(lang === "en" ? "cs" : "en", sectionKey),
       label: lang === "cs" ? "English version" : "Česká verze",
-    }),
+    }, currentCapsulePath),
     "",
     `# ${title}`,
   ];
@@ -1095,7 +1148,9 @@ async function generatePostSectionIndex(lang, sectionKey, posts, homepage, outpu
   const relevantPosts = posts.filter((post) => post.sectionKey === sectionKey && post.languages[lang]);
   for (const post of relevantPosts) {
     const page = post.languages[lang];
-    lines.push(`=> ${articleCapsulePath(lang, sectionKey, post.slug)} ${page.title}`);
+    lines.push(
+      `=> ${capsuleHref(articleCapsulePath(lang, sectionKey, post.slug), currentCapsulePath)} ${page.title}`,
+    );
   }
 
   if (relevantPosts.length === 0) {
@@ -1115,6 +1170,149 @@ async function generatePostSectionIndex(lang, sectionKey, posts, homepage, outpu
     : path.join(outputDir, definition.en.dir, "index.gmi");
   await writeUtf8(target, lines.join("\n"));
   stats.sectionPages += 1;
+}
+
+
+function cleanGopherLabel(value) {
+  return normalizeInlineText(value)
+    .replace(/[\t\r\n]/g, " ")
+    .replace(/ {2,}/g, " ")
+    .trim();
+}
+
+function gopherLine(type, label, selector = "", host = GOPHER_HOST, port = GOPHER_PORT) {
+  const safeLabel = cleanGopherLabel(label) || " ";
+  if (!selector) return `${type}${safeLabel}`;
+  return `${type}${safeLabel}\t${selector}\t${host}\t${port}`;
+}
+
+function gopherInfo(label = "") {
+  return gopherLine("i", label || " ");
+}
+
+function gopherText(label, toCapsulePath) {
+  return gopherLine("0", label, gopherSelector(toCapsulePath));
+}
+
+function gopherDirectory(label, toCapsulePath) {
+  return gopherLine("1", label, gopherDirectorySelector(toCapsulePath));
+}
+
+function gopherWeb(label, url) {
+  const target = normalizeInlineText(url);
+  if (!target) return "";
+  return gopherLine("h", label, `URL:${target}`);
+}
+
+function capsuleDirectory(capsulePath) {
+  const normalized = normalizeCapsulePath(capsulePath);
+  if (!normalized || normalized === "index.gmi") return "";
+  const directory = path.posix.dirname(normalized);
+  return directory === "." ? "" : directory;
+}
+
+async function writeGopherMap(outputDir, capsulePathOrDirectory, lines, stats) {
+  const normalized = normalizeCapsulePath(capsulePathOrDirectory);
+  const directory = normalized.endsWith(".gmi")
+    ? capsuleDirectory(normalized)
+    : normalized.replace(/\/+$/, "");
+  const parts = directory ? directory.split("/") : [];
+  const target = path.join(outputDir, ...parts, "gophermap");
+  const content = lines.filter((line) => line !== "").join("\n");
+  await writeUtf8(target, content);
+  stats.gopherMaps += 1;
+}
+
+function gopherHomepageLines(lang, homepage, siteUrl) {
+  const otherLang = lang === "en" ? "cs" : "en";
+  const lines = [
+    gopherInfo("Vojta Maur"),
+    gopherInfo(homepage?.motto || (lang === "cs" ? "Tvořit je můj základní instinkt" : "Creating is my basic instinct")),
+    gopherInfo(),
+    gopherText(lang === "cs" ? "Gemtext hlavní stránka" : "Gemtext homepage", homepageCapsulePath(lang)),
+    gopherDirectory(otherLang === "cs" ? "Čeština" : "English", homepageCapsulePath(otherLang)),
+    gopherInfo(),
+  ];
+
+  for (const sectionKey of POST_SECTION_KEYS) {
+    lines.push(gopherDirectory(homepageSectionTitle(homepage, lang, sectionKey), sectionRoot(lang, sectionKey)));
+  }
+
+  const sectionData = homepage?.sections?.videos;
+  const videoItems = sectionData?.items || [];
+  if (videoItems.length > 0 || sectionData?.moreHref || sectionData?.href) {
+    lines.push(gopherInfo(), gopherInfo(homepageSectionTitle(homepage, lang, "videos")));
+    for (const item of videoItems) {
+      try {
+        lines.push(gopherWeb(item.title, new URL(item.href, siteUrl).toString()));
+      } catch {
+        // Invalid source URL is omitted.
+      }
+    }
+    try {
+      const playlist = sectionData?.moreHref || sectionData?.href;
+      if (playlist) lines.push(gopherWeb(lang === "cs" ? "ZOBRAZIT VŠE" : "SHOW ALL", new URL(playlist, siteUrl).toString()));
+    } catch {
+      // Invalid source URL is omitted.
+    }
+  }
+
+  lines.push(gopherInfo());
+  lines.push(gopherWeb(lang === "cs" ? "Plná webová verze" : "Full web version", homepage?.canonicalUrl || (lang === "en" ? `${siteUrl}/en/` : `${siteUrl}/`)));
+
+  return lines;
+}
+
+function gopherSectionLines(lang, sectionKey, posts, homepage, siteUrl) {
+  const otherLang = lang === "en" ? "cs" : "en";
+  const title = homepageSectionTitle(homepage, lang, sectionKey);
+  const description = homepageSectionDescription(homepage, sectionKey);
+  const relevantPosts = posts.filter((post) => post.sectionKey === sectionKey && post.languages[lang]);
+  const lines = [
+    gopherInfo("Vojta Maur"),
+    gopherInfo(title),
+  ];
+
+  if (description) lines.push(gopherInfo(description));
+
+  lines.push(
+    gopherInfo(),
+    gopherDirectory(lang === "cs" ? "Domů" : "Home", homepageCapsulePath(lang)),
+    gopherDirectory(lang === "cs" ? "English version" : "Česká verze", sectionRoot(otherLang, sectionKey)),
+    gopherText(lang === "cs" ? "Gemtext index sekce" : "Gemtext section index", sectionRoot(lang, sectionKey)),
+    gopherInfo(),
+  );
+
+  if (relevantPosts.length === 0) {
+    lines.push(gopherInfo(lang === "cs" ? "V této sekci nejsou žádné dostupné položky." : "No entries are available in this section."));
+  } else {
+    for (const post of relevantPosts) {
+      const page = post.languages[lang];
+      lines.push(gopherText(page.title, articleCapsulePath(lang, sectionKey, post.slug)));
+    }
+  }
+
+  const sectionData = homepage?.sections?.[sectionKey];
+  if (sectionData?.href) {
+    try {
+      lines.push(gopherInfo(), gopherWeb(lang === "cs" ? "Plná webová verze" : "Full web version", new URL(sectionData.href, siteUrl).toString()));
+    } catch {
+      // Invalid source URL is omitted.
+    }
+  }
+
+  return lines;
+}
+
+async function generateGopherMaps(posts, homepageData, outputDir, siteUrl, stats) {
+  for (const lang of ["en", "cs"]) {
+    const homepage = homepageData[lang];
+    await writeGopherMap(outputDir, homepageCapsulePath(lang), gopherHomepageLines(lang, homepage, siteUrl), stats);
+
+    for (const sectionKey of POST_SECTION_KEYS) {
+      await writeGopherMap(outputDir, sectionRoot(lang, sectionKey), gopherSectionLines(lang, sectionKey, posts, homepage, siteUrl), stats);
+    }
+  }
 }
 
 
@@ -1171,6 +1369,7 @@ async function main() {
     articlePages: 0,
     sectionPages: 0,
     homePages: 0,
+    gopherMaps: 0,
     copiedFiles: 0,
   };
 
@@ -1202,6 +1401,8 @@ async function main() {
 
   }
 
+  await generateGopherMaps(posts, homepageData, outputDir, siteUrl, stats);
+
   await copyFirstExisting(
     [path.join(distDir, "favicon.txt"), path.join(ROOT, "public", "favicon.txt")],
     path.join(outputDir, "favicon.txt"),
@@ -1221,6 +1422,7 @@ async function main() {
   console.log(`[GEMINI] Written ${normalizeSlashes(path.relative(ROOT, outputDir))}/`);
   console.log(`[GEMINI] Pages: ${totalPages} (${stats.articlePages} articles, ${stats.sectionPages} sections, ${stats.homePages} homepages)`);
   console.log(`[GEMINI] Source posts: ${posts.length}`);
+  console.log(`[GEMINI] Gopher maps: ${stats.gopherMaps}`);
   console.log(`[GEMINI] Copied static files: ${stats.copiedFiles}`);
 
   if (warnings.length > 0) {

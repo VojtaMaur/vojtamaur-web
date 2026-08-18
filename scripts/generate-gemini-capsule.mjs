@@ -12,6 +12,15 @@ const GEMINI_CAPSULE_PREFIX = "/~vojtamaur";
 const GOPHER_HOST = "envs.net";
 const GOPHER_PORT = "70";
 const GOPHER_SELECTOR_PREFIX = GEMINI_CAPSULE_PREFIX;
+const CAPSULE_TEXT_ASSET_PATHS = [
+  "SHA256SUMS.txt",
+  "SHA256SUMS.txt.asc",
+  "BUILD_SHA256.txt",
+  "integrity.json",
+  "SIGNING_STATUS.txt",
+  "ALL_POSTS.txt",
+  "ARCHIVE.txt",
+];
 
 const SECTION_DEFINITIONS = {
   personalWork: {
@@ -260,6 +269,11 @@ function gopherDirectorySelector(toCapsulePath) {
   return gopherSelector(to);
 }
 
+function isCapsuleTextAssetPath(pathname) {
+  const clean = normalizeCapsulePath(pathname);
+  return clean.startsWith("keys/") || CAPSULE_TEXT_ASSET_PATHS.includes(clean);
+}
+
 function normalizeWebPathname(pathname) {
   let value = pathname || "/";
   value = value.replace(/\/index\.html$/i, "/");
@@ -457,9 +471,9 @@ function rewriteHref(rawHref, context) {
     return `${capsuleHref(mapped, context.currentCapsulePath)}${resolved.hash || ""}`;
   }
 
-  if (resolved.pathname.toLowerCase().startsWith("/keys/")) {
-    const keyPath = resolved.pathname.replace(/^\/+/, "");
-    return `${capsuleHref(keyPath, context.currentCapsulePath)}${resolved.search}${resolved.hash}`;
+  if (isCapsuleTextAssetPath(resolved.pathname)) {
+    const assetPath = normalizeCapsulePath(resolved.pathname);
+    return `${capsuleHref(assetPath, context.currentCapsulePath)}${resolved.search}${resolved.hash}`;
   }
 
   if (isLikelyMediaPath(resolved.pathname)) return resolved.toString();
@@ -1316,6 +1330,24 @@ async function generateGopherMaps(posts, homepageData, outputDir, siteUrl, stats
 }
 
 
+async function copyCapsuleTextAssets(distDir, outputDir, stats, warnings) {
+  for (const assetPath of CAPSULE_TEXT_ASSET_PATHS) {
+    const copied = await copyFirstExisting(
+      [
+        path.join(distDir, assetPath),
+        path.join(ROOT, "public", assetPath),
+        path.join(ROOT, assetPath),
+      ],
+      path.join(outputDir, assetPath),
+      stats,
+    );
+
+    if (!copied) {
+      warnings.push(`Missing capsule text asset: ${assetPath}`);
+    }
+  }
+}
+
 async function copyFirstExisting(candidates, destination, stats) {
   for (const source of candidates) {
     if (await exists(source)) {
@@ -1408,6 +1440,8 @@ async function main() {
     path.join(outputDir, "favicon.txt"),
     stats,
   );
+
+  await copyCapsuleTextAssets(distDir, outputDir, stats, warnings);
 
   const copiedDistKeys = await copyDirectoryIfPresent(
     path.join(distDir, "keys"),

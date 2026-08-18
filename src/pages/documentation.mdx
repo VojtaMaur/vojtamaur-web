@@ -1897,7 +1897,64 @@ To verify the real final translated output, use:
     npm run build:web:translate
     npm run preview
 	
-### 11.8 Marking content as not translatable
+### 11.8 MDX hard line breaks inside translated paragraphs
+
+Avoid using Markdown hard line breaks between a bold pseudo-heading and the text that follows it in translated article content.
+
+Problematic pattern:
+
+```mdx
+**2026-03-02: TŘÍDĚNÍ PIXELŮ FOTEK**  
+Pokusil jsem se pomocí algoritmu roztřídit pixely fotografií.
+```
+
+The two trailing spaces after the bold text are meaningful Markdown. They produce a hard HTML line break:
+
+```html
+<p><strong>2026-03-02: TŘÍDĚNÍ PIXELŮ FOTEK</strong><br>
+Pokusil jsem se pomocí algoritmu roztřídit pixely fotografií.</p>
+```
+
+This structure is fragile when the fragment is sent through the English translation postprocess. DeepL receives one translated HTML paragraph containing both the bold title and the following sentence. During translation, it may preserve the `<br>` but move part of the translated title across it, producing output such as:
+
+```html
+<strong>2026-03-02: SORTING PHOTO</strong><br><strong>PIXELS</strong>
+I tried to sort the pixels...
+```
+
+The visual result looks like a broken heading even though the browser is only rendering the hard break that already exists in the HTML.
+
+Safer pattern when the bold line is only a compact label:
+
+```mdx
+**2026-03-02: TŘÍDĚNÍ PIXELŮ FOTEK**
+
+Pokusil jsem se pomocí algoritmu roztřídit pixely fotografií.
+```
+
+This creates separate paragraphs and does not place a `<br>` between the label and the body text.
+
+Best pattern when the line is structurally a subsection heading:
+
+```mdx
+### 2026-03-02: TŘÍDĚNÍ PIXELŮ FOTEK
+
+Pokusil jsem se pomocí algoritmu roztřídit pixely fotografií.
+```
+
+Use real headings for repeated article sections such as dated concept entries. If the default heading style is too visually large, fix that in CSS instead of simulating headings with bold text and hard breaks.
+
+After changing this kind of structure, verify the generated English output:
+
+```bat
+npm run build:web:translate
+npm run build:web:strict
+npm run preview
+```
+
+If the broken English output persists, check whether an old translation cache entry in `translations/en/` is still being reused. The cache stores translated HTML fragments, so a structural mistake can remain visible until the changed source fragment produces a new cache key or the relevant stale cache entry is removed.
+
+### 11.9 Marking content as not translatable
 
 Use `NoTranslate.astro` for MDX content that must remain unchanged.
 
@@ -1932,7 +1989,7 @@ Typical uses:
 - names, labels, or conceptual phrases that should not be normalized by DeepL
 - very large fragments that would otherwise exceed the translation size limit
 
-### 11.9 `notranslate` inside `MediaRow`
+### 11.10 `notranslate` inside `MediaRow`
 
 `MediaRow.astro` is a special case because `type: "text"` items are rendered through `set:html`. That means the `content` value is an HTML string, not an Astro component.
 
@@ -1989,7 +2046,7 @@ The important part is:
 
 The postprocess recognizes this marker, removes the protected block before sending the fragment to DeepL, and restores it afterward.
 
-### 11.10 Large fragments
+### 11.11 Large fragments
 
 The current maximum translated fragment size is `80_000` bytes. If a translated region is larger, the build fails with an error similar to:
 
@@ -2005,7 +2062,7 @@ Preferred solutions:
 
 The size guardrail exists to avoid sending oversized and fragile HTML blobs to DeepL.
 
-### 11.11 Troubleshooting
+### 11.12 Troubleshooting
 
 #### `DEEPL_AUTH_KEY is not set`
 
@@ -2074,7 +2131,7 @@ Check the end of the build log. If it contains `DEEPL_AUTH_KEY is not set` or an
 
 The problem is upload or caching, not translation. Upload the entire `dist/` directory again and force overwrite existing files. Avoid “skip if same size” and similar FTP shortcuts. Then test with a cache-busting URL parameter.
 
-### 11.12 Publishing checklist
+### 11.13 Publishing checklist
 
 Before uploading the web build to FTP:
 

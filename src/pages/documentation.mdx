@@ -2439,8 +2439,12 @@ Possible future directions for the project:
 
 - extending the documentation with content workflow instructions for another editor
 - translation of image alt texts
+- adding alt texts to photographs in the Travel section
 - automatic translation of PDF exports, with automatic compression of the translated PDFs to reduce file size
 - a wiki with interconnected articles (e.g. `wiki.vojtamaur.cz`)
+- evaluation of emerging long-term archival media (e.g. [NanoFiche](https://nanofiche.com/)) as costs and availability improve
+- evaluation of future opportunities for inclusion in lunar cultural archives (e.g. the [Lunar Codex](https://www.lunarcodex.com/)), if suitable public submission pathways become available
+- evaluation of future opportunities for inclusion in space-based cultural archives (e.g. the [Arch Mission Foundation](https://www.archmission.org/)), if suitable public submission pathways become available
 
 ---
 
@@ -2458,9 +2462,11 @@ This priority is especially useful for storage-constrained deposits such as Memo
 
 ### 15.2 Manual mirror updates
 
+Some mirrors do not support automatic deployment from the canonical repository and therefore need to be updated manually. These currently include **ChatGPT Sites, Neocities, ArDrive / Arweave, Pollux.casa, and envs.net**.
+
 The ChatGPT Sites deployment does not update automatically when the canonical repository changes. To refresh it, ask ChatGPT in the Sites chat to load the current state of the canonical repository, save or build a new version, and deploy that version explicitly.
 
-Codeberg Pages is updated separately through `deploy-codeberg-pages.bat`; the complete worktree-based procedure is documented in section 12.2.2.
+Codeberg Pages is also updated separately through `deploy-codeberg-pages.bat`; the complete worktree-based procedure is documented in section 12.2.2.
 
 ### 15.3 External web archives
 
@@ -2502,6 +2508,10 @@ These URLs are not separate archived copies. They are two HTTP gateway routes to
 On 2026-08-18, the ArDrive gateway was observed returning alternating `404` and `200` responses for the same immutable CSS path, while the corresponding `arweave.net` path returned `200` consistently. The failing ArDrive responses reported `X-Cache-Status: UPDATING`. This behavior indicates a gateway cache or retrieval failure rather than a change to the permanent stored data.
 
 The manifest Data TX ID is the authoritative archival identifier. Gateway URLs are replaceable access routes and additional gateway entry points may be recorded without uploading the deployment again.
+
+### 15.6 Arctic World Archive pricing note
+
+For Shared piqlFilm, the observed minimum price is €139. An approximately 0.8 GB package cost €139; 1.19 GB was quoted at €165.48, close to €139/GB; and 9.22 GB was quoted at €1,113.21, which may indicate a different calculation or volume discount at larger sizes. Because the exact public pricing formula is not known, treat these figures as practical observations rather than guaranteed price tiers. To stay at the €139 minimum in practice, keep the package safely below 1 GB.
 
 ---
 

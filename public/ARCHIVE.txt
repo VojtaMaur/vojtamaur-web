@@ -12,6 +12,8 @@ ALTERNATIVE DEPLOYMENTS:
 	https://vojtamaur.netlify.app/
 	Vercel
 	https://vojtamaur-web.vercel.app/
+	https://vojtamaur-web-git-main-vojta-maur.vercel.app/
+	https://vojtamaur-7o0qbm9r5-vojta-maur.vercel.app/
 	Firebase Hosting
 	https://vojtamaur-977c1.web.app/
 	https://vojtamaur-977c1.firebaseapp.com/

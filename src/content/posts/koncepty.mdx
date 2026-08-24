@@ -14,6 +14,26 @@ import NoTranslate from "../../components/NoTranslate.astro";
 Zápisky níže jsou průběžným záznamem nápadů a postřehů, které se u mě v průběhu času objevily.
 Nejsou často domyšlené ani realizované, i když v budoucnu mohou být. A nebo nemusí, na některé myšlenky je dostatečná forma poznámky. Některé jsou slepé uličky a tak nemá cenu je dál rozvíjet. Ale i tak mohou stát za záznam. 
 
+**<NoTranslate>2023-02-24:</NoTranslate> GLITCHE NEURÁLNÍCH FILTRŮ**
+
+Zjistil jsem náhodou během práce, že když se ve Photoshopu snažím zvětšit obrázek pomocí Neural Filters a ten obrázek  je v barevném profilu CMYK a obsahuje větší transparentní části, stane se divný, ale většinou docela estetický glitch. 
+
+Zde je ukázka 3 z 28 obrázků, které jsem zaznamenal:  
+[koncepty-2023-02-24-glitche-neuralnich-siti-1.jpg](/images/koncepty-2023-02-24-glitche-neuralnich-siti-1.jpg)  
+[koncepty-2023-02-24-glitche-neuralnich-siti-2.jpg](/images/koncepty-2023-02-24-glitche-neuralnich-siti-2.jpg)  
+[koncepty-2023-02-24-glitche-neuralnich-siti-3.jpg](/images/koncepty-2023-02-24-glitche-neuralnich-siti-3.jpg)
+
+**<NoTranslate>2024-03-22:</NoTranslate> OPTICKÝ RYTMUS PRÁCE NA POČÍTAČI**  
+
+Vytvořil jsem program, který zaznamenává každý úder do klávesnice a kliknutí myší během mé práce na počítači. Čas postupuje ve směru běžného psaní, zleva doprava a shora dolů. Černý bod znamená zaznamenaný vstup, bílá plocha jeho absenci.
+
+Zde je ukázka 3 z 18 obrázků, které jsem zaznamenal:  
+[koncepty-2024-03-22-opticky-rytmus-prace-na-pocitaci-1.png](/images/koncepty-2024-03-22-opticky-rytmus-prace-na-pocitaci-1.png)  
+[koncepty-2024-03-22-opticky-rytmus-prace-na-pocitaci-2.png](/images/koncepty-2024-03-22-opticky-rytmus-prace-na-pocitaci-2.png)  
+[koncepty-2024-03-22-opticky-rytmus-prace-na-pocitaci-3.png](/images/koncepty-2024-03-22-opticky-rytmus-prace-na-pocitaci-3.png)  
+
+Zdrojový kód: [koncepty-2024-03-22-opticky-rytmus-prace-na-pocitaci.py](/files/koncepty-2024-03-22-opticky-rytmus-prace-na-pocitaci.py)
+
 **<NoTranslate>2024-08-19:</NoTranslate> KUSHÍKOVA POEZIE**
 
 Pracoval jsem na počítači, ale neustále mě rušil můj potkan Kushík. Lezl po mě, vyžadoval pozornost, lezl mi po stole, po počítači. Trochu mě začal frustrovat. Tak jsem se naštval, otevřel mu prázdnej MS Word dokument a řekl mu něco ve smyslu, že ať teda tvoří, když to chce dělat za mě.  
@@ -38,8 +58,8 @@ Napadlo mě udělat Arduino projekt, ve kterém bych dal do prázdného boxu (p�
 
 Zkoušel jsem v Pythonu vytvořit jednoduchou funkční pinhole kameru. Kdysi na střední škole jsem již vytvořil skutečnou fyzickou, ale připadalo mi, že když jí nasimuluju, pochopím lépe její fungování, protože nestačí jen udělat dírku do krabice, vložit světlocitný papír, ten pak po expozici vyvolat a nechat fyziku udělat svou práci (ať už funguje jakkoliv). Tady se naopak musí simulovat i fyzika.  
 Měl jsem snahu udělat simulaci algoritmicky co nejrealističtější, i když limitem samozřejmě zůstávají moje znalosti a dostupný výpočetní výkon. Program například využívá forward ray tracing, tedy sledování světla od zdroje směrem ke scéně a kameře, namísto běžnějšího backward ray tracingu, který sleduje paprsky od kamery zpět do scény. Forward přístup je bližší fyzickému směru šíření světla, ale bývá výpočetně velmi neefektivní.  
-Příklady nastavení programu a vysvětlení parametrů: [koncepty-2026-01-31-simulace-pinhole-nastaveni.txt](/files/koncepty-2026-01-31-simulace-pinhole-nastaveni.txt)  
 
+Příklady nastavení programu a vysvětlení parametrů: [koncepty-2026-01-31-simulace-pinhole-nastaveni.txt](/files/koncepty-2026-01-31-simulace-pinhole-nastaveni.txt)  
 Zdrojový kód: [koncepty-2026-01-31-simulace-pinhole.py](/files/koncepty-2026-01-31-simulace-pinhole.py)
 
 **<NoTranslate>2026-03-02:</NoTranslate> TŘÍDĚNÍ PIXELŮ FOTEK**  
@@ -57,9 +77,12 @@ Tím prvním (naivním) bylo vytvoření programu na zadávání a otvírání U
 Druhý přístup byl postavit si vlastní crawler a dát mu nějakou bizarní seed URL (třeba web [kdomivolal.cz](https://www.kdomivolal.cz/)). Výsledky jsem se pak snažil filtrovat pomocí LLM a následně se dívat jen na ty zajímavé (dle nějakých definovaných kritérií). Našel jsem tak hodně bizárů k pobavení, ale nic převratného.  
 
 Třetí přístup byl mnohem plodnější a zábavnější. Objevil jsem totiž, že existuje Certstream. Je to šikovná služba, která živě vysílá aktuálně vystavené bezpečnostní certifikáty po celém světě. Takže to zobrazuje URL webů, které buď nově vznikají, nebo obnovují svůj certifikát.  
+
 Zdrojový kód: [koncepty-2026-04-13-certstream-listener.py](/files/koncepty-2026-04-13-certstream-listener.py)  
+
 Strávil jsem náhodným proklikáváním těchto URL několik dní. Nejčastěji jsem narazil na podvody (kryptoměnové atd.), porno, AI, AI porno, návody na to, jak vyrobit AI porno, gambling, přihlašovací rozhraní systémů, rodící se weby (které mají placeholder obsah nebo hlášky „pracujeme na tom“).  
-Díky tomuto procesu jsem narazil na web [treeyo.my](https://treeyo.my/), který mi utkvěl v paměti svou minimalistickou podobou a nulovou optimalizací na pozornost diváka. Taky jsem zjistil, že ten web je opravdu okrajová část internetu, protože ho zatím neindexoval ani Google. Internet Archive na něj sice přišel, ale z CT logů, stejně jako já. Kvůli tomuto webu to hledání stálo za to.
+
+Díky tomuto procesu jsem narazil na web [treeyo.my](https://treeyo.my/), který mi utkvěl v paměti svou minimalistickou podobou a nulovou optimalizací na pozornost diváka. Taky jsem zjistil, že ten web je opravdu okrajová část internetu, protože ho zatím neindexoval ani Google. Internet Archive na něj sice přišel, ale z CT logů, stejně jako já. Hledání se nakonec vyplatilo.
 
 **<NoTranslate>2026-05-06:</NoTranslate> VÝSTAVA V PACIFIKU**  
 
@@ -90,9 +113,32 @@ Důsledky téhle myšlenky mě baví si představovat. Když to vezmu s nadsázk
 
 Zkoušel jsem ho simulovat a technicky jsem splnil úkol. Nicméně zase tak zajímavý výsledek to nebyl. Podle mě taky proto, že pro pozorování nějakých zajímavých emergentních vlastnostií je potřeba větší výpočetní výkon (víc částic, víc času v simulaci, možná více dimenzí simulace) a hlubší analýza výstupu. 
 
+Aktualizace z 2026-08-22: Při procházení vygenerovaných světů jsem nakonec narazil na pozoruhodné samoorganizující se struktury. Jsou kulaté až oválné a vypadají trochu jako lipidové kapsle. Mají jasně ohraničený vnějšek a vnitřek, přičemž bariéra neboli „membrána“, která tvoří jejich vnějšek, je velmi stabilní, zatímco jejich vnitřek je pohyblivější. Tento seed jsem nastavil jako výchozí hodnotu v demu níže.
+
+Poznámka: vývoj systému, a tím i velikost těchto struktur, závisí na rozlišení zobrazení. Rychlost animace ovlivňuje jejich stabilitu, pravděpodobně kvůli numerické nepřesnosti při větších časových krocích. I když se struktury rozpadnou, například po zvýšení rychlosti animace, systém se nakonec znovu uspořádá a vytvoří nové.
+
+Tohle není něco, co jsem zamýšlel vytvořit. Vytvořil jsem jen systém s unikátními částicemi/interakcemi a tohle vzniklo jako emergentní jev. Paráda, najednou mám simulátor „lipidů“.
+
 Interaktivní demo: [koncepty-2026-07-30-system-s-unikatnimi-casticemi.html](/files/koncepty-2026-07-30-system-s-unikatnimi-casticemi.html)
 
 **<NoTranslate>2026-08-14:</NoTranslate> ODPADKY**  
 
 Co kdybych vyfotil úplně každý odpadek, který házím do koše? Dalo by se ho nafotit s měřítkem, odpadky pak oříznout od pozadí a v odpovídajících velikostních poměrech je poskládat do pravidelné mřížky. 
 
+**<NoTranslate>2026-08-22: 天天中彩票买</NoTranslate>**  
+
+Když jsem se s ChatGPT (v5.6 Sol) radil, jak nejjednodušeji popsat experiment OPTICKÝ RYTMUS PRÁCE NA POČÍTAČI (viz výše), automaticky ten chat nazvala „Popis programu <NoTranslate>天天中彩票买</NoTranslate>“. Přitom chat byl úplně nově založený jen kvůli popisu tomuhle experimentu. Samotný obsah programu, který jsem jí poslal byl naprosto normální. 
+
+Takže jsem se jí s tím rozhodl konfrontovat a napsal tohle:  
+
+„Proč jsi tenhle chat nazvala Popis programu <NoTranslate>天天中彩票买</NoTranslate>?“
+
+Její odpověď byla:  
+
+„Netuším. 😭 Ten znak „զ“ je arménské písmeno „za“, takže „Popis programu զ“ nedává v češtině vůbec žádný smysl.
+Názvy chatů se generují automaticky z počátku konverzace a tady se generátor titulku zjevně rozhodl přihodit náhodný znak z arménské abecedy. V obsahu konverzace pro něj nevidím žádný důvod.
+Takže ne, není to nějaká tajná značka pro program. Je to prostě „Popis programu“ + typografický vetřelec.“
+
+Po pár dalších interakcích jí došlo, že ne, není to arménština, ale čínština. Nicméně je vidět, že byla zprvu hodně zmatená. Myslím si, že string „<NoTranslate>天天中彩票买</NoTranslate>“ funguje trochu jako nechvalně známý token „<NoTranslate>SolidGoldMagikarp</NoTranslate>“. Netvrdím, že funguje stejně, ani nevím, jestli tokenizer řetězec „<NoTranslate>天天中彩票买</NoTranslate>“ reprezentuje jako jeden token. Nicméně se model při práci s ním chová trochu jako ChatGPT 3 s tokenem „<NoTranslate>SolidGoldMagikarp</NoTranslate>“. Taky není vyloučeno, že to nějak souvisí s její pamětí, protože ta sahá i mimo tento chat.
+
+Celý tento chat vyexportovaný jako PDF: [koncepty-2026-08-22-chatgpt-cely-chat.pdf](/files/koncepty-2026-08-22-chatgpt-cely-chat.pdf)

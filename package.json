@@ -36,7 +36,8 @@
     "build:arweave": "npm run build:web:strict && node scripts/make-arweave-build.mjs && npm run generate:integrity:arweave",
     "build:arweave:signed": "npm run build:arweave && npm run sign:build:arweave",
     "export:pdf": "python scripts/export-site-pdf.py",
-    "export:pdf:build": "python scripts/export-site-pdf.py --build-command \"npm run build:web:strict\""
+    "export:pdf:build": "python scripts/export-site-pdf.py --build-command \"npm run build:web:strict\"",
+    "export:pdf:metaweb": "python scripts/export-metaweb-pdf.py"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",

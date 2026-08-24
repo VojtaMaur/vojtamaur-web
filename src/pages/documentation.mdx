@@ -175,6 +175,7 @@ npm run generate:integrity:arweave
 npm run sign:build
 npm run sign:build:arweave
 npm run export:pdf
+npm run export:pdf:metaweb
 ```
 
 Meaning of the main scripts:
@@ -209,6 +210,7 @@ Meaning of the main scripts:
 - `npm run sign:build` – signs the existing `dist/SHA256SUMS.txt`, verifies the detached signature immediately, and updates the informational signing status and JSON metadata
 - `npm run sign:build:arweave` – performs the same explicit local signing step for `dist-arweave/`
 - `npm run export:pdf` – manually exports article pages from the finished `dist/` build to archival PDF files; this command is not part of the normal build pipeline
+- `npm run export:pdf:metaweb` – manually creates one archival PDF containing the bilingual metaweb article and its directly related preservation files; this command is not part of any build pipeline
 
 
 
@@ -1331,7 +1333,109 @@ The script detects the project root from its own location, so it can be launched
 
 This output is a compact preservation and reading layer, not a lossless replacement for the website, source repository, original media, or `ALL_POSTS.txt`. Text is deliberately very small, images are downsampled, interactive media is represented by links, and missing built assets cannot be embedded. The source files and normal build artifacts remain the authoritative complete versions.
 
-### 9.6.5 Gemini capsule and Gopher map generation
+### 9.6.5 Metaweb archival PDF export
+
+The project includes a dedicated manual exporter for the metaweb article and the preservation material linked from it:
+
+```text
+scripts/export-metaweb-pdf.py
+```
+
+The exporter reads the existing finished standard web build in `dist/`. It does not run Astro, regenerate integrity metadata, sign the build, or run automatically from any web, USB, Arweave, Gemini, or integrity build command. This preserves the exact relationship between the rendered English page and the identity files already present in the selected build.
+
+Before the first use, install the same Playwright and pypdf dependencies used by the normal PDF exporter:
+
+```bash
+python -m pip install -r requirements-pdf-export.txt
+python -m playwright install chromium
+```
+
+Run the export manually with:
+
+```bash
+npm run export:pdf:metaweb
+```
+
+Equivalently:
+
+```bash
+python scripts/export-metaweb-pdf.py
+```
+
+The default output is one PDF plus an adjacent JSON manifest:
+
+```text
+exports/vojtamaur-web-export-metaweb.pdf
+exports/vojtamaur-web-export-metaweb.manifest.json
+```
+
+The PDF contains:
+
+- a simple white bilingual title page with the article title, author, and public website, followed by a separate bilingual contents page
+- the Czech page `/metawebovy-clanek/`
+- the postprocessed English page `/en/metawebovy-clanek/`
+- a deduplicated appendix of every image linked from the article, with the physical archive ID and item name plus Czech and English descriptions derived from the corresponding article versions, the source filename, and public link
+- a bilingual explanatory page followed by `exports/vojtamaur-web-export-ultra.pdf`, the ultra-compact Czech export of every article with its images
+- `ARCHIVE.txt`
+- the complete rendered technical documentation at `/documentation/`
+- every file linked from the article section `INTEGRITA A IDENTITA BUILDU`, including the checksum manifest, detached signature when present, build checksum, JSON metadata, signing status, and public OpenPGP key
+
+The payloads of `ALL_POSTS.txt` and `source/vojtamaur-web-source.zip` are deliberately not appended or embedded. Their descriptions and public links remain visible inside both rendered article versions because they are part of the article itself.
+
+The physical archive registry is wider than an A4 page. During this export only, each table row is converted in the browser DOM into a labeled registry card. The card heading contains the ID and item name; the remaining table headers become field labels. This preserves every original cell and hyperlink while preventing the holder, location, access, and notes fields from being clipped. The website HTML and source MDX are not modified.
+
+The English postprocessed HTML can split the build-integrity link paragraph at invalid positions and expose stray Markdown backticks. For the PDF only, the exporter normalizes those same six links and their descriptions into a readable list. It does not edit the finished build or change any linked payload.
+
+The first page is a deliberately simple white bilingual title page. The generated timestamp, source build, section counts, notices, and outline are placed on a separate bilingual contents page. The image appendix is discovered from article links rather than a hardcoded filename list. The Czech and English pages point to the same images, so every image target is included only once while its card shows the shared archive item title and separate Czech and English article-derived descriptions. The exporter fails instead of silently creating a monolingual card if an image is missing from either article version. The article thumbnail is not included unless it is also linked from the article body. By default, three linked images are placed on each gallery page.
+
+The combined PDF expects the ultra export at:
+
+```text
+exports/vojtamaur-web-export-ultra.pdf
+```
+
+If that file does not exist, the metaweb exporter creates it automatically before rendering the combined document by running the equivalent of:
+
+```bash
+python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
+```
+
+An existing ultra PDF is reused unchanged. Immediately after the bilingual image appendix, the metaweb exporter inserts one generated bilingual introduction page. It identifies the embedded filename and explains that the following pages are an ultra-compact Czech export of every website article with its images. It also states the number of following ultra pages and that their intentionally dense multi-column layout serves as an archival overview. The complete pages of the standalone ultra PDF follow this introduction without being edited or overprinted.
+
+Useful options include:
+
+```bash
+python scripts/export-metaweb-pdf.py --images-per-page 2
+python scripts/export-metaweb-pdf.py --images-per-page 4
+python scripts/export-metaweb-pdf.py --output exports/metaweb-custom.pdf
+python scripts/export-metaweb-pdf.py --site-url https://example.com
+python scripts/export-metaweb-pdf.py --no-manifest
+```
+
+`ARCHIVE.txt`, checksums, JSON, signatures, and public-key material are rendered completely as wrapping monospace text. Long code blocks and URLs in the technical documentation are also wrapped for A4. The final PDF contains outline bookmarks and validates that no file payload was embedded.
+
+An unsigned build legitimately has no `SHA256SUMS.txt.asc`. If that optional link is present in the article but the file is absent from the selected build, the PDF includes an explicit absence notice rather than inventing signature content or failing the whole export. Other missing identity files and missing linked images are treated as build errors.
+
+The exporter writes a manifest describing page ranges, including the generated ultra introduction and the unchanged standalone ultra PDF as separate sections, source routes, bilingual linked-image descriptions and hashes, the included ultra PDF and its hash, identity-file hashes, the registry-card validation result, the final PDF hash, and the two deliberately excluded payloads. Use `--no-manifest` only when the adjacent machine-readable record is not wanted; that option also removes a stale adjacent manifest left by an earlier run.
+
+#### Run all manual exports on Windows
+
+The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the four manual exports sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy:
+
+```bat
+python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
+python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "C:\Program Files\gs\gs10.07.1\bin\gswin64c.exe"
+python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
+python scripts/export-metaweb-pdf.py
+```
+
+Run the complete workflow with:
+
+```bat
+export-all.bat
+```
+
+### 9.6.6 Gemini capsule and Gopher map generation
 
 The project generates a separate bilingual Gemini capsule and a Gopher-compatible map layer with:
 
@@ -2445,6 +2549,7 @@ Possible future directions for the project:
 - evaluation of emerging long-term archival media (e.g. [NanoFiche](https://nanofiche.com/)) as costs and availability improve
 - evaluation of future opportunities for inclusion in lunar cultural archives (e.g. the [Lunar Codex](https://www.lunarcodex.com/)), if suitable public submission pathways become available
 - evaluation of future opportunities for inclusion in space-based cultural archives (e.g. the [Arch Mission Foundation](https://www.archmission.org/)), if suitable public submission pathways become available
+- creation of a long-form, unedited audiovisual walkthrough of the entire website, with author commentary and additional context for individual works and sections
 
 ---
 

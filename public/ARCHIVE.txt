@@ -94,6 +94,9 @@ VIDEO SNAPSHOTS (YouTube-derived archival copies):
 	https://archive.org/details/vojtamaur-krasnoocka-hromnicke-jezirko-video
 	https://archive.org/details/vojtamaur-dva-rytmy-1-cerna-bila-zakladni-koncept
 	https://archive.org/details/vojtamaur-dva-rytmy-2-obrazovy-material
+	https://archive.org/details/masuria-poland-june-2026
+	https://archive.org/details/venice-15-august-2019
+	https://archive.org/details/venice-june-2026
 	
 FILE ARTIFACT SNAPSHOTS:
 	Arweave / ArDrive

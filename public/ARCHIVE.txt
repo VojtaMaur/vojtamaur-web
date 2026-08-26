@@ -52,8 +52,10 @@ COPIES OF GITHUB REPOSITORY:
 	https://archive.org/details/vojtamaur-web-complete-sourcebuildgit-2026-07
 	Permanent.org(archival ingest of repository)
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r9
+	Proton.me
+	https://drive.proton.me/urls/RF0E5CGBSM#uMPlGQv19eDX
 
-STATIC SNAPSHOTS (built output of the repository, reconstructable):
+STATIC SNAPSHOTS (built output of the repository):
 	GitHub Releases
 	https://github.com/VojtaMaur/vojtamaur-web/releases/
 	Zenodo
@@ -66,6 +68,9 @@ STATIC SNAPSHOTS (built output of the repository, reconstructable):
 	Permanent.org
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r7
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r8
+	Proton.me
+	https://drive.proton.me/urls/9MK543P588#Lz2xoUSJ9upD
+	https://drive.proton.me/urls/2HPKXJABCG#CnTLdNh55HA9
 	
 PYTHON CLI PACKAGE (distribution + embedded fallback snapshots):
 	PyPI
@@ -99,6 +104,18 @@ VIDEO SNAPSHOTS (YouTube-derived archival copies):
 	https://archive.org/details/masuria-poland-june-2026
 	https://archive.org/details/venice-15-august-2019
 	https://archive.org/details/venice-june-2026
+	https://archive.org/details/strucna-historie-zivota-na-zemi
+	https://archive.org/details/reportaz-kater-ina-sli-pkova-jan-samec-milan-maur
+	https://archive.org/details/katerina-slipkova-jan-samec-milan-maur
+	https://archive.org/details/milan-maur-nejiste-sekvence-deje-1.-dil-komentovane-prohlidky
+	https://archive.org/details/milan-maur-nejiste-sekvence-deje-2.-dil-komentovane-prohlidky
+	https://archive.org/details/milan-maur-projekty
+	https://archive.org/details/milan-maur-stiny-rastry-doteky
+	https://archive.org/details/milan-maur-tri-cesty-za-sluncem-moravska-galerie-v-brne
+	https://archive.org/details/milan-maurza-znamy-komentovana-online-prohlidka
+	https://archive.org/details/milan-maur-zaznamy
+	https://archive.org/details/milan-maur-znak-struktura-zivotni-prostor
+	https://archive.org/details/vaclav-malina-milan-maur-paralelni-roky
 	
 FILE ARTIFACT SNAPSHOTS:
 	Arweave / ArDrive
@@ -118,6 +135,8 @@ FILE ARTIFACT SNAPSHOTS:
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0006
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00rb
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00rd
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00re
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00rf
 	paste.rs (additional equivalent copies exist)
 	https://paste.rs/s1c6U
 	https://paste.rs/DHEs7
@@ -128,6 +147,9 @@ FILE ARTIFACT SNAPSHOTS:
 	https://drive.proton.me/urls/JTESD1FQX0#xs4RdNrb4puf
 	https://drive.proton.me/urls/SAWJ54KHQ8#Bgom5zhtJ3f5
 	https://drive.proton.me/urls/XSSNEPYP0C#5GNRUzLI77j1
+	https://drive.proton.me/urls/C7Y8YBGNYM#RCTVECZvOzhf
+	https://drive.proton.me/urls/29B884SVH8#p0hnzLEsiRBe
+	https://drive.proton.me/urls/NWWZVJX8W4#TgWNFf0QBv5Q
 	GitHub:
 	https://raw.githubusercontent.com/VojtaMaur/vojtamaur-web/0896fceee5cf9de4d0d3f49a77a3bd6b21ead9ce/public/ARCHIVE.txt
 	https://raw.githubusercontent.com/VojtaMaur/vojtamaur-web/main/public/images/kurt-godel-rat.jpg
@@ -725,3 +747,4 @@ PARTIAL SNAPSHOTS:
 	https://perma.cc/KTS7-GPSC
 	Webarchiv / National Library of the Czech Republic (Captures can be viewed at the National Library of the Czech Republic.)
 	https://wayback.webarchiv.cz/wayback/*/https://vojtamaur.cz/
+	

@@ -1356,6 +1356,26 @@ Run the export manually with:
 npm run export:pdf:metaweb
 ```
 
+There is no `generate:metaweb` npm script. The command above is the supported npm entry point for this manual export.
+
+All standard web and USB builds write to the same `dist/` directory, so the most recently run build determines its routing and link format. Do not run the metaweb exporter against `dist/` left by `build:usb`, `build:usb:translate:signed`, or another USB build variant. USB mode uses flat files such as `metawebovy-clanek.html` and rewrites links for `file://`, while the exporter expects the standard directory route `/metawebovy-clanek/`. A typical symptom of using USB output is `Page.evaluate: Error: Article content container not found.`
+
+Restore a standard translated and signed web build before exporting:
+
+```bash
+npm run build:web:translate:signed
+npm run export:pdf:metaweb
+```
+
+If the English translation cache is already complete and a new Gemini export is not required, the strict standard build can be used instead:
+
+```bash
+npm run build:web:strict:signed
+npm run export:pdf:metaweb
+```
+
+The metaweb exporter intentionally does not rebuild or change `dist/` by itself.
+
 Equivalently:
 
 ```bash
@@ -1435,6 +1455,8 @@ Run the complete workflow with:
 export-all.bat
 ```
 
+The batch file also reuses the current `dist/` and does not create a web build. If the last build was a USB variant, restore a standard web build before running `export-all.bat`.
+
 ### 9.6.6 Gemini capsule and Gopher map generation
 
 The project generates a separate bilingual Gemini capsule and a Gopher-compatible map layer with:
@@ -1456,7 +1478,9 @@ dist/
 dist-gemini/
 ```
 
-`generate:gemini` requires an existing finished `dist/` directory. It does not run Astro or the English translation postprocess by itself. For a complete build from source, use:
+`generate:gemini` requires an existing finished standard web build in `dist/`. It does not run Astro or the English translation postprocess by itself. Do not use it against `dist/` left by a USB build. Although the generator can locate both directory-style article files and flat `slug.html` files, USB postprocessing has already changed internal links and asset paths for `file://`. The Gemini command can therefore finish without an error while deriving incorrect web paths from that USB-specific HTML.
+
+For a complete build from source, use:
 
 ```bash
 npm run build:gemini
@@ -2235,6 +2259,29 @@ Check the end of the build log. If it contains `DEEPL_AUTH_KEY is not set` or an
 
 The problem is upload or caching, not translation. Upload the entire `dist/` directory again and force overwrite existing files. Avoid “skip if same size” and similar FTP shortcuts. Then test with a cache-busting URL parameter.
 
+#### Metaweb PDF export reports `Article content container not found`
+
+Check which build command last wrote to `dist/`. A preceding USB build, including `npm run build:usb:translate:signed`, leaves flat-file routes and `file://`-oriented links in that shared directory. The metaweb PDF exporter expects the standard web layout and cannot find the article at its directory route.
+
+Recreate the standard web build and then rerun the export:
+
+```bat
+npm run build:web:translate:signed
+npm run export:pdf:metaweb
+```
+
+If the translation cache is complete and strict mode is sufficient, `npm run build:web:strict:signed` can replace the first command. Do not use `npm run generate:metaweb`; that package script does not exist.
+
+#### Gemini was generated after a USB build
+
+Treat that `dist-gemini/` output as invalid even if `npm run generate:gemini` completed successfully. A USB build rewrites relative links for opening HTML directly from disk, but the Gemini converter resolves them as web links. Rebuild the capsule from a fresh standard web build:
+
+```bat
+npm run build:gemini
+```
+
+For a release that may also need to fill missing English translations and sign the standard web build, use `npm run build:web:translate:signed` instead; that workflow already generates `dist-gemini/`. Both commands replace the existing Gemini output, so it does not need to be deleted manually.
+
 ### 11.13 Publishing checklist
 
 Before uploading the web build to FTP:
@@ -2547,9 +2594,12 @@ Possible future directions for the project:
 - automatic translation of PDF exports, with automatic compression of the translated PDFs to reduce file size
 - a wiki with interconnected articles (e.g. `wiki.vojtamaur.cz`)
 - evaluation of emerging long-term archival media (e.g. [NanoFiche](https://nanofiche.com/)) as costs and availability improve
+- evaluation of 5D memory crystal storage, once the technology becomes more affordable and openly accessible
+- evaluation of DNA-of-Things storage embedded in physical artworks or materials, once the currently prohibitive cost of custom synthesis and production decreases
 - evaluation of future opportunities for inclusion in lunar cultural archives (e.g. the [Lunar Codex](https://www.lunarcodex.com/)), if suitable public submission pathways become available
 - evaluation of future opportunities for inclusion in space-based cultural archives (e.g. the [Arch Mission Foundation](https://www.archmission.org/)), if suitable public submission pathways become available
 - creation of a long-form, unedited audiovisual walkthrough of the entire website, with author commentary and additional context for individual works and sections
+- self-hosting a Tor Onion Service mirror (e.g. on a Raspberry Pi), exposing the same content from a single .onion address over multiple protocols, including HTTP/HTTPS, Gemini (gemini://...onion), Spartan (spartan://...onion), and Gopher (gopher://...onion)
 
 ---
 
@@ -2570,6 +2620,18 @@ This priority is especially useful for storage-constrained deposits such as Memo
 Some mirrors do not support automatic deployment from the canonical repository and therefore need to be updated manually. These currently include **ChatGPT Sites, Neocities, ArDrive / Arweave, Pollux.casa, and envs.net**.
 
 The ChatGPT Sites deployment does not update automatically when the canonical repository changes. To refresh it, ask ChatGPT in the Sites chat to load the current state of the canonical repository, save or build a new version, and deploy that version explicitly.
+
+The Vercel mirror requires this root-level `vercel.json`:
+
+```json
+{
+  "buildCommand": "npm run build:web",
+  "outputDirectory": "dist",
+  "framework": "astro"
+}
+```
+
+Without this override, Vercel's default Astro build may skip the post-build step that generates `ALL_POSTS.txt`.
 
 Codeberg Pages is also updated separately through `deploy-codeberg-pages.bat`; the complete worktree-based procedure is documented in section 12.2.2.
 

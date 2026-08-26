@@ -38,3 +38,6 @@ source/vojtamaur-web-source*.zip
 
 # generated filtered text exports
 exports/
+
+# Python bytecode cache
+__pycache__/

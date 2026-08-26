@@ -20,24 +20,22 @@ const hasEn = typeof pathForEn === "string" && pathForEn.length > 0;
     <div class="site-header__topline">
       <a href={home(lang)} class="site-header__title">{copy.siteTitle}</a>
 
-      <nav class="site-header__lang" aria-label={lang === "en" ? "Language" : "Jazyk"}>
-        <a
-          href={pathForCs}
-          class:list={["site-header__lang-link", { "is-active": lang === "cs" }]}
-          aria-current={lang === "cs" ? "page" : undefined}
-        >CS</a>
+      {hasEn && (
+        <nav class="site-header__lang" aria-label={lang === "en" ? "Language" : "Jazyk"}>
+          <a
+            href={pathForCs}
+            class:list={["site-header__lang-link", { "is-active": lang === "cs" }]}
+            aria-current={lang === "cs" ? "page" : undefined}
+          >CS</a>
 
-        {hasEn && (
-          <>
-            <span class="site-header__lang-separator" aria-hidden="true">/</span>
-            <a
-              href={pathForEn}
-              class:list={["site-header__lang-link", { "is-active": lang === "en" }]}
-              aria-current={lang === "en" ? "page" : undefined}
-            >EN</a>
-          </>
-        )}
-      </nav>
+          <span class="site-header__lang-separator" aria-hidden="true">/</span>
+          <a
+            href={pathForEn}
+            class:list={["site-header__lang-link", { "is-active": lang === "en" }]}
+            aria-current={lang === "en" ? "page" : undefined}
+          >EN</a>
+        </nav>
+      )}
     </div>
 
     <div class="site-header__motto">{copy.motto}</div>

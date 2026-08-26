@@ -201,7 +201,7 @@ Meaning of the main scripts:
 - `npm run build:usb:prune` – runs the strict portable build and deletes unused, unprotected English translation cache files
 - `npm run build:arweave` – creates the strict standard web build, creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths, and then writes separate unsigned build integrity metadata for `dist-arweave/`
 - `npm run build:arweave:signed` – runs the Arweave build and then signs and verifies `dist-arweave/SHA256SUMS.txt`
-- `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt`, a plain-text export of all article content from the finished build output
+- `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt`, a plain-text export of all article content from the finished build output, and embeds the same text into `dist/404.html`
 - `npm run generate:gemini` – replaces `dist-gemini/` with a freshly generated bilingual Gemini/Gopher text edition based on the existing finished `dist/` build and the post frontmatter
 - `npm run build:gemini` – runs the strict standard web build and then generates `dist-gemini/`; this is the standalone complete Gemini/Gopher text-edition build command
 - `npm run generate:source-bundle` – generates `dist/source/vojtamaur-web-source.zip`, a small reconstructable source package with a media manifest and an asset downloader
@@ -833,7 +833,7 @@ The export is produced by:
 scripts/generate-all-posts.mjs
 ```
 
-The script reads the finished static HTML from `dist/`, extracts the main article content, converts it into plain text, and writes the result to `dist/ALL_POSTS.txt`.
+The script reads the finished static HTML from `dist/`, extracts the main article content, converts it into plain text, writes the result to `dist/ALL_POSTS.txt`, and embeds the same generated text into the finished `dist/404.html` recovery page.
 
 This is intentionally generated from the built output rather than directly from the source `.mdx` files. The English version is created as a post-build static artifact by `scripts/en-postprocess.mjs`, so reading from `dist/` allows the export to include both Czech and English article versions.
 
@@ -864,6 +864,14 @@ Code blocks and generated output blocks are preserved as `[CODE BLOCK]` sections
 This prevents one unusually large generated block from making the entire text export difficult to read or process while still preserving a readable sample of the original block. The full version remains available in the rendered website, source repository, or static snapshots.
 
 The output file is written as UTF-8 with BOM to improve encoding detection in text editors and archival systems.
+
+#### Recovery 404 page
+
+The source template `src/pages/404.astro` turns the normal error page into a human-readable recovery interface. The explanatory text and recovery links appear first, followed by the complete visible content of `ARCHIVE.txt` and then the complete visible content of `ALL_POSTS.txt`. Nothing is hidden behind an expansion control, encoded as Base64, or fetched by client-side JavaScript.
+
+During the Astro phase, the page reads `public/ARCHIVE.txt` and renders its URL lines as real HTML links. After the article pages and English postprocess are complete, `scripts/generate-all-posts.mjs` generates `dist/ALL_POSTS.txt` and replaces the marked `<pre data-all-posts-embed>` content in `dist/404.html` with an HTML-escaped copy of the same text. This order ensures that the standalone file and the copy carried by the 404 page always come from the same build.
+
+The published page must still be served with the real HTTP status `404`; `404.html` is a custom response body, not a normal indexable success page. The separate `/ARCHIVE.txt`, `/ALL_POSTS.txt`, and `/metawebovy-clanek/` resources remain normal recovery entry points. The large text blocks are intentionally rendered in full, with ordinary HTTP compression left to the hosting server or CDN.
 
 #### Manual filtered and compact exports
 
@@ -2331,6 +2339,7 @@ The `dist/` directory contains the finished build intended for publishing.
 Important generated preservation and verification files include:
 
 ```text
+dist/404.html
 dist/ALL_POSTS.txt
 dist/SHA256SUMS.txt
 dist/BUILD_SHA256.txt

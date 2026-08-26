@@ -5,6 +5,7 @@ const ROOT = process.cwd();
 const CONTENT_DIR = path.join(ROOT, "src", "content", "posts");
 const DIST_DIR = path.join(ROOT, "dist");
 const OUTPUT_FILE = path.join(DIST_DIR, "ALL_POSTS.txt");
+const RECOVERY_PAGE = path.join(DIST_DIR, "404.html");
 
 const SITE_URL = "https://vojtamaur.cz";
 
@@ -17,6 +18,36 @@ function normalizeSlashes(value) {
 
 function stripBom(value) {
   return value.replace(/^\uFEFF/, "");
+}
+
+function escapeHtmlText(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+async function embedAllPostsInRecoveryPage(value) {
+  if (!(await exists(RECOVERY_PAGE))) {
+    console.warn("[404] dist/404.html not found; recovery page was not updated.");
+    return;
+  }
+
+  const html = await fs.readFile(RECOVERY_PAGE, "utf8");
+  const embedPattern = /(<pre\b(?=[^>]*\bdata-all-posts-embed\b)[^>]*>)[\s\S]*?(<\/pre>)/i;
+
+  if (!embedPattern.test(html)) {
+    throw new Error("dist/404.html does not contain the ALL_POSTS embed target.");
+  }
+
+  const updated = html.replace(
+    embedPattern,
+    (_match, openingTag, closingTag) =>
+      `${openingTag}${escapeHtmlText(value)}${closingTag}`,
+  );
+
+  await fs.writeFile(RECOVERY_PAGE, updated, "utf8");
+  console.log("[404] Embedded ALL_POSTS.txt in dist/404.html");
 }
 
 function parseFrontmatter(source) {
@@ -493,6 +524,7 @@ async function main() {
   const finalText = chunks.join("\n");
 
   await fs.writeFile(OUTPUT_FILE, "\uFEFF" + finalText, "utf8");
+  await embedAllPostsInRecoveryPage(finalText);
 
   console.log(`[ALL_POSTS] Written ${normalizeSlashes(path.relative(ROOT, OUTPUT_FILE))}`);
   console.log(`[ALL_POSTS] Source posts: ${posts.length}`);

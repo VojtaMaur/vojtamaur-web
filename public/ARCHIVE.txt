@@ -116,6 +116,10 @@ VIDEO SNAPSHOTS (YouTube-derived archival copies):
 	https://archive.org/details/milan-maur-zaznamy
 	https://archive.org/details/milan-maur-znak-struktura-zivotni-prostor
 	https://archive.org/details/vaclav-malina-milan-maur-paralelni-roky
+	https://archive.org/details/vernisaz-vystavy-milana-maura-veroniky-vlkove-a-jiriho-stanka
+	https://archive.org/details/martin-zet-beztridni-spolecnost
+	Proton.me
+	https://drive.proton.me/urls/EY8ZW7X138#tPWTCy2BmQdO
 	
 FILE ARTIFACT SNAPSHOTS:
 	Arweave / ArDrive

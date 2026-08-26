@@ -1,0 +1,208 @@
+---
+import fs from "node:fs/promises";
+import path from "node:path";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const archivePath = path.join(process.cwd(), "public", "ARCHIVE.txt");
+const archiveText = (await fs.readFile(archivePath, "utf8")).replace(/^\uFEFF/, "");
+
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function linkifyPlainText(value: string) {
+  const urlPattern = /(?:https?|gemini|gopher):\/\/[^\s<>"']+/g;
+  let html = "";
+  let lastIndex = 0;
+
+  for (const match of value.matchAll(urlPattern)) {
+    const index = match.index ?? 0;
+    const url = match[0];
+
+    html += escapeHtml(value.slice(lastIndex, index));
+    html += `<a href="${escapeHtml(url)}">${escapeHtml(url)}</a>`;
+    lastIndex = index + url.length;
+  }
+
+  return html + escapeHtml(value.slice(lastIndex));
+}
+
+const archiveHtml = linkifyPlainText(archiveText);
+---
+
+<BaseLayout
+  title="404 — stránka nebyla nalezena | Vojta Maur"
+  description="Záchranná stránka s archivní mapou a úplným textovým exportem webu Vojty Maura."
+  lang="cs"
+  canonicalPath="/404.html"
+  alternateCsPath="/404.html"
+  noindex={true}
+>
+  <main class="recovery-page">
+    <header class="recovery-intro">
+      <p class="recovery-code" aria-hidden="true">HTTP 404</p>
+      <h1>Stránka nebyla nalezena</h1>
+
+      <p class="recovery-lead">
+        Požadovaná adresa na tomto webu neexistuje. Obsah mohl být přesunut,
+        přejmenován nebo odstraněn.
+      </p>
+
+      <p>
+        Pokud hledáte konkrétní dílo nebo dřívější stránku, zkuste následující
+        záchranné cesty. Jestli zde obsah někdy existoval, může přežívat v
+        textovém exportu, na některém zrcadle nebo v některém z archivů.
+      </p>
+
+      <ul class="recovery-links">
+        <li>
+          <a href="/ARCHIVE.txt"><strong>ARCHIVE.txt</strong></a>
+          <span> — mapa archivů, zrcadel, repozitářů a dalších kopií webu</span>
+        </li>
+        <li>
+          <a href="/ALL_POSTS.txt"><strong>ALL_POSTS.txt</strong></a>
+          <span> — samostatný úplný textový export článků v češtině a angličtině</span>
+        </li>
+        <li>
+          <a href="/metawebovy-clanek/"><strong>Metawebový článek</strong></a>
+          <span> — historie webu, princip archivace a fyzické archivní exempláře</span>
+        </li>
+        <li>
+          <a href="/"><strong>Hlavní stránka</strong></a>
+          <span> — návrat na aktuální web</span>
+        </li>
+      </ul>
+
+      <p>
+        Úplný obsah souborů <code>ARCHIVE.txt</code> a <code>ALL_POSTS.txt</code>
+        je navíc zobrazen přímo níže. V dlouhém textu můžete hledat pomocí
+        vyhledávání v prohlížeči, obvykle klávesami <kbd>Ctrl</kbd> + <kbd>F</kbd>.
+      </p>
+
+      <p class="recovery-status">
+        Tato stránka záměrně zůstává technickou odpovědí HTTP 404, i když zároveň
+        poskytuje obsah lidem, crawlerům a dalším entitám.
+      </p>
+    </header>
+
+    <section class="recovery-section" aria-labelledby="archive-heading">
+      <h2 id="archive-heading">ARCHIVE.txt — archivní mapa</h2>
+      <p>
+        Níže je úplný obsah aktuálního souboru <a href="/ARCHIVE.txt">ARCHIVE.txt</a>.
+        Adresy jsou zároveň skutečné odkazy, aby je mohli následovat lidé i crawlery.
+      </p>
+      <pre class="recovery-dump recovery-dump--archive" set:html={archiveHtml}></pre>
+    </section>
+
+    <section class="recovery-section" aria-labelledby="all-posts-heading">
+      <h2 id="all-posts-heading">ALL_POSTS.txt — úplný textový archiv</h2>
+      <p>
+        Následuje celý obsah souboru <a href="/ALL_POSTS.txt">ALL_POSTS.txt</a>
+        vytvořeného při stejném sestavení webu. Obsahuje texty článků v češtině
+        i angličtině spolu se základními metadaty. Obrazová, zvuková, interaktivní
+        a další netextová média jsou v exportu popsána odkazy nebo zástupnými záznamy.
+      </p>
+      <pre class="recovery-dump recovery-dump--all-posts" data-all-posts-embed>ALL_POSTS.txt se sem vloží při produkčním sestavení webu.</pre>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .recovery-page {
+    padding: 1.5rem 0 4rem;
+  }
+
+  .recovery-intro {
+    max-width: 780px;
+  }
+
+  .recovery-code {
+    margin: 0 0 0.25rem;
+    color: var(--muted);
+    font-family: monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+  }
+
+  h1,
+  h2 {
+    line-height: 1.2;
+  }
+
+  h1 {
+    margin: 0 0 1rem;
+    font-size: 2rem;
+  }
+
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.5rem;
+  }
+
+  .recovery-lead {
+    font-size: 1.1rem;
+  }
+
+  .recovery-links {
+    margin: 1.5rem 0;
+    padding-left: 1.25rem;
+  }
+
+  .recovery-links li + li {
+    margin-top: 0.55rem;
+  }
+
+  .recovery-links a,
+  .recovery-section a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .recovery-status {
+    margin-top: 1.5rem;
+    padding: 0.8rem 1rem;
+    border-left: 3px solid var(--border);
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  .recovery-section {
+    margin-top: 3rem;
+  }
+
+  .recovery-dump {
+    width: 100%;
+    margin: 1rem 0 0;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    background: #f7f7f7;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .recovery-dump--archive a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  kbd,
+  code {
+    font-family: Consolas, "Courier New", monospace;
+  }
+
+  kbd {
+    padding: 0.08rem 0.3rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: #f7f7f7;
+    font-size: 0.9em;
+  }
+</style>

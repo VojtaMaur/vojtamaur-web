@@ -364,7 +364,7 @@ Thumbnails are used in article listings, on the homepage, and in individual sect
 
 ### 6.3.1 Public asset metadata and privacy
 
-Files stored in `public/` are copied into the build output unchanged. This includes images in `public/images/` and downloadable or embeddable files in `public/files/`. Embedded metadata in these files must therefore be treated as public data once the files are committed and published.
+Files stored in `public/` are copied into the build output unchanged during the Astro phase. This includes images in `public/images/` and downloadable or embeddable files in `public/files/`. The later source-bundle step intentionally replaces only `dist/images/kurt-godel-rat.jpg` with a JPEG/ZIP carrier, while retaining the complete original public JPEG as its byte-for-byte prefix. Its embedded metadata therefore remains unchanged. Embedded metadata in all public files must be treated as public data once the files are committed and published.
 
 This applies especially to:
 
@@ -1106,7 +1106,7 @@ scripts/generate-source-bundle.mjs
 
 This source package is not a full copy of the generated website and it is not intended to duplicate all media files inside the ZIP. It is a compact reconstruction layer: it contains the project source, content, build scripts, `package.json`, `package-lock.json` when available, Astro configuration, selected small files from `public/`, and the files required to reconstruct omitted media.
 
-Large or externally useful media assets from `public/images/` and `public/files/` are omitted from the ZIP and described in `MEDIA_MANIFEST.json` and `MEDIA_SHA256SUMS.txt`. The generated `download-assets.py` script can then restore them from the configured mirrors and verify them using SHA-256.
+Large or externally useful media assets from `public/images/` and `public/files/` are omitted from the ZIP and described in `MEDIA_MANIFEST.json` and `MEDIA_SHA256SUMS.txt`. The generated `download-assets.py` script can then restore them from the configured mirrors and verify them using SHA-256. The clean base file `public/images/kurt-godel-rat.jpg` is the intentional exception: it is bundled directly and listed in the manifest's `bundledPublicFiles` field.
 
 The `public/demos/` directory is bundled directly into the source ZIP rather than restored through the asset downloader. The demo files are small enough to include, and their HTML can differ between source, web output, USB output, and static mirrors after path rewriting or deployment-specific postprocessing. Treating them as downloadable checksum assets would create false hash mismatches.
 
@@ -1130,7 +1130,19 @@ npm run build:usb
 
 The downloader first checks local candidate paths when possible, then uses the configured public mirrors. Files are accepted only when their SHA-256 hash matches the manifest. Hash mismatches are reported and rejected by default rather than silently written into `public/`.
 
-The source package is generated before the final integrity pass. Therefore `SHA256SUMS.txt` includes the source ZIP as part of the final published or portable build artifact.
+After writing the standalone source package, the same generator also creates a JPEG/ZIP archival carrier at:
+
+```text
+dist/images/kurt-godel-rat.jpg
+```
+
+The generator always reads the clean carrier base from `public/images/kurt-godel-rat.jpg`. Its complete JPEG byte stream, including all six redundant copies of the archival text in JPEG Comment, EXIF, Windows XP and XMP metadata fields, is written unchanged as the output prefix. The source-package ZIP is then written after the JPEG EOI marker with offsets that remain valid for strict ZIP readers. The image is never decoded, recompressed or passed through a metadata editor.
+
+The clean carrier base is included directly in the source package and excluded from the external asset list. This breaks the otherwise unavoidable hash cycle in which a source ZIP would need to contain the final hash of the JPEG that contains that same ZIP. It also makes generation idempotent: every run starts from the clean `public/` JPEG instead of appending another archive to the previous `dist/` result.
+
+ZIP-aware tools such as 7-Zip can open the published `.jpg` directly. Tools that require a `.zip` suffix can operate on a copied or renamed `kurt-godel-rat.zip`. Ordinary image software continues to read the same JPEG image and ignores the archive data after EOI.
+
+The source package and JPEG/ZIP carrier are generated before the final integrity pass. Therefore `SHA256SUMS.txt` includes both artifacts as part of the final published or portable build.
 
 ### 9.6.3 Manual PDF export
 
@@ -2597,7 +2609,6 @@ Where the source text genuinely contains separate paragraphs, replacing `<br>` w
 
 Possible future directions for the project:
 
-- extending the documentation with content workflow instructions for another editor
 - translation of image alt texts
 - adding alt texts to photographs in the Travel section
 - automatic translation of PDF exports, with automatic compression of the translated PDFs to reduce file size
@@ -2609,6 +2620,9 @@ Possible future directions for the project:
 - evaluation of future opportunities for inclusion in space-based cultural archives (e.g. the [Arch Mission Foundation](https://www.archmission.org/)), if suitable public submission pathways become available
 - creation of a long-form, unedited audiovisual walkthrough of the entire website, with author commentary and additional context for individual works and sections
 - self-hosting a Tor Onion Service mirror (e.g. on a Raspberry Pi), exposing the same content from a single .onion address over multiple protocols, including HTTP/HTTPS, Gemini (gemini://...onion), Spartan (spartan://...onion), and Gopher (gopher://...onion)
+- automation of Internet Archive Wayback Machine snapshots (Save Page Now), systematically submitting website pages and public mirrors for archival capture instead of relying on manual submissions
+- evaluation of embedding ARCHIVE.txt and/or ALL_POSTS.txt data invisibly within each generated HTML page, allowing individual archived page snapshots to carry a redundant copy of the website's textual archive without affecting the visible page content
+- evaluation of embedding ARCHIVE.txt data within robots.txt, taking advantage of the file's frequent retrieval and preservation by web crawlers to provide an additional redundant copy of the website's textual archive
 
 ---
 

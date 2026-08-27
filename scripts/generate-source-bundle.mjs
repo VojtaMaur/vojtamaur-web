@@ -7,6 +7,17 @@ const ROOT = process.cwd();
 const TARGET_DIR = path.resolve(process.argv[2] ?? "dist");
 const OUTPUT_RELATIVE = "source/vojtamaur-web-source.zip";
 const OUTPUT_PATH = path.join(TARGET_DIR, ...OUTPUT_RELATIVE.split("/"));
+const CARRIER_SOURCE_RELATIVE = "public/images/kurt-godel-rat.jpg";
+const CARRIER_OUTPUT_RELATIVE = "images/kurt-godel-rat.jpg";
+const CARRIER_SOURCE_PATH = path.join(ROOT, ...CARRIER_SOURCE_RELATIVE.split("/"));
+const CARRIER_OUTPUT_PATH = path.join(TARGET_DIR, ...CARRIER_OUTPUT_RELATIVE.split("/"));
+const CARRIER_SOURCE_SHA256 = "c126fd28f83894b167c66ac2515c8d677c49d97acbc77f7212b15cbcace4d8a4";
+
+// The clean carrier must be reconstructable without downloading the final
+// polyglot, whose hash would depend on the ZIP that contains the manifest.
+const BUNDLED_PUBLIC_FILES = new Set([
+  CARRIER_SOURCE_RELATIVE,
+]);
 
 const ASSET_DIRS = [
   "public/images",
@@ -42,6 +53,7 @@ const EXCLUDED_ROOT_DIRS = new Set([
   ".vscode",
   "dist",
   "dist-arweave",
+  "dist-gemini",
   "exports",
   "node_modules",
   "source-bundle",
@@ -92,6 +104,14 @@ const ZIP_FIXED_DATE = (1 << 5) | 1; // 1980-01-01
 function toPosix(filePath) {
   return filePath.split(path.sep).join("/");
 }
+
+const TARGET_RELATIVE_FROM_ROOT = toPosix(path.relative(ROOT, TARGET_DIR));
+const TARGET_IS_INSIDE_ROOT = (
+  TARGET_RELATIVE_FROM_ROOT !== "" &&
+  TARGET_RELATIVE_FROM_ROOT !== "." &&
+  !TARGET_RELATIVE_FROM_ROOT.startsWith("../") &&
+  !path.isAbsolute(TARGET_RELATIVE_FROM_ROOT)
+);
 
 function normalizeRel(filePath) {
   return toPosix(path.relative(ROOT, filePath));
@@ -146,6 +166,16 @@ function isAssetPath(relativePath) {
 
 function shouldExclude(relativePath) {
   if (!relativePath || relativePath === ".") return true;
+
+  if (
+    TARGET_IS_INSIDE_ROOT &&
+    (
+      relativePath === TARGET_RELATIVE_FROM_ROOT ||
+      relativePath.startsWith(`${TARGET_RELATIVE_FROM_ROOT}/`)
+    )
+  ) {
+    return true;
+  }
 
   const parts = relativePath.split("/");
   const first = parts[0];
@@ -239,6 +269,10 @@ async function buildAssetManifest() {
   const shaLines = [];
 
   for (const file of files) {
+    if (BUNDLED_PUBLIC_FILES.has(file.relativePath)) {
+      continue;
+    }
+
     const data = await fs.readFile(file.absolutePath);
     const hash = sha256(data);
     const stat = await fs.stat(file.absolutePath);
@@ -262,6 +296,7 @@ async function buildAssetManifest() {
     minimumPython: "3.9",
     assetDirectories: ASSET_DIRS,
     bundledPublicDirectories: BUNDLED_PUBLIC_DIRS,
+    bundledPublicFiles: [...BUNDLED_PUBLIC_FILES].sort(),
     mirrors: MIRROR_BASES,
     files: manifestFiles,
   };
@@ -284,6 +319,19 @@ async function collectZipEntries() {
     entries.push({
       zipPath: file.zipPath,
       data: await fs.readFile(file.absolutePath),
+    });
+  }
+
+  for (const relativePath of [...BUNDLED_PUBLIC_FILES].sort()) {
+    const absolutePath = path.join(ROOT, ...relativePath.split("/"));
+
+    if (!await exists(absolutePath)) {
+      throw new Error(`Missing bundled public file: ${relativePath}`);
+    }
+
+    entries.push({
+      zipPath: relativePath,
+      data: await fs.readFile(absolutePath),
     });
   }
 
@@ -370,15 +418,28 @@ function u32(value) {
   return buffer;
 }
 
-async function writeZip(zipPath, entries) {
+async function writeZip(zipPath, entries, { prefix = Buffer.alloc(0) } = {}) {
+  const archivePrefix = Buffer.isBuffer(prefix) ? prefix : Buffer.from(prefix);
+
+  if (archivePrefix.length > 0xffffffff) {
+    throw new Error("ZIP prefix is too large for non-ZIP64 offsets.");
+  }
+
   await fs.mkdir(path.dirname(zipPath), { recursive: true });
   await fs.rm(zipPath, { force: true });
 
   const handle = await fs.open(zipPath, "w");
   const centralDirectory = [];
-  let offset = 0;
+  // ZIP offsets are relative to the complete file, including an optional
+  // self-extracting-style prefix. Strict readers therefore find local headers
+  // even when the archive follows the JPEG EOI marker.
+  let offset = archivePrefix.length;
 
   try {
+    if (archivePrefix.length > 0) {
+      await handle.write(archivePrefix);
+    }
+
     for (const entry of entries) {
       const name = Buffer.from(entry.zipPath, "utf8");
       const uncompressed = Buffer.isBuffer(entry.data) ? entry.data : Buffer.from(entry.data);
@@ -465,22 +526,87 @@ async function writeZip(zipPath, entries) {
   }
 }
 
+async function readJpegCarrierBase() {
+  const jpeg = await fs.readFile(CARRIER_SOURCE_PATH);
+
+  if (jpeg.length < 4 || jpeg[0] !== 0xff || jpeg[1] !== 0xd8) {
+    throw new Error(`${CARRIER_SOURCE_RELATIVE} is not a JPEG file.`);
+  }
+
+  if (jpeg.at(-2) !== 0xff || jpeg.at(-1) !== 0xd9) {
+    throw new Error(
+      `${CARRIER_SOURCE_RELATIVE} must be the clean JPEG base ending at EOI; ` +
+      "do not replace it with a previously generated polyglot."
+    );
+  }
+
+  const actualHash = sha256(jpeg);
+  if (actualHash !== CARRIER_SOURCE_SHA256) {
+    throw new Error(
+      `${CARRIER_SOURCE_RELATIVE} changed (expected SHA-256 ${CARRIER_SOURCE_SHA256}, ` +
+      `got ${actualHash}). Verify its six archival metadata copies before ` +
+      "updating CARRIER_SOURCE_SHA256."
+    );
+  }
+
+  return jpeg;
+}
+
+function isPathWithin(parentPath, candidatePath) {
+  const relativePath = path.relative(path.resolve(parentPath), path.resolve(candidatePath));
+
+  return (
+    relativePath === "" ||
+    (
+      relativePath !== ".." &&
+      !relativePath.startsWith(`..${path.sep}`) &&
+      !path.isAbsolute(relativePath)
+    )
+  );
+}
+
+function validateTargetPaths() {
+  if (path.relative(ROOT, TARGET_DIR) === "") {
+    throw new Error("Build target must not be the project root.");
+  }
+
+  const publicDir = path.join(ROOT, "public");
+  if (isPathWithin(publicDir, TARGET_DIR)) {
+    throw new Error("Build target must not be public/ or one of its subdirectories.");
+  }
+
+  if (path.relative(CARRIER_SOURCE_PATH, CARRIER_OUTPUT_PATH) === "") {
+    throw new Error("JPEG carrier output must not overwrite its clean public/ source.");
+  }
+}
+
 async function main() {
+  validateTargetPaths();
+
   if (!await exists(TARGET_DIR)) {
     throw new Error(`Build target does not exist: ${TARGET_DIR}`);
   }
 
   const { entries, assetManifest } = await collectZipEntries();
+  const jpegCarrierBase = await readJpegCarrierBase();
 
   await writeZip(OUTPUT_PATH, entries);
+  await writeZip(CARRIER_OUTPUT_PATH, entries, { prefix: jpegCarrierBase });
 
-  const stat = await fs.stat(OUTPUT_PATH);
+  const [zipStat, carrierStat] = await Promise.all([
+    fs.stat(OUTPUT_PATH),
+    fs.stat(CARRIER_OUTPUT_PATH),
+  ]);
 
   console.log(`[source-bundle] ${OUTPUT_RELATIVE}`);
   console.log(`[source-bundle] ${entries.length} files in ZIP`);
   console.log(`[source-bundle] ${assetManifest.fileCount} external asset files`);
   console.log(`[source-bundle] ${assetManifest.totalBytes} external asset bytes`);
-  console.log(`[source-bundle] ${stat.size} ZIP bytes`);
+  console.log(`[source-bundle] ${zipStat.size} ZIP bytes`);
+  console.log(
+    `[source-bundle] ${CARRIER_OUTPUT_RELATIVE}: ` +
+    `${jpegCarrierBase.length} JPEG bytes + ${carrierStat.size - jpegCarrierBase.length} ZIP bytes`
+  );
 }
 
 main().catch((error) => {

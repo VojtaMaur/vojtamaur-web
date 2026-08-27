@@ -65,6 +65,7 @@ STATIC SNAPSHOTS (built output of the repository):
 	Internet Archive
 	https://archive.org/details/vojtamaur-2026-04
 	https://archive.org/details/vojtamaur-2026-05
+	https://archive.org/details/vojtamaur-2026-08-git-mirror
 	Permanent.org
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r7
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r8

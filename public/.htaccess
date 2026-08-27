@@ -1,5 +1,7 @@
 RewriteEngine On
 
+ErrorDocument 404 /404.html
+
 # HTTPS redirect
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

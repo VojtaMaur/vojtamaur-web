@@ -6,7 +6,7 @@ set "PYTHONUTF8=1"
 pushd "%~dp0" || exit /b 1
 
 echo.
-echo [1/4] Compact English Free Creation text export
+echo [1/6] Compact English Free Creation text export
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -14,7 +14,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/4] Standard archival PDF export
+echo [2/6] Standard archival PDF export
 python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "C:\Program Files\gs\gs10.07.1\bin\gswin64c.exe"
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -22,7 +22,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/4] Ultra-compact Czech PDF export
+echo [3/6] Ultra-compact Czech PDF export
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -30,8 +30,24 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/4] Metaweb archival PDF export
+echo [4/6] Metaweb archival PDF export
 python scripts/export-metaweb-pdf.py
+if errorlevel 1 (
+    set "EXPORT_EXIT=!ERRORLEVEL!"
+    goto :failed
+)
+
+echo.
+echo [5/6] Compact bilingual Metaweb EPUB export
+python scripts/export-metaweb-epub.py --image-quality compact
+if errorlevel 1 (
+    set "EXPORT_EXIT=!ERRORLEVEL!"
+    goto :failed
+)
+
+echo.
+echo [6/6] Compact Czech and English site EPUB exports
+python scripts/export-site-epub.py --lang both --image-quality compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
     goto :failed

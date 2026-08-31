@@ -174,6 +174,8 @@ npm run generate:integrity
 npm run generate:integrity:arweave
 npm run sign:build
 npm run sign:build:arweave
+npm run export:epub
+npm run export:epub:metaweb
 npm run export:pdf
 npm run export:pdf:metaweb
 ```
@@ -209,6 +211,8 @@ Meaning of the main scripts:
 - `npm run generate:integrity:arweave` – performs the same integrity pass for `dist-arweave/` after the Arweave copy-and-rewrite step
 - `npm run sign:build` – signs the existing `dist/SHA256SUMS.txt`, verifies the detached signature immediately, and updates the informational signing status and JSON metadata
 - `npm run sign:build:arweave` – performs the same explicit local signing step for `dist-arweave/`
+- `npm run export:epub` – manually creates separate Czech and English reflowable EPUB books from the finished article pages in `dist/`, including a generated title/index section; this command is not part of the normal build pipeline
+- `npm run export:epub:metaweb` – manually creates one bilingual Metaweb EPUB with both article languages, its image appendix, archive map, technical documentation, and build identity files; this command is not part of any build pipeline
 - `npm run export:pdf` – manually exports article pages from the finished `dist/` build to archival PDF files; this command is not part of the normal build pipeline
 - `npm run export:pdf:metaweb` – manually creates one archival PDF containing the bilingual metaweb article and its directly related preservation files; this command is not part of any build pipeline
 
@@ -1184,7 +1188,7 @@ The default export:
 - creates one combined A4 PDF
 - adds a generated cover and article index
 - adds PDF outline entries for the included pages
-- writes `pdf-export-manifest.json` with article metadata, output file sizes, and SHA-256 hashes
+- writes `vojtamaur-web-export-pdf.manifest.json` with article metadata, output file sizes, and SHA-256 hashes
 
 The generated files are written to:
 
@@ -1460,13 +1464,15 @@ The exporter writes a manifest describing page ranges, including the generated u
 
 #### Run all manual exports on Windows
 
-The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the four manual exports sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy:
+The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the six manual exports sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow then creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs:
 
 ```bat
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
 python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "C:\Program Files\gs\gs10.07.1\bin\gswin64c.exe"
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
 python scripts/export-metaweb-pdf.py
+python scripts/export-metaweb-epub.py --image-quality compact
+python scripts/export-site-epub.py --lang both --image-quality compact
 ```
 
 Run the complete workflow with:
@@ -1477,7 +1483,147 @@ export-all.bat
 
 The batch file also reuses the current `dist/` and does not create a web build. If the last build was a USB variant, restore a standard web build before running `export-all.bat`.
 
-### 9.6.6 Gemini capsule and Gopher map generation
+### 9.6.6 Manual EPUB exports
+
+The project includes two manual reflowable EPUB exporters:
+
+```text
+scripts/export-site-epub.py
+scripts/export-metaweb-epub.py
+```
+
+Both exporters read the finished HTML and assets from `dist/`. They do not convert the source MDX directly. This preserves the postprocessed English pages and makes the EPUB content reflect the selected finished build. The exporters support both normal directory routes such as `dist/article/index.html` and portable flat routes such as `dist/article.html`.
+
+Install their Python dependencies once. Pillow 11.3 or newer is required so
+that any AVIF image discovered in a finished build can be decoded and converted
+to an EPUB core image format:
+
+```bash
+python -m pip install -r requirements-epub-export.txt
+```
+
+The general site exporter also reads article selection metadata from the generated `dist/ALL_POSTS.txt`. Its default command is:
+
+```bash
+npm run export:epub
+```
+
+The default `--lang both` selection intentionally creates two independent publications:
+
+```text
+exports/vojtamaur-web-export-all-cs.epub
+exports/vojtamaur-web-export-all-en.epub
+exports/vojtamaur-web-export-epub.manifest.json
+```
+
+It does not combine the Czech and English website editions into one bilingual book. Language and section selection follow the normal PDF exporter:
+
+```bash
+python scripts/export-site-epub.py --lang cs
+python scripts/export-site-epub.py --lang en
+python scripts/export-site-epub.py --lang both
+python scripts/export-site-epub.py --section cestovani
+python scripts/export-site-epub.py --section volna-tvorba,vystavy
+python scripts/export-site-epub.py --lang cs --section cestovani
+python scripts/export-site-epub.py --separate
+```
+
+Each combined publication begins with a visible generated title/frontmatter and reflowable article index. It contains the same export metadata, limitations, language status, article dates, sections, titles, and built routes as the generated index in the normal site PDF. The routes are internal links to the corresponding EPUB chapters. This is an export index, not a copy of the website homepage. Pass `--no-cover` only when this frontmatter is not wanted.
+
+`--section` can be repeated or comma-separated. `--separate` creates one EPUB per article under `exports/<language>/<section>/`; like the PDF exporter, these single-article files do not receive the combined export index. A custom `--output` can be used only for a combined single-language export, because `--lang both` always has two output files.
+
+As with the PDF exporter, a build command is run only when explicitly requested:
+
+```bash
+python scripts/export-site-epub.py --build-command "npm run build:web:strict"
+```
+
+Each book keeps the existing article order and content structure. The technical EPUB transformation:
+
+- adds the generated title/frontmatter and linked article index as the first spine document in combined mode
+- places every article in its own XHTML spine document with the correct `lang` and `xml:lang`
+- generates EPUB 3 package metadata, manifest, spine, navigation document, and stable reflowable CSS
+- embeds and deduplicates local JPEG, PNG, GIF, SVG, and WebP resources used by article images or direct image links; local AVIF is converted to JPEG or PNG because AVIF is not an EPUB core image format
+- rewrites links between included articles to internal EPUB links
+- keeps downloads, PDFs, demos, and other non-image payloads as public `https://vojtamaur.cz/` links
+- replaces iframes and other interactive embeds with labelled public links because a non-scripted reflowable EPUB cannot preserve their runtime
+- removes empty built image placeholders that have no source
+
+The exporter can reduce image size without changing article structure. The default preserves the exact source bytes of EPUB-core image formats; AVIF is the intentional exception and is always converted to JPEG or PNG:
+
+```text
+--image-quality archive
+```
+
+Other presets are:
+
+```text
+printer   maximum side 2400 px, JPEG quality 90
+ebook     maximum side 1600 px, JPEG quality 82
+screen    maximum side 1200 px, JPEG quality 72
+compact   maximum side 800 px, JPEG quality 60, static GIF poster frames
+```
+
+For example:
+
+```bash
+python scripts/export-site-epub.py --image-quality ebook
+python scripts/export-site-epub.py --image-quality compact
+python scripts/export-site-epub.py --lang both --image-quality compact
+python scripts/export-site-epub.py --lang cs --image-max-px 1400 --jpeg-quality 78
+```
+
+The third command is the recommended practical complete-site export. It creates separate Czech and English EPUB files with compact images. Because the plain `compact` preset favors the smallest practical files, animated GIFs are represented by static first-frame posters; add `--gif-mode preserve` only when retaining their animation is more important than output size.
+
+`--image-max-px` and `--jpeg-quality` override the selected preset. JPEG files are downscaled and recompressed; PNG files are downscaled losslessly when necessary. The `archive`, `printer`, `ebook`, and `screen` presets preserve animated GIF and SVG resources unchanged. The deliberately lossy `compact` preset converts opaque PNG files to JPEG and, unless overridden, animated GIF files to static first-frame PNG posters. These two decisions can be controlled independently with `--png-mode preserve|jpeg` and `--gif-mode preserve|poster`. Preserved animated GIF files retain their original bytes and therefore remain the main size limit. The JSON manifest records the selected and actually used JPEG quality, original and packaged image byte counts, the number of optimized images, interactive fallbacks, and removed empty placeholders. The Metaweb manifest also records separate source and packaged byte sizes and SHA-256 hashes for every asset, so a converted or optimized file is never described by the hash of a different representation.
+
+The dedicated Metaweb EPUB remains one bilingual publication:
+
+```bash
+npm run export:epub:metaweb
+```
+
+Its default outputs are:
+
+```text
+exports/vojtamaur-web-export-metaweb.epub
+exports/vojtamaur-web-export-metaweb.manifest.json
+```
+
+The Metaweb EPUB follows the semantic section order of `export-metaweb-pdf.py`:
+
+1. bilingual title page
+2. bilingual contents and export notes
+3. Czech Metaweb article
+4. English Metaweb article
+5. a visible bilingual image appendix with every locally linked physical-archive image, its Czech and English descriptions, filename, and source URL
+6. the complete `ARCHIVE.txt` payload
+7. the complete rendered technical documentation from `/documentation/`
+8. every file discovered in the article's build identity and integrity section, each as a text appendix with source URL, byte size, SHA-256, and full payload
+
+The publication metadata declares both `cs` and `en`. Both Metaweb article chapters keep their own language and heading IDs. Their wide physical archive tables are converted to reflowable record cards while preserving every cell and link, all `<details>` blocks are opened, and the malformed English integrity paragraph is normalized to the same six-item list used by the PDF exporter.
+
+The PDF's embedded `vojtamaur-web-export-ultra.pdf` is intentionally not inserted into the EPUB and is not replaced by expanded article chapters. The dense standalone PDF remains a separate publication artifact; the Metaweb EPUB contains no substitute for that section.
+
+As in the PDF exporter, the `ALL_POSTS.txt` and `source/vojtamaur-web-source.zip` payloads are deliberately not appended; their mentions and public links remain in the article. A missing optional `SHA256SUMS.txt.asc` in an unsigned build receives an explicit explanatory appendix instead of invented content.
+
+The Metaweb exporter supports the same image controls. The first command below is the recommended practical Metaweb export:
+
+```bash
+python scripts/export-metaweb-epub.py --image-quality compact
+python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
+python scripts/export-metaweb-epub.py --image-quality ebook
+python scripts/export-metaweb-epub.py --output exports/metaweb-custom.epub
+python scripts/export-metaweb-epub.py --no-manifest
+```
+
+The recommended command uses static first-frame posters for animated GIFs to keep the otherwise complete bilingual Metaweb publication compact. Add `--gif-mode preserve` when animation is required.
+
+The Metaweb EPUB therefore remains focused on the Metaweb material and its direct archival appendices instead of duplicating the complete website corpus.
+
+Every generated book is validated before it replaces the destination file. When the site exporter creates multiple books, all uniquely named candidates are completed first; a conversion failure changes none of the requested outputs, and a handled failure during installation restores the previous set. JSON manifests are likewise written through unique temporary files and atomically replaced. The built-in validator checks the ZIP/mimetype rules, container and package documents, required metadata, correctly namespaced MathML and inline SVG properties, manifest, spine, navigation item, XML/XHTML well-formedness, duplicate IDs, and all packaged local references. The Metaweb exporter additionally verifies its section counts, visible image count, and deliberate payload exclusions before replacing an existing output. This does not replace a final EPUBCheck run when the external Java validator is available, but malformed or structurally incomplete output is rejected locally.
+
+### 9.6.7 Gemini capsule and Gopher map generation
 
 The project generates a separate bilingual Gemini capsule and a Gopher-compatible map layer with:
 
@@ -2623,6 +2769,7 @@ Possible future directions for the project:
 - automation of Internet Archive Wayback Machine snapshots (Save Page Now), systematically submitting website pages and public mirrors for archival capture instead of relying on manual submissions
 - evaluation of embedding ARCHIVE.txt and/or ALL_POSTS.txt data invisibly within each generated HTML page, allowing individual archived page snapshots to carry a redundant copy of the website's textual archive without affecting the visible page content
 - evaluation of embedding ARCHIVE.txt data within robots.txt, taking advantage of the file's frequent retrieval and preservation by web crawlers to provide an additional redundant copy of the website's textual archive
+- evaluation of [FOREVER](https://www.forever.com/) as an additional long-term digital preservation service, complementing the existing use of [Permanent.org](https://www.permanent.org/) and providing further redundancy through an independent archival provider
 
 ---
 

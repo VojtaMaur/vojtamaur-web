@@ -35,6 +35,9 @@
     "build:usb:prune": "set \"EN_PRUNE_CACHE=1\" && node scripts/build-usb-strict.mjs",
     "build:arweave": "npm run build:web:strict && node scripts/make-arweave-build.mjs && npm run generate:integrity:arweave",
     "build:arweave:signed": "npm run build:arweave && npm run sign:build:arweave",
+    "export:epub": "python scripts/export-site-epub.py",
+    "export:epub:build": "python scripts/export-site-epub.py --build-command \"npm run build:web:strict\"",
+    "export:epub:metaweb": "python scripts/export-metaweb-epub.py",
     "export:pdf": "python scripts/export-site-pdf.py",
     "export:pdf:build": "python scripts/export-site-pdf.py --build-command \"npm run build:web:strict\"",
     "export:pdf:metaweb": "python scripts/export-metaweb-pdf.py"

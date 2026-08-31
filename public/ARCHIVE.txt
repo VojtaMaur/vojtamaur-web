@@ -50,6 +50,7 @@ COPIES OF GITHUB REPOSITORY:
 	Internet archive (archival ingest of repository)
 	https://archive.org/details/vojtamaur-web-source-2026-05
 	https://archive.org/details/vojtamaur-web-complete-sourcebuildgit-2026-07
+	https://archive.org/details/vojtamaur-2026-08-git-mirror
 	Permanent.org(archival ingest of repository)
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r9
 	Proton.me
@@ -65,7 +66,6 @@ STATIC SNAPSHOTS (built output of the repository):
 	Internet Archive
 	https://archive.org/details/vojtamaur-2026-04
 	https://archive.org/details/vojtamaur-2026-05
-	https://archive.org/details/vojtamaur-2026-08-git-mirror
 	Permanent.org
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r7
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r8
@@ -119,6 +119,7 @@ VIDEO SNAPSHOTS (YouTube-derived archival copies):
 	https://archive.org/details/vaclav-malina-milan-maur-paralelni-roky
 	https://archive.org/details/vernisaz-vystavy-milana-maura-veroniky-vlkove-a-jiriho-stanka
 	https://archive.org/details/martin-zet-beztridni-spolecnost
+	https://archive.org/details/vojtamaur-video-archive-2026-08-27
 	Proton.me
 	https://drive.proton.me/urls/EY8ZW7X138#tPWTCy2BmQdO
 	

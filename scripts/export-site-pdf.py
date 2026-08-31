@@ -68,7 +68,8 @@ TRANSLATION_LABELS = {
 SECTION_ORDER = ["volna-tvorba", "vystavy", "cestovani"]
 VALID_LANGS = {"cs", "en"}
 DEFAULT_SITE_URL = "https://vojtamaur.cz"
-SCRIPT_VERSION = "3.2.1-public-media-links"
+SCRIPT_VERSION = "3.2.2-manifest-name"
+MANIFEST_NAME = "vojtamaur-web-export-pdf.manifest.json"
 
 
 @dataclasses.dataclass(frozen=True)
@@ -217,7 +218,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--no-manifest",
         action="store_true",
-        help="Do not write pdf-export-manifest.json.",
+        help=f"Do not write {MANIFEST_NAME}.",
     )
     parser.add_argument(
         "--title",
@@ -1447,8 +1448,8 @@ def main() -> int:
         server.shutdown()
         server.server_close()
 
+    manifest_path = output_dir / MANIFEST_NAME
     if not args.no_manifest:
-        manifest_path = output_dir / "pdf-export-manifest.json"
         write_manifest(manifest_path, args, jobs, outputs, project_root, dist_dir)
         outputs.append(manifest_path)
 

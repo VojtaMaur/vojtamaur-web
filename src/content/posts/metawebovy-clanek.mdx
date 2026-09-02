@@ -23,7 +23,7 @@ Projekt je rozložený napříč více nezávislými systémy: repozitáři, arc
 
 Cílem je zajistit, aby bylo možné obsah rekonstruovat i v případě, že některé části původní infrastruktury přestanou existovat.
 
-## VSTUPNÍ BODY
+## ONLINE ARCHIVNÍ VRSTVA
 
 Tyto odkazy představují stejný projekt uložený v různých systémech a v různých podobách.
 
@@ -31,7 +31,7 @@ Zahrnují kanonický zdrojový repozitář, jeho kopie a kompletní statické sn
 
 Projekt existuje také jako Python CLI balíček distribuovaný přes GitHub a PyPI, včetně vložených fallback snapshotů vybraných textových artefaktů.  
 
-Digitální archivace tohoto webu tak využívá kromě vlastní domény také služby GitHub, GitLab, Codeberg, Neocities, Cloudflare, Netlify, Vercel, Firebase, ChatGPT Sites, Arweave, Pollux.casa (Gemini), envs.net (Gemini + Gopher), Software Heritage, Internet Archive, Webarchiv, Zenodo, Figshare, Permanent.org, Proton.me, PyPI, Perma.cc, archive.today, Ghost Archive, Arquivo.pt, Megalodon / Web Gyotaku a paste.rs.  
+Digitální archivace tohoto webu tak využívá kromě vlastní domény také služby GitHub, GitLab, Codeberg, Neocities, Cloudflare, Netlify, Vercel, Firebase, ChatGPT Sites, Arweave, Pollux.casa (Gemini), envs.net (Gemini + Gopher), Software Heritage, Internet Archive, Webarchiv, Zenodo, Figshare, Permanent.org, Proton.me, Catbox, PyPI, Perma.cc, archive.today, Ghost Archive, Arquivo.pt, Megalodon / Web Gyotaku a paste.rs.  
 
 <EntryPoints />
 
@@ -70,15 +70,23 @@ SHA-256 ověřuje, zda se soubory buildu nezměnily. OpenPGP podpis navíc umož
 
 Ne každý deployment musí být podepsaný. Podepsaný build musí obsahovat soubor `SHA256SUMS.txt.asc` a jeho podpis se musí úspěšně ověřit. Samotné tvrzení v `integrity.json` nebo `SIGNING_STATUS.txt` není důkazem platného podpisu; tyto soubory jsou pouze informativní.
 
-## TEXTOVÝ EXPORT VŠECH ČLÁNKŮ  
+## EXPORTY
 
-Plain-text export všech článků generovaný při buildu webu. Obsahuje textový obsah příspěvků v lineární podobě bez závislosti na CSS, JavaScriptu nebo konkrétní webové technologii. Slouží jako minimální archivní vrstva pro indexaci, offline čtení, fulltextové vyhledávání a dlouhodobou rekonstruovatelnost obsahu i v případě částečného rozpadu původní struktury webu. Textový export je vhodný i pro velké jazykové modely.  
+Web při každém buildu generuje plain-text export všech článků. Obsahuje textový obsah příspěvků v lineární podobě bez závislosti na CSS, JavaScriptu nebo konkrétní webové technologii. Slouží jako minimální archivní vrstva pro indexaci, offline čtení, fulltextové vyhledávání a dlouhodobou rekonstruovatelnost obsahu i v případě částečného rozpadu původní struktury webu. Textový export je vhodný i pro velké jazykové modely.
 
 [Zobrazit textový export všech článků (ALL_POSTS.txt)](/ALL_POSTS.txt)
 
-## FYZICKÁ ARCHIVNÍ VRSTVA
+Obsah webu je možné exportovat také do PDF, které zachovává jeho obsah v podobě vhodné pro čtení, tisk a dlouhodobou archivaci nezávislou na samotném webu. Podrobnosti o způsobu generování a struktuře exportu jsou uvedeny v technické dokumentaci výše.
 
-Vybrané části obsahu webu existují také na samostatných fyzických archivních nosičích. Patří sem tištěné analogové exempláře i přenosná datová média. Jednotlivé nosiče se liší způsobem čtení, technickými závislostmi, správou, dostupností a očekávanou životností. Některé jsou přímo čitelné bez elektronického zařízení, zatímco jiné vyžadují kompatibilní hardware, software nebo zprostředkování archivní institucí.
+Obdobně je vytvářen také EPUB export, určený především pro elektronické čtečky a další software pracující s elektronickými knihami. Oproti PDF používá přizpůsobivý tok textu a představuje další reprezentaci obsahu webu.
+
+Vedle strojově generovaných exportů existuje také přibližně šestihodinový verbální export webu z 29. srpna 2026, ve kterém postupně procházím, čtu a vlastními slovy komentuji jeho obsah. Záznam tak kromě samotných textů zachycuje také dodatečný kontext, vzpomínky, vysvětlení a informace, které nejsou přímo součástí webu.  
+
+[Přehrát verbální export webu (YouTube)](https://www.youtube-nocookie.com/embed/xOdeVAuI-Wc)
+
+## OFFLINE ARCHIVNÍ VRSTVA
+
+Vybrané části obsahu webu existují také na samostatných fyzických archivních nosičích, které jsou běžně fyzicky oddělené od síťové infrastruktury a tvoří tak air-gapped archivní vrstvu. Patří sem tištěné analogové exempláře i přenosná datová média. Jednotlivé nosiče se liší způsobem čtení, technickými závislostmi, správou, dostupností a očekávanou životností. Některé jsou přímo čitelné bez elektronického zařízení, zatímco jiné vyžadují kompatibilní hardware, software nebo zprostředkování archivní institucí.
 
 Každý řádek následujícího registru označuje jeden konkrétní fyzický exemplář.
 

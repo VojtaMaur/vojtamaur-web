@@ -1569,11 +1569,11 @@ For example:
 ```bash
 python scripts/export-site-epub.py --image-quality ebook
 python scripts/export-site-epub.py --image-quality compact
-python scripts/export-site-epub.py --lang both --image-quality compact
+python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
 python scripts/export-site-epub.py --lang cs --image-max-px 1400 --jpeg-quality 78
 ```
 
-The third command is the recommended practical complete-site export. It creates separate Czech and English EPUB files with compact images. Because the plain `compact` preset favors the smallest practical files, animated GIFs are represented by static first-frame posters; add `--gif-mode preserve` only when retaining their animation is more important than output size.
+The third command is the recommended practical complete-site export. It creates separate Czech and English EPUB files with compact still images while preserving animated GIFs. Use plain `--image-quality compact` only when the smallest practical files are more important than GIF animation.
 
 `--image-max-px` and `--jpeg-quality` override the selected preset. JPEG files are downscaled and recompressed; PNG files are downscaled losslessly when necessary. The `archive`, `printer`, `ebook`, and `screen` presets preserve animated GIF and SVG resources unchanged. The deliberately lossy `compact` preset converts opaque PNG files to JPEG and, unless overridden, animated GIF files to static first-frame PNG posters. These two decisions can be controlled independently with `--png-mode preserve|jpeg` and `--gif-mode preserve|poster`. Preserved animated GIF files retain their original bytes and therefore remain the main size limit. The JSON manifest records the selected and actually used JPEG quality, original and packaged image byte counts, the number of optimized images, interactive fallbacks, and removed empty placeholders. The Metaweb manifest also records separate source and packaged byte sizes and SHA-256 hashes for every asset, so a converted or optimized file is never described by the hash of a different representation.
 
@@ -1610,14 +1610,14 @@ As in the PDF exporter, the `ALL_POSTS.txt` and `source/vojtamaur-web-source.zip
 The Metaweb exporter supports the same image controls. The first command below is the recommended practical Metaweb export:
 
 ```bash
-python scripts/export-metaweb-epub.py --image-quality compact
 python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
+python scripts/export-metaweb-epub.py --image-quality compact
 python scripts/export-metaweb-epub.py --image-quality ebook
 python scripts/export-metaweb-epub.py --output exports/metaweb-custom.epub
 python scripts/export-metaweb-epub.py --no-manifest
 ```
 
-The recommended command uses static first-frame posters for animated GIFs to keep the otherwise complete bilingual Metaweb publication compact. Add `--gif-mode preserve` when animation is required.
+The recommended command keeps animated GIFs intact while applying the compact preset to still images. Use plain `--image-quality compact` only when static first-frame posters are acceptable in exchange for a smaller EPUB.
 
 The Metaweb EPUB therefore remains focused on the Metaweb material and its direct archival appendices instead of duplicating the complete website corpus.
 
@@ -2759,12 +2759,13 @@ Possible future directions for the project:
 - adding alt texts to photographs in the Travel section
 - automatic translation of PDF exports, with automatic compression of the translated PDFs to reduce file size
 - a wiki with interconnected articles (e.g. `wiki.vojtamaur.cz`)
+- restructuring of the homepage biographical content by replacing the current formal “About me” text with a shorter, more informal introduction, while providing a separate detailed curriculum vitae as a linked PDF document
+- evaluation of custom perforated boards manufactured by JLCPCB as a passive, punch-card-like physical storage medium, encoding binary data as a regular pattern of through-holes, with development of a self-describing format and optical decoding method using backlighting and conventional cameras or scanners
 - evaluation of emerging long-term archival media (e.g. [NanoFiche](https://nanofiche.com/)) as costs and availability improve
 - evaluation of 5D memory crystal storage, once the technology becomes more affordable and openly accessible
 - evaluation of DNA-of-Things storage embedded in physical artworks or materials, once the currently prohibitive cost of custom synthesis and production decreases
 - evaluation of future opportunities for inclusion in lunar cultural archives (e.g. the [Lunar Codex](https://www.lunarcodex.com/)), if suitable public submission pathways become available
 - evaluation of future opportunities for inclusion in space-based cultural archives (e.g. the [Arch Mission Foundation](https://www.archmission.org/)), if suitable public submission pathways become available
-- creation of a long-form, unedited audiovisual walkthrough of the entire website, with author commentary and additional context for individual works and sections
 - self-hosting a Tor Onion Service mirror (e.g. on a Raspberry Pi), exposing the same content from a single .onion address over multiple protocols, including HTTP/HTTPS, Gemini (gemini://...onion), Spartan (spartan://...onion), and Gopher (gopher://...onion)
 - automation of Internet Archive Wayback Machine snapshots (Save Page Now), systematically submitting website pages and public mirrors for archival capture instead of relying on manual submissions
 - evaluation of embedding ARCHIVE.txt and/or ALL_POSTS.txt data invisibly within each generated HTML page, allowing individual archived page snapshots to carry a redundant copy of the website's textual archive without affecting the visible page content

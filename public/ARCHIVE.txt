@@ -136,6 +136,9 @@ FILE ARTIFACT SNAPSHOTS:
 	Internet Archive
 	https://archive.org/details/all-posts
 	https://archive.org/details/vojtamaur-web-export-all-cs-en-2026-07-10
+	https://archive.org/details/vojtamaur-cz-all-posts-epub-export-cs
+	https://archive.org/details/vojtamaur-cz-all-posts-epub-export-en
+	https://archive.org/details/vojtamaur-web-export-metaweb-2026-08
 	Permanent.org
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0007
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0006
@@ -143,6 +146,9 @@ FILE ARTIFACT SNAPSHOTS:
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00rd
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00re
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00rf
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00rg
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00rh
+	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00ri
 	paste.rs (additional equivalent copies exist)
 	https://paste.rs/s1c6U
 	https://paste.rs/DHEs7
@@ -156,9 +162,21 @@ FILE ARTIFACT SNAPSHOTS:
 	https://drive.proton.me/urls/C7Y8YBGNYM#RCTVECZvOzhf
 	https://drive.proton.me/urls/29B884SVH8#p0hnzLEsiRBe
 	https://drive.proton.me/urls/NWWZVJX8W4#TgWNFf0QBv5Q
-	GitHub:
-	https://raw.githubusercontent.com/VojtaMaur/vojtamaur-web/0896fceee5cf9de4d0d3f49a77a3bd6b21ead9ce/public/ARCHIVE.txt
-	https://raw.githubusercontent.com/VojtaMaur/vojtamaur-web/main/public/images/kurt-godel-rat.jpg
+	https://drive.proton.me/urls/V3S7ECR2VG#9OJ8ti7D7CIw
+	https://drive.proton.me/urls/TT23CVS910#OU2FTpzCaG4i
+	Catbox
+	https://files.catbox.moe/10gopt.txt
+	https://files.catbox.moe/ftuhz2.txt
+	https://files.catbox.moe/f2dyeg.pdf
+	https://files.catbox.moe/b4il58.pdf
+	https://files.catbox.moe/hfrfks.pdf
+	https://files.catbox.moe/rw0jjg.epub
+	https://files.catbox.moe/pi1l4t.epub
+	https://files.catbox.moe/unm3su.epub
+	https://files.catbox.moe/1rz04v.zip
+	https://files.catbox.moe/ayecii.zip
+	https://files.catbox.moe/g6yb72.zip
+	https://files.catbox.moe/6nyysp.zip
 	
 PARTIAL SNAPSHOTS:
 	Internet Archive (additional snapshots may exist)

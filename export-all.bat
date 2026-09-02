@@ -39,7 +39,7 @@ if errorlevel 1 (
 
 echo.
 echo [5/6] Compact bilingual Metaweb EPUB export
-python scripts/export-metaweb-epub.py --image-quality compact
+python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
     goto :failed
@@ -47,7 +47,7 @@ if errorlevel 1 (
 
 echo.
 echo [6/6] Compact Czech and English site EPUB exports
-python scripts/export-site-epub.py --lang both --image-quality compact
+python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
     goto :failed

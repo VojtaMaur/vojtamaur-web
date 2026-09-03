@@ -1,0 +1,36 @@
+﻿POKYNY PRO ZACHOVÁNÍ
+
+České znění je původní. Anglický překlad následuje níže.
+
+Hlavním cílem tohoto archivu je další přežití informací obsažených na webu. Jeho konkrétní formát, médium, umístění, doména, podoba a dostupnost současným čtenářům jsou druhořadé, pokud informace přežijí v informačně ekvivalentní podobě.
+
+Dokud je původní autor schopen projekt spravovat, třetí strany mohou vytvářet a šířit věrné archivní kopie, neměly by však měnit jejich obsah ani vydávat pozměněné verze za pokračování původního webu. Pokud původní autor zemře nebo se stane trvale neschopným projekt spravovat, může kdokoliv archiv nezávisle uchovávat, zrcadlit, migrovat a konzervativně udržovat. Není vyžadován žádný výhradní nástupce ani centrální autorita.
+
+Taková údržba by měla zachovat význam a informační obsah existujících materiálů. Je třeba se vyvarovat zásadního přepisování, reinterpretace nebo odstraňování. Technické opravy jsou přípustné, pokud obnovují přístup ke stejné informaci — například nahrazení nefunkčního odkazu na YouTube odkazem na archivní kopii stejného videa v Internet Archive. Opravy, migrace a pozdější doplnění by měly být zdokumentovány a vše, co nepochází od původního autora, musí být jasně odlišeno od původního obsahu.
+
+Kryptografické podpisy původního autora a jeho veřejný klíč musí být zachovány, aby bylo možné nadále ověřovat historicky podepsané verze. Po smrti původního autora nebo poté, co se stane trvale neschopným projekt spravovat, nesmí být jeho klíč použit k podepisování nových verzí. Budoucí správci mohou nové nebo upravené verze podepisovat vlastními klíči a sami za sebe, případně je mohou zveřejnit bez podpisu, pokud je tato skutečnost jasně uvedena. Nové podpisy nesmějí být vydávány za podpis, souhlas nebo pokračující autoritu původního autora.
+
+Pokud se úplné zachování stane nemožným, je lepší uchovat důležité fragmenty než informace zcela ztratit. Neúplné nebo informačně neekvivalentní kopie by měly být jako takové označeny.
+
+Vojta Maur
+Vydáno: 3. září 2026
+Verze: 1
+
+
+PRESERVATION INSTRUCTIONS
+
+The Czech text is the original version. The English translation follows below.
+
+The primary objective of this archive is the continued survival of the information contained in the website. Its particular format, medium, location, domain, presentation, and availability to contemporary readers are secondary, provided that the information survives in an equivalent form.
+
+While the original author remains capable of maintaining the project, third parties may create and distribute faithful archival copies, but should not modify their content or present altered versions as continuations of the original website. If the original author dies or becomes permanently unable to maintain the project, anyone may independently preserve, mirror, migrate, and conservatively maintain the archive. No exclusive successor or central authority is required.
+
+Such maintenance should preserve the meaning and informational content of the existing material. Substantial rewriting, reinterpretation, or removal should be avoided. Technical repairs are permitted when they restore access to the same information—for example, replacing a dead YouTube link with a link to an archived copy of the same video on the Internet Archive. Repairs, migrations, and later additions should be documented, and anything not originating from the original author must be clearly distinguished from the original content.
+
+The original author's cryptographic signatures and public key must be preserved so that historically signed versions can continue to be verified. After the original author dies or becomes permanently unable to maintain the project, the author's key must not be used to sign new versions. Future maintainers may sign new or modified versions with their own keys and in their own names, or publish them unsigned if this is clearly stated. New signatures must not be represented as the signature, approval, or continuing authority of the original author.
+
+If complete preservation becomes impossible, preserving important fragments is preferable to losing the information entirely. Incomplete or informationally non-equivalent copies should be identified as such.
+
+Vojta Maur
+Issued: 3 September 2026
+Version: 1

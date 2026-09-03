@@ -177,6 +177,58 @@ FILE ARTIFACT SNAPSHOTS:
 	https://files.catbox.moe/ayecii.zip
 	https://files.catbox.moe/g6yb72.zip
 	https://files.catbox.moe/6nyysp.zip
+	CYX Share
+	https://share.cyx.su/LYNP.zip
+	https://share.cyx.su/notO.pdf
+	https://share.cyx.su/7FPp.pdf
+	https://share.cyx.su/f7U6.pdf
+	https://share.cyx.su/fLd7.epub
+	https://share.cyx.su/dpr5.epub
+	https://share.cyx.su/EP1M.epub
+	https://share.cyx.su/tZDy.txt
+	https://share.cyx.su/26bH.txt
+	Ocen Share
+	https://s.ocen.uk/vojtamaur_cz-build-gemini-2026-09-02_kdQGy.zip
+	https://s.ocen.uk/ALL_POSTS_Zx6c8.txt
+	https://s.ocen.uk/ARCHIVE_pJ0wq.txt
+	https://s.ocen.uk/vojtamaur-web-export-all-cs-en_my3OR.pdf
+	https://s.ocen.uk/vojtamaur-web-export-metaweb_4vWiZ.pdf
+	https://s.ocen.uk/vojtamaur-web-export-ultra_KO0QZ.pdf
+	https://s.ocen.uk/vojtamaur-web-export-all-cs_iSOgt.zip
+	https://s.ocen.uk/vojtamaur-web-export-all-en_lvcP6.zip
+	https://s.ocen.uk/vojtamaur-web-export-metaweb_RKlAJ.zip
+	Node 616
+	https://616169.xyz/6da48e871077.zip
+	https://616169.xyz/3f3a60f95a5f.txt
+	https://616169.xyz/1dbdfe7a1dab.txt
+	https://616169.xyz/2338703a2f9f.pdf
+	https://616169.xyz/6dcb1b94d88c.pdf
+	https://616169.xyz/cbb65c74d61c.pdf
+	https://616169.xyz/febefeecd949.zip
+	pOne.Rs
+	https://u.pone.rs/zkwplvgl.txt
+	https://u.pone.rs/efojmrrk.txt
+	https://u.pone.rs/preazimj.pdf
+	https://u.pone.rs/xvoigdad.pdf
+	https://u.pone.rs/scoeyyba.pdf
+	https://u.pone.rs/qiateeze.epub
+	https://u.pone.rs/ozlmzpwa.epub
+	https://u.pone.rs/ekpcxtms.epub
+	https://u.pone.rs/wnjjypxg.zip
+	https://u.pone.rs/failqdjq.zip
+	https://u.pone.rs/enesizgh.zip
+	kappa.lol
+	https://kappa.lol/3fkcMd.txt
+	https://kappa.lol/8pjmxm.txt
+	https://kappa.lol/9QGjl3.zip
+	https://kappa.lol/Z90fd5.pdf
+	https://kappa.lol/iJO2bh.pdf
+	https://kappa.lol/nOy1Ut.pdf
+	https://kappa.lol/t6rsDM.epub
+	https://kappa.lol/nbvVpJ.epub
+	https://kappa.lol/Rwwxhk.epub
+	Lulu
+	https://www.lulu.com/shop/vojta-maur/metawebov%C3%BD-%C4%8Dl%C3%A1nek-metaweb-article/ebook/product-je8nwn7.html
 	
 PARTIAL SNAPSHOTS:
 	Internet Archive (additional snapshots may exist)

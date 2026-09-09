@@ -227,8 +227,22 @@ FILE ARTIFACT SNAPSHOTS:
 	https://kappa.lol/t6rsDM.epub
 	https://kappa.lol/nbvVpJ.epub
 	https://kappa.lol/Rwwxhk.epub
+	File Garden
+	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/vojtamaur.cz-build-gemini-2026-09-08.zip
+	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/ALL_POSTS.txt
+	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/ARCHIVE.txt
+	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/vojtamaur-web-export-all-cs-en.pdf
+	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/vojtamaur-web-export-metaweb.pdf
+	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/vojtamaur-web-export-ultra.pdf
+	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/vojtamaur-web-export-all-cs.epub
+	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/vojtamaur-web-export-all-en.epub
+	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/vojtamaur-web-export-metaweb.epub
 	Lulu
 	https://www.lulu.com/shop/vojta-maur/metawebov%C3%BD-%C4%8Dl%C3%A1nek-metaweb-article/ebook/product-je8nwn7.html
+	https://www.lulu.com/shop/vojta-maur/vojtamaurcz-kompletn%C3%AD-export-webu/ebook/product-45emd7y.html
+	https://www.lulu.com/shop/vojta-maur/vojtamaurcz-complete-website-export/ebook/product-2mg5n2p.html
+	Kobo
+	https://www.kobo.com/cz/cs/ebook/vojta-maur-tvorba
 	
 PARTIAL SNAPSHOTS:
 	Internet Archive (additional snapshots may exist)
@@ -539,6 +553,9 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260806114812/https://vojtamaur.cz/vystavy-stavebni-pozemky-1/
 	https://web.archive.org/web/20260811111443/https://vojtamaur.vojtam.chatgpt.site/
 	https://web.archive.org/web/20260818044335/https://vojtamaur.envs.net/
+	https://web.archive.org/web/20260904055954/https://vojtamaur.cz/documentation/
+	https://web.archive.org/web/20260904064920/https://vojtamaur.cz/metawebovy-clanek/
+	https://web.archive.org/web/20260904064924/https://vojtamaur.cz/en/metawebovy-clanek/
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/

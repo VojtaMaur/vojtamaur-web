@@ -178,6 +178,7 @@ npm run export:epub
 npm run export:epub:metaweb
 npm run export:pdf
 npm run export:pdf:metaweb
+npm run export:sstv
 ```
 
 Meaning of the main scripts:
@@ -215,6 +216,7 @@ Meaning of the main scripts:
 - `npm run export:epub:metaweb` – manually creates one bilingual Metaweb EPUB with both article languages, its image appendix, archive map, technical documentation, and build identity files; this command is not part of any build pipeline
 - `npm run export:pdf` – manually exports article pages from the finished `dist/` build to archival PDF files; this command is not part of the normal build pipeline
 - `npm run export:pdf:metaweb` – manually creates one archival PDF containing the bilingual metaweb article and its directly related preservation files; this command is not part of any build pipeline
+- `npm run export:sstv` – manually renders indexed articles from the finished `dist/` build to numbered PNG frames at native SSTV mode dimensions; defaults to Czech PD120 output under `exports/sstv/pd120/`, does not run a build or generate audio, and is not part of any build pipeline (section 9.6.8)
 
 
 
@@ -1483,6 +1485,8 @@ export-all.bat
 
 The batch file also reuses the current `dist/` and does not create a web build. If the last build was a USB variant, restore a standard web build before running `export-all.bat`.
 
+The manual SSTV PNG export is run separately with `npm run export:sstv`; it is not included in `export-all.bat` (section 9.6.8).
+
 ### 9.6.6 Manual EPUB exports
 
 The project includes two manual reflowable EPUB exporters:
@@ -1760,6 +1764,293 @@ Available command-line overrides are:
 ```
 
 Because `dist-gemini/` is outside `dist/`, the existing web integrity and signing commands do not cover it. Even when the capsule is produced during `build:web:translate:signed`, the resulting detached signature authenticates only `dist/SHA256SUMS.txt`. A separate checksum or signing workflow for `dist-gemini/` has not been implemented. This applies to both the Gemini files and the generated Gopher map layer.
+
+### 9.6.8 Manual SSTV PNG export
+
+The project includes a separate manual exporter for an SSTV (Slow-Scan Television) edition of its articles:
+
+```text
+scripts/export-site-sstv.py
+requirements-sstv-export.txt
+```
+
+It creates numbered RGB PNG pages at the native resolution of the selected standard SSTV mode. Each PNG represents one complete frame. The exporter is started explicitly with `npm run export:sstv`; it is not called by any normal web, USB, Arweave, or Gemini build, or by `export-all.bat`.
+
+#### Setup and build-before-export workflow
+
+Install the Python dependencies once. Chromium is used to rasterize local SVG images and can reuse the installation already needed by the PDF exporters:
+
+```bash
+python -m pip install -r requirements-sstv-export.txt
+python -m playwright install chromium
+```
+
+Run the export commands from the repository root. The exporter reads article selection metadata from `dist/ALL_POSTS.txt`, then takes the full article text and media from the corresponding finished HTML and local assets in `dist/`. It does not use the shortened text representation in `ALL_POSTS.txt` as the article body and does not render the source `.mdx` directly. This also preserves the English content produced by the translation postprocess.
+
+**After editing an article, a media component, or a source image, rebuild the website before exporting again.** Running only `npm run export:sstv` reuses the existing `dist/`, including any old content or broken image references still present there. The exporter never starts a build or refreshes translations itself.
+
+For a Czech export, or when the existing English translation cache is sufficient:
+
+```bash
+npm run build:web
+npm run export:sstv
+```
+
+The usual translating and signing workflow can also be used:
+
+```bash
+npm run build:web:translate:signed
+npm run export:sstv
+```
+
+The second workflow fills missing translations and signs the web build. Signing is not required to generate SSTV PNGs, and the web signature does not cover the separate SSTV export directory. If `dist/` already contains the desired finished build, only the export command is needed. For the shared PDF, EPUB, and SSTV workflow, use a standard web build; the SSTV exporter itself can also resolve directory routes and flat USB article routes.
+
+#### Mode, language, and preview selection
+
+The default command exports all indexed Czech articles from all article sections, using PD120:
+
+```bash
+npm run export:sstv
+```
+
+The following mode choices are implemented:
+
+| `--mode` | Native PNG dimensions | Aspect ratio |
+|---|---|---|
+| `pd120` (default) | 640 × 496 px | 40:31 |
+| `pd180` | 640 × 496 px | 40:31 |
+| `pd240` | 640 × 496 px | 40:31 |
+| `pd290` | 800 × 616 px | 100:77 |
+
+`--mode pd290` changes the PNG raster to 800 × 616 pixels and scales the default typography accordingly. PD120, PD180, and PD240 use the same raster and layout; their mode labels and export metadata differ. The exporter keeps each mode's native frame dimensions without introducing a square format. Mode references are recorded in `manifest.json` and in the script's `MODE_SOURCES` list.
+
+Useful commands:
+
+```bash
+npm run export:sstv -- --max-pages 10
+npm run export:sstv -- --slug koncepty --max-pages 10
+npm run export:sstv -- --mode pd290
+npm run export:sstv -- --lang en
+npm run export:sstv -- --mode pd290 --lang both
+npm run export:sstv -- --section volna-tvorba,vystavy
+npm run export:sstv -- --help
+```
+
+The `--` after the npm script name passes the remaining options to the exporter. `--section` and `--slug` accept repeated options or comma-separated values. `--lang both` puts the selected Czech and English article pages into one numbered sequence, with language labels on the frames and in the manifest. Incomplete English translations remain visibly marked as `EN incomplete / Czech fallback`.
+
+`--max-pages 10` is a preview limit of ten complete PNG frames for the whole run, not ten articles or ten frames per article. If the limit stops the export before all selected content has been rendered, the run is marked as partial. Omit this option for a complete export.
+
+Body text defaults to 24 native pixels for PD120/PD180/PD240 and 30 pixels for PD290. `--font-size` accepts 16–48 pixels; `--font` and `--bold-font` accept local font files. Additional path options are `--project-root`, `--dist`, `--output-dir`, and `--site-url`; use `--help` for their current meanings.
+
+#### Layout and output files
+
+The export includes articles listed in the finished build index. Homepage sections and the contents of linked PDF, download, or source-package files are not appended automatically.
+
+The SSTV layout uses:
+
+- black text on white, a single reading column, page numbers, and article identification
+- text wrapping and pagination, including long code blocks; wide tables become labelled cell records with their links retained
+- separate image frames fitted proportionally without cropping or stretching, with EXIF orientation applied and transparency composited onto white
+- the first frame of animated images; local SVG image files are rasterized through Chromium
+- visible references for interactive media and unavailable images; remote media are not downloaded
+- available fallback fonts for additional Unicode characters, with explicit code-point text if a glyph cannot be rendered
+
+Every successful run creates a new timestamped directory rather than mixing its frames with an earlier run. For example:
+
+```text
+exports/sstv/pd120/<timestamp>-cs/
+  000001.png
+  000002.png
+  ...
+  manifest.json
+  README.txt
+```
+
+A preview stopped by the page limit has a directory name ending in `-preview`. `--output-dir` overrides the parent directory; the exporter still creates a new timestamped child inside it. The default `exports/` tree is already ignored by Git and remains outside the signed `dist/` build.
+
+Use the numbered PNGs in filename order. `README.txt` identifies the selected mode and dimensions. `manifest.json` records the selection, article page ranges, translation status, rendered text and image references, native dimensions, fonts, source and PNG hashes, warnings, and whether the export is partial.
+
+`partial: False` means all content selected for that run was processed. It does not mean that the warnings list is empty or that SSTV transmission quality has been tested. An unfiltered Czech export covers the indexed Czech articles; a filtered export is complete only for its selected subset.
+
+#### Warning diagnosis and stale build output
+
+Read the `warnings` array in the run's `manifest.json` for the reasons behind the console warning count.
+
+- `Missing, remote or unsupported image source` means an image could not be resolved to an available local build asset. An empty `source` value can come from a `MediaRow` item written as `{ type: "image", src: "" }`. Use `{ type: "empty" }` for an intentionally blank cell, as described in section 7.2. The exporter renders unavailable images as `[Image unavailable]`; correctly rendered empty cells are skipped. After correcting the MDX, rebuild the web and then export again. Otherwise the old `<img>` elements remain in `dist/` and the same warnings return.
+- `Cannot render image: ...` includes the reason why an existing image could not be decoded or rasterized. Check the named source and any required image-rendering dependencies.
+- `Missing font glyphs rendered as explicit Unicode code points` lists characters that the available fonts could not render. The PNG uses visible text such as `[U+FFFD]`; the manifest retains the original text. This warning groups affected characters rather than reporting every occurrence separately. `U+FFFD` is the Unicode replacement character (`�`), which can already occur in experimental article content such as Anti-jazyk. Its presence does not by itself establish that the SSTV exporter damaged the text.
+
+#### Audio tools and working directories
+
+The PNG-to-audio and recovery procedure below was verified on 2026-09-10 using the scripts, archival README, and WAV files described in this section. It documents the working sequence, including MMSSTV for continuous reception.
+
+The project includes the following audio tools and archival README:
+
+```text
+scripts/sstv-audio/
+  encode_sstv.bat
+  join_wavs.py
+  README.txt
+```
+
+The complete operational instructions for these tools are maintained here in `documentation.mdx`. `README.txt` is the archival companion intended to travel with the finished WAV volumes, for example in an Internet Archive deposit. It describes the specific six-volume edition tested on 2026-09-10.
+
+Both scripts resolve their input and output directories relative to their own location. For each new edition, copy `scripts/sstv-audio/` to a new working directory under `exports/sstv-audio/`, then put the numbered PNGs from one finished PD120 export into its `input_images/` directory. Keep the PNG export's manifest as `png-manifest.json` beside the scripts. Keep the archival `README.txt` from `scripts/sstv-audio/`; the shorter `README.txt` generated with the PNGs is a different document.
+
+For example, in Windows Explorer copy the tool directory to `exports/sstv-audio/2026-09-10-cs/` and use this layout:
+
+```text
+exports/sstv-audio/2026-09-10-cs/
+  encode_sstv.bat
+  join_wavs.py
+  README.txt
+  png-manifest.json
+  input_images/
+    000001.png
+    000002.png
+    ...
+  input_wav/
+  output_wav/
+```
+
+Run the audio commands below in the working copy, not in `scripts/sstv-audio/`. Use a new directory name for a new edition; reuse a working directory only to resume the same unchanged PNG set. Working files under `exports/` are excluded from Git and the reconstructable source bundle. Keep `scripts/sstv-audio/` for the small source files: the source-bundle generator traverses `scripts/`, so putting generated PNG/WAV files or an Open-SSTV installation there would also put them in the source ZIP.
+
+All audio stages are manual. `npm run export:sstv` continues to generate PNGs only; neither the audio scripts nor the decoding software are invoked by the website build or `export-all.bat`.
+
+#### Open-SSTV encoder setup
+
+The tested encoder is `open-sstv-encode` from [Open-SSTV](https://github.com/bucknova/Open-SSTV). The working installation used a source checkout at `%USERPROFILE%\Downloads\Open-SSTV` with a Python 3.11.9 virtual environment. The inspected checkout declares version `0.6.10`, requires Python 3.11 or newer, and was at commit `0cf68e0d2ee0ca85d1f9947403319a2a92043be3`. These details record the tested installation rather than a promise about future releases.
+
+The Windows GUI ZIP used in the experiment did not provide the required CLI executable. Installing with `pip install open-sstv` also failed in that test. The successful setup used the source repository and a Python 3.11 virtual environment. For a fresh installation, after installing Python 3.11 and Git, the commands are:
+
+```bat
+cd /d "%USERPROFILE%\Downloads"
+git clone https://github.com/bucknova/Open-SSTV.git
+cd Open-SSTV
+py -3.11 -m venv .venv
+.venv\Scripts\activate
+python -m pip install -e .
+open-sstv-encode --help
+```
+
+Reuse an existing working installation instead of recreating it. The test initially failed with Python 3.10; explicitly selecting Python 3.11 when creating the environment resolved that dependency requirement. Open-SSTV is separate from the Python environment used by the website's PNG exporter.
+
+`encode_sstv.bat` finds the encoder in this order:
+
+1. the executable path in `OPEN_SSTV_ENCODER`, if set and present
+2. `open-sstv-encode.exe` on `PATH`
+3. `.venv\Scripts\open-sstv-encode.exe` beside the batch
+4. `Open-SSTV\.venv\Scripts\open-sstv-encode.exe` beside the batch
+5. `%USERPROFILE%\Downloads\Open-SSTV\.venv\Scripts\open-sstv-encode.exe`
+
+The final fallback matches the tested installation without hard-coding the account name. If the encoder is installed elsewhere, set `OPEN_SSTV_ENCODER` to its full executable path before running the batch. The installed encoder can then be used without manually activating its virtual environment for every export.
+
+#### PNG to WAV encoding
+
+Use PNGs from the website exporter's `--mode pd120` output: 640 × 496 pixels. The copied batch is fixed to PD120 and invokes Open-SSTV with the differently spelled mode identifier `pd_120`. It does not read the PNG manifest or accept a mode argument. Choosing `--mode pd290` in the PNG exporter does not change this batch; using another audio mode requires a corresponding change in a working copy and a new test.
+
+From the working directory containing the scripts and `input_images/`, run:
+
+```bat
+encode_sstv.bat
+```
+
+For each input PNG, the batch runs the equivalent of:
+
+```bat
+open-sstv-encode "input_images\000001.png" --mode pd_120 -o "input_wav\000001.wav"
+```
+
+The result is one complete SSTV transmission per image, with its own VIS mode-identification signal. The actual test files are uncompressed mono PCM WAVs at 48,000 Hz and 16 bits per sample. The batch uses the encoder's default sample rate; it does not pass `--sample-rate` explicitly.
+
+The batch creates `input_wav/` if needed, reports missing input PNGs, stops on an encoder error, and pauses for keyboard input when finished. Existing WAV filenames are skipped. This allows an interrupted run to resume, but the skip checks only file existence: it does not check PNG changes or validate an existing WAV. Use a fresh working directory when the input edition changes. Inspect an output left by an interrupted encoding before reusing it.
+
+#### Joining WAVs into archive volumes
+
+After encoding has finished successfully, run this in the same working directory:
+
+```bat
+py join_wavs.py
+```
+
+`join_wavs.py` uses only Python's standard library. It reads all `.wav` files from `input_wav/`, sorts them naturally by filename, and writes to `output_wav/`. There is no manually maintained `files.txt` list and no FFmpeg step in this final workflow.
+
+The script checks that the input WAVs are uncompressed PCM with matching channel count, sample width, sample rate, and compression type. It writes their PCM sample data in sequence without resampling or re-encoding, inserting one second of digital silence between transmissions. A frame remains whole when a volume boundary is reached; the inter-frame silence is placed at the beginning of the next volume. No extra silence is appended after the final frame.
+
+The configured data-size limit is `MAX_WAV_DATA_BYTES = 3_900_000_000`, below the capacity of a classic RIFF/WAV file. Splitting is determined by byte size, not a fixed number of images. If the complete sequence fits, the output is `combined-with-gaps.wav`. Otherwise the names are:
+
+```text
+combined-with-gaps_001.wav
+combined-with-gaps_002.wav
+combined-with-gaps_003.wav
+...
+```
+
+The joiner overwrites matching output names and does not remove leftover volumes from an older run. Use the separate working directory for the current edition to keep the inputs and output set consistent. Some messages in the preserved script still mention `input` or `output`; its actual directory constants are `input_wav` and `output_wav`.
+
+#### WAV to images: tested MMSSTV reception
+
+The successful continuous decoder was [MMSSTV for Windows](https://hamsoft.ca/pages/mmsstv.php). Open-SSTV successfully encoded frames and decoded individual image WAVs during the experiment, but the tested continuous multi-image playback did not produce the desired sequence there. MMSSTV with automatic restart was then verified to reconstruct consecutive pages. This is a record of the tested setup, not a general claim about all Open-SSTV versions.
+
+The working audio path is:
+
+```text
+WAV volume played at normal speed
+  -> Windows playback output
+  -> Stereo Mix / Směšovač stereo (Realtek)
+  -> MMSSTV recording input
+  -> automatic VIS detection and PD120 reception
+  -> progressively drawn pages and received-image history
+```
+
+The initial MMSSTV failure was caused by Stereo Mix being disabled while a microphone was the default recording device. The working Windows setup was:
+
+1. Open **Control Panel → Sound → Recording** (`Ovládací panely → Zvuk → Záznam`).
+2. Enable **Stereo Mix / Směšovač stereo (Realtek)**. If hidden, show disabled devices first.
+3. Set it as the default recording device.
+4. Restart MMSSTV so it picks up the recording-device change.
+
+Use these settings, as recorded in the successful test and the archival README:
+
+| Location | Setting | Value |
+|---|---|---|
+| Main RX window | RX Mode | Auto |
+| Main RX window | Auto history | ON |
+| Option → Setup MMSSTV → RX | Auto start | VIS only |
+| Option → Setup MMSSTV → RX | Auto restart | ON |
+| Option → Setup MMSSTV → RX | Auto resync | ON |
+| Option → Setup MMSSTV → RX | Auto stop | OFF |
+| Option → Setup MMSSTV → Misc | Sound Card → In | Default, with Stereo Mix selected as the Windows default recording input |
+
+If MMSSTV lists the Stereo Mix input directly, it can be selected there. Play the WAV in a normal Windows audio player at its original speed and let MMSSTV listen to that input. It does not need to open the long WAV as an offline image file. Each new VIS signal identifies another PD120 frame, and automatic restart allows the next page to begin after the previous one.
+
+The tested installation keeps received images in `C:\Ham\MMSSTV\History\` as `Hist*.bmp`; the shortcut in the experimental workspace points to that directory. The observed history is BMP, not a recreation of the original PNG filenames. Preserve wanted received images separately and use the page number printed in each image to relate them to the source PNG sequence. Other installations may use a different program or history location.
+
+The user also verified recovery after seeking to an arbitrary position inside a long WAV volume. A partial frame at that point may be unusable; keep playback running until the next complete VIS signal, when reception can start from the next page. Decoding through playback happens in real time. Keep the original playback speed and pitch and use the original WAVs to retain the tested signal timing.
+
+This recovers a readable visual edition of the web content. It does not recreate the original HTML/MDX or guarantee pixel-identical copies of the source PNGs. The observed decoded pages contain SSTV artifacts. Successful individual, consecutive, and seek-recovery tests have been reported; a page-by-page audit of every frame across the entire archive has not been recorded.
+
+#### Archival README and the verified audio edition
+
+The audio edition verified on 2026-09-10 contained 1,724 input PNGs, 1,724 individual WAVs, and these six final volumes. Their sizes and PCM format were checked directly:
+
+| Volume | Bytes |
+|---|---:|
+| `combined-with-gaps_001.wav` | 3,895,596,294 |
+| `combined-with-gaps_002.wav` | 3,895,692,294 |
+| `combined-with-gaps_003.wav` | 3,895,692,294 |
+| `combined-with-gaps_004.wav` | 3,895,692,294 |
+| `combined-with-gaps_005.wav` | 3,895,692,294 |
+| `combined-with-gaps_006.wav` | 1,708,205,794 |
+| **Total** | **21,186,571,264** |
+
+All six volumes are 48 kHz, 16-bit mono PCM WAVs. These counts and sizes describe this edition; a later build or different PNG selection may produce a different set.
+
+For an archive deposit, place the archival `README.txt` alongside the original numbered WAV volumes. It explains what the audio contains, the PD120 mode, volume order, the tested MMSSTV settings, audio routing, recovery after seeking, and the archival purpose; it includes a short Czech explanation as well as the English instructions.
+
+The copied `scripts/sstv-audio/README.txt` already names the six volumes and their total size above. For a later edition, update those edition-specific details in the distribution copy to match its actual outputs. Preserve the source copy in `scripts/sstv-audio/README.txt` as the record of the tested edition. The scripts do not generate or update that archival README automatically. Retaining the corresponding `png-manifest.json` with the archive also preserves the article-to-page mapping. Archive publication, including an Internet Archive upload, is a separate manual step.
+
+Calibration images and a systematic comparison of source and received pages remain future work. Basic PNG-to-WAV encoding, joined-volume playback, and visual recovery are now implemented and experimentally verified as described above.
 
 ### 9.7 Arweave / Permaweb build
 
@@ -2773,6 +3064,8 @@ Possible future directions for the project:
 - evaluation of [FOREVER](https://www.forever.com/) as an additional long-term digital preservation service, complementing the existing use of [Permanent.org](https://www.permanent.org/) and providing further redundancy through an independent archival provider
 - evaluation of using LLM agents to perform the archivist's role, scaling web discovery and preservation by running many parallel instances
 - evaluation of Bitcoin Ordinals inscriptions as an immutable, blockchain-based archival medium, embedding selected small digital artifacts directly into the Bitcoin blockchain to provide highly durable, publicly retrievable copies independent of conventional hosting infrastructure
+- further development of the SSTV (Slow-Scan Television) edition: manual PNG export, batch PD120 WAV encoding, volume joining, and visual recovery through MMSSTV have been implemented and tested (section 9.6.8); calibration images and a systematic comparison of the source and received pages remain to be added
+
 ---
 
 ## 15. Archival operations

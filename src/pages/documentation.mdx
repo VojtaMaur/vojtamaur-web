@@ -1466,15 +1466,18 @@ The exporter writes a manifest describing page ranges, including the generated u
 
 #### Run all manual exports on Windows
 
-The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the six manual exports sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow then creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs:
+The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the nine manual exports sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow begins with the JSON-LD article export and separate English and Czech compact text exports. After the PDF steps it creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs, preserving animated GIFs. The SSTV PNG export is the final step:
 
 ```bat
+node scripts/export-site-json.mjs
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
+python scripts/filter-all-posts.py --language cs --section volna-tvorba --format compact
 python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "C:\Program Files\gs\gs10.07.1\bin\gswin64c.exe"
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
 python scripts/export-metaweb-pdf.py
-python scripts/export-metaweb-epub.py --image-quality compact
-python scripts/export-site-epub.py --lang both --image-quality compact
+python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
+python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
+python scripts/export-site-sstv.py
 ```
 
 Run the complete workflow with:
@@ -1485,7 +1488,7 @@ export-all.bat
 
 The batch file also reuses the current `dist/` and does not create a web build. If the last build was a USB variant, restore a standard web build before running `export-all.bat`.
 
-The manual SSTV PNG export is run separately with `npm run export:sstv`; it is not included in `export-all.bat` (section 9.6.8).
+The SSTV PNG export runs last in `export-all.bat` and can also be run separately with `npm run export:sstv` (section 9.6.8). The batch does not generate SSTV audio.
 
 ### 9.6.6 Manual EPUB exports
 
@@ -1774,7 +1777,7 @@ scripts/export-site-sstv.py
 requirements-sstv-export.txt
 ```
 
-It creates numbered RGB PNG pages at the native resolution of the selected standard SSTV mode. Each PNG represents one complete frame. The exporter is started explicitly with `npm run export:sstv`; it is not called by any normal web, USB, Arweave, or Gemini build, or by `export-all.bat`.
+It creates numbered RGB PNG pages at the native resolution of the selected standard SSTV mode. Each PNG represents one complete frame. The exporter is started explicitly with `npm run export:sstv` or as the final step of `export-all.bat`; it is not called by any normal web, USB, Arweave, or Gemini build.
 
 #### Setup and build-before-export workflow
 
@@ -2051,6 +2054,43 @@ For an archive deposit, place the archival `README.txt` alongside the original n
 The copied `scripts/sstv-audio/README.txt` already names the six volumes and their total size above. For a later edition, update those edition-specific details in the distribution copy to match its actual outputs. Preserve the source copy in `scripts/sstv-audio/README.txt` as the record of the tested edition. The scripts do not generate or update that archival README automatically. Retaining the corresponding `png-manifest.json` with the archive also preserves the article-to-page mapping. Archive publication, including an Internet Archive upload, is a separate manual step.
 
 Calibration images and a systematic comparison of source and received pages remain future work. Basic PNG-to-WAV encoding, joined-volume playback, and visual recovery are now implemented and experimentally verified as described above.
+
+### 9.6.9 Manual JSON-LD article export and vocabulary
+
+The structured article export is started manually:
+
+```bash
+node scripts/export-site-json.mjs
+```
+
+It writes `exports/ALL_POSTS.json` as UTF-8 JSON without BOM, also valid as JSON-LD 1.1. It uses the existing Node.js and Cheerio project dependencies. It never runs a build, fills translation caches, or accesses the network, and no normal build command invokes it. It is also the first step of `export-all.bat`.
+
+The finished `dist/ALL_POSTS.txt` supplies article selection, order and original metadata. Full content comes from the corresponding built HTML files, including postprocessed English titles and bodies. Both directory routes and flat USB article files are supported. The export includes all indexed article language versions; it does not automatically include homepage-only content, standalone pages such as this documentation or `/ns/`, or the contents of linked downloads.
+
+The root is a Schema.org `Collection` with article records in `hasPart`. Each record is a `BlogPosting` with its canonical URL, rendered headline, language, section, publication date, author, full `articleBody`, structured media references, and translation links when the counterpart is present. Code blocks in the JSON article body are not truncated. `vm:articleHtml` separately retains the parsed article HTML fragment, including its heading and visible metadata. Images and other media remain references; binary files and external embed payloads are not downloaded or bundled.
+
+The inline `@context` combines Schema.org with the custom namespace `https://vojtamaur.cz/ns/`. The [vm: vocabulary](/ns/) documents every custom property and the `vm:Link` class, including JSON types, scopes, examples and interpretation limits. For example, `vm:slug` expands to `https://vojtamaur.cz/ns/slug`. The namespace ends with `/`, not `#`; anchors on the vocabulary page are navigation aids, not replacement identifiers. Each known term also has a static description page, for example `/ns/slug/`.
+
+Vocabulary descriptions are maintained in `src/lib/export-vocabulary.ts`. The static route `src/pages/ns/[...term].astro` generates `/ns/` and the individual term pages from this shared data. These ordinary website pages become public when the built website is deployed; no separate service or runtime is required. Keep this vocabulary synchronized whenever custom export fields change. The export's inline context remains self-contained and does not fetch the vocabulary page during JSON-LD processing.
+
+Important interpretation rules:
+
+- `vm:sourceMetadata` is a JSON literal (`@type: "@json"`); its original index keys are not interpreted as Schema.org terms. The index's `TITLE` may remain Czech even for an English article, while `headline` comes from the rendered language version.
+- `vm:position` records article order starting at 1, since ordinary JSON-LD arrays do not imply RDF ordering. Each language version counts separately in `vm:articleCount`.
+- `vm:builtHtmlSha256` hashes the whole original HTML file; `vm:sourceIndexSha256` hashes the exact input index bytes. `vm:declaredBuildSha256`, when present, only copies the declared hash from `BUILD_SHA256.txt`; the exporter does not verify the manifest or OpenPGP signature.
+- `vm:generatedAt` is the JSON export time, not an article modification date. `datePublished` retains the index date, including legacy first-of-month migration values described in section 5.5.1.
+- `vm:languageStatus` records the existing English fallback convention based on the `noindex` marker. It is not an independent translation-quality assessment, and English records may contain Czech ALT text or untranslated passages.
+- `vm:sourcePath` records the source path from the finished index. The exporter does not mix the current MDX contents into an older build.
+
+Useful options:
+
+```bash
+node scripts/export-site-json.mjs --dry-run
+node scripts/export-site-json.mjs --dist dist --output exports/ALL_POSTS.json
+node scripts/export-site-json.mjs --project-root "H:\vojtamaur-web"
+```
+
+Relative paths are resolved from the project root, which defaults to the parent of `scripts/`. The output must be a `.json` or `.jsonld` file under `exports/` and outside the selected build. Dry run validates the inputs and constructs the export without writing it. Missing article files, malformed metadata, duplicate records and unsafe output paths cause a nonzero exit; successful writes replace the output through a temporary file. The exporter reports article count, byte size and the SHA-256 of the resulting JSON. The generated file remains outside `dist/` and outside the existing build signature.
 
 ### 9.7 Arweave / Permaweb build
 
@@ -3064,7 +3104,6 @@ Possible future directions for the project:
 - evaluation of [FOREVER](https://www.forever.com/) as an additional long-term digital preservation service, complementing the existing use of [Permanent.org](https://www.permanent.org/) and providing further redundancy through an independent archival provider
 - evaluation of using LLM agents to perform the archivist's role, scaling web discovery and preservation by running many parallel instances
 - evaluation of Bitcoin Ordinals inscriptions as an immutable, blockchain-based archival medium, embedding selected small digital artifacts directly into the Bitcoin blockchain to provide highly durable, publicly retrievable copies independent of conventional hosting infrastructure
-- further development of the SSTV (Slow-Scan Television) edition: manual PNG export, batch PD120 WAV encoding, volume joining, and visual recovery through MMSSTV have been implemented and tested (section 9.6.8); calibration images and a systematic comparison of the source and received pages remain to be added
 
 ---
 

@@ -139,6 +139,7 @@ FILE ARTIFACT SNAPSHOTS:
 	https://archive.org/details/vojtamaur-cz-all-posts-epub-export-cs
 	https://archive.org/details/vojtamaur-cz-all-posts-epub-export-en
 	https://archive.org/details/vojtamaur-web-export-metaweb-2026-08
+	https://archive.org/details/vojtamaur-cz-sstv-edition
 	Permanent.org
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0007
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0006

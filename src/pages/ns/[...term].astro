@@ -1,0 +1,100 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { namespace, exportVersion, groups, terms } from "../../lib/export-vocabulary";
+
+export function getStaticPaths() {
+  return [
+    { params: { term: undefined } },
+    ...terms.map((term) => ({ params: { term: term.name } })),
+  ];
+}
+
+const selected = terms.find((term) => term.name === Astro.params.term);
+const shownGroups = selected ? groups.filter((group) => group.id === selected.group) : groups;
+const title = selected ? `vm:${selected.name} — slovník metadat | Vojta Maur` : "Slovník metadat vm: | Vojta Maur";
+const canonicalPath = selected ? `/ns/${selected.name}/` : "/ns/";
+const TermHeading = selected ? "h2" : "h3";
+const exampleContext = {
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://schema.org/",
+    vm: { "@id": namespace, "@prefix": true },
+    "vm:sourceMetadata": { "@id": "vm:sourceMetadata", "@type": "@json" },
+  },
+};
+---
+
+<BaseLayout title={title} description="Význam, datové typy a příklady vlastních polí JSON-LD exportu webu Vojty Maura." canonicalPath={canonicalPath}>
+  <main class="section-page vocabulary">
+    <article class="post-body">
+      <header class="post-header">
+        {selected && <p><a href="/ns/">← Celý slovník metadat</a></p>}
+        <h1 class="page-title">{selected ? `vm:${selected.name}` : "Slovník metadat vm:"}</h1>
+        <p class="page-intro">Vlastní pojmy pro archivní JSON-LD export webu Vojty Maura.</p>
+      </header>
+
+      {!selected && <>
+        <p>Tento slovník vysvětluje všech 23 vlastních polí a třídu <code>vm:Link</code> používanou exportérem <code>export-site-json.mjs</code> ve verzi <code>{exportVersion}</code>. U každého pojmu uvádí význam, místo použití, datový typ a příklad. Příklady jsou ilustrativní.</p>
+        <p>Jmenný prostor je <code>{namespace}</code>. Prefix <code>vm:</code> zkracuje jeho adresu: například <code>vm:slug</code> znamená <code>{namespace}slug</code>. Názvy rozlišují velká a malá písmena.</p>
+        <p>JSON-LD export obsahuje vlastní kontext přímo v souboru, takže tuto stránku ke zpracování nepotřebuje stahovat. Stránka dokumentuje význam místních pojmů. Zkrácená ukázka kontextu:</p>
+        <pre><code>{JSON.stringify(exampleContext, null, 2)}</code></pre>
+        <p><code>@prefix: true</code> umožňuje použít <code>vm</code> jako prefix. Standardní pojmy, například <code>BlogPosting</code>, <code>headline</code> a <code>articleBody</code>, se rozvíjejí podle Schema.org. Jejich význam tento slovník nepředefinovává.</p>
+
+        <nav aria-label="Obsah slovníku" class="vocabulary-index">
+          {groups.map((group) => <div>
+            <h2><a href={`#${group.id}`}>{group.title}</a></h2>
+            <ul>{terms.filter((term) => term.group === group.id).map((term) => <li><a href={`#${term.name}`}><code>vm:{term.name}</code></a></li>)}</ul>
+          </div>)}
+        </nav>
+      </>}
+
+      {shownGroups.map((group) => <section aria-labelledby={selected ? selected.name : group.id}>
+        {!selected && <h2 id={group.id}>{group.title}</h2>}
+        {terms.filter((term) => selected ? term.name === selected.name : term.group === group.id).map((term) => <section class="vocabulary-term" aria-labelledby={term.name}>
+          <TermHeading id={term.name}><code>vm:{term.name}</code></TermHeading>
+          <p>{term.description}</p>
+          <dl>
+            <dt>Použití</dt><dd>{term.scope}</dd>
+            <dt>Typ v JSON</dt><dd>{term.type}</dd>
+            <dt>Identifikátor</dt><dd><code>{namespace}{term.name}</code></dd>
+          </dl>
+          <p class="example-label">Příklad {term.name === "Link" ? "objektu" : "hodnoty"}</p>
+          <pre><code>{JSON.stringify(term.example, null, 2)}</code></pre>
+          {term.notes?.map((note) => <p>{note}</p>)}
+          {!selected && <p><a href={`/ns/${term.name}/`}>Samostatný popis pojmu →</a></p>}
+        </section>)}
+      </section>)}
+
+      {!selected && <section aria-labelledby="standardni-pojmy">
+        <h2 id="standardni-pojmy">Standardní pojmy a souvislosti</h2>
+        <p>Kořen exportu je <a href="https://schema.org/Collection">Collection</a> a články jsou objekty <a href="https://schema.org/BlogPosting">BlogPosting</a> v poli <code>hasPart</code>. České a anglické verze propojují <code>translationOfWork</code> a <code>workTranslation</code>.</p>
+        <p><code>articleBody</code> obsahuje text z hotového HTML, včetně nezkrácených bloků kódu. Média jsou popsaná standardními typy <code>ImageObject</code>, <code>VideoObject</code>, <code>AudioObject</code> a <code>MediaObject</code>. Všechna nalezená podporovaná média jsou v <code>associatedMedia</code>; obrázky jsou zároveň uvedené v <code>image</code>.</p>
+        <p><code>datePublished</code> přebírá datum z indexu. U části starších článků je první den měsíce pouze technickou hodnotou z migrace, nikoli doloženým přesným dnem publikace.</p>
+        <p>Identifikátor pojmu <code>{namespace}slug</code> a odkaz na odstavec <code>{namespace}#slug</code> jsou různé adresy. Tento web poskytuje také samostatné popisy známých pojmů, například <a href="/ns/slug/">/ns/slug/</a>. Stávající identifikátory v exportu se tím nemění.</p>
+        <p>Význam již použitých identifikátorů má zůstat stálý. Při rozšíření exportu je potřeba doplnit i tento slovník; významově odlišný údaj má dostat nový název.</p>
+        <ul>
+          <li><a href="https://www.w3.org/TR/json-ld11/#compact-iris">JSON-LD 1.1: zkrácené identifikátory a prefixy</a></li>
+          <li><a href="https://www.w3.org/TR/json-ld11/#json-literals">JSON-LD 1.1: literály JSON</a></li>
+          <li><a href="https://schema.org/">Slovník Schema.org</a></li>
+          <li><a href="/documentation/">Technická dokumentace webu</a> — část 9.6.9 popisuje ruční spuštění, vstupy a výstupy exportéru.</li>
+        </ul>
+      </section>}
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  .vocabulary { max-width: 52rem; margin-inline: auto; overflow-wrap: anywhere; }
+  .vocabulary-index { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; margin-block: 2rem; padding: 1rem; border: 1px solid var(--border); }
+  .vocabulary-index h2 { margin-top: 0; font-size: 1.1rem; }
+  .vocabulary-index ul { padding-left: 1.2rem; }
+  .vocabulary-term { border-top: 1px solid var(--border); padding-block: 1rem; }
+  .vocabulary-term h3 { margin-top: 0.5rem; }
+  dl { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 0.5rem 1rem; }
+  dt { font-weight: bold; }
+  dd { margin: 0; }
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .example-label { margin-bottom: 0; color: var(--muted); }
+  :target { scroll-margin-top: 1rem; }
+  @media (max-width: 520px) { dl { grid-template-columns: 1fr; gap: 0.25rem; } dd { margin-bottom: 0.75rem; } }
+</style>

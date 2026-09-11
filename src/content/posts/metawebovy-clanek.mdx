@@ -76,9 +76,15 @@ Web při každém buildu generuje plain-text export všech článků. Obsahuje t
 
 [Zobrazit textový export všech článků (ALL_POSTS.txt)](/ALL_POSTS.txt)
 
-Obsah webu je možné exportovat také do PDF, které zachovává jeho obsah v podobě vhodné pro čtení, tisk a dlouhodobou archivaci nezávislou na samotném webu. Podrobnosti o způsobu generování a struktuře exportu jsou uvedeny v technické dokumentaci výše.
+Pro strojové zpracování je k dispozici ručně spouštěný JSON-LD export, který zahrnuje české i anglické texty článků, metadata a odkazy na média. Využívá standardní slovník Schema.org doplněný o vlastní pojmy popsané ve [slovníku metadat tohoto webu](/ns/). Zachovává tak význam jednotlivých polí i vztahy mezi jazykovými verzemi článků.
+
+Obsah webu je možné ručně exportovat také do PDF, které zachovává jeho obsah v podobě vhodné pro čtení, tisk a dlouhodobou archivaci nezávislou na samotném webu. Podrobnosti o způsobu generování a struktuře exportu jsou uvedeny v technické dokumentaci výše.
 
 Obdobně je vytvářen také EPUB export, určený především pro elektronické čtečky a další software pracující s elektronickými knihami. Oproti PDF používá přizpůsobivý tok textu a představuje další reprezentaci obsahu webu.
+
+Samostatnou reprezentaci obsahu tvoří také SSTV export z 10. září 2026, který automaticky převádí textový a obrazový obsah webu na stránky optimalizované pro standardní obrazový přenos Slow-Scan Television (SSTV) v režimu PD120 (640 × 496 px). Jednotlivé stránky jsou zakódovány jako zvukové přenosy ve formátu WAV a lze je zpětně zobrazit běžným SSTV přijímačem bez původního HTML nebo webového prohlížeče. Kompletní export má přibližně 21 GB a 61 hodin zvuku.
+
+[Stáhnout SSTV export (Internet Archive)](https://archive.org/details/vojtamaur-cz-sstv-edition)
 
 Vedle strojově generovaných exportů existuje také přibližně šestihodinový verbální export webu z 29. srpna 2026, ve kterém postupně procházím, čtu a vlastními slovy komentuji jeho obsah. Záznam tak kromě samotných textů zachycuje také dodatečný kontext, vzpomínky, vysvětlení a informace, které nejsou přímo součástí webu.  
 

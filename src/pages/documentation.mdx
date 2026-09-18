@@ -696,6 +696,20 @@ The remaining sections are handled differently:
 
 No separate Gemini section pages are created for Promotional Videos, About Me, or Contact. English is the capsule root language at `/index.gmi`; Czech is available under `/cs/index.gmi`.
 
+### 8.8 Homepage archive metadata
+
+Both the Czech (`/`) and English (`/en/`) homepages include three custom archive metadata tags in their HTML `<head>`:
+
+```html
+<meta name="archive-documentation" content="https://vojtamaur.cz/metawebovy-clanek/" />
+<meta name="archive-full-text" content="https://vojtamaur.cz/ALL_POSTS.txt" />
+<meta name="archive-index" content="https://vojtamaur.cz/ARCHIVE.txt" />
+```
+
+The tags are rendered by `src/layouts/BaseLayout.astro` only when `pathForCs === "/"`, which identifies both homepage variants. Both languages use the same absolute public URLs: the metaweb article explaining the archive, the full-text export, and the archive index. These metadata tags do not embed the contents of those resources.
+
+The tags provide machine-readable archive entry points without adding visible page content or hidden anchor links. Their names are project-specific conventions; automatic discovery or indexing by crawlers is not guaranteed. They complement the existing sitemap and ordinary archive links.
+
 ---
 
 ## 9. Development and normal workflow

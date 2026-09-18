@@ -39,6 +39,15 @@ const enUrl = pathForEn ? new URL(pathForEn, Astro.site) : null;
 
     <title>{title}</title>
     <meta name="description" content={description} />
+
+    {pathForCs === "/" && (
+      <>
+        <meta name="archive-documentation" content="https://vojtamaur.cz/metawebovy-clanek/" />
+        <meta name="archive-full-text" content="https://vojtamaur.cz/ALL_POSTS.txt" />
+        <meta name="archive-index" content="https://vojtamaur.cz/ARCHIVE.txt" />
+      </>
+    )}
+
     <meta
       name="robots"
       content={noindex ? "noindex,follow" : "index,follow,max-image-preview:large"}

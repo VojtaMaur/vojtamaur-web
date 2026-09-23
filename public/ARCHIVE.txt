@@ -72,6 +72,8 @@ STATIC SNAPSHOTS (built output of the repository):
 	Proton.me
 	https://drive.proton.me/urls/9MK543P588#Lz2xoUSJ9upD
 	https://drive.proton.me/urls/2HPKXJABCG#CnTLdNh55HA9
+	Hugging Face
+	https://huggingface.co/datasets/VojtaMaur/vojtamaur.cz
 	
 PYTHON CLI PACKAGE (distribution + embedded fallback snapshots):
 	PyPI
@@ -244,6 +246,8 @@ FILE ARTIFACT SNAPSHOTS:
 	https://www.lulu.com/shop/vojta-maur/vojtamaurcz-complete-website-export/ebook/product-2mg5n2p.html
 	Kobo
 	https://www.kobo.com/cz/cs/ebook/vojta-maur-tvorba
+	Spotify
+	https://open.spotify.com/show/6eybq6M9VcyEd76Re925U2
 	
 PARTIAL SNAPSHOTS:
 	Internet Archive (additional snapshots may exist)

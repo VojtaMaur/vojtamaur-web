@@ -142,6 +142,7 @@ FILE ARTIFACT SNAPSHOTS:
 	https://archive.org/details/vojtamaur-cz-all-posts-epub-export-en
 	https://archive.org/details/vojtamaur-web-export-metaweb-2026-08
 	https://archive.org/details/vojtamaur-cz-sstv-edition
+	https://archive.org/details/vojtamaur-web-rosetta-export-2026-09-23
 	Permanent.org
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0007
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-0006
@@ -561,6 +562,11 @@ PARTIAL SNAPSHOTS:
 	https://web.archive.org/web/20260904055954/https://vojtamaur.cz/documentation/
 	https://web.archive.org/web/20260904064920/https://vojtamaur.cz/metawebovy-clanek/
 	https://web.archive.org/web/20260904064924/https://vojtamaur.cz/en/metawebovy-clanek/
+	https://web.archive.org/web/20260923092828/https://vojtamaur.cz/metawebovy-clanek/
+	https://web.archive.org/web/20260923092848/https://vojtamaur.cz/images/metawebovy-clanek-013-all_posts-mom-edition-1.jpg
+	https://web.archive.org/web/20260923092913/https://vojtamaur.cz/images/metawebovy-clanek-013-all_posts-mom-edition-3.jpg
+	https://web.archive.org/web/20260904064944/https://vojtamaur.cz/images/metawebovy-clanek-013-all_posts-mom-edition.jpg
+	https://web.archive.org/web/20260923093016/https://vojtamaur.cz/images/metawebovy-clanek-013-all_posts-mom-edition-2.jpg
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/

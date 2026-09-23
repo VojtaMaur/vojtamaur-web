@@ -2110,6 +2110,91 @@ node scripts/export-site-json.mjs --project-root "H:\vojtamaur-web"
 
 Relative paths are resolved from the project root, which defaults to the parent of `scripts/`. The output must be a `.json` or `.jsonld` file under `exports/` and outside the selected build. Dry run validates the inputs and constructs the export without writing it. Missing article files, malformed metadata, duplicate records and unsafe output paths cause a nonzero exit; successful writes replace the output through a temporary file. The exporter reports article count, byte size and the SHA-256 of the resulting JSON. The generated file remains outside `dist/` and outside the existing build signature.
 
+### 9.6.10 Rosetta multilingual text export
+
+`scripts/export-site-rosetta.mjs` creates a machine-translated reading and archival edition of the articles using the Google Gemini Batch API. It runs manually with Node.js 20 or newer and the project's existing Cheerio dependency. It reads the JSON-LD article export described above and writes its own files under `exports/`; it does not build the site, change published pages, or update the DeepL English translation cache. The Gemini API used here is separate from the Gemini/Gopher publishing format described in section 9.6.7.
+
+#### Source and translation boundaries
+
+By default, the script selects the JSON-LD snapshot with the newest `vm:generatedAt` from `exports/ALL_POSTS.json`, dated `exports/ALL_POSTS-YYYY-MM-DD.json` snapshots, or their `.jsonld` equivalents. `--input` selects an explicit snapshot. Only records with `inLanguage == "cs"` are translated, in `vm:position` order. English is also translated from Czech for this edition; the existing English article records are not reused. The 2026-09-23 source contained 82 Czech articles and 82 English counterparts; later exports can have different counts.
+
+`articleBody` supplies the linear text, including headings, captions and image ALT descriptions. `vm:articleHtml` supplies the matching protection map for `notranslate`, `translate="no"`, and code/output elements such as `pre`, `code`, `kbd` and `samp`. Ordinary prose and the article headline are translated unless protected. Structured media remain references in the text; media files are not downloaded or bundled.
+
+Before sending text to Gemini, the exporter replaces protected spans with placeholders and retains their originals locally. These include complete `[CODE BLOCK]...[/CODE BLOCK]` sections, explicitly protected passages and program output, inline code, URLs, slugs, paths, filenames, hashes, IDs, numeric data and other recognized technical tokens. Source line/paragraph separators and metadata are assembled locally. Protected content is restored unchanged after translation. Technical or experimental text that is not identifiable by these rules must be marked `notranslate` in the source before generating the JSON-LD snapshot.
+
+Preparation verifies HTML-to-body mapping, paired code markers and an exact protection/restoration round trip. Response validation rejects missing, duplicated or invented placeholders, missing text items and invalid structural boundaries. These checks preserve the archive's structure and protected text; they do not establish the linguistic accuracy of a machine translation. Each TXT identifies the model and states that its translation has not been independently reviewed.
+
+#### Preparation and translation commands
+
+Run commands from the project root. Paths supplied to the exporter resolve relative to that root. Offline preparation needs no API key and makes no API calls, but does create or update the local `rosetta.json` state file:
+
+```bash
+node scripts/export-site-rosetta.mjs --list-languages
+node scripts/export-site-rosetta.mjs prepare
+node scripts/export-site-rosetta.mjs run --languages de,ja --limit 1 --dry-run
+```
+
+The default selection is all Czech articles and a fixed list of 98 target languages. `--languages` accepts comma-separated codes; `--limit` restricts the selection to the first N Czech articles. The language list is a recorded selection derived from Gemini Live's 99-language list with Czech excluded, not a translation-quality guarantee for the selected model. `--list-languages` shows the exact supported CLI codes and full names.
+
+For API operations, set `GEMINI_API_KEY` (or the fallback `GOOGLE_API_KEY`) in the launching shell. The exporter reads the environment and does not save the key in its output. The API project must have access and quota for the selected model and Batch API. Translation submissions and explicit retries may incur API charges; offline preparation does not check account billing or quota.
+
+Start with a small translation, or run the complete selection:
+
+```bash
+node scripts/export-site-rosetta.mjs run --languages de,ja --limit 1
+node scripts/export-site-rosetta.mjs run
+```
+
+The default model is `gemini-3.1-flash-lite`; `--model` overrides it. `run` prepares the selection, submits missing work and waits for the batch, checking its state every 60 seconds by default (`--poll-seconds` overrides this). Running without `--languages` or `--limit` expands a completed pilot to all articles and target languages while reusing saved results. Collect an outstanding batch before changing its selection.
+
+To submit and collect in separate sessions:
+
+```bash
+node scripts/export-site-rosetta.mjs submit
+node scripts/export-site-rosetta.mjs collect
+```
+
+`submit` uses the saved preparation. `collect` checks the saved batch and downloads its results when ready; if it is still running, call `collect` again later or use `run` with the same selection to wait. After results have been collected, another `collect` rebuilds and validates the TXT files locally without another API call. Console messages identify language codes and names, queued work, available batch progress, completed exports and article/part failures. Detailed per-language completion becomes available when Gemini returns the results.
+
+#### Output directory and resumable state
+
+All languages share one directory, with one TXT per complete language and one supporting JSON:
+
+```text
+exports/
+  rosetta/
+    ALL_POSTS__lang-de.txt
+    ALL_POSTS__lang-ja.txt
+    ALL_POSTS__lang-uk.txt
+    ...
+    rosetta.json
+```
+
+TXT files use UTF-8 with BOM. Filenames always follow `ALL_POSTS__lang-CODE.txt`, with no `__section-all` suffix. Existing outputs with the old suffix are migrated after their saved checksums are verified. A language TXT is written only when every required part for the saved article set passes validation. A pilot TXT therefore contains only its limited selection; its header records that article count. When expanding to the full archive, a stale partial pilot file is removed until the complete language can be exported.
+
+`rosetta.json` is both the language manifest and the resumable working state. Its `manifest.languages` entries map `code`, full language `name` and `filename`, with completion status, article counts and output checksums. The same file retains the source identity, protected originals, translation plan, API results, recovered valid text items, batch history and validation errors. Keep it alongside the TXT files: deleting it discards the local cache needed to avoid repeating paid translations. No per-language subdirectories or separate request, preview or error files are required.
+
+`--output exports/rosetta-NAME` selects another shared directory under `exports/`; pass that option consistently when preparing, submitting and collecting that edition. A different source snapshot or model requires a different output directory. For example:
+
+```bash
+node scripts/export-site-rosetta.mjs prepare --input exports/ALL_POSTS-2026-09-23.json --output exports/rosetta-2026-09-23
+node scripts/export-site-rosetta.mjs run --input exports/ALL_POSTS-2026-09-23.json --output exports/rosetta-2026-09-23
+```
+
+#### Failed items and recovery
+
+A Gemini batch marked `SUCCEEDED` can still contain truncated, blocked or structurally invalid translations. The exporter retains valid work, writes complete languages and exits with an error if selected parts remain invalid. Inspect `errors` in `rosetta.json` for the language, article, part and pending text-item IDs. There is no automatic paid retry.
+
+To request the remaining failed text items explicitly:
+
+```bash
+node scripts/export-site-rosetta.mjs run --retry-failed
+```
+
+The repair path preserves valid items even from incomplete responses and submits only invalid or missing items from failed parts as individual requests. Already valid translations are reused. If another item still fails, the next explicit retry targets only what remains; it does not restart complete languages. Validation is not relaxed to accept missing source information.
+
+An interrupted run keeps its batch ID and results in `rosetta.json`. If a submission's outcome is uncertain and no batch ID was saved, locate the actual job in Google AI Studio and recover it with `collect --batch-name batches/ID` (replace `ID` with that job's identifier), adding the same `--output` when applicable. Do not submit a duplicate job blindly. Completed exports from an older timestamped Rosetta directory can be imported into the shared directory without API calls using `node scripts/export-site-rosetta.mjs import --from exports/rosetta-OLD`.
+
 ### 9.7 Arweave / Permaweb build
 
 The Arweave / Permaweb build is created with:

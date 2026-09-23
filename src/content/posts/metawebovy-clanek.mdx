@@ -78,6 +78,10 @@ Web při každém buildu generuje plain-text export všech článků. Obsahuje t
 
 Pro strojové zpracování je k dispozici ručně spouštěný JSON-LD export, který zahrnuje české i anglické texty článků, metadata a odkazy na média. Využívá standardní slovník Schema.org doplněný o vlastní pojmy popsané ve [slovníku metadat tohoto webu](/ns/). Zachovává tak význam jednotlivých polí i vztahy mezi jazykovými verzemi článků.
 
+Z tohoto JSON-LD exportu vzniká také vícejazyčný „Rosetta“ export, ve kterém LLM překládá jeho český obsah do zhruba sta jazyků. Výsledkem jsou samostatné plain-text exporty jednotlivých jazykových verzí.
+
+[„Rosetta“ export (Internet Archive)](https://archive.org/details/vojtamaur-web-rosetta-export-2026-09-23)
+
 Obsah webu je možné ručně exportovat také do PDF, které zachovává jeho obsah v podobě vhodné pro čtení, tisk a dlouhodobou archivaci nezávislou na samotném webu. Podrobnosti o způsobu generování a struktuře exportu jsou uvedeny v technické dokumentaci výše.
 
 Obdobně je vytvářen také EPUB export, určený především pro elektronické čtečky a další software pracující s elektronickými knihami. Oproti PDF používá přizpůsobivý tok textu a představuje další reprezentaci obsahu webu.

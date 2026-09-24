@@ -3201,7 +3201,7 @@ Possible future directions for the project:
 - evaluation of future opportunities for inclusion in lunar cultural archives (e.g. the [Lunar Codex](https://www.lunarcodex.com/)), if suitable public submission pathways become available
 - evaluation of future opportunities for inclusion in space-based cultural archives (e.g. the [Arch Mission Foundation](https://www.archmission.org/)), if suitable public submission pathways become available
 - self-hosting a Tor Onion Service mirror (e.g. on a Raspberry Pi), exposing the same content from a single .onion address over multiple protocols, including HTTP/HTTPS, Gemini (gemini://...onion), Spartan (spartan://...onion), and Gopher (gopher://...onion)
-- automation of Internet Archive Wayback Machine snapshots (Save Page Now), systematically submitting website pages and public mirrors for archival capture instead of relying on manual submissions
+- extension of the manual Internet Archive Wayback Machine sitemap exporter (section 15.3.1) to public mirror URLs and scheduled capture runs
 - evaluation of embedding ARCHIVE.txt and/or ALL_POSTS.txt data invisibly within each generated HTML page, allowing individual archived page snapshots to carry a redundant copy of the website's textual archive without affecting the visible page content
 - evaluation of embedding ARCHIVE.txt data within robots.txt, taking advantage of the file's frequent retrieval and preservation by web crawlers to provide an additional redundant copy of the website's textual archive
 - evaluation of [FOREVER](https://www.forever.com/) as an additional long-term digital preservation service, complementing the existing use of [Permanent.org](https://www.permanent.org/) and providing further redundancy through an independent archival provider
@@ -3251,6 +3251,82 @@ The Czech Webarchiv likely captured `https://vojtamaur.cz/` after a manual prese
 > Tuto stránku Webarchiv nemůže zobrazit. Z důvodu autorského zákona nemůžeme tuto stránku zpřístupnit online. Archivované verze této stránky jsou dostupné pouze z Referenčního centra NK ČR.
 
 This indicates restricted archived holdings rather than public online access; it does not by itself establish the completeness or capture dates of those holdings.
+
+#### 15.3.1 Manual Wayback snapshots from the live sitemap
+
+The manual exporter `scripts/export-wayback-snapshots.py` submits the site's live sitemap URLs to Internet Archive Wayback Machine Save Page Now (SPN2) and exports confirmed snapshot links. It requires Python 3.10 or newer and uses only the standard library; no additional Python packages are needed.
+
+Every run downloads `https://vojtamaur.cz/sitemap-index.xml` and follows all referenced sitemap files, including nested indices and compressed sitemaps. It processes every unique page URL without language, section, or path filtering, including `/ns/.../`. Exact duplicate URLs are submitted once per run. The sitemap check on 2026-09-24 found 199 unique URLs, including 25 `/ns/` URLs; these counts are observations, not fixed limits.
+
+The input is the published site, so a local build is not required. The script does not discover mirror URLs or other pages outside the sitemap. Submit those separately. This workflow is started manually and is not included in `export-all.bat` or any web, USB, Arweave, or Gemini build command.
+
+##### Internet Archive credentials
+
+Sign in with the usual Internet Archive account at [Internet Archive S3 API keys](https://archive.org/account/s3.php) to obtain the **access key** and **secret key**. These are the account's programmatic credentials. Supply them through these environment variables:
+
+- `IA_ACCESS_KEY_ID` — the access key
+- `IA_SECRET_ACCESS_KEY` — the secret key
+
+The script authenticates SPN2 requests with these keys. It does not ask for an email address or account password, read `.env` files, or automatically load the Internet Archive CLI configuration. Keep actual keys out of source files, documentation, committed batch files, and the repository.
+
+The familiar `ia configure` login is related: it asks for an email address and password, then saves the S3 keys in a local configuration file for the `ia` CLI. An existing CLI login alone therefore does not configure this exporter; both environment variables still need to be set. See the [Internet Archive configuration documentation](https://archive.org/developers/internetarchive/configuration.html).
+
+##### Run from Windows Command Prompt (CMD)
+
+Replace the two placeholder values with the actual keys and run all three commands in the same CMD window:
+
+```bat
+set "IA_ACCESS_KEY_ID=YOUR_ACCESS_KEY"
+set "IA_SECRET_ACCESS_KEY=YOUR_SECRET_KEY"
+python "G:\vojtamaur-web\scripts\export-wayback-snapshots.py"
+```
+
+These `set` commands apply to the current CMD session and the programs started from it. They do not persist after the window is closed; set both values again in a new window. The script can be launched from any working directory because it resolves the export directory relative to its own location.
+
+For PowerShell, use its environment-variable syntax instead:
+
+```powershell
+$env:IA_ACCESS_KEY_ID = "YOUR_ACCESS_KEY"
+$env:IA_SECRET_ACCESS_KEY = "YOUR_SECRET_KEY"
+python "G:\vojtamaur-web\scripts\export-wayback-snapshots.py"
+```
+
+To check the live sitemap and list the selected URLs without credentials, captures, or output files, run:
+
+```bat
+python "G:\vojtamaur-web\scripts\export-wayback-snapshots.py" --dry-run
+```
+
+##### Snapshot TXT output and `ARCHIVE.txt`
+
+Each capture run creates a new UTF-8 file in `G:\vojtamaur-web\exports\`, with a timestamped filename such as:
+
+```text
+exports/vojtamaur-web-wayback-20260924-143025-123456.txt
+```
+
+The TXT contains only confirmed Wayback snapshot URLs, one per line, with no headings, status messages, or blank separator lines. For example:
+
+```text
+https://web.archive.org/web/20260420175521/https://vojtamaur.cz/barva-tvar-ton/
+```
+
+Each link uses the capture timestamp and final `original_url` returned by SPN2 after success. If the source page redirects, the final URL may differ from the sitemap entry. The script does not construct a success link merely because a capture job was accepted. If SPN2 returns `favicon.ico` for a request that was not itself for `favicon.ico`, the script retries the original URL once after a 15-second wait, within the existing retry limit. If the result is again a favicon, it reports an error, omits that result from the TXT, and counts the URL as failed. Other redirects remain accepted, including `/pf2026/` to `/demos/pf2026/`; this is a targeted favicon check, not a general verification of redirected destinations.
+
+Successful lines are appended, flushed, and synced to disk immediately. Progress, job IDs, errors, and the final summary appear only in the console. The `[current/total]` counter identifies the URL being attempted; the final summary reports successful captures, failed captures, and sitemap errors separately.
+
+After reviewing the results, manually copy the desired lines into `public/ARCHIVE.txt`. The exporter never edits `ARCHIVE.txt` itself. The `exports/` directory is already ignored by Git and lies outside `dist/`.
+
+##### Waiting, errors, and interruption
+
+URLs are processed sequentially, with a five-second pause between them. After SPN2 accepts a job, the script polls its status every five seconds until success or an error. A job that remains pending has no overall time limit; the console periodically reports that it is still waiting.
+
+HTTP `429` and `5xx` responses are retried up to six times after the initial request. The exponential wait starts at 15 seconds and is capped at 300 seconds, unless the server's `Retry-After` header requests a longer wait. Individual network requests have a 60-second timeout. Selected temporary SPN2 job errors also trigger retries. If the reply to a capture submission is lost in a network failure, its outcome is reported as unknown rather than blindly submitting the same job again.
+
+A failed URL is reported and processing continues with the next one; failed or unconfirmed captures are omitted from the TXT. A failed child sitemap is also reported while other referenced sitemaps continue to be processed. Check the final summary to distinguish a complete batch from partial results. A disk-write failure stops the run.
+
+Press `Ctrl+C` to interrupt the run. Completed TXT lines remain available, but the current unconfirmed job may still finish at Internet Archive without appearing in the file. Starting the script again creates a new file and processes the live sitemap from the beginning: there is no automatic resume or skipping based on previous TXT files. Exit codes are `0` for a complete run, `1` for partial results or failure, and `130` for interruption.
+
 
 ### 15.4 YouTube video archiving
 

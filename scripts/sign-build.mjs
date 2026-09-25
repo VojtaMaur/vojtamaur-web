@@ -1,4 +1,6 @@
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { HISTORY_FILE, readHistory, validateBuildType, recordSignedBuild } from "./build-hash-history.mjs";
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -17,6 +19,7 @@ const MANIFEST_FILE = "SHA256SUMS.txt";
 const SIGNATURE_FILE = "SHA256SUMS.txt.asc";
 const SIGNING_STATUS_FILE = "SIGNING_STATUS.txt";
 const JSON_FILE = "integrity.json";
+const BUILD_HASH_FILE = "BUILD_SHA256.txt";
 
 const manifestPath = path.join(targetDir, MANIFEST_FILE);
 const signaturePath = path.join(targetDir, SIGNATURE_FILE);
@@ -199,6 +202,30 @@ async function resolveGnuPgHome(fingerprint) {
   }
 }
 
+async function inspectBuildHistory() {
+  const manifest = await fs.readFile(manifestPath);
+  const buildHash = createHash("sha256").update(manifest).digest("hex");
+  const declaredHash = await fs.readFile(path.join(targetDir, BUILD_HASH_FILE), "utf8");
+  if (declaredHash.trim() !== buildHash + "  " + MANIFEST_FILE) {
+    throw new Error(BUILD_HASH_FILE + " does not match " + MANIFEST_FILE + ".");
+  }
+
+  const history = await readHistory(path.join(targetDir, HISTORY_FILE));
+  const historyHash = createHash("sha256").update(history, "utf8").digest("hex");
+  const historyEntries = manifest.toString("utf8").split(/\r?\n/)
+    .filter((line) => line.endsWith("  " + HISTORY_FILE));
+  if (historyEntries.length !== 1 || historyEntries[0] !== historyHash + "  " + HISTORY_FILE) {
+    throw new Error(MANIFEST_FILE + " does not cover the exact " + HISTORY_FILE + " snapshot.");
+  }
+
+  const metadata = JSON.parse(await fs.readFile(integrityJsonPath, "utf8"));
+  validateBuildType(metadata.buildType);
+  if (metadata.buildHash !== buildHash || metadata.buildHistoryFile !== HISTORY_FILE) {
+    throw new Error(JSON_FILE + " does not match the build history or manifest.");
+  }
+  return { history, buildHash, buildType: metadata.buildType };
+}
+
 async function updateIntegrityMetadata({
   present,
   fingerprint = null,
@@ -224,6 +251,7 @@ async function updateIntegrityMetadata({
       "utf8"
     );
   } catch (metadataError) {
+    if (present) throw metadataError;
     console.warn(
       `[signing] Could not update ${JSON_FILE}: ${metadataError.message}`
     );
@@ -237,6 +265,7 @@ This build is OpenPGP signed by the author.
 
 Signed manifest: ${MANIFEST_FILE}
 Detached signature: ${SIGNATURE_FILE}
+Previous signed builds: ${HISTORY_FILE} (covered by the signed manifest)
 Signing key fingerprint:
 ${formatFingerprint(fingerprint)}
 
@@ -269,6 +298,7 @@ async function main() {
   await fs.access(targetDir);
   await fs.access(manifestPath);
 
+  const build = await inspectBuildHistory();
   const fingerprint = await readFingerprint();
 
   await fs.rm(signaturePath, { force: true });
@@ -296,13 +326,21 @@ async function main() {
     manifestPath
   ]);
 
+  const verifiedBuild = await inspectBuildHistory();
+  if (verifiedBuild.buildHash !== build.buildHash || verifiedBuild.buildType !== build.buildType) {
+    throw new Error("Build changed during signing; rebuild before signing again.");
+  }
+
   await writeSignedStatus(fingerprint);
   await updateIntegrityMetadata({
     present: true,
     fingerprint: formatFingerprint(fingerprint)
   });
 
-  console.log(`[signing] ${SIGNATURE_FILE}: verified`);
+  // Last commit step: any earlier failure leaves canonical history untouched.
+  const appended = await recordSignedBuild(projectRoot, build);
+  console.log("[signing] " + HISTORY_FILE + ": " + (appended ? "recorded in source" : "already recorded"));
+  console.log("[signing] " + SIGNATURE_FILE + ": verified");
 }
 
 main().catch(async (error) => {

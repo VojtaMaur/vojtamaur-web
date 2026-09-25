@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { deflateRawSync } from "node:zlib";
+import { HISTORY_FILE, validateHistory } from "./build-hash-history.mjs";
 
 const ROOT = process.cwd();
 const TARGET_DIR = path.resolve(process.argv[2] ?? "dist");
@@ -588,10 +589,16 @@ async function main() {
   }
 
   const { entries, assetManifest } = await collectZipEntries();
+  // Use the exact bytes embedded in both source archives for the build snapshot.
+  const history = entries.find((entry) => entry.zipPath === HISTORY_FILE);
+  if (!history) throw new Error("Missing canonical " + HISTORY_FILE + " in source.");
+  validateHistory(history.data.toString("utf8"));
   const jpegCarrierBase = await readJpegCarrierBase();
 
   await writeZip(OUTPUT_PATH, entries);
   await writeZip(CARRIER_OUTPUT_PATH, entries, { prefix: jpegCarrierBase });
+
+  await fs.writeFile(path.join(TARGET_DIR, HISTORY_FILE), history.data);
 
   const [zipStat, carrierStat] = await Promise.all([
     fs.stat(OUTPUT_PATH),

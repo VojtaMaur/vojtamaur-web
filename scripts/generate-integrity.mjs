@@ -1,10 +1,12 @@
 import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { HISTORY_FILE, readHistory, validateBuildType } from "./build-hash-history.mjs";
 
 const targetArg = process.argv[2] ?? "dist";
 const TARGET_DIR = path.resolve(targetArg);
 const SCOPE = path.basename(TARGET_DIR);
+const BUILD_TYPE = process.argv[3] ?? (process.env.BUILD_TARGET === "usb" ? "usb" : "web");
 
 const MANIFEST_FILE = "SHA256SUMS.txt";
 const OLD_MANIFEST_FILE = "SHA256SUMS";
@@ -84,6 +86,10 @@ async function removeOldIntegrityFiles() {
 
 async function main() {
   await fs.access(TARGET_DIR);
+  validateBuildType(BUILD_TYPE);
+  // Source-bundle generation supplies the snapshot also embedded in its ZIP.
+  // Never refresh it here: doing so could disagree with the already built ZIP.
+  await readHistory(path.join(TARGET_DIR, HISTORY_FILE));
 
   await removeOldIntegrityFiles();
 
@@ -120,6 +126,8 @@ async function main() {
       root: targetArg,
       manifest: MANIFEST_FILE,
       buildHashFile: BUILD_HASH_FILE,
+      buildType: BUILD_TYPE,
+      buildHistoryFile: HISTORY_FILE,
       buildHash: manifestHash,
       fileCount: files.length,
       excluded: [...EXCLUDED],

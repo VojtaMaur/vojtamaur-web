@@ -16,6 +16,7 @@ const CAPSULE_TEXT_ASSET_PATHS = [
   "SHA256SUMS.txt",
   "SHA256SUMS.txt.asc",
   "BUILD_SHA256.txt",
+  "BUILD_HASH_HISTORY.txt",
   "integrity.json",
   "SIGNING_STATUS.txt",
   "ALL_POSTS.txt",

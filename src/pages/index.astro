@@ -13,8 +13,8 @@ const allPosts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 );
 
-function buildSectionTiles(sectionPosts, moreHref: string) {
-  const base: any[] = sectionPosts.slice(0, 9).map((post) => ({
+function buildSectionTiles(sectionPosts, moreHref: string, limit = 9) {
+  const base: any[] = sectionPosts.slice(0, limit).map((post) => ({
     title: post.data.title,
     href: page(post.data.slug, lang),
     thumbnail: post.data.thumbnail,
@@ -24,7 +24,7 @@ function buildSectionTiles(sectionPosts, moreHref: string) {
     exhibition: post.data.exhibition,
   }));
 
-  if (sectionPosts.length > 9) {
+  if (sectionPosts.length > limit) {
     base.push({
       title: "",
       href: moreHref,
@@ -42,7 +42,7 @@ const cestovani = allPosts.filter((post) => post.data.section === "cestovani");
 
 const volnaTvorbaTiles = buildSectionTiles(volnaTvorba, section("volna-tvorba", lang));
 const vystavyTiles = buildSectionTiles(vystavy, section("vystavy", lang));
-const cestovaniTiles = buildSectionTiles(cestovani, section("cestovani", lang));
+const cestovaniTiles = buildSectionTiles(cestovani, section("cestovani", lang), 3);
 
 const allVideos = (await getCollection("videos", ({ data }) => !data.draft))
   .sort((a, b) =>

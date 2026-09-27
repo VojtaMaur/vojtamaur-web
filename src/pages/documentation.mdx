@@ -662,11 +662,13 @@ This policy uses normal HTML links and requires no client-side JavaScript. Visit
 The homepage combines content from multiple parts of the website.
 
 ### 8.1 Dynamic content loading
-Each main section on the homepage displays the latest 9 items:
+Both Czech and English homepages display the latest items by section:
 
-- Volná tvorba
-- Výstavy
-- Cestování
+- Volná tvorba: 9 items (three rows on desktop)
+- Výstavy: 9 items (three rows on desktop)
+- Cestování: 3 items (one row on desktop)
+
+The grids retain their responsive two-column and single-column layouts on smaller screens.
 
 ### 8.2 “Show all” button
 If a given section contains more items than the number displayed on the homepage, a “show all” tile is added.
@@ -706,7 +708,7 @@ public/keys/vojta-maur-openpgp-fingerprint.txt
 
 The generated Gemini homepage intentionally follows the content logic of the HTML homepage rather than reducing the capsule to a single archive dump.
 
-For **Volná tvorba / Personal Work**, **Výstavy / Exhibitions**, and **Cestování / Travel**, the capsule shows the latest nine entries in the same order as the built homepage. If the HTML homepage contains its final “show all” tile, the Gemini homepage appends an uppercase `ZOBRAZIT VŠE` or `SHOW ALL` link after those entries.
+For **Volná tvorba / Personal Work**, **Výstavy / Exhibitions**, and **Cestování / Travel**, the capsule shows the same entries in the same order as the built homepage: up to nine for Personal Work and Exhibitions, and three for Travel. If the HTML homepage contains its final “show all” tile, the Gemini homepage appends an uppercase `ZOBRAZIT VŠE` or `SHOW ALL` link after those entries.
 
 The remaining sections are handled differently:
 
@@ -1806,7 +1808,7 @@ The Gemini homepage contains:
 - a language switch
 - a short description of the capsule
 - a provider-neutral capsule description without host-specific acknowledgements
-- the latest nine items for Personal Work, Exhibitions, and Travel
+- up to nine latest items for Personal Work and Exhibitions, and three for Travel
 - `SHOW ALL` / `ZOBRAZIT VŠE` after the previews where the HTML homepage exposes that action
 - promotional video links followed by a direct link to the YouTube playlist
 - the full About Me and Contact content directly on the homepage
@@ -3320,6 +3322,7 @@ The following approaches were tested or seriously evaluated but were ultimately 
 - publication of the `Metaweb Article` on Kobo was attempted but rejected because Kobo considered it too niche and insufficiently distinct for publication; rather than resubmitting the same work, the approach was changed and the EPUB export of all articles was later published successfully as an authorial collection categorized primarily as biography/art rather than technology/programming
 - hosting of a Spartan capsule on [tilde.team](https://tilde.team/) was explored as an additional alternative-protocol mirror of `vojtamaur.cz`; the service was contacted about Spartan hosting, but no response was received, so this option was abandoned
 - inclusion of the English `Metaweb Article` in ArchiveBox's [Web Archiving Community](https://github.com/ArchiveBox/ArchiveBox/wiki/Web-Archiving-Community) page was proposed to Nick Sweeting for the “Articles We Like About Internet Archiving” section; no response was received and the article was not added
+- registration of two physical air-gapped copies listed in the [Metaweb Article](https://vojtamaur.cz/metawebovy-clanek/) — ID 013 (`ALL_POSTS.txt Memory of Mankind Edition`) and ID 015 (`vojtamaur.cz offline 5`) — with the [International Time Capsule Society](https://www.itcsoc.org/) was attempted; the first registration was submitted on 2026-09-07 and the second on 2026-09-21; as of 2026-09-27, neither had appeared in the public registry, and a follow-up email sent on 2026-09-18 had received no response
 
 ---
 

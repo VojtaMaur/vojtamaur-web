@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "93cd9376e31c9cc61daf07d0debe54bc2d7a4004b50d4bab2522aa42627fb6cf",
+  "purpose": "html-region",
+  "page": "/en/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-grid\"> <a class=\"post-card \" href=\"/en/cestovani-polsko-mazury-2026/\"> <div class=\"post-card__thumb\"> <img src=\"/images/cestovani-polsko-mazury-2026-nahled.jpg\" alt=\"Polsko - Mazury 2026\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Polsko - Mazury 2026</div> </a><a class=\"post-card \" href=\"/en/cestovani-italie-benatky-2026/\"> <div class=\"post-card__thumb\"> <img src=\"/images/cestovani-italie-benatky-2019-nahled.jpg\" alt=\"Itálie - Benátky 2026\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Itálie - Benátky 2026</div> </a><a class=\"post-card \" href=\"/en/cestovani-thaisko-2024/\"> <div class=\"post-card__thumb\"> <img src=\"/images/cestovani-thaisko-2024-nahled.png\" alt=\"Thaisko 2024\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Thaisko 2024</div> </a><a class=\"post-card post-card--more\" href=\"/en/cestovani/\"> <div class=\"post-card__thumb\"> <div class=\"post-card__more-text\">show all</div> </div>  </a> </div> ",
+  "translatedFragment": " <div class=\"post-grid\"> <a class=\"post-card \" href=\"/en/cestovani-polsko-mazury-2026/\"> <div class=\"post-card__thumb\"> <img src=\"/images/cestovani-polsko-mazury-2026-nahled.jpg\" alt=\"Polsko - Mazury 2026\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Poland - Masuria 2026</div> </a><a class=\"post-card \" href=\"/en/cestovani-italie-benatky-2026/\"> <div class=\"post-card__thumb\"> <img src=\"/images/cestovani-italie-benatky-2019-nahled.jpg\" alt=\"Itálie - Benátky 2026\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Italy - Venice 2026</div> </a><a class=\"post-card \" href=\"/en/cestovani-thaisko-2024/\"> <div class=\"post-card__thumb\"> <img src=\"/images/cestovani-thaisko-2024-nahled.png\" alt=\"Thaisko 2024\" loading=\"lazy\"> </div> <div class=\"post-card__title\">Thailand 2024</div> </a><a class=\"post-card post-card--more\" href=\"/en/cestovani/\"> <div class=\"post-card__thumb\"> <div class=\"post-card__more-text\">show all</div> </div>  </a> </div> ",
+  "createdAt": "2026-09-27T08:05:18.975Z"
+}

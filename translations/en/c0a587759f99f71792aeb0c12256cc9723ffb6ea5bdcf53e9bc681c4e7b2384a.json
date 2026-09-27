@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "c0a587759f99f71792aeb0c12256cc9723ffb6ea5bdcf53e9bc681c4e7b2384a",
+  "purpose": "html-region",
+  "page": "/en/cestovani-egypt-2012/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Egypt 2012</h1> <p class=\"post-meta\">Fotografie</p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-egypt-2012-obr-1.jpg\"> <img src=\"/images/cestovani-egypt-2012-obr-1.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-egypt-2012-obr-2.jpg\"> <img src=\"/images/cestovani-egypt-2012-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-egypt-2012-obr-3.jpg\"> <img src=\"/images/cestovani-egypt-2012-obr-3.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-egypt-2012-obr-4.jpg\"> <img src=\"/images/cestovani-egypt-2012-obr-4.jpg\" alt=\"\"> </a>   </div> </div> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Egypt 2012</h1> <p class=\"post-meta\">Photos</p> </div> <div class=\"post-body\"> <figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-egypt-2012-obr-1.jpg\"> <img src=\"/images/cestovani-egypt-2012-obr-1.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-egypt-2012-obr-2.jpg\"> <img src=\"/images/cestovani-egypt-2012-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-egypt-2012-obr-3.jpg\"> <img src=\"/images/cestovani-egypt-2012-obr-3.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-egypt-2012-obr-4.jpg\"> <img src=\"/images/cestovani-egypt-2012-obr-4.jpg\" alt=\"\"> </a>   </div> </div> </div> ",
+  "createdAt": "2026-05-07T18:14:24.755Z"
+}

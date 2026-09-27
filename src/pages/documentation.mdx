@@ -537,7 +537,7 @@ Supported alignment options:
 - `center`
 - `right`
 
-Depending on the configuration, the component can also open the image when clicked.
+`link` defaults to `true`: clicking the image opens its source file in the current tab. Setting `link={false}` renders the image without a wrapping link.
 
 ### 7.2 `MediaRow.astro`
 
@@ -556,6 +556,8 @@ Use cases:
 - intentional empty cells used to keep a row layout without creating fake media
 
 The component also supports a bordered variant.
+
+The component-level `link` parameter defaults to `true` and opens image items in the current tab. Setting `link={false}` removes the image links for the whole row. Items of type `pdf` remain embedded in an iframe; this setting only controls image links.
 
 Image items support `alt` text. The value is rendered directly into the image `alt` attribute. If `alt` is omitted, the component renders an empty `alt` attribute.
 
@@ -645,6 +647,14 @@ When the grid collapses, a PDF iframe may require special adjustment of height o
 #### Responsive grid collapse
 Listings and media layouts have multiple states depending on screen width. Some elements, such as the “show all” button or PDF embeds, required separate behavior adjustments for 3, 2, and 1 column layouts.
 
+### 7.5 Link behavior
+
+Site links open in the current tab by default, including linked images in `ImageFigure` and `MediaRow`, text links to images and files, and archive entry points. A linked image and a text link to the same file therefore behave consistently. File links do not force a download: the browser displays supported formats or handles the file according to its settings and the server response.
+
+The intentional exceptions are the YouTube video tiles on the homepage and the Propagační videa playlist links (including the section heading and the show-all tile). They continue to open in a new tab in both language versions.
+
+This policy uses normal HTML links and requires no client-side JavaScript. Visitors can still choose to open web and file links in a new tab. It also applies to the portable/offline and Arweave builds; controls inside third-party embeds are managed by their providers. Links using protocols such as `mailto:`, `tel:`, `gemini:`, or `gopher:` are handled by the browser or a registered application rather than being guaranteed to open in a browser tab.
+
 ---
 
 ## 8. Homepage architecture
@@ -662,7 +672,7 @@ Each main section on the homepage displays the latest 9 items:
 If a given section contains more items than the number displayed on the homepage, a “show all” tile is added.
 
 ### 8.3 Propagační videa
-The Propagační videa section uses a visual model similar to article listings, but the items link to external YouTube URLs. The listing is based on the `videos` collection.
+The Propagační videa section uses a visual model similar to article listings, but the items link to external YouTube URLs. The listing is based on the `videos` collection. The video tiles, show-all playlist tile, and playlist section heading intentionally open in a new tab in both language versions (section 7.5).
 
 ### 8.4 Clickable section headings
 Section headings on the homepage are clickable and serve as quick navigation to the relevant categories or an external playlist.
@@ -2628,6 +2638,7 @@ Practical consequences:
 
 - unchanged content is not sent to DeepL again
 - changed Czech content gets a new cache key
+- changes to link attributes in unprotected translated HTML also change its cache key, even when the visible Czech text stays the same; the corresponding source and translated fragments must both match the updated link behavior
 - changing a glossary entry invalidates fragments that contain its Czech source term
 - changing an unrelated glossary entry does not invalidate every translated page
 - changing other translation policy can invalidate old cache entries

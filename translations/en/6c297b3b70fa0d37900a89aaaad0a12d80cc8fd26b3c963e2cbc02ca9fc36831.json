@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "hash": "6c297b3b70fa0d37900a89aaaad0a12d80cc8fd26b3c963e2cbc02ca9fc36831",
+  "purpose": "html-region",
+  "page": "/en/cestovani-italie-2016/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true
+  },
+  "selectorPolicyRevision": 2,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Itálie 2016</h1> <p class=\"post-meta\">Video, fotografie</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-1.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-2.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-3.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-3.jpg\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-italie-2016-obr-4.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-4.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-5.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-5.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-6.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-6.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-7.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-7.jpg\" alt=\"\"> </a>   </div> </div> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Italy 2016</h1> <p class=\"post-meta\">Video, photos</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-1.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-2.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-3.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-3.jpg\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-italie-2016-obr-4.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-4.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-5.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-5.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-6.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-6.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-italie-2016-obr-7.jpg\"> <img src=\"/images/cestovani-italie-2016-obr-7.jpg\" alt=\"\"> </a>   </div> </div> </div> ",
+  "createdAt": "2026-05-07T18:32:22.559Z"
+}

@@ -16,7 +16,7 @@ const { items = [], bordered = false, link = true } = Astro.props;
       <div class="media-row__item">
         {item.type === "image" && (
           link ? (
-            <a href={resolvedSrc} target="_blank" rel="noopener noreferrer">
+            <a href={resolvedSrc}>
               <img src={resolvedSrc} alt={item.alt || ""} />
             </a>
           ) : (

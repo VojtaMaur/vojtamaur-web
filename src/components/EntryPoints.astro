@@ -32,7 +32,6 @@ const isHttpUrl = (value: string) =>
     ? (
       <a
         href={part}
-        target={isHttpUrl(part) ? '_blank' : undefined}
         rel={isHttpUrl(part) ? 'noopener noreferrer' : undefined}
       >{part}</a>
     )

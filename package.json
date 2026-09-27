@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "test:integrity": "node --test tests/build-hash-history.test.mjs",
+    "test:morse": "python -B -m unittest discover -s tests -p test_morse_export.py",
     "build": "npm run build:web",
     "preview": "astro preview",
     "generate:all-posts": "node scripts/generate-all-posts.mjs",
@@ -42,7 +43,8 @@
     "export:pdf": "python scripts/export-site-pdf.py",
     "export:pdf:build": "python scripts/export-site-pdf.py --build-command \"npm run build:web:strict\"",
     "export:pdf:metaweb": "python scripts/export-metaweb-pdf.py",
-    "export:sstv": "python scripts/export-site-sstv.py"
+    "export:sstv": "python scripts/export-site-sstv.py",
+    "export:morse": "python scripts/export-site-morse.py"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",

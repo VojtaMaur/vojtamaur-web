@@ -225,6 +225,7 @@ Meaning of the main scripts:
 - `npm run export:pdf` – manually exports article pages from the finished `dist/` build to archival PDF files; this command is not part of the normal build pipeline
 - `npm run export:pdf:metaweb` – manually creates one archival PDF containing the bilingual metaweb article and its directly related preservation files; this command is not part of any build pipeline
 - `npm run export:sstv` – manually renders indexed articles from the finished `dist/` build to numbered PNG frames at native SSTV mode dimensions; defaults to Czech PD120 output under `exports/sstv/pd120/`, does not run a build or generate audio, and is not part of any build pipeline (section 9.6.8)
+- `npm run export:morse` – manually converts the existing `dist/ALL_POSTS.json` through the compact text serializer into an ASCII Morse edition under `exports/`; supports `--lang cs|en|both`, defaults to one bilingual file, and is also included in `export-all.bat` (section 9.6.11)
 
 All signed build variants and both standalone signing commands use the same history mechanism: after successful signature verification and status/metadata writes, they record the current build in the project-root `BUILD_HASH_HISTORY.txt`. Unsigned build commands do not append records. The source-bundle step supplies the history snapshot required by the subsequent integrity pass; see section 9.6.1.
 
@@ -2269,6 +2270,38 @@ The repair path preserves valid items even from incomplete responses and submits
 
 An interrupted run keeps its batch ID and results in `rosetta.json`. If a submission's outcome is uncertain and no batch ID was saved, locate the actual job in Google AI Studio and recover it with `collect --batch-name batches/ID` (replace `ID` with that job's identifier), adding the same `--output` when applicable. Do not submit a duplicate job blindly. Completed exports from an older timestamped Rosetta directory can be imported into the shared directory without API calls using `node scripts/export-site-rosetta.mjs import --from exports/rosetta-OLD`.
 
+### 9.6.11 Morse-code text export
+
+`scripts/export-site-morse.py` creates a manual archival edition from the existing `dist/ALL_POSTS.json`, using only the Python standard library. It reuses the JSON parser, language selection, article order, full `articleBody` and compact media serializer from `scripts/filter-all-posts.py`. It does not encode raw JSON syntax or JSON-LD bookkeeping. Each article retains its rendered title and month, language, section and public URL, followed by compact text and media references (image filenames, alt text, captions and embed sources). Explicit `ARTICLE` / `END ARTICLE` lines mark article boundaries, and the closing code marker becomes `END CODE BLOCK` before normalization.
+
+```bash
+npm run export:morse -- --lang cs
+npm run export:morse -- --lang en
+npm run export:morse -- --lang both
+```
+
+The default is `both`, which writes one combined file containing Czech and English entries in source order. All sections are included. Filenames follow the existing compact export convention:
+
+```text
+exports/ALL_POSTS__lang-cs__section-all__format-morse.txt
+exports/ALL_POSTS__lang-en__section-all__format-morse.txt
+exports/ALL_POSTS__lang-cs+en__section-all__format-morse.txt
+```
+
+The pipeline is JSON → compact text with article metadata → normalized ASCII → International Morse. Normalization uses Unicode NFKD decomposition and uppercase A–Z / 0–9. The versioned, fixed `scripts/morse-glossary.json` supplies letter transliterations such as `ł → L` and named symbols such as `π → PI`, `φ → PHI`, `× → TIMES` and `≈ → APPROXIMATELY`. Named symbols become separate words. Remaining punctuation becomes word separators; combining marks and invisible Unicode formatting controls are removed. Unsupported characters become `UNICODE` followed by their uppercase hexadecimal code point, for example `天 → UNICODE 5929`, rather than disappearing silently. This is a lossy reading representation: punctuation, case, diacritics and indentation cannot be reconstructed exactly.
+
+Horizontal whitespace becomes single spaces; every LF and blank line in the compact representation is preserved. As with compact text export, redundant prose blank lines are already removed by the shared serializer, while blank lines inside code remain. CRLF, CR and Unicode line separators normalize to LF. The final file contains only `.`, `-`, spaces, `/` and LF: Morse letters are separated by a space and words by ` / `. It is ASCII without BOM, with LF even on Windows; any header is Morse-encoded too. The same input, glossary and options produce the same bytes, and the command reports article counts and SHA-256.
+
+Paths resolve from the project root (the parent of `scripts/`, or `--project-root`). Explicit inputs must be JSON-LD article archives; legacy TXT is not accepted. An explicit output must remain a `.txt` file under `exports/` and cannot overwrite the input. Missing requested languages are errors. Examples for archived input and validation without writing:
+
+```bash
+python scripts/export-site-morse.py --input exports/ALL_POSTS-2026-09-23.json --lang cs --output exports/morse-cs-2026-09-23.txt
+python scripts/export-site-morse.py --lang both --dry-run
+npm run test:morse
+```
+
+`export-all.bat` runs the bilingual Morse export after its compact text exports. No normal web, USB, Arweave or Gemini build invokes it; the build continues to generate the source JSON, and the manual export leaves `dist/` and its integrity manifests unchanged. The generated `exports/` files remain excluded from version control.
+
 ### 9.7 Arweave / Permaweb build
 
 The Arweave / Permaweb build is created with:
@@ -3304,7 +3337,6 @@ Possible future directions for the project:
 - implementation of an automated link and file integrity checker for detecting broken internal links, missing assets and invalid fragment references across the website and generated archival outputs
 - production of additional ceramic tablets for deposit in Memory of Mankind containing the website’s image archive, with original filenames preserved so that individual images can be matched to their references in ALL_POSTS.txt
 - evaluation of producing a self-supporting laser-engraved granite archival copy of ALL_POSTS.txt, using a substantial stone slab (approximately 35 × 35 cm and 30–40 mm thick) with dense microtext across the front surface; dark, fine-grained granite would be preferred for engraving contrast, with final material and text size selected according to the manufacturer’s technical assessment before production
-- development of a Morse-code archival edition of ALL_POSTS.txt as a highly simplified, human-decodable representation: the UTF-8 source would be normalized to a restricted A–Z/0–9 character set, using a predefined transliteration glossary for unsupported Unicode symbols (e.g. π → PI), and subsequently converted to International Morse code
 - development of an interactive-fiction edition for the [IF Archive](https://www.ifarchive.org/), embedding the complete ARCHIVE.txt and ALL_POSTS.txt in a self-contained `.gblorb` text adventure, playable locally or in a browser via Parchment
 - evaluation of producing a laser-engraved glass archival copy of ALL_POSTS.txt, either as a solid glass cube with dense microtext distributed across all six faces or as a set of smaller glass plates; surface or subsurface engraving would be selected according to technical feasibility
 - creation of an additional offline archival copy on M-DISC optical media, containing the most important exports, source files, and offline builds of `vojtamaur.cz`

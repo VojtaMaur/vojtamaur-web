@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "letters": {
+    "Æ": "AE", "æ": "AE", "Œ": "OE", "œ": "OE",
+    "Ø": "O", "ø": "O", "Ł": "L", "ł": "L",
+    "Đ": "D", "đ": "D", "Ð": "D", "ð": "D",
+    "Þ": "TH", "þ": "TH", "ẞ": "SS", "ß": "SS",
+    "ı": "I", "Ŋ": "NG", "ŋ": "NG", "Ħ": "H", "ħ": "H"
+  },
+  "symbols": {
+    "Α": "ALPHA", "α": "ALPHA", "Β": "BETA", "β": "BETA",
+    "Γ": "GAMMA", "γ": "GAMMA", "Δ": "DELTA", "δ": "DELTA",
+    "Ε": "EPSILON", "ε": "EPSILON", "Ζ": "ZETA", "ζ": "ZETA",
+    "Η": "ETA", "η": "ETA", "Θ": "THETA", "θ": "THETA",
+    "Ι": "IOTA", "ι": "IOTA", "Κ": "KAPPA", "κ": "KAPPA",
+    "Λ": "LAMBDA", "λ": "LAMBDA", "Μ": "MU", "μ": "MU", "µ": "MU",
+    "Ν": "NU", "ν": "NU", "Ξ": "XI", "ξ": "XI",
+    "Ο": "OMICRON", "ο": "OMICRON", "Π": "PI", "π": "PI",
+    "Ρ": "RHO", "ρ": "RHO", "Σ": "SIGMA", "σ": "SIGMA", "ς": "SIGMA",
+    "Τ": "TAU", "τ": "TAU", "Υ": "UPSILON", "υ": "UPSILON",
+    "Φ": "PHI", "φ": "PHI", "Χ": "CHI", "χ": "CHI",
+    "Ψ": "PSI", "ψ": "PSI", "Ω": "OMEGA", "ω": "OMEGA",
+    "+": "PLUS", "=": "EQUALS", "<": "LESS THAN", ">": "GREATER THAN",
+    "&": "AND", "%": "PERCENT", "$": "DOLLAR",
+    "−": "MINUS", "±": "PLUS MINUS", "∓": "MINUS PLUS",
+    "×": "TIMES", "÷": "DIVIDED BY", "·": "TIMES", "⋅": "TIMES",
+    "≈": "APPROXIMATELY", "≠": "NOT EQUAL", "≡": "IDENTICAL TO",
+    "≤": "LESS THAN OR EQUAL", "≥": "GREATER THAN OR EQUAL",
+    "∞": "INFINITY", "√": "SQUARE ROOT", "∛": "CUBE ROOT",
+    "∑": "SUM", "∏": "PRODUCT", "∫": "INTEGRAL",
+    "∂": "PARTIAL", "∇": "NABLA", "∈": "ELEMENT OF", "∉": "NOT ELEMENT OF",
+    "∅": "EMPTY SET", "∩": "INTERSECTION", "∪": "UNION",
+    "°": "DEGREES", "′": "PRIME", "″": "DOUBLE PRIME",
+    "→": "RIGHT ARROW", "←": "LEFT ARROW", "↔": "LEFT RIGHT ARROW",
+    "↑": "UP ARROW", "↓": "DOWN ARROW", "⇒": "IMPLIES", "⇔": "EQUIVALENT",
+    "€": "EURO", "£": "POUND", "¥": "YEN", "¢": "CENT", "₿": "BITCOIN",
+    "©": "COPYRIGHT", "®": "REGISTERED", "™": "TRADEMARK",
+    "§": "SECTION", "¶": "PARAGRAPH", "†": "DAGGER", "‡": "DOUBLE DAGGER",
+    "�": "REPLACEMENT CHARACTER"
+  }
+}

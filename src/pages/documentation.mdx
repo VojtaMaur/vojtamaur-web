@@ -116,6 +116,10 @@ Helper utilities and shared logic used across the project.
 #### `source-bundle/`
 Templates used by `scripts/generate-source-bundle.mjs` when creating the reconstructable source package. This directory contains the Python asset downloader and the reconstruction README that are copied into the generated source ZIP.
 
+#### `BUILD_HASH_HISTORY.txt`
+
+The project-root file is the canonical cumulative history of successfully signed builds. It is source data to preserve in version control. Builds receive a snapshot of the previous records; signing appends the current record only to the source file (section 9.6.1).
+
 ---
 
 ## 3. Key configuration files
@@ -160,6 +164,7 @@ npm run preview
 npm run build:usb
 npm run build:usb:signed
 npm run build:usb:translate
+npm run build:usb:translate:signed
 npm run build:usb:strict
 npm run build:usb:strict:signed
 npm run build:usb:prune:dry
@@ -174,6 +179,7 @@ npm run generate:integrity
 npm run generate:integrity:arweave
 npm run sign:build
 npm run sign:build:arweave
+npm run test:integrity
 npm run export:epub
 npm run export:epub:metaweb
 npm run export:pdf
@@ -184,27 +190,28 @@ npm run export:sstv
 Meaning of the main scripts:
 
 - `npm run dev` – starts the Astro development server
-- `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`, and writes unsigned build integrity metadata for `dist/`
+- `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:web:signed` – runs the standard web build and then creates and verifies the detached OpenPGP signature for `dist/SHA256SUMS.txt`
 - `npm run build:signed` – alias for `npm run build:web:signed`
-- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, writes unsigned build integrity metadata for `dist/`, and then generates the Gemini/Gopher text edition in `dist-gemini/`
+- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package, writes unsigned build integrity metadata for `dist/`, and then generates the Gemini/Gopher text edition in `dist-gemini/`
 - `npm run build:web:translate:signed` – runs the translating web build, including Gemini/Gopher text-edition generation, and then signs and verifies the checksum manifest for `dist/`; the detached signature does not cover the separate `dist-gemini/` directory
 - `npm run build:translate:signed` – alias for `npm run build:web:translate:signed`
-- `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, and writes unsigned build integrity metadata for `dist/`
+- `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:web:strict:signed` – runs the strict web build and then signs and verifies its checksum manifest
 - `npm run build:web:prune:dry` – runs the strict web build and prints unused English translation cache files that would be deleted, without deleting them
 - `npm run build:web:prune` – runs the strict web build and deletes unused, unprotected English translation cache files
 - `npm run preview` – local preview of the build
-- `npm run build:usb` – creates a portable file-based build, applies the English postprocess, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, rewrites paths for offline use, and writes unsigned build integrity metadata for `dist/`
+- `npm run build:usb` – creates a portable file-based build, applies the English postprocess, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package, rewrites paths for offline use, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:usb:signed` – runs the portable build and then signs and verifies its checksum manifest
-- `npm run build:usb:translate` – creates a portable file-based build, fills missing English translation cache entries, generates `dist/ALL_POSTS.txt`, generates the reconstructable source package, rewrites paths for offline use, and writes unsigned build integrity metadata for `dist/`
+- `npm run build:usb:translate` – creates a portable file-based build, fills missing English translation cache entries, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package, rewrites paths for offline use, and writes unsigned build integrity metadata for `dist/`
+- `npm run build:usb:translate:signed` – runs the translating portable build, signs and verifies its manifest, and records its hash in the source history with type `usb`
 - `npm run build:usb:strict` – creates a strict portable file-based build and fails if an English translation cache entry is missing
 - `npm run build:usb:strict:signed` – runs the strict portable build and then signs and verifies its checksum manifest
 - `npm run build:usb:prune:dry` – runs the strict portable build and prints unused English translation cache files that would be deleted, without deleting them
 - `npm run build:usb:prune` – runs the strict portable build and deletes unused, unprotected English translation cache files
 - `npm run build:arweave` – creates the strict standard web build, creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths, and then writes separate unsigned build integrity metadata for `dist-arweave/`
 - `npm run build:arweave:signed` – runs the Arweave build and then signs and verifies `dist-arweave/SHA256SUMS.txt`
-- `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt`, a plain-text export of all article content from the finished build output, and embeds the same text into `dist/404.html`
+- `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt` and the structured `dist/ALL_POSTS.json` from the finished build output, and embeds the text export into `dist/404.html`
 - `npm run generate:gemini` – replaces `dist-gemini/` with a freshly generated bilingual Gemini/Gopher text edition based on the existing finished `dist/` build and the post frontmatter
 - `npm run build:gemini` – runs the strict standard web build and then generates `dist-gemini/`; this is the standalone complete Gemini/Gopher text-edition build command
 - `npm run generate:source-bundle` – generates `dist/source/vojtamaur-web-source.zip`, a small reconstructable source package with a media manifest and an asset downloader
@@ -212,11 +219,14 @@ Meaning of the main scripts:
 - `npm run generate:integrity:arweave` – performs the same integrity pass for `dist-arweave/` after the Arweave copy-and-rewrite step
 - `npm run sign:build` – signs the existing `dist/SHA256SUMS.txt`, verifies the detached signature immediately, and updates the informational signing status and JSON metadata
 - `npm run sign:build:arweave` – performs the same explicit local signing step for `dist-arweave/`
+- `npm run test:integrity` – checks history formatting, archive snapshots, signing and failure handling in isolated temporary projects; the signing tests use a temporary GPG key and are skipped if GnuPG is unavailable
 - `npm run export:epub` – manually creates separate Czech and English reflowable EPUB books from the finished article pages in `dist/`, including a generated title/index section; this command is not part of the normal build pipeline
 - `npm run export:epub:metaweb` – manually creates one bilingual Metaweb EPUB with both article languages, its image appendix, archive map, technical documentation, and build identity files; this command is not part of any build pipeline
 - `npm run export:pdf` – manually exports article pages from the finished `dist/` build to archival PDF files; this command is not part of the normal build pipeline
 - `npm run export:pdf:metaweb` – manually creates one archival PDF containing the bilingual metaweb article and its directly related preservation files; this command is not part of any build pipeline
 - `npm run export:sstv` – manually renders indexed articles from the finished `dist/` build to numbered PNG frames at native SSTV mode dimensions; defaults to Czech PD120 output under `exports/sstv/pd120/`, does not run a build or generate audio, and is not part of any build pipeline (section 9.6.8)
+
+All signed build variants and both standalone signing commands use the same history mechanism: after successful signature verification and status/metadata writes, they record the current build in the project-root `BUILD_HASH_HISTORY.txt`. Unsigned build commands do not append records. The source-bundle step supplies the history snapshot required by the subsequent integrity pass; see section 9.6.1.
 
 
 
@@ -853,7 +863,7 @@ The export is produced by:
 scripts/generate-all-posts.mjs
 ```
 
-The script reads the finished static HTML from `dist/`, extracts the main article content, converts it into plain text, writes the result to `dist/ALL_POSTS.txt`, and embeds the same generated text into the finished `dist/404.html` recovery page.
+The script reads the finished static HTML from `dist/`, extracts the main article content, converts it into plain text, writes the result to `dist/ALL_POSTS.txt`, and embeds the same generated text into the finished `dist/404.html` recovery page. It then calls `scripts/export-site-json.mjs` to create `dist/ALL_POSTS.json` beside the text export. Both files are generated before the build integrity pass. Section 9.6.9 describes the JSON-LD format and its full, untruncated article content.
 
 This is intentionally generated from the built output rather than directly from the source `.mdx` files. The English version is created as a post-build static artifact by `scripts/en-postprocess.mjs`, so reading from `dist/` allows the export to include both Czech and English article versions.
 
@@ -881,7 +891,7 @@ HTML tables are converted into readable plain-text table blocks marked with `[TA
 
 Code blocks and generated output blocks are preserved as `[CODE BLOCK]` sections. Very large code or generated output blocks are truncated when they exceed the configured size limits. The export keeps the beginning of the block up to the configured line or character limit, then adds an explicit truncation note with the original size and the amount of omitted content.
 
-This prevents one unusually large generated block from making the entire text export difficult to read or process while still preserving a readable sample of the original block. The full version remains available in the rendered website, source repository, or static snapshots.
+This prevents one unusually large generated block from making the entire text export difficult to read or process while still preserving a readable sample of the original block. The full version remains available in `ALL_POSTS.json`, the rendered website, source repository, or static snapshots.
 
 The output file is written as UTF-8 with BOM to improve encoding detection in text editors and archival systems.
 
@@ -895,15 +905,15 @@ The published page must still be served with the real HTTP status `404`; `404.ht
 
 #### Manual filtered and compact exports
 
-The generated `dist/ALL_POSTS.txt` can be filtered manually with:
+The generated `dist/ALL_POSTS.json` can be filtered into a plain-text reading or archival copy manually with:
 
 ```text
 scripts/filter-all-posts.py
 ```
 
-This Python script is a separate post-processing tool. It is not called by `npm run build:web`, `npm run build:usb`, `npm run build:arweave`, `npm run generate:all-posts`, or any other normal build command. It reads an already generated `dist/ALL_POSTS.txt` and does not modify the source export.
+This Python script is a separate post-processing tool. It is not called by `npm run build:web`, `npm run build:usb`, `npm run build:arweave`, `npm run generate:all-posts`, or any other normal build command. It reads an already generated `dist/ALL_POSTS.json` and does not modify the source export. Article metadata comes from `vm:sourceMetadata`, ordering from `vm:position`, and full text from `articleBody`. Structured media references are adapted to the existing text and compact-media records. Code is not shortened to the limits of `ALL_POSTS.txt`.
 
-The script has no external Python dependencies. When it is stored in `scripts/`, the default input is resolved automatically as `dist/ALL_POSTS.txt`. Available languages, sections, metadata fields, and current article counts can be inspected with:
+The script has no external Python dependencies. When it is stored in `scripts/`, the default input is resolved automatically as `dist/ALL_POSTS.json`. Available languages, sections, metadata fields, and current article counts can be inspected with:
 
 ```bash
 python scripts/filter-all-posts.py --list-values
@@ -920,9 +930,16 @@ python scripts/filter-all-posts.py --from-date 2020-01-01 --to-date 2026-12-31 -
 Two output formats are available:
 
 - `--format structured` is the default. It retains the delimited article-block structure and can preserve all metadata or use the `full`, `archive`, `minimal`, or `none` metadata profiles. Exact metadata fields can also be selected with `--metadata-fields`, for example `--metadata-fields TITLE,URL,DATE`.
-- `--format compact` creates a compact reading and transfer copy. Long separator lines and repeated article metadata blocks are removed. Each article starts with [rendered title|YYYY-MM]; image references are reduced to records such as [img:filename|ALT: ...|CAPTION: ...]; and video, PDF, and interactive embeds use equivalent one-line records. Redundant blank lines and generic embed notes are omitted.
+- `--format compact` creates a compact reading and transfer copy. Long separator lines and repeated article metadata blocks are removed. Each article starts with [rendered title|YYYY-MM]; image references are reduced to records such as [img:filename|ALT: ...|CAPTION: ...]; and video, PDF, and interactive embeds use equivalent one-line records. Redundant blank lines outside code blocks and generic embed notes are omitted. Code indentation and blank lines inside code blocks are preserved.
 
-Compact output and structured output with `--metadata none` are intentionally not intended as inputs for another filtering pass because the metadata required for reliable filtering has been removed. Use structured output with sufficient metadata when another filtering step may be needed later.
+A different JSON or JSON-LD snapshot can be supplied as the positional input argument. Legacy structured TXT exports remain supported when selected explicitly, for example:
+
+```bash
+python scripts/filter-all-posts.py exports/ALL_POSTS-2026-09-23.json --language cs --format compact
+python scripts/filter-all-posts.py dist/ALL_POSTS.txt --language cs --metadata archive
+```
+
+The legacy TXT input retains any truncation already present in that source. Compact output and structured output with `--metadata none` are not suitable as inputs for another filtering pass because the metadata required for reliable filtering has been removed. Use the original JSON again, or structured TXT output with sufficient metadata, when another filtering step is needed.
 
 The default output directory is:
 
@@ -960,6 +977,8 @@ scripts/generate-integrity.mjs
 ```
 
 The script walks through the selected output directory, calculates a SHA-256 checksum for each included file, writes a sorted per-file manifest to `SHA256SUMS.txt`, and then calculates a global build hash from that manifest.
+
+The output also contains `BUILD_HASH_HISTORY.txt`, supplied earlier by `scripts/generate-source-bundle.mjs`. The integrity generator requires and validates that snapshot; it does not refresh it from source, because the already generated source ZIP must contain the same bytes. Unlike the metadata files excluded below, `BUILD_HASH_HISTORY.txt` is included in `SHA256SUMS.txt`.
 
 The global build hash is stored in:
 
@@ -1021,6 +1040,8 @@ It reads the expected primary-key fingerprint from `public/keys/vojta-maur-openp
 
 and immediately verifies the new signature against `SHA256SUMS.txt`. Only after successful verification does it write a signed `SIGNING_STATUS.txt` and update the informational `openPgp` object in `integrity.json`.
 
+The final step appends the current build hash to the canonical source history. Before signing and again after verification, the signer checks that `BUILD_SHA256.txt` matches the manifest, that the manifest covers the exact history snapshot, and that `integrity.json` contains a valid build type and matching build hash/history reference. Failure before the final history commit leaves the canonical file unchanged.
+
 If signing fails, the script removes `SHA256SUMS.txt.asc`, writes a failed unsigned status where possible, records `openPgp.present: false`, and exits with a non-zero status. A build is therefore signed only when the detached signature is present and verifies successfully.
 
 When `GNUPGHOME` is already set, the script validates that directory and confirms that it contains the requested secret key. When it is not set and an interactive terminal is available, the script asks for the GnuPG home directory. In a non-interactive environment, `GNUPGHOME` must be set explicitly.
@@ -1038,9 +1059,11 @@ The available signed build commands are:
 
 ```bash
 npm run build:web:signed
+npm run build:web:translate:signed
 npm run build:translate:signed
 npm run build:web:strict:signed
 npm run build:usb:signed
+npm run build:usb:translate:signed
 npm run build:usb:strict:signed
 npm run build:arweave:signed
 ```
@@ -1051,6 +1074,33 @@ The signing step can also be applied to an already generated output:
 npm run sign:build
 npm run sign:build:arweave
 ```
+
+#### Cumulative signed build history
+
+`BUILD_HASH_HISTORY.txt` at the project root is the canonical source file shared by the web, USB, and Arweave signing workflows. It contains one record per successfully signed build, in append order, without a header:
+
+```text
+ISO-8601 UTC timestamp | build type | SHA256 | hash
+```
+
+The timestamp is the local record-creation time in UTC, written as `YYYY-MM-DDTHH:mm:ss.sssZ`. The stable build type is `web`, `usb`, or `arweave`; translation and strict modes do not create additional types. The hash is the lowercase 64-character SHA-256 digest of that build's `SHA256SUMS.txt`, also declared in its `BUILD_SHA256.txt`. Each record ends with a newline; an empty file is valid before the first recorded signed build.
+
+For build N, the lifecycle is:
+
+1. Source-bundle generation embeds the existing history in both source archives and copies those exact bytes into the build as `BUILD_HASH_HISTORY.txt`.
+2. After all build-specific rewriting, integrity generation includes that snapshot in `SHA256SUMS.txt` and writes the current manifest hash to `BUILD_SHA256.txt`.
+3. The explicit signing step creates and verifies `SHA256SUMS.txt.asc`, then writes the signed status and informational metadata.
+4. Only then is the current hash appended to the project-root history. The history snapshot, manifest, and source archives inside build N remain unchanged. The next build inherits the new record.
+
+This separates previous signed builds (`BUILD_HASH_HISTORY.txt` in the output) from the current build (`BUILD_SHA256.txt`). It avoids putting the current hash into a file that contributes to that same hash. The existing signature on `SHA256SUMS.txt` also authenticates the history snapshot through its checksum; no separate `BUILD_HASH_HISTORY.txt.asc` is created.
+
+`integrity.json` records `buildType` and `buildHistoryFile` alongside `buildHash`. Both web and USB builds use `dist/`, and the USB runner's environment is not automatically inherited by the later standalone signing process. The integrity step therefore stores `usb` in the metadata while `BUILD_TARGET=usb` is available, and the signer reads the stored type. The Arweave integrity command passes `arweave` explicitly. These metadata fields remain informational; verification uses the detached signature and the manifest checksums.
+
+Unsigned builds and failed signing attempts do not append records. Re-signing the same already recorded build does not append a duplicate. If another build has advanced the canonical history since the snapshot was taken, a new unrecorded build using that old snapshot is rejected; rebuild from the current source history before signing it.
+
+History updates use an exclusive lock and a temporary file under `.source-bundle-staging/`, which is excluded from Git and the source archives, followed by atomic replacement of the canonical source file. A lock conflict stops the update. After an interrupted signing process, remove a leftover `.source-bundle-staging/build-hash-history.lock` only after confirming that no signer is still running.
+
+Preserve the updated project-root history in version control after a successful signed build. Do not replace the history inside an already signed output with that newer source file: the output intentionally contains only the previous records, and changing it would break its manifest checksum.
 
 #### Verifying a signed build
 
@@ -1103,6 +1153,8 @@ sha256sum -c SHA256SUMS.txt
 ```
 
 The last command requires `sha256sum`. It is normally available on Linux, through GNU coreutils on macOS, and on Windows through environments such as Git Bash or WSL.
+
+The checksum check includes `BUILD_HASH_HISTORY.txt`. To also compare the current manifest digest with the value declared in `BUILD_SHA256.txt`, run `sha256sum -c BUILD_SHA256.txt` from the build root. A history file by itself is not a substitute for verifying the signature and checksums of the build that carries it.
 
 ### 9.6.2 Reconstructable source package
 
@@ -1163,6 +1215,8 @@ The clean carrier base is included directly in the source package and excluded f
 ZIP-aware tools such as 7-Zip can open the published `.jpg` directly. Tools that require a `.zip` suffix can operate on a copied or renamed `kurt-godel-rat.zip`. Ordinary image software continues to read the same JPEG image and ignores the archive data after EOI.
 
 The source package and JPEG/ZIP carrier are generated before the final integrity pass. Therefore `SHA256SUMS.txt` includes both artifacts as part of the final published or portable build.
+
+Both archives include the project-root `BUILD_HASH_HISTORY.txt`. The generator copies the exact archived history bytes into the build output, so all three snapshots agree. They contain the records preceding the current build, even after that build is successfully signed. Signing updates only the canonical file in the working source tree; it does not regenerate either archive. A reconstruction from an older source ZIP therefore starts with that ZIP's historical snapshot, not any records subsequently added to the maintained source repository.
 
 ### 9.6.3 Manual PDF export
 
@@ -1286,7 +1340,7 @@ The project also includes a second PDF exporter designed for high-density archiv
 scripts/export-site-pdf-ultra.py
 ```
 
-Unlike `scripts/export-site-pdf.py`, this exporter does not reproduce the visual design of each web page. It reads the existing `dist/ALL_POSTS.txt`, reuses the compact serialization implemented by `scripts/filter-all-posts.py`, and lays the selected content out as a dense A4 document. The tool is intended for cases where page count and storage size matter, while images and links should still remain present and usable.
+Unlike `scripts/export-site-pdf.py`, this exporter does not reproduce the visual design of each web page. It reads the existing `dist/ALL_POSTS.json`, reuses the compact serialization implemented by `scripts/filter-all-posts.py`, and lays the selected content out as a dense A4 document. The tool is intended for cases where page count and storage size matter, while images and links should still remain present and usable.
 
 The ultra-compact export:
 
@@ -1304,11 +1358,13 @@ The ultra-compact export:
 The exporter is manual and is not called by the normal web, USB, Arweave, Gemini, or integrity build workflows. It expects a current standard web build containing:
 
 ```text
-dist/ALL_POSTS.txt
+dist/ALL_POSTS.json
 dist/images/
 dist/files/
 dist/demos/
 ```
+
+The `--input` option can select another JSON-LD snapshot or a legacy structured TXT export. JSON supplies full article text without the code-block truncation of `ALL_POSTS.txt`; thumbnails still come from the local build assets.
 
 Create or refresh that input before exporting, for example with:
 
@@ -1480,10 +1536,9 @@ The exporter writes a manifest describing page ranges, including the generated u
 
 #### Run all manual exports on Windows
 
-The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the nine manual exports sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow begins with the JSON-LD article export and separate English and Czech compact text exports. After the PDF steps it creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs, preserving animated GIFs. The SSTV PNG export is the final step:
+The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the eight manual exports sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow requires both `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json` from the existing build and begins with separate English and Czech compact text exports. It uses the built JSON without regenerating it, preserving the bytes covered by any existing build checksum manifest or signature. After the PDF steps it creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs, preserving animated GIFs. The SSTV PNG export is the final step:
 
 ```bat
-node scripts/export-site-json.mjs
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
 python scripts/filter-all-posts.py --language cs --section volna-tvorba --format compact
 python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "C:\Program Files\gs\gs10.07.1\bin\gswin64c.exe"
@@ -2073,15 +2128,19 @@ Calibration images and a systematic comparison of source and received pages rema
 
 When publishing this SSTV export through Spotify for Creators, the original large WAV volumes uploaded successfully, appeared as published, and were playable in Creators, but an ingest problem prevented the episodes/show from appearing publicly. Spotify support confirmed that the issue was related to the audio file type. Converting the same volumes to MP3 and uploading them again resolved public publication. For future Spotify uploads of this export, use MP3 copies of the volumes; this records the workaround for this specific ingest issue, not a general claim that Spotify does not support WAV.
 
-### 9.6.9 Manual JSON-LD article export and vocabulary
+<span id="969-manual-json-ld-article-export-and-vocabulary"></span>
 
-The structured article export is started manually:
+### 9.6.9 JSON-LD article export and vocabulary
+
+The structured article export is generated automatically alongside `ALL_POSTS.txt` by `npm run generate:all-posts`, which is part of the web and USB build variants. The Arweave build carries both files into `dist-arweave/`. The standalone command remains available for an existing build:
 
 ```bash
 node scripts/export-site-json.mjs
 ```
 
-It writes `exports/ALL_POSTS.json` as UTF-8 JSON without BOM, also valid as JSON-LD 1.1. It uses the existing Node.js and Cheerio project dependencies. It never runs a build, fills translation caches, or accesses the network, and no normal build command invokes it. It is also the first step of `export-all.bat`.
+By default, it writes `dist/ALL_POSTS.json` as UTF-8 JSON without BOM, also valid as JSON-LD 1.1. It uses the existing Node.js and Cheerio project dependencies. The exporter reads an existing build; it does not start Astro, fill translation caches, or access the network. `export-all.bat` consumes the built JSON and no longer regenerates it.
+
+The JSON is initially generated after the English postprocess and TXT generation. After USB or Arweave path rewrites, the respective rewrite script refreshes the JSON when it is present, so `vm:articleHtml` and `vm:builtHtmlSha256` describe the final HTML files. The following integrity pass includes `ALL_POSTS.json` in that build's checksum manifest; signed variants cover it through the signed manifest.
 
 The finished `dist/ALL_POSTS.txt` supplies article selection, order and original metadata. Full content comes from the corresponding built HTML files, including postprocessed English titles and bodies. Both directory routes and flat USB article files are supported. The export includes all indexed article language versions; it does not automatically include homepage-only content, standalone pages such as this documentation or `/ns/`, or the contents of linked downloads.
 
@@ -2095,7 +2154,7 @@ Important interpretation rules:
 
 - `vm:sourceMetadata` is a JSON literal (`@type: "@json"`); its original index keys are not interpreted as Schema.org terms. The index's `TITLE` may remain Czech even for an English article, while `headline` comes from the rendered language version.
 - `vm:position` records article order starting at 1, since ordinary JSON-LD arrays do not imply RDF ordering. Each language version counts separately in `vm:articleCount`.
-- `vm:builtHtmlSha256` hashes the whole original HTML file; `vm:sourceIndexSha256` hashes the exact input index bytes. `vm:declaredBuildSha256`, when present, only copies the declared hash from `BUILD_SHA256.txt`; the exporter does not verify the manifest or OpenPGP signature.
+- `vm:builtHtmlSha256` hashes the whole selected HTML file; `vm:sourceIndexSha256` hashes the exact input index bytes. The JSON inside the build omits `vm:declaredBuildSha256`: it cannot contain the final hash of a build that includes itself. An explicit snapshot written under `exports/` may copy the declared hash from an existing `BUILD_SHA256.txt`; this does not verify the manifest or OpenPGP signature.
 - `vm:generatedAt` is the JSON export time, not an article modification date. `datePublished` retains the index date, including legacy first-of-month migration values described in section 5.5.1.
 - `vm:languageStatus` records the existing English fallback convention based on the `noindex` marker. It is not an independent translation-quality assessment, and English records may contain Czech ALT text or untranslated passages.
 - `vm:sourcePath` records the source path from the finished index. The exporter does not mix the current MDX contents into an older build.
@@ -2104,11 +2163,14 @@ Useful options:
 
 ```bash
 node scripts/export-site-json.mjs --dry-run
+node scripts/export-site-json.mjs --dist dist-arweave --dry-run
 node scripts/export-site-json.mjs --dist dist --output exports/ALL_POSTS.json
 node scripts/export-site-json.mjs --project-root "H:\vojtamaur-web"
 ```
 
-Relative paths are resolved from the project root, which defaults to the parent of `scripts/`. The output must be a `.json` or `.jsonld` file under `exports/` and outside the selected build. Dry run validates the inputs and constructs the export without writing it. Missing article files, malformed metadata, duplicate records and unsafe output paths cause a nonzero exit; successful writes replace the output through a temporary file. The exporter reports article count, byte size and the SHA-256 of the resulting JSON. The generated file remains outside `dist/` and outside the existing build signature.
+Relative paths are resolved from the project root, which defaults to the parent of `scripts/`. Without `--output`, the destination is `ALL_POSTS.json` at the root of the directory selected by `--dist` (default: `dist/`). An explicit output may be that same build file, or a `.json` / `.jsonld` snapshot under the project's `exports/` directory and outside the selected build. Such separate snapshots are not included in the build signature.
+
+Dry run validates the inputs and constructs the export without writing it. Missing article files, malformed metadata, duplicate records and unsafe output paths cause a nonzero exit; successful writes replace the output through a temporary file. The exporter reports article count, byte size and the SHA-256 of the resulting JSON. Rerunning the standalone exporter into an already checksummed or signed build changes the export, including its generation time; regenerate integrity metadata and sign again when applicable, or use `--dry-run` / an explicit snapshot under `exports/` to preserve the existing build.
 
 ### 9.6.10 Rosetta multilingual text export
 
@@ -2116,7 +2178,7 @@ Relative paths are resolved from the project root, which defaults to the parent 
 
 #### Source and translation boundaries
 
-By default, the script selects the JSON-LD snapshot with the newest `vm:generatedAt` from `exports/ALL_POSTS.json`, dated `exports/ALL_POSTS-YYYY-MM-DD.json` snapshots, or their `.jsonld` equivalents. `--input` selects an explicit snapshot. Only records with `inLanguage == "cs"` are translated, in `vm:position` order. English is also translated from Czech for this edition; the existing English article records are not reused. The 2026-09-23 source contained 82 Czech articles and 82 English counterparts; later exports can have different counts.
+By default, the script reads `dist/ALL_POSTS.json` from the current build. It does not search `exports/` or automatically select a dated snapshot. If the default file is missing, create a build or select an existing JSON / JSON-LD snapshot with `--input`. Only records with `inLanguage == "cs"` are translated, in `vm:position` order. English is also translated from Czech for this edition; the existing English article records are not reused. The 2026-09-23 source contained 82 Czech articles and 82 English counterparts; later exports can have different counts.
 
 `articleBody` supplies the linear text, including headings, captions and image ALT descriptions. `vm:articleHtml` supplies the matching protection map for `notranslate`, `translate="no"`, and code/output elements such as `pre`, `code`, `kbd` and `samp`. Ordinary prose and the article headline are translated unless protected. Structured media remain references in the text; media files are not downloaded or bundled.
 
@@ -2174,7 +2236,7 @@ TXT files use UTF-8 with BOM. Filenames always follow `ALL_POSTS__lang-CODE.txt`
 
 `rosetta.json` is both the language manifest and the resumable working state. Its `manifest.languages` entries map `code`, full language `name` and `filename`, with completion status, article counts and output checksums. The same file retains the source identity, protected originals, translation plan, API results, recovered valid text items, batch history and validation errors. Keep it alongside the TXT files: deleting it discards the local cache needed to avoid repeating paid translations. No per-language subdirectories or separate request, preview or error files are required.
 
-`--output exports/rosetta-NAME` selects another shared directory under `exports/`; pass that option consistently when preparing, submitting and collecting that edition. A different source snapshot or model requires a different output directory. For example:
+`--output exports/rosetta-NAME` selects another shared directory under `exports/`; pass that option consistently when preparing, submitting and collecting that edition. A different source snapshot or model requires a different output directory. After rebuilding the site, use a new output directory for the new JSON, or keep selecting the exact archived input with `--input` when continuing an earlier edition. `submit` and `collect` reuse the saved configuration and do not need `--input`. For example:
 
 ```bash
 node scripts/export-site-rosetta.mjs prepare --input exports/ALL_POSTS-2026-09-23.json --output exports/rosetta-2026-09-23
@@ -2238,6 +2300,7 @@ The integrity files inside `dist-arweave/` belong to the Arweave deployment outp
 ```text
 dist-arweave/SHA256SUMS.txt
 dist-arweave/BUILD_SHA256.txt
+dist-arweave/BUILD_HASH_HISTORY.txt
 dist-arweave/integrity.json
 ```
 
@@ -2250,17 +2313,20 @@ The source of truth remains the normal project source. `dist-arweave/` is a gene
 The `build:usb` script is defined as a USB-targeted Astro build followed by postprocessing. In the current translation-aware workflow, the effective order is:
 
 ```text
-set "BUILD_TARGET=usb" && astro build && node scripts/en-postprocess.mjs && node scripts/usb-rewrite.mjs && npm run generate:all-posts && npm run generate:integrity
+set "BUILD_TARGET=usb" && astro build && node scripts/en-postprocess.mjs && npm run generate:all-posts && npm run generate:source-bundle && node scripts/usb-rewrite.mjs && npm run generate:integrity
 ```
 
-This implies six steps:
+This implies seven steps:
 
 1. `BUILD_TARGET=usb` is set
 2. the Astro build is run in the mode defined in `astro.config.mjs`
 3. `scripts/en-postprocess.mjs` applies the English translation layer using the available cache
-4. `scripts/usb-rewrite.mjs` rewrites root-based URLs into relative file paths
-5. `scripts/generate-all-posts.mjs` creates `dist/ALL_POSTS.txt` as a plain-text preservation export of the finished build
-6. `scripts/generate-integrity.mjs` creates `dist/SHA256SUMS.txt`, `dist/BUILD_SHA256.txt`, and `dist/integrity.json` for the final static output
+4. `scripts/generate-all-posts.mjs` creates `dist/ALL_POSTS.txt`, embeds the text in `dist/404.html`, and calls `scripts/export-site-json.mjs` to create `dist/ALL_POSTS.json`
+5. `scripts/generate-source-bundle.mjs` creates the source archives and copies their previous-build history snapshot into `dist/BUILD_HASH_HISTORY.txt`
+6. `scripts/usb-rewrite.mjs` rewrites root-based URLs into relative file paths, including links to the source ZIP and history, then refreshes the existing `dist/ALL_POSTS.json` from the rewritten HTML
+7. `scripts/generate-integrity.mjs` creates `dist/SHA256SUMS.txt`, `dist/BUILD_SHA256.txt`, `dist/integrity.json`, and an unsigned `dist/SIGNING_STATUS.txt` for the final static output, recording `buildType: "usb"`
+
+`npm run build:usb:translate:signed` uses the same successful-build order through `scripts/build-usb-translate.mjs`, with missing translations enabled. The runner attempts the USB rewrite even if an earlier step fails, but exits unsuccessfully and does not reach signing in that case. Only a successful underlying build reaches `npm run sign:build`; after signature verification and metadata/status updates, the signer appends a `usb` record to the canonical source history.
 
 ### 10.1 What `astro.config.mjs` does in USB mode
 
@@ -2314,11 +2380,13 @@ This implies five main steps:
 
 1. the standard Astro web build is created in `dist/`
 2. `scripts/en-postprocess.mjs` verifies or applies the English translation layer according to the strict build workflow
-3. `scripts/generate-all-posts.mjs` creates `dist/ALL_POSTS.txt` and `scripts/generate-integrity.mjs` creates integrity files for `dist/`
-4. `scripts/make-arweave-build.mjs` copies `dist/` to `dist-arweave/` and rewrites root-relative paths
-5. `scripts/generate-integrity.mjs dist-arweave` creates fresh integrity files for the final Arweave output
+3. `scripts/generate-all-posts.mjs` creates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, `scripts/generate-source-bundle.mjs` creates the source archives and history snapshot, and `scripts/generate-integrity.mjs` creates integrity files for `dist/`
+4. `scripts/make-arweave-build.mjs` copies `dist/` to `dist-arweave/`, rewrites root-relative paths, and refreshes the copied `dist-arweave/ALL_POSTS.json` from the rewritten HTML
+5. `scripts/generate-integrity.mjs dist-arweave arweave` creates fresh integrity files for the final Arweave output and records `buildType: "arweave"`
 
 The second integrity pass matters. The checksum files created during `build:web:strict` describe `dist/`. After `scripts/make-arweave-build.mjs` rewrites files in `dist-arweave/`, those original checksums would no longer be sufficient for the Arweave output. Therefore `dist-arweave/` gets its own `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json`.
+
+The copied `BUILD_HASH_HISTORY.txt` snapshot remains unchanged and is included in the new Arweave manifest. `npm run build:arweave:signed` records only the verified final Arweave build hash with type `arweave`; its intermediate unsigned web build does not add a history record.
 
 The Arweave output keeps the directory-style route model of the normal web build, for example:
 
@@ -2329,7 +2397,7 @@ en/fotogrammetrie/index.html
 
 This is different from the USB build, which uses a file-based output model.
 
-The purpose of `dist-arweave/` is to create a static folder that can be uploaded to ArDrive and then exposed through an Arweave manifest. The manifest should be created at the level where `index.html`, `_astro/`, `images/`, `files/`, `ALL_POSTS.txt`, and `ARCHIVE.txt` are directly present.
+The purpose of `dist-arweave/` is to create a static folder that can be uploaded to ArDrive and then exposed through an Arweave manifest. The manifest should be created at the level where `index.html`, `_astro/`, `images/`, `files/`, `ALL_POSTS.txt`, `ALL_POSTS.json`, and `ARCHIVE.txt` are directly present.
 
 ### 10.4 Exact Gemini build logic
 
@@ -2354,13 +2422,17 @@ The translating signed production command reaches the Gemini generator through t
 ```text
 Astro build
 -> English postprocess with missing translations enabled
--> ALL_POSTS and source-bundle generation
+-> ALL_POSTS.txt, ALL_POSTS.json and source-bundle generation
 -> integrity generation for dist/
 -> Gemini capsule generation in dist-gemini/
--> detached OpenPGP signing of dist/SHA256SUMS.txt
+-> detached OpenPGP signing and verification of dist/SHA256SUMS.txt
+-> signed status/metadata updates
+-> append the web build hash to the canonical source BUILD_HASH_HISTORY.txt
 ```
 
 The final signing step remains scoped to the normal web build. `dist-gemini/` is generated in the same workflow but is a separate unsigned artifact.
+
+The capsule copies `BUILD_HASH_HISTORY.txt` from the completed web output so that the article's history link works in the text edition. During this workflow the copied file contains the same previous-build snapshot as `dist/`. Capsule generation itself adds no history record, and the later source-history append does not refresh the capsule copy.
 
 ---
 
@@ -2891,7 +2963,7 @@ Before uploading the web build to FTP:
 3. If translation cache cleanup is needed, run `npm run build:web:prune:dry` and check the summary.
 4. If the dry-run looks correct, run `npm run build:web:prune`.
 5. Run `npm run preview`.
-6. Check that `dist/SHA256SUMS.txt`, `dist/BUILD_SHA256.txt`, and `dist/integrity.json` exist.
+6. Check that `dist/SHA256SUMS.txt`, `dist/BUILD_SHA256.txt`, `dist/BUILD_HASH_HISTORY.txt`, and `dist/integrity.json` exist.
 7. Open at least one EN article locally.
 8. Check that the article body is actually English, not only the header and metadata.
 9. Upload the complete `dist/` directory, including the integrity files.
@@ -2903,7 +2975,7 @@ For USB/offline output:
 2. Run `npm run build:usb:strict`.
 3. If translation cache cleanup is needed, run `npm run build:usb:prune:dry` and check the summary.
 4. If the dry-run looks correct, run `npm run build:usb:prune`.
-5. Check that `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json` are present in the generated output.
+5. Check that `SHA256SUMS.txt`, `BUILD_SHA256.txt`, `BUILD_HASH_HISTORY.txt`, and `integrity.json` are present in the generated output.
 6. Open the generated HTML from disk.
 7. Check CSS, images, internal links, and EN article content.
 
@@ -2914,12 +2986,12 @@ For Arweave / Permaweb output:
 2. Resolve unintended metadata findings before publishing.
 3. Run `npm run build:arweave`.
 4. Verify that the log ends with `Arweave build prepared in dist-arweave`.
-5. Verify that `dist-arweave/SHA256SUMS.txt`, `dist-arweave/BUILD_SHA256.txt`, and `dist-arweave/integrity.json` exist.
+5. Verify that `dist-arweave/SHA256SUMS.txt`, `dist-arweave/BUILD_SHA256.txt`, `dist-arweave/BUILD_HASH_HISTORY.txt`, and `dist-arweave/integrity.json` exist.
 6. Test the build locally under a fake manifest-like subdirectory.
 7. Upload only `dist-arweave/` to ArDrive.
 8. Create the manifest at the level where `index.html` is directly present.
 9. Test the manifest gateway URL.
-10. Check several deep routes, English routes, `ALL_POSTS.txt`, `ARCHIVE.txt`, and the integrity files.
+10. Check several deep routes, English routes, `ALL_POSTS.txt`, `ALL_POSTS.json`, `ARCHIVE.txt`, and the integrity files.
 
 ---
 
@@ -2933,8 +3005,10 @@ Important generated preservation and verification files include:
 ```text
 dist/404.html
 dist/ALL_POSTS.txt
+dist/ALL_POSTS.json
 dist/SHA256SUMS.txt
 dist/BUILD_SHA256.txt
+dist/BUILD_HASH_HISTORY.txt
 dist/integrity.json
 dist/SIGNING_STATUS.txt
 dist/SHA256SUMS.txt.asc       # only after an explicit signed build
@@ -3055,8 +3129,10 @@ A valid signature belongs only to the exact `SHA256SUMS.txt` that was signed. A 
 
 A mirror that receives an already completed locally signed build without rebuilding or modifying it can preserve the same signature. The absence of `SHA256SUMS.txt.asc` on an automated deployment therefore does not indicate failed checksum generation; it indicates that the explicit private-key operation was not performed.
 
+Deploy the history snapshot already contained in the signed output. The newer project-root `BUILD_HASH_HISTORY.txt` belongs to future builds and must not be copied over the signed snapshot. Provider-side unsigned rebuilds may inherit existing source-history records, but they do not append a record or authenticate their own output merely by publishing that file.
+
 ### 12.3 `.htaccess`
-For a static Astro website, a minimalist configuration is appropriate. A typical WordPress rewrite rule to `index.php` is not relevant for this type of project.
+For a static Astro website, a minimalist configuration is appropriate. 
 
 ### 12.4 Portable build
 The portable build can be used as a file-based snapshot or offline copy. However, it is not identical to normal web hosting, and some external services may behave differently.
@@ -3086,7 +3162,7 @@ Recommended workflow:
 
 1. run the public asset metadata audit
 2. run `npm run build:arweave`
-3. verify that `dist-arweave/SHA256SUMS.txt`, `dist-arweave/BUILD_SHA256.txt`, and `dist-arweave/integrity.json` exist
+3. verify that `dist-arweave/SHA256SUMS.txt`, `dist-arweave/BUILD_SHA256.txt`, `dist-arweave/BUILD_HASH_HISTORY.txt`, and `dist-arweave/integrity.json` exist
 4. optionally test `dist-arweave/` locally under a fake manifest-like subdirectory
 5. upload only `dist-arweave/` to a public ArDrive drive
 6. create an Arweave manifest at the level where `index.html` is directly present
@@ -3101,9 +3177,11 @@ _astro/
 images/
 files/
 ALL_POSTS.txt
+ALL_POSTS.json
 ARCHIVE.txt
 SHA256SUMS.txt
 BUILD_SHA256.txt
+BUILD_HASH_HISTORY.txt
 integrity.json
 ```
 
@@ -3185,7 +3263,9 @@ Where the source text genuinely contains separate paragraphs, replacing `<br>` w
 
 ---
 
-## 14. Future extensions
+## 14. Project backlog and experiments
+
+### 14.1 Future extensions
 
 Possible future directions for the project:
 
@@ -3209,6 +3289,26 @@ Possible future directions for the project:
 - evaluation of Bitcoin Ordinals inscriptions as an immutable, blockchain-based archival medium, embedding selected small digital artifacts directly into the Bitcoin blockchain to provide highly durable, publicly retrievable copies independent of conventional hosting infrastructure
 - implementation of standardized RSS and JSON Feed endpoints (e.g. /rss.xml and /feed.json) for machine-readable syndication and independent subscription to newly published content
 - implementation of an automated link and file integrity checker for detecting broken internal links, missing assets and invalid fragment references across the website and generated archival outputs
+- production of additional ceramic tablets for deposit in Memory of Mankind containing the website’s image archive, with original filenames preserved so that individual images can be matched to their references in ALL_POSTS.txt
+- evaluation of producing a self-supporting laser-engraved granite archival copy of ALL_POSTS.txt, using a substantial stone slab (approximately 35 × 35 cm and 30–40 mm thick) with dense microtext across the front surface; dark, fine-grained granite would be preferred for engraving contrast, with final material and text size selected according to the manufacturer’s technical assessment before production
+- development of a Morse-code archival edition of ALL_POSTS.txt as a highly simplified, human-decodable representation: the UTF-8 source would be normalized to a restricted A–Z/0–9 character set, using a predefined transliteration glossary for unsupported Unicode symbols (e.g. π → PI), and subsequently converted to International Morse code
+- development of an interactive-fiction edition for the [IF Archive](https://www.ifarchive.org/), embedding the complete ARCHIVE.txt and ALL_POSTS.txt in a self-contained `.gblorb` text adventure, playable locally or in a browser via Parchment
+- evaluation of producing a laser-engraved glass archival copy of ALL_POSTS.txt, either as a solid glass cube with dense microtext distributed across all six faces or as a set of smaller glass plates; surface or subsurface engraving would be selected according to technical feasibility
+- creation of an additional offline archival copy on M-DISC optical media, containing the most important exports, source files, and offline builds of `vojtamaur.cz`
+- production of a PDF/A archival edition of the existing searchable PDF export, complementing the ordinary PDF with a format specifically constrained for long-term preservation
+- creation of a ZIM edition of `vojtamaur.cz` for distribution and browsing through Kiwix, providing an additional standardized, self-contained offline representation of the website alongside the existing HTML-based USB build
+- donation of physical print editions to institutional collections: an artist’s-book edition of the Metaweb article to the [Franklin Furnace Archive](https://franklinfurnace.org/artist-books/), and printed editions of the Metaweb article and ALL_POSTS.txt to the [Internet Archive Physical Archive](https://openlibrary.org/bookdrive.en), providing additional long-term preservation within independent cultural and library institutions
+
+### 14.2 Failed attempts and abandoned approaches
+
+The following approaches were tested or seriously evaluated but were ultimately abandoned:
+
+- development of a custom OpenAI GPT tentatively called vojtamaurGPT was explored as an interactive interface to the project and its content; the approach was abandoned because the Custom GPT interface at the time was considered too restrictive for the intended development workflow, while relying on a language model to interpret and mediate access to the archived material was considered less desirable than providing direct, deterministic access to the underlying content
+- publication of the searchable PDF export of `vojtamaur.cz` on [sourceAFRICA](https://sourceafrica.net/) was considered as an additional public archival and distribution channel; sourceAFRICA was contacted about the possibility, but no response was received, so the attempt was abandoned
+- use of [Perpetual Storage](https://www.perpetualstorage.com/) and its Family GoBox service was considered for long-term physical storage in a climate-controlled, highly secured facility in Utah; the company was contacted for further information, but no response was received, so the option was abandoned
+- publication of the `Metaweb Article` on Kobo was attempted but rejected because Kobo considered it too niche and insufficiently distinct for publication; rather than resubmitting the same work, the approach was changed and the EPUB export of all articles was later published successfully as an authorial collection categorized primarily as biography/art rather than technology/programming
+- hosting of a Spartan capsule on [tilde.team](https://tilde.team/) was explored as an additional alternative-protocol mirror of `vojtamaur.cz`; the service was contacted about Spartan hosting, but no response was received, so this option was abandoned
+- inclusion of the English `Metaweb Article` in ArchiveBox's [Web Archiving Community](https://github.com/ArchiveBox/ArchiveBox/wiki/Web-Archiving-Community) page was proposed to Nick Sweeting for the “Articles We Like About Internet Archiving” section; no response was received and the article was not added
 
 ---
 
@@ -3240,7 +3340,7 @@ The Vercel mirror requires this root-level `vercel.json`:
 }
 ```
 
-Without this override, Vercel's default Astro build may skip the post-build step that generates `ALL_POSTS.txt`.
+Without this override, Vercel's default Astro build may skip the post-build step that generates `ALL_POSTS.txt` and `ALL_POSTS.json`.
 
 Codeberg Pages is also updated separately through `deploy-codeberg-pages.bat`; the complete worktree-based procedure is documented in section 12.2.2.
 

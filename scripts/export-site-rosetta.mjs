@@ -14,7 +14,7 @@
  *   node scripts/export-site-rosetta.mjs collect
  * Use GEMINI_API_KEY (or GOOGLE_API_KEY) in the environment; never stored in files.
  * Paths resolve from the project root. --input selects an explicit JSON snapshot;
- * otherwise the newest vm:generatedAt in exports/ALL_POSTS*.json[ld] wins.
+ * otherwise dist/ALL_POSTS.json from the current build is used.
  * All languages share exports/rosetta/: translated TXT files + rosetta.json.
  * Repeated runs reuse saved translations. --output can select another folder.
  * run without --languages/--limit expands a pilot to all Czech articles/98 languages.
@@ -506,18 +506,13 @@ async function safeOutput(root, output) {
 
 async function chooseInput(root, input) {
   if (input) return path.resolve(root, input);
-  const candidates = [];
-  for (const name of await fs.readdir(path.join(root, 'exports'))) {
-    if (!/^ALL_POSTS(?:-\d{4}-\d{2}-\d{2})?\.json(?:ld)?$/i.test(name)) continue;
-    const file = path.join(root, 'exports', name);
-    const doc = JSON.parse(decode(await fs.readFile(file)));
-    const generated = Date.parse(doc['vm:generatedAt']);
-    if (!Number.isFinite(generated)) fail(`Invalid generation date in ${file}; select --input explicitly.`);
-    candidates.push({ file, generated });
+  const file = path.join(root, 'dist', 'ALL_POSTS.json');
+  try { await fs.access(file); }
+  catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    fail('No dist/ALL_POSTS.json found. Run a site build or node scripts/export-site-json.mjs, or select an archived snapshot with --input.');
   }
-  candidates.sort((a, b) => b.generated - a.generated || a.file.localeCompare(b.file));
-  if (!candidates.length) fail('No JSON-LD export found. Run node scripts/export-site-json.mjs first, or pass --input.');
-  return candidates[0].file;
+  return file;
 }
 
 const STATE_FILE = 'rosetta.json';

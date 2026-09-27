@@ -84,3 +84,9 @@ for (const file of htmlFiles) {
 }
 
 console.log(`Rewritten ${htmlFiles.length} HTML files for USB mode.`);
+
+// Refresh HTML fragments and checksums after the final path rewrites.
+if (fs.existsSync(path.join(distDir, "ALL_POSTS.json"))) {
+  const { exportSiteJson } = await import("./export-site-json.mjs");
+  await exportSiteJson({ projectRoot: process.cwd(), dist: distDir });
+}

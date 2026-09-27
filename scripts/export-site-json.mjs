@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Manual, offline JSON-LD 1.1 article export. Never runs a build.
- * node scripts/export-site-json.mjs [--dist dist] [--output exports/ALL_POSTS.json]
+ * Offline JSON-LD 1.1 article export, also called by the build. Never starts a build.
+ * node scripts/export-site-json.mjs [--dist dist] [--output PATH]
  * Selection and source metadata: finished ALL_POSTS.txt; full content: built HTML.
  * The inline context works offline. vm: terms belong to https://vojtamaur.cz/ns/,
  * an identifier namespace, not a dependency on a hosted vocabulary document.
@@ -149,7 +149,7 @@ function articleText($, node, resolve) {
   return BLOCKS.has(tag) ? `\n${children}\n` : children;
 }
 
-async function exportDocument(root, dist) {
+async function exportDocument(root, dist, includeBuildHash) {
   const indexBytes = await fs.readFile(path.join(dist, "ALL_POSTS.txt"));
   const indexText = decode(indexBytes);
   const metadata = parseIndex(indexText);
@@ -231,7 +231,7 @@ async function exportDocument(root, dist) {
     ],
     hasPart: articles,
   };
-  try {
+  if (includeBuildHash) try {
     const declared = decode(await fs.readFile(path.join(dist, "BUILD_SHA256.txt"))).trim();
     const hash = /^([a-fA-F0-9]{64})(?:\s|$)/.exec(declared)?.[1];
     if (!hash) throw new Error("Invalid BUILD_SHA256.txt.");
@@ -244,19 +244,24 @@ async function main() {
   const { values } = parseArgs({ options: {
     "project-root": { type: "string", default: fileURLToPath(new URL("../", import.meta.url)) },
     dist: { type: "string", default: "dist" },
-    output: { type: "string", default: "exports/ALL_POSTS.json" },
+    output: { type: "string" },
     "dry-run": { type: "boolean", default: false },
     help: { type: "boolean", short: "h" },
   } });
   if (values.help) {
-    console.log("Usage: node scripts/export-site-json.mjs [--project-root PATH] [--dist PATH] [--output exports/ALL_POSTS.json] [--dry-run]\nPaths resolve from the project root. Output must be a .json/.jsonld file under exports/. Reads an existing build; never builds or accesses the network.");
+    console.log("Usage: node scripts/export-site-json.mjs [--project-root PATH] [--dist PATH] [--output PATH] [--dry-run]\nPaths resolve from the project root. Output defaults to <dist>/ALL_POSTS.json; an explicit .json/.jsonld snapshot may be written under exports/. Reads an existing build; never builds or accesses the network.");
     return;
   }
-  const root = await fs.realpath(path.resolve(values["project-root"]));
-  const dist = await fs.realpath(path.resolve(root, values.dist));
-  const output = path.resolve(root, values.output);
+  await exportSiteJson({ projectRoot: values["project-root"], dist: values.dist, output: values.output, dryRun: values["dry-run"] });
+}
+
+export async function exportSiteJson({ projectRoot = fileURLToPath(new URL("../", import.meta.url)), dist: distPath = "dist", output: outputPath, dryRun = false } = {}) {
+  const root = await fs.realpath(path.resolve(projectRoot));
+  const dist = await fs.realpath(path.resolve(root, distPath));
+  const output = outputPath === undefined ? path.join(dist, "ALL_POSTS.json") : path.resolve(root, outputPath);
+  const inBuild = output === path.join(dist, "ALL_POSTS.json");
   const exportsDir = path.join(root, "exports");
-  if (!inside(output, exportsDir) || inside(output, dist) || !/\.json(ld)?$/i.test(output)) throw new Error("Output must be a JSON file under exports/ and outside the selected build.");
+  if (!inBuild && (!inside(output, exportsDir) || inside(output, dist) || !/\.json(ld)?$/i.test(output))) throw new Error("Output must be <dist>/ALL_POSTS.json or a JSON snapshot under exports/ outside the selected build.");
   // Check existing ancestors before mkdir: a nested output must not create
   // directories through an exports/ symlink pointing outside the export tree.
   let ancestor = path.dirname(output);
@@ -270,25 +275,26 @@ async function main() {
       ancestor = path.dirname(ancestor);
     }
   }
-  const document = await exportDocument(root, dist);
+  // A build cannot contain its own final hash; copied/old manifests are stale here.
+  const document = await exportDocument(root, dist, !inBuild);
   const serialized = JSON.stringify(document, null, 2) + "\n";
-  if (!values["dry-run"]) {
+  if (!dryRun) {
     await fs.mkdir(path.dirname(output), { recursive: true });
     const realParent = await fs.realpath(path.dirname(output));
-    if (realParent !== exportsDir && !inside(realParent, exportsDir)) throw new Error("Output directory resolves outside exports/.");
-    if (realParent === dist || inside(realParent, dist)) throw new Error("Output directory resolves inside the selected build.");
+    if (!inBuild && realParent !== exportsDir && !inside(realParent, exportsDir)) throw new Error("Output directory resolves outside exports/.");
+    if (!inBuild && (realParent === dist || inside(realParent, dist))) throw new Error("Output directory resolves inside the selected build.");
     const temporary = path.join(realParent, `.all-posts-${randomUUID()}.tmp`);
     try {
       await fs.writeFile(temporary, serialized, { encoding: "utf8", flag: "wx" });
       await fs.rename(temporary, output);
     } finally { await fs.rm(temporary, { force: true }); }
   }
-  console.log(`[JSON-LD] ${values["dry-run"] ? "Validated" : "Written"}: ${output}`);
+  console.log(`[JSON-LD] ${dryRun ? "Validated" : "Written"}: ${output}`);
   console.log(`[JSON-LD] Articles: ${document.hasPart.length}; languages: ${document.inLanguage.join(", ")}; bytes: ${Buffer.byteLength(serialized)}`);
   console.log(`[JSON-LD] SHA-256: ${sha256(serialized)}`);
 }
 
-main().catch((error) => {
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((error) => {
   console.error(`[JSON-LD] Failed: ${error.message}`);
   process.exitCode = 1;
 });

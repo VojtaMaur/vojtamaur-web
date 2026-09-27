@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Create a filtered plain-text subset of dist/ALL_POSTS.txt.
+"""Create a filtered plain-text subset of dist/ALL_POSTS.json.
 
 The script is deliberately independent of the website build. When stored as
 scripts/filter-all-posts.py, it finds the repository root automatically and
-uses dist/ALL_POSTS.txt as its default input.
+uses dist/ALL_POSTS.json as its default input. Explicit legacy TXT inputs remain
+supported for older snapshots and structured filtered exports.
 """
 
 from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
 import re
 import sys
@@ -72,6 +74,7 @@ class Entry:
 class ParsedExport:
     preamble: str
     entries: tuple[Entry, ...]
+    source_name: str = "ALL_POSTS.txt"
 
 
 def repository_root() -> Path:
@@ -104,6 +107,9 @@ def parse_export(path: Path) -> ParsedExport:
     except UnicodeDecodeError as exc:
         raise ExportError(f"Input is not valid UTF-8: {path}") from exc
 
+    if path.suffix.lower() in {".json", ".jsonld"} or text.lstrip().startswith("{"):
+        return parse_json_export(text)
+
     # Parsing is independent of whether the build was produced on Windows or Unix.
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     matches = list(HEADER_RE.finditer(text))
@@ -134,6 +140,108 @@ def parse_export(path: Path) -> ParsedExport:
 
     preamble = text[: matches[0].start()].strip("\n")
     return ParsedExport(preamble, tuple(entries))
+
+
+def json_article_body(article: dict) -> str:
+    """Adapt JSON media references to the shared TXT/PDF rendering records.
+
+    Use articleBody for full text, including untruncated code. Media metadata
+    supplies the exact markers emitted by the JSON exporter; never interpret
+    lookalike text inside a code block as an actual image or embed.
+    """
+    replacements = {}
+    media = article.get("associatedMedia", [])
+    if not isinstance(media, list):
+        raise ExportError("associatedMedia must be an array.")
+    for item in media:
+        if not isinstance(item, dict):
+            raise ExportError("Media records must be objects.")
+        kind = item.get("@type")
+        url = item.get("contentUrl") or item.get("embedUrl")
+        if not isinstance(kind, str) or not isinstance(url, str) or not url:
+            raise ExportError("Media records need a type and URL.")
+        alt = item.get("vm:altText", "")
+        caption = item.get("caption", "")
+        title = item.get("name", "")
+        if not all(isinstance(value, str) for value in (alt, caption, title)):
+            raise ExportError("Media descriptions must be strings.")
+        marker = f"[{kind}: {url}{' | ' + alt if alt else ''}]"
+        if kind == "ImageObject":
+            details = ["[MEDIA: image]", f"FILE: {url}"]
+            if alt:
+                details.append("ALT: " + " ".join(alt.split()))
+            if caption:
+                details.append("CAPTION: " + " ".join(caption.split()))
+        else:
+            embed = "VIDEO" if kind == "VideoObject" else "PDF" if item.get("encodingFormat") == "application/pdf" else "INTERACTIVE"
+            details = [f"[{embed} EMBED]", f"SOURCE: {url}"]
+            if title:
+                details.append("TITLE: " + " ".join(title.split()))
+        replacements[marker] = "\n".join(details)
+
+    body = article["articleBody"].replace("\r\n", "\n").replace("\r", "\n")
+    # Split on full-line code delimiters so code content stays byte-for-byte
+    # intact apart from normalized newlines, including indentation/blank lines.
+    chunks = re.split(r"(?m)^(\[/?CODE BLOCK\])$", body)
+    in_code = False
+    for index, chunk in enumerate(chunks):
+        if chunk == "[CODE BLOCK]":
+            in_code = True
+        elif chunk == "[/CODE BLOCK]":
+            in_code = False
+        elif not in_code and replacements:
+            pattern = "|".join(re.escape(marker) for marker in replacements)
+            chunks[index] = re.sub(pattern, lambda match: replacements[match.group()], chunk)
+    return "".join(chunks)
+
+
+def parse_json_export(text: str) -> ParsedExport:
+    try:
+        document = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ExportError(f"Invalid JSON export: {exc}") from exc
+    if not isinstance(document, dict) or document.get("@type") != "Collection":
+        raise ExportError("Expected a JSON-LD Collection export.")
+    articles = document.get("hasPart")
+    if not isinstance(articles, list) or not articles:
+        raise ExportError("JSON export has no article records in hasPart.")
+    if document.get("vm:articleCount") != len(articles):
+        raise ExportError("JSON article count does not match hasPart.")
+    entries = []
+    positions = set()
+    identities = set()
+    for article in articles:
+        if not isinstance(article, dict) or article.get("@type") != "BlogPosting":
+            raise ExportError("Expected BlogPosting article records.")
+        position = article.get("vm:position")
+        if type(position) is not int or position < 1 or position in positions:
+            raise ExportError("Article positions must be unique positive integers.")
+        positions.add(position)
+        metadata = article.get("vm:sourceMetadata")
+        if not isinstance(metadata, dict) or not metadata or any(
+            not isinstance(key, str) or not re.fullmatch(r"[A-Z][A-Z0-9_]*", key)
+            or not isinstance(value, str) or "\n" in value or "\r" in value
+            for key, value in metadata.items()
+        ):
+            raise ExportError("Article source metadata must contain single-line string fields.")
+        fields = {"SLUG": "vm:slug", "URL": "url", "LANGUAGE": "inLanguage", "SECTION": "articleSection", "DATE": "datePublished"}
+        for field, key in fields.items():
+            if not metadata.get(field) or metadata[field] != article.get(key):
+                raise ExportError(f"Missing or inconsistent article metadata: {field}.")
+        if not metadata.get("TITLE"):
+            raise ExportError("Missing article TITLE.")
+        parse_iso_date(metadata["DATE"], "article DATE")
+        identity = (metadata["LANGUAGE"], metadata["SLUG"])
+        if identity in identities:
+            raise ExportError(f"Duplicate article: {identity}.")
+        identities.add(identity)
+        if not isinstance(article.get("articleBody"), str) or not article["articleBody"].strip():
+            raise ExportError("Article body must be nonempty text.")
+        entries.append((position, Entry(dict(metadata), tuple(metadata), json_article_body(article))))
+    generated = document.get("vm:sourceGeneratedAt") or document.get("vm:generatedAt", "")
+    if not isinstance(generated, str):
+        raise ExportError("Export generation time must be a string.")
+    return ParsedExport(f"Generated: {generated}", tuple(entry for _, entry in sorted(entries)), "ALL_POSTS.json")
 
 
 def split_values(raw_values: Sequence[str] | None) -> set[str] | None:
@@ -271,7 +379,7 @@ def make_document_header(
     source_generated = extract_source_generated(parsed.preamble)
     lines = [
         output_name,
-        "Filtered plain-text export derived from vojtamaur.cz ALL_POSTS.txt.",
+        f"Filtered plain-text export derived from vojtamaur.cz {parsed.source_name}.",
         "",
         "Primary website: https://vojtamaur.cz/",
     ]
@@ -313,7 +421,7 @@ def make_compact_document_header(
     source_generated = extract_source_generated(parsed.preamble)
     lines = [
         output_name,
-        "Compact plain-text export derived from vojtamaur.cz ALL_POSTS.txt.",
+        f"Compact plain-text export derived from vojtamaur.cz {parsed.source_name}.",
         "",
         "Primary website: https://vojtamaur.cz/",
     ]
@@ -421,9 +529,11 @@ def serialize_compact_entry(entry: Entry) -> str:
     in_code = False
     index = 0
     while index < len(lines):
-        raw_line = lines[index].rstrip()
+        raw_line = lines[index] if in_code else lines[index].rstrip()
         stripped = raw_line.strip()
         if not stripped:
+            if in_code:
+                output.append(raw_line)
             index += 1
             continue
 
@@ -617,7 +727,7 @@ def is_relative_to(path: Path, parent: Path) -> bool:
 def build_argument_parser(root: Path) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Filter dist/ALL_POSTS.txt by language, section, and date without "
+            "Filter dist/ALL_POSTS.json by language, section, and date without "
             "running or modifying the website build."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -632,8 +742,8 @@ def build_argument_parser(root: Path) -> argparse.ArgumentParser:
         "input",
         nargs="?",
         type=Path,
-        default=root / "dist" / "ALL_POSTS.txt",
-        help="source export (default: <repository>/dist/ALL_POSTS.txt)",
+        default=root / "dist" / "ALL_POSTS.json",
+        help="JSON-LD or legacy structured TXT export (default: <repository>/dist/ALL_POSTS.json)",
     )
     parser.add_argument("-o", "--output", type=Path, help="output file path")
     parser.add_argument(
@@ -777,7 +887,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         ).resolve()
         input_path = args.input.resolve()
         if output == input_path:
-            raise ExportError("Output must not overwrite the source ALL_POSTS.txt.")
+            raise ExportError("Output must not overwrite the source export.")
 
         result = serialize_export(
             parsed,

@@ -171,3 +171,8 @@ for (const file of files) {
 }
 
 console.log(`Arweave build prepared in ${TARGET}`);
+// Refresh HTML fragments and checksums after the final path rewrites.
+if (await exists(path.join(TARGET, "ALL_POSTS.json"))) {
+  const { exportSiteJson } = await import("./export-site-json.mjs");
+  await exportSiteJson({ projectRoot: process.cwd(), dist: TARGET });
+}

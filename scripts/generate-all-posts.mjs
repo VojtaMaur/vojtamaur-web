@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { exportSiteJson } from "./export-site-json.mjs";
 
 const ROOT = process.cwd();
 const CONTENT_DIR = path.join(ROOT, "src", "content", "posts");
@@ -525,6 +526,7 @@ async function main() {
 
   await fs.writeFile(OUTPUT_FILE, "\uFEFF" + finalText, "utf8");
   await embedAllPostsInRecoveryPage(finalText);
+  await exportSiteJson({ projectRoot: ROOT, dist: DIST_DIR });
 
   console.log(`[ALL_POSTS] Written ${normalizeSlashes(path.relative(ROOT, OUTPUT_FILE))}`);
   console.log(`[ALL_POSTS] Source posts: ${posts.length}`);

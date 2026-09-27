@@ -36,6 +36,12 @@ if not exist "dist\ALL_POSTS.txt" (
     goto :failed
 )
 
+if not exist "dist\ALL_POSTS.json" (
+    echo [ERROR] dist\ALL_POSTS.json was not found. Rebuild the site first.
+    set "EXPORT_EXIT=12"
+    goto :failed
+)
+
 for %%R in (
     "requirements-pdf-export.txt"
     "requirements-epub-export.txt"
@@ -113,15 +119,7 @@ rem EXPORT WORKFLOW
 rem ===========================================================================
 
 echo.
-echo [1/9] Structured JSON-LD article export
-node scripts/export-site-json.mjs
-if errorlevel 1 (
-    set "EXPORT_EXIT=!ERRORLEVEL!"
-    goto :failed
-)
-
-echo.
-echo [2/9] Compact English Free Creation text export
+echo [1/8] Compact English Free Creation text export
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -129,7 +127,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/9] Compact Czech Free Creation text export
+echo [2/8] Compact Czech Free Creation text export
 python scripts/filter-all-posts.py --language cs --section volna-tvorba --format compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -137,7 +135,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/9] Standard archival PDF export
+echo [3/8] Standard archival PDF export
 python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "!GS_EXE!"
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -145,7 +143,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [5/9] Ultra-compact Czech PDF export
+echo [4/8] Ultra-compact Czech PDF export
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -153,7 +151,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [6/9] Metaweb archival PDF export
+echo [5/8] Metaweb archival PDF export
 python scripts/export-metaweb-pdf.py
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -161,7 +159,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [7/9] Compact bilingual Metaweb EPUB export
+echo [6/8] Compact bilingual Metaweb EPUB export
 python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -169,7 +167,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [8/9] Compact Czech and English site EPUB exports
+echo [7/8] Compact Czech and English site EPUB exports
 python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -177,7 +175,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [9/9] SSTV PNG export
+echo [8/8] SSTV PNG export
 python scripts/export-site-sstv.py
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"

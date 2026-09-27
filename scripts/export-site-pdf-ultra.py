@@ -37,7 +37,7 @@ from urllib.parse import unquote, urljoin, urlsplit
 
 SCRIPT_VERSION = "3.3.2"
 DEFAULT_SITE_URL = "https://vojtamaur.cz/"
-DEFAULT_INPUT = "dist/ALL_POSTS.txt"
+DEFAULT_INPUT = "dist/ALL_POSTS.json"
 DEFAULT_FILTER_SCRIPT = "scripts/filter-all-posts.py"
 DEFAULT_OUTPUT = "exports/vojtamaur-web-export-ultra.pdf"
 DEFAULT_SEPARATE_DIR = "exports/ultra-media-separate"
@@ -99,7 +99,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--input",
         default=DEFAULT_INPUT,
-        help=f"Structured ALL_POSTS export. Default: {DEFAULT_INPUT}",
+        help=f"JSON-LD or legacy structured TXT export. Default: {DEFAULT_INPUT}",
     )
     parser.add_argument(
         "--filter-script",
@@ -1277,7 +1277,7 @@ def main() -> int:
     if not input_path.is_file():
         raise SystemExit(
             f"Input archive not found: {input_path}\n"
-            "Run a site build first so dist/ALL_POSTS.txt exists."
+            "Run a site build first so dist/ALL_POSTS.json exists."
         )
     if not dist_dir.is_dir():
         raise SystemExit(f"Built media directory not found: {dist_dir}")

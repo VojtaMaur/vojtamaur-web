@@ -1549,13 +1549,16 @@ The exporter writes a manifest describing page ranges, including the generated u
 
 #### Run all manual exports on Windows
 
-The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the eight manual exports sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow requires both `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json` from the existing build and begins with separate English and Czech compact text exports. It uses the built JSON without regenerating it, preserving the bytes covered by any existing build checksum manifest or signature. After the PDF steps it creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs, preserving animated GIFs. The SSTV PNG export is the final step:
+The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the eleven export steps sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow requires both `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json` from the existing build and begins with separate English and Czech compact text exports. It uses the built JSON without regenerating it, preserving the bytes covered by any existing build checksum manifest or signature. The PDF steps include separate Czech and English MoM-like editions of `volna-tvorba` at the default 4 pt font size. After the PDF steps it creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs, preserving animated GIFs. The SSTV PNG export is the final step:
 
 ```bat
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
 python scripts/filter-all-posts.py --language cs --section volna-tvorba --format compact
+python scripts/export-site-morse.py --lang both
 python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "C:\Program Files\gs\gs10.07.1\bin\gswin64c.exe"
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
+python scripts/export-site-mom-like.py --lang cs --output exports/vojtamaur-web-export-mom-like.pdf
+python scripts/export-site-mom-like.py --lang en --output exports/vojtamaur-web-export-mom-like-en.pdf
 python scripts/export-metaweb-pdf.py
 python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
 python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
@@ -2301,6 +2304,80 @@ npm run test:morse
 ```
 
 `export-all.bat` runs the bilingual Morse export after its compact text exports. No normal web, USB, Arweave or Gemini build invokes it; the build continues to generate the source JSON, and the manual export leaves `dist/` and its integrity manifests unchanged. The generated `exports/` files remain excluded from version control.
+
+### 9.6.12 MoM-like text-only PDF export
+
+`scripts/export-site-mom-like.py` creates an additional text-only edition inspired by the supplied Memory of Mankind PDF. It shares the JSON parser, article selection and compact serializer in `scripts/filter-all-posts.py`. It does not import or change `export-site-pdf-ultra.py`.
+
+Install the two Python dependencies and run it manually:
+
+```bash
+python -m pip install -r requirements-mom-like-export.txt
+python scripts/export-site-mom-like.py
+```
+
+The npm equivalent is `npm run export:mom-like`. The default input is the existing `dist/ALL_POSTS.json`, and the default selection is Czech articles in `volna-tvorba`. No browser, local media assets, network access or new site build is required. `export-all.bat` runs this exporter twice, creating separate Czech and English PDFs with the default `volna-tvorba` selection and 4 pt font size. The Czech PDF uses the default path below; the English PDF uses `exports/vojtamaur-web-export-mom-like-en.pdf`, with its own TXT and manifest. The batch setup includes `requirements-mom-like-export.txt`. Normal builds, signing and integrity generation do not invoke this exporter.
+
+Running the script without selection options is equivalent to:
+
+```bash
+python scripts/export-site-mom-like.py --lang cs --section volna-tvorba
+```
+
+The section default also applies to `--lang en` and `--lang both`. An explicit `--section` replaces the default rather than adding to it. For example, `--section vystavy` exports only exhibitions; `--section all` exports every section. The visible `Selection` line and the manifest record the actual selection. Article and page counts depend on the input snapshot and selected content.
+
+The default outputs are:
+
+```text
+exports/vojtamaur-web-export-mom-like.pdf
+exports/vojtamaur-web-export-mom-like.txt
+exports/vojtamaur-web-export-mom-like.manifest.json
+```
+
+The PDF uses three columns, embedded Arial at 4 pt, character spacing of -0.2 pt, a 3.5 pt line advance, justified text and square 210 x 210 mm pages. Equal 7 mm margins create a square 196 x 196 mm text frame, with 1 mm gaps between columns. Any remaining fraction of a line at the bottom of the grid is divided equally above and below it. The negative character spacing matches the reference Word document (w:spacing=-4 twentieths of a point), and is applied both when measuring line breaks and when drawing glyphs. Use `--char-spacing` to override it. `--margin-mm` sets all margins unless `--top-margin-mm` is supplied explicitly. On systems without Arial, an installed Liberation Sans or DejaVu Sans is used; `--font` supplies an explicit TrueType font for reproducible typography. The manifest records font paths and hashes.
+
+Set `--font-size` to change the text size in points; the default remains 4 pt. Decimal values such as `--font-size 4.5` are supported. For example, this creates a separate edition with 5 pt text:
+
+```bash
+python scripts/export-site-mom-like.py --font-size 5 --output exports/mom-like-5pt.pdf
+```
+
+Line advance scales with the font size: it is `font-size * line-height`, with `--line-height 0.875` by default (4.375 pt at a 5 pt font size). Page dimensions and margins stay unchanged; larger text generally requires more pages. Character spacing remains -0.2 pt unless overridden with `--char-spacing`.
+
+Original logical line breaks become gaps of seven spaces before justification. Article titles and dates are bold, while image records and prose remain ordinary. Titles still flow continuously without forced article breaks, thumbnail grids, background bands or page numbers. Emphasis uses fill-and-stroke text with the same embedded glyphs and advances, so it does not increase page count. Only actual article headings are emphasized, including across line, column and page boundaries; title/date-like strings inside code are unaffected. The visible opening label and PDF title use ALL_POSTS; MoM-like remains an internal exporter name. Images retain their filename, ALT and CAPTION as text; video, PDF and interactive records retain their source references. Media is not embedded or deduplicated. URLs and filenames can wrap at existing separators such as slashes, hyphens and underscores, making use of the remaining line width. Oversized unbroken words can wrap without added hyphens. Links are visible text, not clickable annotations.
+
+By default, the DullGPT example output log is shortened to the same preview limits used by `ALL_POSTS.txt`: the first 120 lines, capped at 12000 characters. A visible `[TRUNCATED: ...]` note reports the omitted part, and the manifest records counts per language. This applies only to the recognized output log in the `dullgpt` article; its executable Python program and all other articles remain complete. The companion TXT has the same explicitly shortened log. `--full-dullgpt-log` restores the full log from JSON. The source JSON and original MoM Word/PDF are never modified.
+
+This flowing treatment also applies to source-code blocks in the PDF. The companion UTF-8 TXT retains the compact serializer's logical lines, blank lines within code and code indentation. Use that TXT or the JSON/source repository when recovering executable code. It contains the compact content, not raw JSON or the original complete website markup. JSON provides full code blocks before the explicit DullGPT log preview; an explicitly selected legacy TXT snapshot can already contain truncated code that this exporter cannot recover.
+
+Unicode fallback fonts are used when installed. Characters unsupported by the available fonts, and supplementary-plane characters whose PDF Unicode mapping is not reliably supported by the renderer, are printed explicitly as `[U+XXXX]` (or a longer code point) in the PDF. The TXT preserves the original characters. Counts are reported on the console and in the manifest. Before replacing output files, the exporter verifies the PDF's page dimensions, absence of images and exact non-whitespace text against the prepared PDF content. The manifest includes this check, article selection, layout and SHA-256 hashes of the input, PDF and TXT.
+
+Each run replaces the PDF, TXT and manifest at the selected output path. Use distinct `--output` paths to retain separate language or section exports.
+
+Examples:
+
+```bash
+python scripts/export-site-mom-like.py --lang cs --output exports/mom-like-cs.pdf
+python scripts/export-site-mom-like.py --lang en --output exports/mom-like-en.pdf
+python scripts/export-site-mom-like.py --section vystavy
+python scripts/export-site-mom-like.py --section all
+python scripts/export-site-mom-like.py --lang both --output exports/mom-like-both.pdf
+python scripts/export-site-mom-like.py --section volna-tvorba,vystavy --from-date 2020-01-01 --to-date 2026-12-31
+python scripts/export-site-mom-like.py --page-width-mm 210 --page-height-mm 210
+python scripts/export-site-mom-like.py --columns 3 --font-size 4 --char-spacing -0.2 --line-height 0.875 --line-gap-spaces 7
+python scripts/export-site-mom-like.py --full-dullgpt-log --output exports/mom-like-full-log.pdf
+python scripts/export-site-mom-like.py --input exports/older-ALL_POSTS.json --page-numbers
+python scripts/export-site-mom-like.py --help
+```
+
+`--section` defaults to `volna-tvorba`. An explicit selection replaces that default and can be repeated or comma-separated. Use `--section all` to include every section. The source article order is preserved. Bilingual selections label each article's language. Relative input and output paths are resolved against the repository root, inferred from the script location or supplied with `--project-root`. An explicit `--input dist/ALL_POSTS.txt` remains supported for legacy structured snapshots.
+
+Run the content-preservation and pagination regression checks with:
+
+```bash
+python -B -m unittest discover -s tests -p test_mom_like_export.py
+```
+
 
 ### 9.7 Arweave / Permaweb build
 

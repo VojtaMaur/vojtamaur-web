@@ -41,3 +41,6 @@ exports/
 
 # Python bytecode cache
 __pycache__/
+
+# tests
+/tests/

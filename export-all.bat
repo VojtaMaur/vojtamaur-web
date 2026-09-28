@@ -46,6 +46,7 @@ for %%R in (
     "requirements-pdf-export.txt"
     "requirements-epub-export.txt"
     "requirements-sstv-export.txt"
+    "requirements-mom-like-export.txt"
 ) do (
     if not exist "%%~R" (
         echo [ERROR] Missing requirements file: %%~R
@@ -58,7 +59,8 @@ echo [SETUP 1/2] Installing/checking Python dependencies...
 python -m pip install --disable-pip-version-check ^
     -r requirements-pdf-export.txt ^
     -r requirements-epub-export.txt ^
-    -r requirements-sstv-export.txt
+    -r requirements-sstv-export.txt ^
+    -r requirements-mom-like-export.txt
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
     echo.
@@ -119,7 +121,7 @@ rem EXPORT WORKFLOW
 rem ===========================================================================
 
 echo.
-echo [1/9] Compact English Free Creation text export
+echo [1/11] Compact English Free Creation text export
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -127,7 +129,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/9] Compact Czech Free Creation text export
+echo [2/11] Compact Czech Free Creation text export
 python scripts/filter-all-posts.py --language cs --section volna-tvorba --format compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -135,7 +137,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/9] Bilingual Morse text export
+echo [3/11] Bilingual Morse text export
 python scripts/export-site-morse.py --lang both
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -143,7 +145,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/9] Standard archival PDF export
+echo [4/11] Standard archival PDF export
 python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "!GS_EXE!"
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -151,7 +153,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [5/9] Ultra-compact Czech PDF export
+echo [5/11] Ultra-compact Czech PDF export
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -159,7 +161,23 @@ if errorlevel 1 (
 )
 
 echo.
-echo [6/9] Metaweb archival PDF export
+echo [6/11] MoM-like Czech Free Creation PDF export
+python scripts/export-site-mom-like.py --lang cs --output exports/vojtamaur-web-export-mom-like.pdf
+if errorlevel 1 (
+    set "EXPORT_EXIT=!ERRORLEVEL!"
+    goto :failed
+)
+
+echo.
+echo [7/11] MoM-like English Free Creation PDF export
+python scripts/export-site-mom-like.py --lang en --output exports/vojtamaur-web-export-mom-like-en.pdf
+if errorlevel 1 (
+    set "EXPORT_EXIT=!ERRORLEVEL!"
+    goto :failed
+)
+
+echo.
+echo [8/11] Metaweb archival PDF export
 python scripts/export-metaweb-pdf.py
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -167,7 +185,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [7/9] Compact bilingual Metaweb EPUB export
+echo [9/11] Compact bilingual Metaweb EPUB export
 python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -175,7 +193,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [8/9] Compact Czech and English site EPUB exports
+echo [10/11] Compact Czech and English site EPUB exports
 python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -183,7 +201,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [9/9] SSTV PNG export
+echo [11/11] SSTV PNG export
 python scripts/export-site-sstv.py
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"

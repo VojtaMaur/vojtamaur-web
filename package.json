@@ -44,7 +44,8 @@
     "export:pdf:build": "python scripts/export-site-pdf.py --build-command \"npm run build:web:strict\"",
     "export:pdf:metaweb": "python scripts/export-metaweb-pdf.py",
     "export:sstv": "python scripts/export-site-sstv.py",
-    "export:morse": "python scripts/export-site-morse.py"
+    "export:morse": "python scripts/export-site-morse.py",
+    "export:mom-like": "python scripts/export-site-mom-like.py"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",

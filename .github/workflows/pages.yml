@@ -114,6 +114,11 @@ jobs:
           walk(distDir);
           NODE
 
+      - name: Refresh content checksums after mirror rewrites
+        run: |
+          node scripts/export-site-json.mjs --output dist/ALL_POSTS.json
+          npm run generate:integrity
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

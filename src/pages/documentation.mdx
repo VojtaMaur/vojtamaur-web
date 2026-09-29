@@ -175,6 +175,7 @@ npm run generate:all-posts
 npm run generate:gemini
 npm run build:gemini
 npm run generate:source-bundle
+npm run generate:sitemap
 npm run generate:integrity
 npm run generate:integrity:arweave
 npm run sign:build
@@ -190,13 +191,13 @@ npm run export:sstv
 Meaning of the main scripts:
 
 - `npm run dev` – starts the Astro development server
-- `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`, and writes unsigned build integrity metadata for `dist/`
+- `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`, enriches the sitemap with images and PDF/TXT files, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:web:signed` – runs the standard web build and then creates and verifies the detached OpenPGP signature for `dist/SHA256SUMS.txt`
 - `npm run build:signed` – alias for `npm run build:web:signed`
-- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package, writes unsigned build integrity metadata for `dist/`, and then generates the Gemini/Gopher text edition in `dist-gemini/`
+- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package, enriches the sitemap with images and PDF/TXT files, writes unsigned build integrity metadata for `dist/`, and then generates the Gemini/Gopher text edition in `dist-gemini/`
 - `npm run build:web:translate:signed` – runs the translating web build, including Gemini/Gopher text-edition generation, and then signs and verifies the checksum manifest for `dist/`; the detached signature does not cover the separate `dist-gemini/` directory
 - `npm run build:translate:signed` – alias for `npm run build:web:translate:signed`
-- `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package, and writes unsigned build integrity metadata for `dist/`
+- `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package, enriches the sitemap with images and PDF/TXT files, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:web:strict:signed` – runs the strict web build and then signs and verifies its checksum manifest
 - `npm run build:web:prune:dry` – runs the strict web build and prints unused English translation cache files that would be deleted, without deleting them
 - `npm run build:web:prune` – runs the strict web build and deletes unused, unprotected English translation cache files
@@ -215,6 +216,7 @@ Meaning of the main scripts:
 - `npm run generate:gemini` – replaces `dist-gemini/` with a freshly generated bilingual Gemini/Gopher text edition based on the existing finished `dist/` build and the post frontmatter
 - `npm run build:gemini` – runs the strict standard web build and then generates `dist-gemini/`; this is the standalone complete Gemini/Gopher text-edition build command
 - `npm run generate:source-bundle` – generates `dist/source/vojtamaur-web-source.zip`, a small reconstructable source package with a media manifest and an asset downloader
+- `npm run generate:sitemap` – enriches existing web sitemaps with page-associated images and public PDF/TXT files after content generation and before integrity generation; USB builds omit this step
 - `npm run generate:integrity` – generates `SHA256SUMS.txt`, `BUILD_SHA256.txt`, `integrity.json`, and an unsigned `SIGNING_STATUS.txt` for `dist/`; any stale detached signature is removed
 - `npm run generate:integrity:arweave` – performs the same integrity pass for `dist-arweave/` after the Arweave copy-and-rewrite step
 - `npm run sign:build` – signs the existing `dist/SHA256SUMS.txt`, verifies the detached signature immediately, and updates the informational signing status and JSON metadata
@@ -3480,78 +3482,97 @@ This indicates restricted archived holdings rather than public online access; it
 
 #### 15.3.1 Manual Wayback snapshots from the live sitemap
 
-The manual exporter `scripts/export-wayback-snapshots.py` submits the site's live sitemap URLs to Internet Archive Wayback Machine Save Page Now (SPN2) and exports confirmed snapshot links. It requires Python 3.10 or newer and uses only the standard library; no additional Python packages are needed.
+The manual exporter `scripts/export-wayback-snapshots.py` submits selected live sitemap URLs to Internet Archive Wayback Machine Save Page Now (SPN2) and exports confirmed snapshot links. It requires Python 3.10 or newer and uses only the standard library. It runs independently of `export-all.bat` and all build commands.
 
-Every run downloads `https://vojtamaur.cz/sitemap-index.xml` and follows all referenced sitemap files, including nested indices and compressed sitemaps. It processes every unique page URL without language, section, or path filtering, including `/ns/.../`. Exact duplicate URLs are submitted once per run. The sitemap check on 2026-09-24 found 199 unique URLs, including 25 `/ns/` URLs; these counts are observations, not fixed limits.
+##### Sitemap content and build order
 
-The input is the published site, so a local build is not required. The script does not discover mirror URLs or other pages outside the sitemap. Submit those separately. This workflow is started manually and is not included in `export-all.bat` or any web, USB, Arweave, or Gemini build command.
+Web builds retain Astro's `sitemap-index.xml` and existing child sitemap names. After translation postprocessing, `ALL_POSTS` generation and source-bundle generation, `npm run generate:sitemap` enriches the child sitemaps from the rendered HTML. Existing local images are attached to their pages through `image:image` / `image:loc`, including thumbnails, full-size links, social images and `srcset` variants. Missing files and external image hosts are excluded; unreferenced images are not assigned to arbitrary pages. Images are deduplicated per page, with a maximum of 1,000 per page. A sitemap exceeding the URL or byte limit fails the build instead of silently dropping entries.
+
+Public PDFs and relevant TXT files are ordinary `loc` entries: PDFs in the build, TXT files under `files/`, linked nontechnical TXT files, and the root exports `ALL_POSTS.txt`, `ARCHIVE.txt`, `PRESERVATION_INSTRUCTIONS.txt` and `llms.txt`. Technical checksum/status files and `robots.txt` are excluded. `MEDIA_MANIFEST.json` and `MEDIA_SHA256SUMS.txt` exist inside the source ZIP, not as standalone public URLs, so the sitemap does not invent links to them.
+
+Integrity generation follows sitemap enrichment; signed builds sign that final manifest afterwards. USB builds continue to omit sitemaps. Arweave builds inherit the web sitemap before their own rewrite and integrity steps. The GitHub Pages workflow refreshes `ALL_POSTS.json` and integrity after rewriting mirror paths; the sitemap retains canonical `https://vojtamaur.cz` URLs.
+
+##### Choose pages only or pages with files
+
+Run either command from any working directory:
+
+```bat
+python "F:\vojtamaur-web\scripts\export-wayback-snapshots.py" --pages-only
+python "F:\vojtamaur-web\scripts\export-wayback-snapshots.py" --with-files
+```
+
+`--pages-only` is the default when no selection option is supplied. It submits page URLs, including all languages and `/ns/.../`, without separately submitting images or PDF/TXT files. Wayback may still capture a page's embedded resources while capturing the page itself. `--with-files` selects pages plus all images, PDFs and TXT files discovered in the sitemap. It processes pages first, then images, PDFs and TXT files, so a large image collection does not delay the page batch.
+
+For a custom selection, use `--types images pdf txt` or `--types pages pdf`. `--pages-only`, `--with-files` and `--types` are mutually exclusive. “With files” means the supported files in the sitemap, not a filesystem upload or discovery of arbitrary files outside it. The checked build on 2026-09-28 contained 199 page URLs, 822 unique image URLs, 7 PDFs and 5 TXT files; these are observations, not fixed limits.
+
+The exporter follows nested sitemap indices and gzip-compressed sitemaps. URLs must be valid public HTTP(S) addresses on the selected sitemap's origin; credentials, local addresses, invalid paths and cross-origin sitemap redirects are rejected. Fragments and equivalent host/default-port/percent-escape spellings are normalized for deduplication. It does not discover mirror URLs or pages outside the sitemap.
 
 ##### Internet Archive credentials
 
-Sign in with the usual Internet Archive account at [Internet Archive S3 API keys](https://archive.org/account/s3.php) to obtain the **access key** and **secret key**. These are the account's programmatic credentials. Supply them through these environment variables:
-
-- `IA_ACCESS_KEY_ID` — the access key
-- `IA_SECRET_ACCESS_KEY` — the secret key
-
-The script authenticates SPN2 requests with these keys. It does not ask for an email address or account password, read `.env` files, or automatically load the Internet Archive CLI configuration. Keep actual keys out of source files, documentation, committed batch files, and the repository.
-
-The familiar `ia configure` login is related: it asks for an email address and password, then saves the S3 keys in a local configuration file for the `ia` CLI. An existing CLI login alone therefore does not configure this exporter; both environment variables still need to be set. See the [Internet Archive configuration documentation](https://archive.org/developers/internetarchive/configuration.html).
-
-##### Run from Windows Command Prompt (CMD)
-
-Replace the two placeholder values with the actual keys and run all three commands in the same CMD window:
+Obtain an access key and secret key from [Internet Archive S3 API keys](https://archive.org/account/s3.php). In Windows Command Prompt, set the placeholders to your actual keys in the same window before running the exporter:
 
 ```bat
 set "IA_ACCESS_KEY_ID=YOUR_ACCESS_KEY"
 set "IA_SECRET_ACCESS_KEY=YOUR_SECRET_KEY"
-python "G:\vojtamaur-web\scripts\export-wayback-snapshots.py"
+python "F:\vojtamaur-web\scripts\export-wayback-snapshots.py" --pages-only
 ```
 
-These `set` commands apply to the current CMD session and the programs started from it. They do not persist after the window is closed; set both values again in a new window. The script can be launched from any working directory because it resolves the export directory relative to its own location.
-
-For PowerShell, use its environment-variable syntax instead:
+In PowerShell:
 
 ```powershell
 $env:IA_ACCESS_KEY_ID = "YOUR_ACCESS_KEY"
 $env:IA_SECRET_ACCESS_KEY = "YOUR_SECRET_KEY"
-python "G:\vojtamaur-web\scripts\export-wayback-snapshots.py"
+python "F:\vojtamaur-web\scripts\export-wayback-snapshots.py" --with-files
 ```
 
-To check the live sitemap and list the selected URLs without credentials, captures, or output files, run:
+These settings last for the current shell session. The script does not read `.env`, load `ia configure` credentials, or ask for an account password. Keep keys out of source files, documentation and committed batch files. Credentials are sent only to the fixed SPN2 endpoint; authenticated redirects are disabled.
+
+##### Preview without archiving
+
+Live sitemap previews need no keys and create no files or captures:
 
 ```bat
-python "G:\vojtamaur-web\scripts\export-wayback-snapshots.py" --dry-run
+python "F:\vojtamaur-web\scripts\export-wayback-snapshots.py" --pages-only --dry-run
+python "F:\vojtamaur-web\scripts\export-wayback-snapshots.py" --with-files --dry-run
 ```
 
-##### Snapshot TXT output and `ARCHIVE.txt`
+A local preview performs no network requests at all:
 
-Each capture run creates a new UTF-8 file in `G:\vojtamaur-web\exports\`, with a timestamped filename such as:
-
-```text
-exports/vojtamaur-web-wayback-20260924-143025-123456.txt
+```bat
+python "F:\vojtamaur-web\scripts\export-wayback-snapshots.py" --with-files --dry-run --dist "F:\vojtamaur-web\dist"
 ```
 
-The TXT contains only confirmed Wayback snapshot URLs, one per line, with no headings, status messages, or blank separator lines. For example:
+`--dist` requires `--dry-run`; actual captures use the published sitemap. `--sitemap URL` selects another sitemap and defines the permitted origin. `--limit N` limits the number of selected unique URLs after ordering, including any locally reusable results. Dry-run lists the selected URLs regardless of recent captures; it does not resume or write an export.
 
-```text
-https://web.archive.org/web/20260420175521/https://vojtamaur.cz/barva-tvar-ton/
-```
+##### Restarting and recent captures
 
-Each link uses the capture timestamp and final `original_url` returned by SPN2 after success. If the source page redirects, the final URL may differ from the sitemap entry. The script does not construct a success link merely because a capture job was accepted. If SPN2 returns `favicon.ico` for a request that was not itself for `favicon.ico`, the script retries the original URL once after a 15-second wait, within the existing retry limit. If the result is again a favicon, it reports an error, omits that result from the TXT, and counts the URL as failed. Other redirects remain accepted, including `/pf2026/` to `/demos/pf2026/`; this is a targeted favicon check, not a general verification of redirected destinations.
+By default, the exporter reuses confirmed captures from the last 24 hours. It reads previous `exports/vojtamaur-web-wayback-*.txt` files, validates their snapshot links and capture timestamps, and reuses the newest matching original URL without submitting it again. Those confirmed links are included in the new output and marked as reused in the console. Old, future-dated, malformed and invalid links are ignored. Previous export files are never modified.
 
-Successful lines are appended, flushed, and synced to disk immediately. Progress, job IDs, errors, and the final summary appear only in the console. The `[current/total]` counter identifies the URL being attempted; the final summary reports successful captures, failed captures, and sitemap errors separately.
+The same interval is sent to SPN2 through `if_not_archived_within`, allowing the service to return a recent capture too. Thus, after interruption or rate limiting, run the same command again to reuse recent successes and work on the remaining URLs. Local matching uses the final original URL in the stored snapshot; a redirect from a different requested URL may require a request to SPN2 again. Pending jobs, failed captures and ambiguous submissions are never assumed successful.
 
-After reviewing the results, manually copy the desired lines into `public/ARCHIVE.txt`. The exporter never edits `ARCHIVE.txt` itself. The `exports/` directory is already ignored by Git and lies outside `dist/`.
+`--if-not-archived-within 86400` explicitly selects 24 hours. A different nonnegative number changes the interval; `--if-not-archived-within 0` disables local reuse and requests a fresh capture from SPN2. It cannot override Internet Archive's resource-specific daily limits. See the [Internet Archive SPN2 client options](https://github.com/internetarchive/gospn/blob/main/options.go).
 
-##### Waiting, errors, and interruption
+##### Output and failures
 
-URLs are processed sequentially, with a five-second pause between them. After SPN2 accepts a job, the script polls its status every five seconds until success or an error. A job that remains pending has no overall time limit; the console periodically reports that it is still waiting.
+Each capture run creates a timestamped UTF-8 TXT under `F:\vojtamaur-web\exports\`. It contains only confirmed snapshot URLs, one per line, including reused recent results. Each link uses the actual capture timestamp and final `original_url`; accepting a job alone is not success. An unexpected `favicon.ico` result is omitted without resubmission. Other legitimate redirects remain supported.
 
-HTTP `429` and `5xx` responses are retried up to six times after the initial request. The exponential wait starts at 15 seconds and is capped at 300 seconds, unless the server's `Retry-After` header requests a longer wait. Individual network requests have a 60-second timeout. Selected temporary SPN2 job errors also trigger retries. If the reply to a capture submission is lost in a network failure, its outcome is reported as unknown rather than blindly submitting the same job again.
+Successful lines are flushed and synced immediately. A sibling `.failures.jsonl` file records each failed target URL and its error, including a failure that stops the batch. An empty failure file means no individual failures were recorded; also check the final sitemap-error count and exit status. A disk-write failure stops processing. The console reports selection counts, jobs, waits, local reuse and the final totals. Files are created only by actual capture runs, never by dry-run.
 
-A failed URL is reported and processing continues with the next one; failed or unconfirmed captures are omitted from the TXT. A failed child sitemap is also reported while other referenced sitemaps continue to be processed. Check the final summary to distinguish a complete batch from partial results. A disk-write failure stops the run.
+After review, manually copy desired snapshot links into `public/ARCHIVE.txt`; the exporter never edits it. Export files stay outside `dist/` and are ignored by Git.
 
-Press `Ctrl+C` to interrupt the run. Completed TXT lines remain available, but the current unconfirmed job may still finish at Internet Archive without appearing in the file. Starting the script again creates a new file and processes the live sitemap from the beginning: there is no automatic resume or skipping based on previous TXT files. Exit codes are `0` for a complete run, `1` for partial results or failure, and `130` for interruption.
+##### Waiting, rate limits and interruption
+
+Submissions are sequential, with a default 15-second pause between targets that need a request (`--delay`, minimum 5 seconds). Locally reused results need no pause. Accepted jobs are polled every five seconds with a default 900-second deadline (`--poll-timeout`). HTTP requests have a maximum 60-second timeout, shortened by the remaining polling deadline.
+
+An HTTP `429` rejects a submission. The exporter waits at least 300 seconds, or longer if `Retry-After` requests it, and retries that rejected request up to six times. If a `429` unexpectedly includes a job ID or confirmed success, that result is handled instead of resubmitting. Explicit `error:too-many-requests` and `error:user-session-limit` admission errors without a job ID also wait and retry. Exhausted rate-limit retries stop the batch while preserving completed results. Authentication/access failures (`401`/`403`) stop immediately.
+
+Once a job has been accepted, it is never submitted again in the same run. Lost POST replies, POST `5xx` responses, job errors, polling timeouts and unexpected favicon results are recorded as failures without blind resubmission. Safe GET requests may retry network/`429`/`5xx` failures with backoff and `Retry-After`, within the polling deadline where applicable.
+
+`error:too-many-daily-captures` is a limit for that particular URL. It is deferred to a later run while other targets continue; the script cannot bypass it. Errors such as `error:gateway-timeout`, `error:no-captures` or `nocaptures` mean Wayback could not complete the capture. The script records them and continues, but cannot guarantee that Internet Archive can reach the target. Rerunning later reuses recent successes and tries unfinished targets again.
+
+By default, HTTP error pages are not requested as captures. Use `--capture-errors` only when you also want SPN2 to capture HTTP error responses, matching the older exporter's `capture_all` behavior. This option does not fix rate limits or connectivity errors.
+
+`Ctrl+C` preserves completed lines. An unconfirmed job may still finish at Internet Archive after interruption, which is why it is not blindly resubmitted within the same run. Exit codes: `0` = complete selected batch, `1` = failure or partial results, `130` = interrupted.
 
 
 ### 15.4 YouTube video archiving

@@ -23,6 +23,7 @@ const BUNDLED_PUBLIC_FILES = new Set([
 const ASSET_DIRS = [
   "public/images",
   "public/files",
+  "public/rosetta",
 ];
 
 const BUNDLED_PUBLIC_DIRS = [
@@ -63,6 +64,7 @@ const EXCLUDED_ROOT_DIRS = new Set([
 const EXCLUDED_FILENAMES = new Set([
   ".DS_Store",
   "Thumbs.db",
+  "rosetta.json", // Repository-only translation state; never publish it.
 ]);
 
 const EXCLUDED_FILE_PATTERNS = [

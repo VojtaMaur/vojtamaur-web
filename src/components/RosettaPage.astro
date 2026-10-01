@@ -1,0 +1,28 @@
+---
+import RosettaLayout from "../layouts/RosettaLayout.astro";
+import type { RosettaLanguage } from "../lib/rosetta";
+const { language } = Astro.props as { language: RosettaLanguage };
+---
+<RosettaLayout
+  title={`Rosetta — ${language.name} | Vojta Maur`}
+  description={language.notice}
+  lang={language.code}
+  dir={language.dir}
+  canonicalPath={`/${language.code}/`}
+>
+  <main class="rosetta-page">
+    <h1><bdi>Rosetta</bdi> — {language.name}</h1>
+    <p class="rosetta-notice">{language.notice}</p>
+    {language.translatedAt && (
+      <p class="rosetta-date">
+        {language.translationDate}: <time datetime={language.translatedAt}><bdi>{language.date}</bdi></time>
+      </p>
+    )}
+    <p><a class="rosetta-open" href={language.href} type="text/plain" hreflang={language.code}>{language.open}</a></p>
+    <ul class="rosetta-links">
+      <li><a href="/" lang="cs" hreflang="cs"><bdi>Česká homepage</bdi></a></li>
+      <li><a href="/en/" lang="en" hreflang="en"><bdi>English homepage</bdi></a></li>
+      <li><a href="/rosetta/">{language.languages}</a></li>
+    </ul>
+  </main>
+</RosettaLayout>

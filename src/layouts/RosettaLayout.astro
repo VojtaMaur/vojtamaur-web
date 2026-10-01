@@ -1,0 +1,50 @@
+---
+import "../styles/global.css";
+import { ui } from "../lib/i18n";
+const { title, description, lang = "cs", dir = "ltr", canonicalPath } = Astro.props as {
+  title: string;
+  description: string;
+  lang?: string;
+  dir?: "ltr" | "rtl";
+  canonicalPath: string;
+};
+const canonical = new URL(canonicalPath, Astro.site);
+---
+<!doctype html>
+<html lang={lang} dir={dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#000000" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-shell">
+        <a href="/" class="site-header__title" dir="ltr">Vojta Maur</a>
+        <div class="site-header__motto" lang="cs" dir="ltr">{ui.cs.motto}</div>
+      </div>
+    </header>
+    <div class="site-shell"><slot /></div>
+  </body>
+</html>
+
+<style is:global>
+  .rosetta-page { padding: 1.5rem 0 3rem; }
+  .rosetta-page h1 { margin: 0 0 1rem; font-size: 2rem; line-height: 1.25; }
+  .rosetta-notice { max-width: 48rem; }
+  .rosetta-english { margin: 1.5rem 0; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+  .rosetta-date { color: var(--muted); }
+  .rosetta-page a { text-decoration: underline; text-underline-offset: 0.18em; }
+  .rosetta-links { padding-inline-start: 1.25rem; }
+  .rosetta-links li + li { margin-top: 0.65rem; }
+  .rosetta-open { display: inline-block; margin: 0.5rem 0; padding: 0.75rem 1rem; border: 1px solid var(--border); }
+  .rosetta-page a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+  .rosetta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 0.75rem 1.5rem; padding-inline-start: 1.25rem; }
+  .rosetta-grid a { overflow-wrap: anywhere; }
+</style>

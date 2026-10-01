@@ -1,0 +1,33 @@
+---
+import RosettaLayout from "../../layouts/RosettaLayout.astro";
+import { getRosettaLanguages } from "../../lib/rosetta";
+const languages = await getRosettaLanguages();
+---
+<RosettaLayout
+  title="Rosetta — jazyky | Vojta Maur"
+  description="Rozcestník strojových překladů článků Vojty Maura v čistém textu."
+  canonicalPath="/rosetta/"
+>
+  <main class="rosetta-page">
+    <h1>Rosetta</h1>
+    <p class="rosetta-notice">
+      Textové překlady článků do {languages.length} jazyků. Vyberte jazyk a otevřete
+      příslušný soubor TXT. Překlady jsou strojové, nebyly nezávisle jazykově ověřeny
+      a nemusí odpovídat aktuálnímu obsahu webu.
+    </p>
+    <p>Plnohodnotný web: <a href="/" lang="cs">Česká homepage</a> · <a href="/en/" lang="en">English homepage</a></p>
+    <div lang="en" class="rosetta-english">
+      <p class="rosetta-notice">
+        Plain-text translations of articles into {languages.length} languages.
+        Choose a language and open its TXT file. These machine translations have
+        not been independently reviewed and may not reflect the current website content.
+      </p>
+      <p>Full website: <a href="/" lang="cs">Česká homepage</a> · <a href="/en/" lang="en">English homepage</a></p>
+    </div>
+    <ul class="rosetta-grid">
+      {languages.map((language) => (
+        <li><a href={`/${language.code}/`} lang={language.code} hreflang={language.code}><bdi>{language.name}</bdi></a></li>
+      ))}
+    </ul>
+  </main>
+</RosettaLayout>

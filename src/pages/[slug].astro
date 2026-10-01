@@ -1,5 +1,12 @@
 ---
-import { getCollection, render } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import RosettaPage from "../components/RosettaPage.astro";
+import { getRosettaLanguages, type RosettaLanguage } from "../lib/rosetta";
+
+interface Props {
+  post?: CollectionEntry<"posts">;
+  rosetta?: RosettaLanguage;
+}
 import PostLayout from "../layouts/PostLayout.astro";
 import { canonicalPostPath, formatMonthYear } from "../lib/i18n";
 
@@ -8,20 +15,28 @@ const lang = "cs" as const;
 export async function getStaticPaths() {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
 
-  return posts.map((post) => ({
-    params: { slug: post.data.slug },
-    props: { post },
-  }));
+  const languages = await getRosettaLanguages();
+  for (const language of languages) {
+    if (posts.some((post) => post.data.slug === language.code)) {
+      throw new Error(`Rosetta language conflicts with an article slug: ${language.code}`);
+    }
+  }
+  return [
+    ...posts.map((post) => ({ params: { slug: post.data.slug }, props: { post } })),
+    ...languages.map((rosetta) => ({ params: { slug: rosetta.code }, props: { rosetta } })),
+  ];
 }
 
-const { post } = Astro.props;
-const { Content } = await render(post);
-
-const d = post.data;
-const csPath = canonicalPostPath(d.slug, "cs");
-const enPath = canonicalPostPath(d.slug, "en");
+const { post, rosetta } = Astro.props;
+const rendered = post ? await render(post) : undefined;
+const Content = rendered?.Content;
+const d = post?.data;
+const csPath = d ? canonicalPostPath(d.slug, "cs") : undefined;
+const enPath = d ? canonicalPostPath(d.slug, "en") : undefined;
 ---
 
+{rosetta && <RosettaPage language={rosetta} />}
+{d && Content && (
 <PostLayout
   title={`${d.title} | Vojta Maur`}
   description={d.excerpt ?? d.title}
@@ -72,3 +87,4 @@ const enPath = canonicalPostPath(d.slug, "en");
     </div>
   </article>
 </PostLayout>
+)}

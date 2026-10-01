@@ -394,3 +394,12 @@ Attribution to the original author and website is required for any public archiv
 Vojta Maur
 https://vojtamaur.cz/
 ```
+
+
+## Published Rosetta translations
+
+Keep finished, selected non-English translations as `public/rosetta/ALL_POSTS__lang-CODE.txt`. These stable repository files are published unchanged. `/rosetta/` lists the available languages; `/<CODE>/` shows a short localized notice and a link to its TXT, with links back to the full CS/EN homepages. English Rosetta is not published; `/en/` remains the normal English homepage.
+
+An optional root `rosetta.json` keeps the matching export state and supplies translation-edition date and validation metadata during the build. It stays out of the public build and source ZIP. The build never reads `exports/` or calls a translation API. Replace the selected TXT and matching JSON manually when updating this edition. UI notices live in `src/lib/rosetta-copy.ts`. See documentation section 9.6.10 for publication and source-package recovery details.
+
+After a web or USB build, run `npm run test:rosetta` to check all published language pages, dates, links and original TXT bytes.

@@ -12,6 +12,7 @@
     "generate:gemini": "node scripts/generate-gemini-capsule.mjs",
     "generate:source-bundle": "node scripts/generate-source-bundle.mjs",
     "generate:sitemap": "node scripts/enrich-sitemap.mjs",
+    "test:rosetta": "node --test scripts/tests/rosetta.test.mjs",
     "test:sitemap": "node --test scripts/tests/sitemap.test.mjs",
     "test:wayback": "python -B -m unittest discover -s scripts/tests -p test_wayback.py",
     "generate:integrity": "node scripts/generate-integrity.mjs",

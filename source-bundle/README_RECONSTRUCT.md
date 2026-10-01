@@ -2,7 +2,7 @@
 
 Tento ZIP není kompletní statický snapshot webu. Je to malý zdrojový balík bez velkých veřejných assetů.
 
-Balík obsahuje zdrojové soubory projektu, `download-assets.py`, `MEDIA_MANIFEST.json` a `MEDIA_SHA256SUMS.txt`. Velké assety z `public/images/` a `public/files/` nejsou v ZIPu vložené. Skript je stáhne nebo zkopíruje podle manifestu a ověří jejich SHA-256. Složka `public/demos/` je naopak součástí ZIPu, protože demo soubory se na živém webu mohou lišit od zdrojových souborů a nejsou spolehlivý hashově totožný download-target.
+Balík obsahuje zdrojové soubory projektu, `download-assets.py`, `MEDIA_MANIFEST.json` a `MEDIA_SHA256SUMS.txt`. Velké assety z `public/images/`, `public/files/` a `public/rosetta/` nejsou v ZIPu vložené. Skript je stáhne nebo zkopíruje podle manifestu a ověří jejich SHA-256. Složka `public/demos/` je naopak součástí ZIPu, protože demo soubory se na živém webu mohou lišit od zdrojových souborů a nejsou spolehlivý hashově totožný download-target.
 
 ## Rychlá rekonstrukce
 
@@ -31,7 +31,7 @@ Teprve když lokální soubor chybí nebo nesedí SHA-256, zkouší síťové fa
 
 ## Demos
 
-`public/demos/` se nestahuje jako asset. Je přibalené přímo ve zdrojovém ZIPu. Důvod je jednoduchý: demo HTML může být při buildu nebo při hostingu přepsané, takže živé `/demos/...` nemusí mít stejný SHA-256 jako zdrojový soubor v repozitáři. Manifest proto sleduje jen `public/images/` a `public/files/`.
+`public/demos/` se nestahuje jako asset. Je přibalené přímo ve zdrojovém ZIPu. Důvod je jednoduchý: demo HTML může být při buildu nebo při hostingu přepsané, takže živé `/demos/...` nemusí mít stejný SHA-256 jako zdrojový soubor v repozitáři. Manifest proto sleduje `public/images/`, `public/files/` a `public/rosetta/`. Rosetta TXT se obnoví beze změny stejně jako ostatní assety. Pracovní `rosetta.json` z kořene repozitáře se nezveřejňuje ani nepřibaluje a k rekonstrukci není potřeba.
 
 ## Fallback mirrory
 
@@ -44,7 +44,7 @@ https://vojtamaur.github.io/vojtamaur-web
 ArDrive / Arweave deployment
 ```
 
-Manifest nepředpokládá HTML routy typu `/documentation/`. Pracuje jen s assety z `public/images/`, `public/files/` a `public/demos/`.
+Manifest nepředpokládá HTML routy typu `/documentation/`. Pracuje s assety z `public/images/`, `public/files/` a `public/rosetta/`; `public/demos/` je přibalené přímo.
 
 ## Ověření
 

@@ -3,6 +3,8 @@ layout: ../layouts/BaseLayout.astro
 title: Technical Documentation
 ---
 
+<main class="post-page post-body">
+
 # Technical documentation for the `vojtamaur-web` project
 
 ## 1. Project overview
@@ -2275,6 +2277,22 @@ The repair path preserves valid items even from incomplete responses and submits
 
 An interrupted run keeps its batch ID and results in `rosetta.json`. If a submission's outcome is uncertain and no batch ID was saved, locate the actual job in Google AI Studio and recover it with `collect --batch-name batches/ID` (replace `ID` with that job's identifier), adding the same `--output` when applicable. Do not submit a duplicate job blindly. Completed exports from an older timestamped Rosetta directory can be imported into the shared directory without API calls using `node scripts/export-site-rosetta.mjs import --from exports/rosetta-OLD`.
 
+#### Published Rosetta reading pages
+
+Finished translations selected for publication live in the stable, versioned `public/rosetta/` directory, using `ALL_POSTS__lang-CODE.txt` filenames. Do not put the Rosetta English TXT here: `/en/` remains the existing full English homepage. The build never selects files from `exports/`, translates content, calls an API, or modifies the selected TXT files.
+
+`/rosetta/` is a directory of available languages with their native names. Each language has a small page, for example `/de/`, containing a localized notice, the text-translation edition date, and links to the TXT, the Czech and English homepages, and the language directory. The notice explains that the language URL leads to an unreviewed machine translation in plain text that may be out of date. No article text is embedded in these HTML pages. They are ordinary static pages, not 404 recovery responses; unsupported languages retain the normal 404 behavior. Right-to-left notices use the appropriate document direction.
+
+The localized notices and link labels are maintained in `src/lib/rosetta-copy.ts`. `src/lib/rosetta.ts` discovers actual TXT files and reads their headers. Only exports with the complete Czech article set are accepted. The visible date describes the text-translation edition, never the source text or the current website build time. The directory has Czech and English introductions stacked above the shared native-language list.
+
+A repository-root `rosetta.json` can retain the export's original working state. When present, the build uses `manifest.updatedAt` (recorded after TXT export) for the visible translation-edition date and checks each selected TXT's completion status, source identity, article count and SHA-256 against its manifest. An incomplete overall manifest is allowed when the selected TXT languages are complete. Missing TXT files are not advertised. Source dates in TXT headers remain validation metadata. When the JSON or its TXT export timestamp is absent, the translation-date line is omitted rather than mislabeling a source date or a copied file timestamp. Neither development nor builds modify this JSON.
+
+`rosetta.json` must remain outside `public/`. It is excluded from the public source ZIP as well as from the website itself. The TXT files are copied once into `dist/rosetta/` and included in normal sitemap and integrity generation. To avoid another copy inside the public source ZIP (and its JPEG carrier), `public/rosetta/` is treated as an external asset directory in the source-bundle manifest. The existing asset downloader restores and verifies those TXT files when reconstructing the source package. The root JSON is unnecessary for reconstruction.
+
+To update the published edition, manually replace the selected TXT files in `public/rosetta/` and, if kept, their matching root `rosetta.json`. Adding a new supported TXT automatically adds its landing page and directory entry; removing it removes both. Add localized UI copy before publishing an entirely new language code. Do not mix files from different source editions with a retained manifest.
+
+Run `npm run test:rosetta` after a web or USB build to verify the directory, language pages, dates, links, untouched TXT bytes, integrity inclusion and absence of public JSON. USB builds use flat HTML pages with relative links; the Arweave copy also carries the Rosetta files through its existing path rewrite.
+
 ### 9.6.11 Morse-code text export
 
 `scripts/export-site-morse.py` creates a manual archival edition from the existing `dist/ALL_POSTS.json`, using only the Python standard library. It reuses the JSON parser, language selection, article order, full `articleBody` and compact media serializer from `scripts/filter-all-posts.py`. It does not encode raw JSON syntax or JSON-LD bookkeeping. Each article retains its rendered title and month, language, section and public URL, followed by compact text and media references (image filenames, alt text, captions and embed sources). Explicit `ARTICLE` / `END ARTICLE` lines mark article boundaries, and the closing code marker becomes `END CODE BLOCK` before normalization.
@@ -3397,13 +3415,11 @@ Possible future directions for the project:
 - translation of image alt texts
 - adding alt texts to photographs in the Travel section
 - automatic translation of PDF exports, with automatic compression of the translated PDFs to reduce file size
-- a wiki with interconnected articles (e.g. `wiki.vojtamaur.cz`)
 - restructuring of the homepage biographical content by replacing the current formal “About me” text with a shorter, more informal introduction, while providing a separate detailed curriculum vitae as a linked PDF document
 - evaluation of custom perforated boards manufactured by JLCPCB as a passive, punch-card-like physical storage medium, encoding binary data as a regular pattern of through-holes, with development of a self-describing format and optical decoding method using backlighting and conventional cameras or scanners
 - evaluation of emerging long-term archival media (e.g. [NanoFiche](https://nanofiche.com/)) as costs and availability improve
 - evaluation of 5D memory crystal storage, once the technology becomes more affordable and openly accessible
 - evaluation of DNA-of-Things storage embedded in physical artworks or materials, once the currently prohibitive cost of custom synthesis and production decreases
-- evaluation of future opportunities for inclusion in lunar cultural archives (e.g. the [Lunar Codex](https://www.lunarcodex.com/)), if suitable public submission pathways become available
 - evaluation of future opportunities for inclusion in space-based cultural archives (e.g. the [Arch Mission Foundation](https://www.archmission.org/)), if suitable public submission pathways become available
 - self-hosting a Tor Onion Service mirror (e.g. on a Raspberry Pi), exposing the same content from a single .onion address over multiple protocols, including HTTP/HTTPS, Gemini (gemini://...onion), Spartan (spartan://...onion), and Gopher (gopher://...onion)
 - extension of the manual Internet Archive Wayback Machine sitemap exporter (section 15.3.1) to public mirror URLs and scheduled capture runs
@@ -3422,19 +3438,27 @@ Possible future directions for the project:
 - production of a PDF/A archival edition of the existing searchable PDF export, complementing the ordinary PDF with a format specifically constrained for long-term preservation
 - creation of a ZIM edition of `vojtamaur.cz` for distribution and browsing through Kiwix, providing an additional standardized, self-contained offline representation of the website alongside the existing HTML-based USB build
 - donation of physical print editions to institutional collections: an artist’s-book edition of the Metaweb article to the [Franklin Furnace Archive](https://franklinfurnace.org/artist-books/), and printed editions of the Metaweb article and ALL_POSTS.txt to the [Internet Archive Physical Archive](https://openlibrary.org/bookdrive.en), providing additional long-term preservation within independent cultural and library institutions
-- evaluation of a BitTorrent edition of `vojtamaur.cz`, using a multi-file torrent to reconstruct the complete offline build directly from existing public mirrors configured as HTTP web seeds, avoiding the need to host an additional duplicate ZIP archive
+- experimental neural archival edition of `ALL_POSTS.txt`, training a small Transformer language model from scratch exclusively on the text corpus and deliberately overfitting it to memorize the original content within its neural weights, with the aim of reconstructing a substantial proportion of the original text (ideally 80–90% or more) from the trained model without access to the source file
+- development of an automated approach to indirectly disseminating the project's ideas through third-party language model training, building on initial manual experiments involving discussions about `vojtamaur.cz`, `ALL_POSTS.txt`, and the Metaweb article, accompanied by positive response feedback to potentially increase their relevance for training; possible approaches include sustained automated conversations between models from different providers, aiming to marginally influence future models' learned representations and token probability distributions. Training inclusion and actual influence remain unverified, automated interactions may be filtered, and any implementation must account for providers' terms of service and the potential classification of such activity as training-data poisoning
+- evaluation of lunar archival preservation through [LifeShip](https://lifeship.com/), either by submitting a PDF export of `vojtamaur.cz` for storage on a digital microchip (starting at $75 for up to 2 MB) or by commissioning a more durable, passively readable NanoFiche edition; the latter requires individual pricing and verification of archival longevity and future mission availability
+- evaluation of submitting `vojtamaur.cz` as an artistic and archival project to a future [Moon Gallery Foundation](https://moongallery.eu/) open call, subject to the availability of new submission opportunities and curatorial selection
+- evaluation of sending a physical [NanoFiche](https://nanofiche.com/) archival copy of `vojtamaur.cz` to the Moon through [Astrobotic MoonBox](https://www.astrobotic.com/lunar-delivery/send-to-the-moon/), potentially using a small circular NanoFiche (12–19 mm in diameter) instead of conventional flash storage; feasibility depends on verification of the capsule's internal dimensions, material compatibility, environmental protection, mission availability, and cost
 
 ### 14.2 Failed attempts and abandoned approaches
 
 The following approaches were tested or seriously evaluated but were ultimately abandoned:
 
 - development of a custom OpenAI GPT tentatively called vojtamaurGPT was explored as an interactive interface to the project and its content; the approach was abandoned because the Custom GPT interface at the time was considered too restrictive for the intended development workflow, while relying on a language model to interpret and mediate access to the archived material was considered less desirable than providing direct, deterministic access to the underlying content
+- development of a dedicated wiki with interconnected articles (e.g. `wiki.vojtamaur.cz`) was considered but ultimately abandoned for both practical and philosophical reasons; the approximately six-hour video-based verbal export of `vojtamaur.cz` already covers much of the material that might otherwise have been included in the wiki, while the need for a separate explanatory knowledge base was considered undesirable, as the website itself should remain sufficiently self-contained and comprehensible without an additional layer of interpretation
 - publication of the searchable PDF export of `vojtamaur.cz` on [sourceAFRICA](https://sourceafrica.net/) was considered as an additional public archival and distribution channel; sourceAFRICA was contacted about the possibility, but no response was received, so the attempt was abandoned
 - use of [Perpetual Storage](https://www.perpetualstorage.com/) and its Family GoBox service was considered for long-term physical storage in a climate-controlled, highly secured facility in Utah; the company was contacted for further information, but no response was received, so the option was abandoned
 - publication of the `Metaweb Article` on Kobo was attempted but rejected because Kobo considered it too niche and insufficiently distinct for publication; rather than resubmitting the same work, the approach was changed and the EPUB export of all articles was later published successfully as an authorial collection categorized primarily as biography/art rather than technology/programming
 - hosting of a Spartan capsule on [tilde.team](https://tilde.team/) was explored as an additional alternative-protocol mirror of `vojtamaur.cz`; the service was contacted about Spartan hosting, but no response was received, so this option was abandoned
 - inclusion of the English `Metaweb Article` in ArchiveBox's [Web Archiving Community](https://github.com/ArchiveBox/ArchiveBox/wiki/Web-Archiving-Community) page was proposed to Nick Sweeting for the “Articles We Like About Internet Archiving” section; no response was received and the article was not added
 - registration of two physical air-gapped copies listed in the [Metaweb Article](https://vojtamaur.cz/metawebovy-clanek/) — ID 013 (`ALL_POSTS.txt Memory of Mankind Edition`) and ID 015 (`vojtamaur.cz offline 5`) — with the [International Time Capsule Society](https://www.itcsoc.org/) was attempted; the first registration was submitted on 2026-09-07 and the second on 2026-09-21; as of 2026-09-27, neither had appeared in the public registry, and a follow-up email sent on 2026-09-18 had received no response
+- publication of text-based archival exports of `vojtamaur.cz` on [Tumblr](https://www.tumblr.com/) was attempted using its official API; smaller exports were successfully published, but the account was subsequently terminated, possibly due to automated spam detection triggered by unusually large posts and repeated API requests; an appeal was submitted to Tumblr Trust & Safety on 2026-09-27, and the approach was suspended pending review
+- a BitTorrent edition of `vojtamaur.cz` was evaluated as a way to reconstruct the complete web build directly from existing public hosting mirrors using HTTP web seeds, without storing an additional ZIP archive; the approach was abandoned because the BEP 19 multi-file web seeding specification requires compatible URL directory structures, while individual hosting providers may serve structurally or byte-wise different builds. Supporting these differences would require provider-specific configuration or changes to the existing deployment workflows. Furthermore, continuously updated mirrors cannot guarantee the availability of immutable historical torrent releases. The resulting implementation and maintenance overhead was considered disproportionate to the expected archival benefit. Conventional P2P torrent distribution remains technically possible but was not pursued as part of this approach.
+- inclusion of `vojtamaur.cz` in the [Lunar Codex](https://www.lunarcodex.com/) was considered as a potential form of lunar archival preservation; however, the project closed submissions in August 2025 and has stated that it does not plan to reopen them. The approach was therefore abandoned indefinitely without contacting the organization, although its submission status may be reassessed in the future
 
 ---
 
@@ -3610,6 +3634,25 @@ The manifest Data TX ID is the authoritative archival identifier. Gateway URLs a
 
 For Shared piqlFilm, the observed minimum price is €139. An approximately 0.8 GB package cost €139; 1.19 GB was quoted at €165.48, close to €139/GB; and 9.22 GB was quoted at €1,113.21, which may indicate a different calculation or volume discount at larger sizes. Because the exact public pricing formula is not known, treat these figures as practical observations rather than guaranteed price tiers. To stay at the €139 minimum in practice, keep the package safely below 1 GB.
 
+### 15.7 Recurring preservation and maintenance
+
+The following archival operations should be performed periodically to maintain the accessibility and preservation of the project. The intervals are approximate and may be adjusted according to the extent of changes.
+
+- update `ARCHIVE.txt` whenever new archival locations, permanent identifiers, or significant snapshots are created
+- approximately once per year, publish an updated archival release of `vojtamaur.cz` on Zenodo, preserving previous versions
+- approximately once per year, upload an updated website build to Arweave / ArDrive as a new immutable archival snapshot
+- periodically run `scripts/export-wayback-snapshots.py` to submit the current website to the Internet Archive Wayback Machine, particularly after substantial content updates
+- periodically update manually maintained mirrors that do not support automatic deployment
+- approximately once per year, review the availability of existing archival copies, repositories, and mirrors, identifying inaccessible or discontinued services
+- periodically verify the integrity and recoverability of stored archival copies using available checksums and signatures
+- approximately once per decade, deposit an updated archival edition of `vojtamaur.cz` in the Memory of Mankind (MoM) archive, preserving previous deposits
+- approximately once per decade, deposit an updated archival edition of `vojtamaur.cz` in the Arctic World Archive (AWA), preserving previous deposits
+- approximately once every three years, update the archival copies of the project's YouTube videos, including newly published content, on the existing archival platforms
+- periodically archive `ALL_POSTS.txt`, `ARCHIVE.txt`, the documentation page, and the Metaweb article using independent web snapshot services (e.g. archive.today, Ghost Archive, Arquivo.pt, Web Gyotaku, ...), particularly after significant updates
+- approximately once every one to three years, print an updated archival edition of `vojtamaur.cz` and deposit it in the author's private physical archive, preserving previous editions
+- approximately once every three to five years, test the reconstruction of `vojtamaur.cz` from an independent archival copy, verifying that the website can be restored without relying on the original development environment
+- approximately once every six months, submit the public source code repository of `vojtamaur.cz` to Software Heritage using its Save Code Now feature, particularly after significant updates
+
 ---
 
 ## 16. Summary
@@ -3631,3 +3674,5 @@ From a maintenance perspective, the following points are especially important:
 - unused English translation cache entries can be pruned with a dry-run-first workflow, while `manual`, `locked`, and `edited` entries are preserved
 
 This documentation describes the current architecture and operating model of the project in a form suitable for ongoing maintenance, handoff, or future migration.
+
+</main>

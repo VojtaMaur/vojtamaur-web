@@ -947,6 +947,7 @@ PARTIAL PAGE SNAPSHOTS:
 	https://arquivo.pt/wayback/20260706110810/https://vojtamaur.cz/cestovani-recko-2020/
 	https://arquivo.pt/wayback/20260707030750/https://colab.research.google.com/drive/18y4hUsNv-aEZHtXVp67ygHGGpMBkByxD?usp=sharing
 	https://arquivo.pt/wayback/20260722032730/https://vojtamaur.cz/en/plevel/
+	https://web.archive.org/web/20261001074202/https://vojtamaur.cz/rosetta/
 	Megalodon
 	https://megalodon.jp/2026-0702-1329-40/https://vojtamaur.cz:443/
 	https://megalodon.jp/2026-0702-1331-10/https://vojtamaur.cz:443/en/

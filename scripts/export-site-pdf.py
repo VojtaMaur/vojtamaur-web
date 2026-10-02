@@ -45,6 +45,8 @@ from typing import Iterable
 from urllib.parse import quote, urljoin, urlsplit, urlunsplit
 from urllib.request import urlopen
 
+import pdf_export_common as pdf_common
+
 
 SECTION_LABELS = {
     "cs": {
@@ -68,7 +70,7 @@ TRANSLATION_LABELS = {
 SECTION_ORDER = ["volna-tvorba", "vystavy", "cestovani"]
 VALID_LANGS = {"cs", "en"}
 DEFAULT_SITE_URL = "https://vojtamaur.cz"
-SCRIPT_VERSION = "3.2.2-manifest-name"
+SCRIPT_VERSION = "3.3.0-pdfa"
 MANIFEST_NAME = "vojtamaur-web-export-pdf.manifest.json"
 
 
@@ -241,7 +243,7 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help=(
             "Override image downsampling resolution used during Ghostscript compression. "
-            "Ignored with --pdf-quality archive."
+            "Overrides --compress / --pdf-quality; with PDF/A applies to its derivative."
         ),
     )
     parser.add_argument(
@@ -250,7 +252,7 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help=(
             "Override JPEG quality from 1 to 100 during Ghostscript compression. "
-            "Ignored with --pdf-quality archive."
+            "Overrides --compress / --pdf-quality; with PDF/A applies to its derivative."
         ),
     )
     parser.add_argument(
@@ -263,6 +265,7 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="When compression is enabled, also keep the original uncompressed PDF.",
     )
+    pdf_common.add_arguments(parser, existing_images=True, existing_ghostscript=True)
     return parser.parse_args()
 
 
@@ -1004,7 +1007,7 @@ def render_url_to_pdf(
             page.wait_for_load_state("networkidle", timeout=min(args.timeout_ms, 8000))
         page.add_style_tag(content=css_escape())
         scroll_page(page, args.wait_ms)
-        if args.pdf_quality != "archive":
+        if args.pdf_quality != "archive" or args._ordinary_processing:
             replace_iframes_with_linked_snapshots(
                 page,
                 public_page_url,
@@ -1249,26 +1252,21 @@ def finalize_pdf(
     ghostscript: Path | None,
     outputs: list[Path],
 ) -> None:
-    if args.pdf_quality == "archive":
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        if uncompressed.resolve() != destination.resolve():
-            shutil.copy2(uncompressed, destination)
-        outputs.append(destination)
-        return
-
-    if ghostscript is None:
-        raise SystemExit(
-            "Ghostscript is required for --pdf-quality printer, ebook, or screen. "
-            "Install Ghostscript or pass --ghostscript with the executable path."
-        )
-
-    if args.keep_uncompressed:
-        uncompressed_output = compressed_copy_name(destination, "-uncompressed")
-        shutil.copy2(uncompressed, uncompressed_output)
-        outputs.append(uncompressed_output)
-
-    compress_pdf(uncompressed, destination, args, ghostscript)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if uncompressed.resolve() != destination.resolve():
+        shutil.copy2(uncompressed, destination)
+    if args.pdfa and args.pdf_quality != "archive":
+        # Preserve the existing explicitly selected ordinary-PDF workflow.
+        if args.keep_uncompressed:
+            raw_copy = compressed_copy_name(destination, "-uncompressed")
+            shutil.copy2(uncompressed, raw_copy)
+            outputs.append(raw_copy)
+        compress_pdf(uncompressed, destination, args, ghostscript)
+    records = pdf_common.process(destination, args)
     outputs.append(destination)
+    if args.keep_uncompressed and args._ordinary_processing:
+        outputs.append(compressed_copy_name(destination, "-uncompressed"))
+    outputs.extend(Path(record["path"]) for record in records if record["kind"] == "pdfa-2b")
 
 
 def run_build(command: str | None, project_root: Path) -> None:
@@ -1295,6 +1293,7 @@ def write_manifest(
         "language": args.lang,
         "sections": split_csv(args.section),
         "pdf_quality": args.pdf_quality,
+        "pdf_processing": args._pdf_records,
         "site_url": args.site_url,
         "image_dpi": args.image_dpi,
         "jpeg_quality": args.jpeg_quality,
@@ -1334,6 +1333,7 @@ def write_manifest(
 
 def main() -> int:
     args = parse_args()
+    pdf_common.prepare(args)
     args.site_url = normalize_site_url(args.site_url)
     project_root = Path(args.project_root).resolve()
     dist_dir = resolve_path(project_root, args.dist).resolve()
@@ -1364,24 +1364,7 @@ def main() -> int:
     if not jobs:
         raise SystemExit("No matching article pages found. Filters are too strict or dist/ is incomplete.")
 
-    if args.pdf_quality == "archive" and (
-        args.image_dpi is not None or args.jpeg_quality is not None or args.keep_uncompressed
-    ):
-        print(
-            "[warn] --image-dpi, --jpeg-quality, and --keep-uncompressed are ignored "
-            "with --pdf-quality archive.",
-            file=sys.stderr,
-        )
-
-    ghostscript = None
-    if args.pdf_quality != "archive":
-        ghostscript = find_ghostscript(args.ghostscript)
-        if ghostscript is None:
-            raise SystemExit(
-                "Ghostscript was not found. Install it or pass its executable path, for example:\n"
-                '  --ghostscript "C:\\Program Files\\gs\\gs10.xx.x\\bin\\gswin64c.exe"'
-            )
-        print(f"[ghostscript] {ghostscript}")
+    ghostscript = args._ghostscript
 
     output_dir.mkdir(parents=True, exist_ok=True)
     server, base_url = start_server(dist_dir)
@@ -1407,7 +1390,7 @@ def main() -> int:
                             public_url = make_public_page_url(args.site_url, job.url_path)
                             print(f"[{index}/{len(jobs)}] {job.label}")
 
-                            if args.pdf_quality == "archive":
+                            if args.pdf_quality == "archive" and not args.pdfa and not args._ordinary_processing:
                                 render_url_to_pdf(browser, url, public_url, out, args)
                                 outputs.append(out)
                             else:
@@ -1458,7 +1441,7 @@ def main() -> int:
         if path.exists():
             print(f"  {path} ({path.stat().st_size:,} bytes)")
 
-    return 0
+    return 2 if args._target_failed else 0
 
 
 if __name__ == "__main__":

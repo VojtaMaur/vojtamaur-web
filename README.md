@@ -368,6 +368,23 @@ GitHub is the canonical source repository. GitLab and Codeberg contain repositor
 
 The current archive entry points and mirror topology are intentionally maintained outside this README so that they do not become a stale duplicated list. See the Metaweb article and `ARCHIVE.txt` for the current map.
 
+## Optional archival PDF exports
+
+The three manual exporters in `scripts/` support `--pdfa 2b` to retain the ordinary
+PDF and create a separate `*-pdfa-2b.pdf`. Shared options are `--compress
+none|light|medium|high`, `--image-dpi`, `--jpeg-quality`, and `--target-size`:
+
+```bash
+python scripts/export-site-pdf-ultra.py --pdfa 2b --compress medium --target-size 2M
+```
+
+Final processing requires Ghostscript; PDF/A also requires an RGB ICC profile,
+normally detected from its installation. veraPDF is used when available; otherwise
+the exporter explicitly reports that external PDF/A validation was not performed.
+Ordinary PDF remains the default, and `export-all.bat` does not request PDF/A.
+See documentation section 9.6.5 for presets, override semantics, validation and
+the bounded target-size search (status 2 when the limit cannot be reached).
+
 ## Documentation
 
 This README is only the public repository overview.

@@ -43,8 +43,10 @@ from typing import Any, Iterable
 from urllib.parse import quote, unquote, urljoin, urlsplit, urlunsplit
 from urllib.request import urlopen
 
+import pdf_export_common as pdf_common
 
-SCRIPT_VERSION = "1.3.0"
+
+SCRIPT_VERSION = "1.4.0"
 DEFAULT_SITE_URL = "https://vojtamaur.cz"
 DEFAULT_OUTPUT_NAME = "vojtamaur-web-export-metaweb.pdf"
 ULTRA_OUTPUT_PATH = Path("exports/vojtamaur-web-export-ultra.pdf")
@@ -204,6 +206,7 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Do not write the adjacent JSON export manifest.",
     )
+    pdf_common.add_arguments(parser, existing_images=False, existing_ghostscript=False)
     return parser.parse_args()
 
 
@@ -1532,6 +1535,7 @@ def write_manifest(
         "generated_at": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
         "generator": f"export-metaweb-pdf.py {SCRIPT_VERSION}",
         "source_build": str(dist_dir),
+        "pdf_processing": args._pdf_records,
         "site_url": args.site_url,
         "ultra_export": {
             "path": str(ultra_pdf_path),
@@ -1602,6 +1606,7 @@ def part_path(temp_dir: Path, index: int, name: str) -> Path:
 
 def main() -> int:
     args = parse_args()
+    pdf_common.prepare(args)
     ensure_dependencies()
     args.site_url = normalize_site_url(args.site_url)
 
@@ -1855,6 +1860,7 @@ def main() -> int:
             expected_pages = sum(part.pages for part in parts)
             print(f"[merge] {len(parts)} section(s), {expected_pages} page(s)")
             merge_pdfs(parts, output_path, f"{args.title} / {args.title_en}")
+            pdf_common.process(output_path, args)
             page_count, link_count = validate_final_pdf(
                 output_path,
                 expected_pages,
@@ -1886,7 +1892,7 @@ def main() -> int:
             )
             if not args.no_manifest:
                 print(f"[manifest] {manifest_path}")
-            return 0
+            return 2 if args._target_failed else 0
     finally:
         server.shutdown()
         server.server_close()

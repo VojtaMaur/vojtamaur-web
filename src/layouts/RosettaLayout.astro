@@ -24,7 +24,7 @@ const canonical = new URL(canonicalPath, Astro.site);
     <meta name="theme-color" content="#000000" />
   </head>
   <body>
-    <header class="site-header">
+    <header class="site-header" lang="cs" dir="ltr">
       <div class="site-shell">
         <a href="/" class="site-header__title" dir="ltr">Vojta Maur</a>
         <div class="site-header__motto" lang="cs" dir="ltr">{ui.cs.motto}</div>
@@ -35,6 +35,8 @@ const canonical = new URL(canonicalPath, Astro.site);
 </html>
 
 <style is:global>
+  .site-header .site-header__title,
+  .site-header .site-header__motto { font-family: Consolas, "Courier New", monospace; }
   .rosetta-page { padding: 1.5rem 0 3rem; }
   .rosetta-page h1 { margin: 0 0 1rem; font-size: 2rem; line-height: 1.25; }
   .rosetta-notice { max-width: 48rem; }

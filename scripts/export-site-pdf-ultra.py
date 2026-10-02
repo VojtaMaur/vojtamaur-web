@@ -34,14 +34,19 @@ from types import ModuleType
 from typing import Any, Sequence
 from urllib.parse import unquote, urljoin, urlsplit
 
+import pdf_export_common as pdf_common
 
-SCRIPT_VERSION = "3.3.2"
+
+SCRIPT_VERSION = "3.4.2"
 DEFAULT_SITE_URL = "https://vojtamaur.cz/"
 DEFAULT_INPUT = "dist/ALL_POSTS.json"
 DEFAULT_FILTER_SCRIPT = "scripts/filter-all-posts.py"
 DEFAULT_OUTPUT = "exports/vojtamaur-web-export-ultra.pdf"
 DEFAULT_SEPARATE_DIR = "exports/ultra-media-separate"
 DEFAULT_TITLE = "vojtamaur.cz - ultra-compact media archive"
+# Match TXT preview limits, applied only to the DullGPT output log.
+DULLGPT_MAX_LINES = 120
+DULLGPT_MAX_CHARS = 12000
 
 CSS_LENGTH_RE = re.compile(r"^(?:\d+(?:\.\d+)?|\.\d+)(?:mm|cm|in|pt|px)$")
 URL_RE = re.compile(r"https?://[^\s<>\[\]\"']+", flags=re.IGNORECASE)
@@ -191,14 +196,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--image-dpi",
         type=int,
-        default=240,
-        help="Thumbnail raster resolution. Default: 240 dpi.",
+        default=None,
+        help="Thumbnail resolution and final maximum raster DPI; overrides preset. Plain default: 240 dpi.",
     )
     parser.add_argument(
         "--jpeg-quality",
         type=int,
-        default=70,
-        help="Thumbnail JPEG quality from 1 to 95. Default: 70.",
+        default=None,
+        help="Thumbnail/final JPEG quality 1-100; overrides preset. Plain default: 70.",
     )
     parser.add_argument(
         "--repeat-media",
@@ -220,6 +225,13 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Do not write the adjacent JSON manifest.",
     )
+    parser.add_argument(
+        "--full-dullgpt-log", "--full-code-blocks",
+        dest="full_dullgpt_log",
+        action="store_true",
+        help="Keep the full DullGPT example output log from JSON. Default: only that log is previewed at 120 lines / 12000 characters; executable code and other articles remain complete. --full-code-blocks is a compatibility alias; legacy TXT truncation cannot be recovered.",
+    )
+    pdf_common.add_arguments(parser, existing_images=True, existing_ghostscript=False)
     return parser.parse_args()
 
 
@@ -247,10 +259,10 @@ def validate_args(args: argparse.Namespace) -> None:
         raise SystemExit("--thumbnail-width-mm must be between 3 and 80.")
     if not 3.0 <= args.thumbnail_height_mm <= 80.0:
         raise SystemExit("--thumbnail-height-mm must be between 3 and 80.")
-    if not 36 <= args.image_dpi <= 600:
-        raise SystemExit("--image-dpi must be between 36 and 600.")
-    if not 1 <= args.jpeg_quality <= 95:
-        raise SystemExit("--jpeg-quality must be between 1 and 95.")
+    if args.image_dpi < 36:
+        raise SystemExit("--image-dpi must be at least 36.")
+    if not 1 <= args.jpeg_quality <= 100:
+        raise SystemExit("--jpeg-quality must be between 1 and 100.")
     for name in ("margin", "column_gap"):
         value = getattr(args, name).strip().lower()
         if not CSS_LENGTH_RE.fullmatch(value):
@@ -542,6 +554,58 @@ def linked_wrapper(
     )
 
 
+def preview_dullgpt_log(
+    compact: str,
+    metadata: dict[str, str],
+    truncations: list[dict[str, Any]],
+) -> str:
+    """Preview only the recognized DullGPT output log, never executable code."""
+    if metadata.get("SLUG") != "dullgpt":
+        return compact
+    block_index = 0
+
+    def shorten(match: re.Match[str]) -> str:
+        nonlocal block_index
+        block_index += 1
+        raw = match.group(1).rstrip()
+        # JSON serializes code and unlabelled output alike. Recognize the log
+        # by its content, as in MoM, rather than by code language or position.
+        if not re.match(r"Input: .*?, Output:", raw):
+            return match.group(0)
+        if re.search(
+            r"^\[TRUNCATED: (?:original code/output block had|source export code block incomplete)",
+            raw, flags=re.M,
+        ):
+            return match.group(0)
+        lines = raw.split("\n") if raw else []
+        if len(lines) <= DULLGPT_MAX_LINES and len(raw) <= DULLGPT_MAX_CHARS:
+            return match.group(0)
+        visible = "\n".join(lines[:DULLGPT_MAX_LINES]).rstrip()
+        visible = visible[:DULLGPT_MAX_CHARS].rstrip()
+        shown_lines = len(visible.split("\n")) if visible else 0
+        omitted_lines = max(0, len(lines) - shown_lines)
+        omitted_chars = len(raw) - len(visible)
+        truncations.append({
+            "slug": metadata.get("SLUG"), "language": metadata.get("LANGUAGE"),
+            "block_index": block_index,
+            "original_lines": len(lines), "original_characters": len(raw),
+            "shown_lines": shown_lines, "shown_characters": len(visible),
+            "omitted_lines": omitted_lines, "omitted_characters": omitted_chars,
+        })
+        print(f"[dullgpt-log-preview] {metadata.get('LANGUAGE', '?')}/{metadata.get('SLUG', '?')} "
+              f"block {block_index}: omitted {omitted_lines} lines / {omitted_chars:,} characters")
+        note = (f"[TRUNCATED: original code/output block had {len(lines)} lines and {len(raw)} characters; "
+                f"showing first {shown_lines} lines. Omitted {omitted_lines} lines and {omitted_chars} characters.]")
+        return "\n".join([
+            "[CODE BLOCK]", visible, "", note,
+            "See the full source JSON or rendered post for the complete version.",
+            "[/CODE BLOCK]",
+        ])
+
+    return re.sub(r"^\[CODE BLOCK\]\n(.*?)^\[/CODE BLOCK\]", shorten,
+                  compact, flags=re.M | re.S)
+
+
 def render_compact_body(
     entries: Sequence[Any],
     filter_module: ModuleType,
@@ -657,6 +721,8 @@ def render_compact_body(
 
     for entry in entries:
         compact = filter_module.serialize_compact_entry(entry)
+        if not args.full_dullgpt_log:
+            compact = preview_dullgpt_log(compact, entry.metadata, args._log_truncations)
         compact_characters += len(compact)
         lines = compact.splitlines()
         if not lines:
@@ -1077,6 +1143,15 @@ def write_manifest(
             "clickable_links": not args.no_links,
             "page_numbers": not args.no_page_numbers,
         },
+        "content": {
+            "dullgpt_log": {
+                "full": args.full_dullgpt_log,
+                "max_lines": DULLGPT_MAX_LINES,
+                "max_characters": DULLGPT_MAX_CHARS,
+                "truncated_blocks": args._log_truncations,
+            },
+        },
+        "pdf_processing": args._pdf_records,
         "media": vars(stats),
         "output": {
             "path": str(output_path),
@@ -1181,6 +1256,7 @@ def render_separate_exports(
                 render_pdf_with_browser(
                     browser, document_html(body, args), output_path, args
                 )
+                pdf_common.process(output_path, args)
                 pages, _, _, links = inspect_pdf(output_path)
                 add_media_stats(total_stats, stats)
                 total_characters += characters
@@ -1244,6 +1320,15 @@ def write_separate_manifest(
             "clickable_links": not args.no_links,
             "page_numbers": not args.no_page_numbers,
         },
+        "content": {
+            "dullgpt_log": {
+                "full": args.full_dullgpt_log,
+                "max_lines": DULLGPT_MAX_LINES,
+                "max_characters": DULLGPT_MAX_CHARS,
+                "truncated_blocks": args._log_truncations,
+            },
+        },
+        "pdf_processing": args._pdf_records,
         "media": vars(stats),
         "summary": {
             "pdfs": len(records),
@@ -1260,6 +1345,8 @@ def write_separate_manifest(
 
 def main() -> int:
     args = parse_args()
+    args._log_truncations = []
+    pdf_common.prepare(args, ultra=True)
     validate_args(args)
     ensure_dependencies()
     args.site_url = normalize_site_url(args.site_url)
@@ -1336,7 +1423,7 @@ def main() -> int:
             f"{sum(record['pages'] for record in records)} total page(s), "
             f"{sum(record['bytes'] for record in records):,} bytes"
         )
-        return 0
+        return 2 if args._target_failed else 0
 
     body, stats, compact_characters = render_compact_body(
         selected, filter_module, image_map, dist_dir, args
@@ -1356,6 +1443,7 @@ def main() -> int:
 
     print(f"[render] {output_path}")
     render_pdf(document_html(body, args), output_path, args)
+    pdf_common.process(output_path, args)
     page_count, width_pt, height_pt, link_count = inspect_pdf(output_path)
 
     manifest_path = output_path.with_suffix(".manifest.json")
@@ -1380,7 +1468,7 @@ def main() -> int:
     )
     if not args.no_manifest:
         print(f"[manifest] {manifest_path}")
-    return 0
+    return 2 if args._target_failed else 0
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 setlocal EnableExtensions EnableDelayedExpansion
 chcp 65001 >nul
 set "PYTHONUTF8=1"
@@ -120,6 +120,16 @@ rem ===========================================================================
 rem EXPORT WORKFLOW
 rem ===========================================================================
 
+rem Use one local timestamp for every artifact in this archival edition.
+set "VOJTAMAUR_EXPORT_TIMESTAMP="
+for /f "delims=" %%T in ('python scripts/export_naming.py') do set "VOJTAMAUR_EXPORT_TIMESTAMP=%%T"
+if not defined VOJTAMAUR_EXPORT_TIMESTAMP (
+    echo [ERROR] Could not create the export timestamp.
+    set "EXPORT_EXIT=16"
+    goto :failed
+)
+echo [EDITION] !VOJTAMAUR_EXPORT_TIMESTAMP!
+
 echo.
 echo [1/11] Compact English Free Creation text export
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
@@ -162,7 +172,7 @@ if errorlevel 1 (
 
 echo.
 echo [6/11] MoM-like Czech Free Creation PDF export
-python scripts/export-site-mom-like.py --lang cs --output exports/vojtamaur-web-export-mom-like.pdf
+python scripts/export-site-mom-like.py --lang cs
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
     goto :failed
@@ -170,7 +180,7 @@ if errorlevel 1 (
 
 echo.
 echo [7/11] MoM-like English Free Creation PDF export
-python scripts/export-site-mom-like.py --lang en --output exports/vojtamaur-web-export-mom-like-en.pdf
+python scripts/export-site-mom-like.py --lang en
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
     goto :failed

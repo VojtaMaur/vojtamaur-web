@@ -22,6 +22,8 @@ but their payloads are deliberately not appended to the PDF.
 
 from __future__ import annotations
 
+from export_naming import add_arguments, stamped_path, timestamp_for
+
 import argparse
 import contextlib
 import dataclasses
@@ -207,6 +209,7 @@ def parse_args() -> argparse.Namespace:
         help="Do not write the adjacent JSON export manifest.",
     )
     pdf_common.add_arguments(parser, existing_images=False, existing_ghostscript=False)
+    add_arguments(parser)
     return parser.parse_args()
 
 
@@ -329,7 +332,8 @@ def ensure_ultra_export(project_root: Path, output_path: Path) -> bool:
 
     display_command = "python " + " ".join(ULTRA_EXPORT_ARGS)
     print(f"[ultra] missing; running: {display_command}")
-    command = [sys.executable, str(exporter), *ULTRA_EXPORT_ARGS[1:]]
+    command = [sys.executable, str(exporter), *ULTRA_EXPORT_ARGS[1:],
+               "--output", str(output_path), "--no-timestamp"]
     completed = subprocess.run(command, cwd=project_root, check=False)
     if completed.returncode != 0:
         raise SystemExit(
@@ -1202,6 +1206,7 @@ def contents_html(
     linked_images: list[LinkedImage],
     linked_files: list[LinkedFile],
     ultra_pages: int,
+    ultra_name: str = ULTRA_OUTPUT_PATH.name,
 ) -> str:
     generated = dt.datetime.now().astimezone().isoformat(timespec="seconds")
     identity_list = "".join(
@@ -1224,7 +1229,7 @@ def contents_html(
     <li>Metawebový článek - česká verze / <span lang="en">Metaweb article - Czech version</span></li>
     <li>Metawebový článek - anglická verze / <span lang="en">Metaweb article - English version</span></li>
     <li>Obrazová příloha fyzické archivní vrstvy / <span lang="en">Physical archival layer image appendix</span></li>
-    <li><code>vojtamaur-web-export-ultra.pdf</code> ({ultra_pages} stran / <span lang="en">pages</span>)
+    <li><code>{html.escape(ultra_name)}</code> ({ultra_pages} stran / <span lang="en">pages</span>)
       <span class="toc-description">Ultra-kompaktní český export všech článků webu včetně obrázků. / <span lang="en">Ultra-compact Czech export of all website articles, including images.</span></span>
     </li>
     <li><code>ARCHIVE.txt</code></li>
@@ -1247,12 +1252,12 @@ def contents_html(
     return html_document("Obsah / Contents", body, base_url)
 
 
-def ultra_intro_html(base_url: str, ultra_pages: int) -> str:
+def ultra_intro_html(base_url: str, ultra_pages: int, ultra_name: str = ULTRA_OUTPUT_PATH.name) -> str:
     body = f"""
 <main class="section-intro">
   <p class="eyebrow">Vložený samostatný dokument / <span lang="en">Embedded standalone document</span></p>
   <h1>Všechny články s obrázky <span lang="en">All articles with images</span></h1>
-  <p class="filename"><code>vojtamaur-web-export-ultra.pdf</code></p>
+  <p class="filename"><code>{html.escape(ultra_name)}</code></p>
   <div class="intro-copy">
     <p lang="cs">Ultra-kompaktní český export všech článků webu včetně jejich obrázků. Následující {ultra_pages} strany zachovávají celý samostatný export beze změn; hustá vícesloupcová sazba slouží jako archivní přehled.</p>
     <p lang="en">An ultra-compact Czech export of every website article, including its images. The following {ultra_pages} pages preserve the complete standalone export unchanged; the dense multi-column layout is intended as an archival overview.</p>
@@ -1606,6 +1611,7 @@ def part_path(temp_dir: Path, index: int, name: str) -> Path:
 
 def main() -> int:
     args = parse_args()
+    stamp = timestamp_for(args)
     pdf_common.prepare(args)
     ensure_dependencies()
     args.site_url = normalize_site_url(args.site_url)
@@ -1621,13 +1627,13 @@ def main() -> int:
     output_path = (
         resolve_path(project_root, args.output)
         if args.output
-        else output_dir / DEFAULT_OUTPUT_NAME
+        else stamped_path(output_dir / DEFAULT_OUTPUT_NAME, stamp)
     )
     if output_path.suffix.lower() != ".pdf":
         raise SystemExit("--output must end with .pdf")
 
     require_finished_build(dist_dir)
-    ultra_pdf_path = (project_root / ULTRA_OUTPUT_PATH).resolve()
+    ultra_pdf_path = stamped_path((project_root / ULTRA_OUTPUT_PATH).resolve(), stamp)
     ultra_generated = ensure_ultra_export(project_root, ultra_pdf_path)
     ultra_pages = inspect_pdf(ultra_pdf_path)
     print(
@@ -1695,6 +1701,7 @@ def main() -> int:
                             linked_images,
                             linked_files,
                             ultra_pages,
+                            ultra_pdf_path.name,
                         ),
                         contents_path,
                         "Obsah / Contents",
@@ -1758,7 +1765,7 @@ def main() -> int:
                     print("[render] ultra export introduction")
                     render_html_pdf(
                         browser,
-                        ultra_intro_html(base_url, ultra_pages),
+                        ultra_intro_html(base_url, ultra_pages, ultra_pdf_path.name),
                         ultra_intro_path,
                         "Všechny články s obrázky / All articles with images",
                         args,
@@ -1775,7 +1782,7 @@ def main() -> int:
                     print(f"[include] ultra article export: {ultra_pdf_path}")
                     parts.append(
                         PdfPart(
-                            "vojtamaur-web-export-ultra.pdf",
+                            ultra_pdf_path.name,
                             ultra_pdf_path,
                             str(ultra_pdf_path),
                         )

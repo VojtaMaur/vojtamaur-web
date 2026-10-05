@@ -9,6 +9,8 @@ ultra-compact PDF section is intentionally omitted without a replacement.
 
 from __future__ import annotations
 
+from export_naming import add_arguments, stamped_path, timestamp_for
+
 import argparse
 import copy
 import dataclasses
@@ -210,6 +212,7 @@ def parse_args() -> argparse.Namespace:
             "uses the first frame as PNG. Default: preserve, except compact uses poster."
         ),
     )
+    add_arguments(parser)
     return parser.parse_args()
 
 
@@ -1016,6 +1019,7 @@ def write_manifest(
 
 def main() -> int:
     args = parse_args()
+    stamp = timestamp_for(args)
     args.site_url = normalize_site_url(args.site_url)
     project_root = (
         Path(args.project_root).resolve()
@@ -1027,7 +1031,7 @@ def main() -> int:
     output_path = (
         resolve_path(project_root, args.output)
         if args.output
-        else output_dir / DEFAULT_OUTPUT_NAME
+        else stamped_path(output_dir / DEFAULT_OUTPUT_NAME, stamp)
     )
     if output_path.suffix.lower() != ".epub":
         raise SystemExit("--output must end with .epub")
@@ -1122,7 +1126,7 @@ def main() -> int:
     finally:
         candidate_path.unlink(missing_ok=True)
 
-    manifest_path = output_path.with_suffix(".manifest.json")
+    manifest_path = output_path.with_suffix(".epub.manifest.json")
     if args.no_manifest:
         manifest_path.unlink(missing_ok=True)
     else:

@@ -18,6 +18,8 @@ Typical workflow from the project root:
 
 from __future__ import annotations
 
+from export_naming import add_arguments, stamped_path, timestamp_for
+
 import argparse
 import base64
 import datetime as dt
@@ -116,7 +118,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--output",
-        default=DEFAULT_OUTPUT,
+        default=None,
         help=f"Output PDF, relative to project root. Default: {DEFAULT_OUTPUT}",
     )
     parser.add_argument(
@@ -232,6 +234,7 @@ def parse_args() -> argparse.Namespace:
         help="Keep the full DullGPT example output log from JSON. Default: only that log is previewed at 120 lines / 12000 characters; executable code and other articles remain complete. --full-code-blocks is a compatibility alias; legacy TXT truncation cannot be recovered.",
     )
     pdf_common.add_arguments(parser, existing_images=True, existing_ghostscript=False)
+    add_arguments(parser)
     return parser.parse_args()
 
 
@@ -1244,6 +1247,7 @@ def render_separate_exports(
                     / safe_filename(section)
                     / f"{safe_filename(slug)}.pdf"
                 )
+                output_path = stamped_path(output_path, timestamp_for(args))
                 print(f"[{index}/{len(entries)}] {language.upper()} {section}/{slug}")
                 body, stats, characters = render_compact_body(
                     [entry],
@@ -1345,6 +1349,7 @@ def write_separate_manifest(
 
 def main() -> int:
     args = parse_args()
+    stamp = timestamp_for(args)
     args._log_truncations = []
     pdf_common.prepare(args, ultra=True)
     validate_args(args)
@@ -1358,7 +1363,8 @@ def main() -> int:
     )
     input_path = resolve_path(project_root, args.input)
     filter_path = resolve_path(project_root, args.filter_script)
-    output_path = resolve_path(project_root, args.output)
+    output_path = (resolve_path(project_root, args.output) if args.output
+                   else stamped_path(resolve_path(project_root, DEFAULT_OUTPUT), stamp))
     dist_dir = project_root / "dist"
 
     if not input_path.is_file():
@@ -1405,7 +1411,7 @@ def main() -> int:
                 file=sys.stderr,
             )
         if not args.no_manifest:
-            manifest_path = output_dir / "pdf-export-manifest.json"
+            manifest_path = stamped_path(output_dir / "pdf-export-manifest.json", stamp)
             write_separate_manifest(
                 manifest_path,
                 input_path,

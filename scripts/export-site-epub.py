@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from export_naming import add_arguments, stamped_path, timestamp_for
+
 import argparse
 import dataclasses
 import datetime as dt
@@ -217,6 +219,7 @@ def parse_args() -> argparse.Namespace:
             "uses the first frame as PNG. Default: preserve, except compact uses poster."
         ),
     )
+    add_arguments(parser)
     return parser.parse_args()
 
 
@@ -330,7 +333,7 @@ def combined_output_path(
         if not selected_sections
         else "-".join(safe_filename(item) for item in selected_sections)
     )
-    return output_dir / f"vojtamaur-web-export-{section_part}-{lang}.epub"
+    return stamped_path(output_dir / f"vojtamaur-web-export-{section_part}-{lang}.epub", timestamp_for(args))
 
 
 def frontmatter_html(
@@ -689,6 +692,7 @@ def commit_staged_books(
 
 def main() -> int:
     args = parse_args()
+    stamp = timestamp_for(args)
     args.site_url = normalize_site_url(args.site_url)
     project_root = Path(args.project_root).resolve()
     dist_dir = resolve_path(project_root, args.dist)
@@ -796,6 +800,7 @@ def main() -> int:
                     / safe_filename(job.post.section)
                     / f"{safe_filename(job.post.slug, fallback='article')}.epub"
                 )
+                output_path = stamped_path(output_path, stamp)
                 print(
                     f"[{index}/{len(jobs)}] {lang.upper()} · "
                     f"{job.section_label} · {job.display_title}"
@@ -855,7 +860,7 @@ def main() -> int:
         for result, _ in staged:
             result.output_path.unlink(missing_ok=True)
 
-    manifest_path = output_dir / MANIFEST_NAME
+    manifest_path = stamped_path(output_dir / MANIFEST_NAME, stamp)
     if args.no_manifest:
         manifest_path.unlink(missing_ok=True)
     else:

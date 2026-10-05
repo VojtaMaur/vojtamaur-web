@@ -21,6 +21,8 @@ No browser, media files, network access, or site rebuild is needed.
 
 from __future__ import annotations
 
+from export_naming import add_arguments, stamped_path, timestamp_for
+
 import argparse
 from collections import Counter
 import datetime as dt
@@ -52,7 +54,7 @@ def parse_args(argv=None):
                         default=Path(__file__).resolve().parent.parent)
     parser.add_argument("--input", default="dist/ALL_POSTS.json",
                         help="JSON-LD snapshot, or an explicit legacy structured TXT.")
-    parser.add_argument("--output", default=DEFAULT_OUTPUT,
+    parser.add_argument("--output", default=None,
                         help="PDF path; adjacent .txt and .manifest.json are also written.")
     parser.add_argument("--lang", "--language", choices=("cs", "en", "both"), default="cs")
     parser.add_argument("--section", action="append",
@@ -81,6 +83,7 @@ def parse_args(argv=None):
                         help="Additional TrueType font, repeat for Unicode coverage.")
     parser.add_argument("--page-numbers", action="store_true",
                         help="Print page numbers in the bottom margin (default: off).")
+    add_arguments(parser)
     args = parser.parse_args(argv)
     if args.section is None:
         args.section = ["volna-tvorba"]
@@ -506,7 +509,12 @@ def export(args):
     root = args.project_root.expanduser().resolve()
     filters = load_filter(root)
     input_path = resolve_path(root, args.input)
-    output_path = resolve_path(root, args.output)
+    default_output = Path(DEFAULT_OUTPUT)
+    if args.lang != "cs":
+        language = "cs-en" if args.lang == "both" else args.lang
+        default_output = default_output.with_name(f"{default_output.stem}-{language}.pdf")
+    output_path = (resolve_path(root, args.output) if args.output is not None
+                   else stamped_path(root / default_output, timestamp_for(args)))
     if output_path.suffix.lower() != ".pdf":
         raise ValueError("--output must end in .pdf.")
     text_path = output_path.with_suffix(".txt")

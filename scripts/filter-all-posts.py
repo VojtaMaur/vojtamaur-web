@@ -9,6 +9,8 @@ supported for older snapshots and structured filtered exports.
 
 from __future__ import annotations
 
+from export_naming import add_arguments, stamped_path, timestamp_for
+
 import argparse
 import hashlib
 import json
@@ -805,6 +807,7 @@ def build_argument_parser(root: Path) -> argparse.ArgumentParser:
         action="store_true",
         help="allow a filter that selects no articles",
     )
+    add_arguments(parser)
     return parser
 
 
@@ -885,6 +888,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.format,
             )
         ).resolve()
+        if args.output is None:
+            output = stamped_path(output, timestamp_for(args))
         input_path = args.input.resolve()
         if output == input_path:
             raise ExportError("Output must not overwrite the source export.")

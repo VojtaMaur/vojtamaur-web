@@ -964,7 +964,7 @@ The default output directory is:
 exports/
 ```
 
-Output filenames describe the selected language, section, date range, format, and metadata profile. A different path can be supplied with `--output`. The `exports/` directory is generated and excluded through `.gitignore`, while `scripts/filter-all-posts.py` remains a versioned source file.
+Output filenames describe the selected language, section, date range, format, and metadata profile, followed by the export timestamp. A different path can be supplied with `--output`. The `exports/` directory is generated and excluded through `.gitignore`, while `scripts/filter-all-posts.py` remains a versioned source file.
 
 Filtered exports are written outside `dist/` by default so that they do not silently change the contents described by the existing build integrity manifests. If an explicit `--output` path is placed inside `dist/`, the script prints a warning because the existing `SHA256SUMS.txt`, `BUILD_SHA256.txt`, and `integrity.json` do not cover the newly created file.
 
@@ -1636,6 +1636,8 @@ validator report aborts publication of the derivative. When veraPDF is unavailab
 the exporter explicitly reports that external validation was not performed and
 records `external_validation.status: not_performed`.
 
+On 2026-10-02, the maintainer manually checked the Site (CS), Ultra and Metaweb PDF/A-2b outputs with veraPDF; all three passed validation. Validate each new archival export separately.
+
 Unless `--no-manifest` is used, each PDF/A derivative receives its own
 `*-pdfa-2b.manifest.json` containing the source hash, final settings, trial sizes,
 target result, structural checks, output hash and external-validation status.
@@ -1656,6 +1658,12 @@ require the local tools described above.
 
 #### Run all manual exports on Windows
 
+The manual TXT, Morse, PDF, Ultra PDF, MoM-like PDF and EPUB exporters append the local export start time to automatically generated filenames, before the extension: `-YYYY-MM-DD_HH-MM-SS-ffffff`. For example, `vojtamaur-web-export-ultra-2026-10-05_14-30-00-123456.pdf` and `vojtamaur-web-export-ultra-2026-10-05_14-30-00-123456.manifest.json` belong to the same run. Microseconds distinguish repeated runs, including multiple exports on the same day. Separate article exports also receive the timestamp. An explicit `--output` is used exactly as supplied, including its adjacent TXT and manifest names. `--no-timestamp` restores legacy automatic names; `--timestamp YYYY-MM-DD_HH-MM-SS-ffffff` selects a specific edition timestamp. PDF/A and uncompressed derivative labels precede the timestamp. The generated build files in `dist/` retain their stable names.
+
+`export-all.bat` generates one shared timestamp in `VOJTAMAUR_EXPORT_TIMESTAMP` for all eleven steps, including the SSTV output directory. A new batch run creates a new timestamp and preserves older editions. Metaweb PDF includes the Ultra PDF with that same timestamp, creating it at that exact path if needed; a standalone Metaweb PDF run creates its own matching Ultra edition. MoM-like automatic English and bilingual names add `-en` and `-cs-en`, respectively, before the timestamp. Metaweb EPUB uses an `.epub.manifest.json` sidecar so it can coexist with the PDF's `.manifest.json` without replacing it.
+
+The default output listings in the sections below and above show the base names; the timestamp is appended automatically unless an explicit `--output` or `--no-timestamp` is used.
+
 The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the eleven export steps sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow requires both `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json` from the existing build and begins with separate English and Czech compact text exports. It uses the built JSON without regenerating it, preserving the bytes covered by any existing build checksum manifest or signature. The PDF steps include separate Czech and English MoM-like editions of `volna-tvorba` at the default 4 pt font size. After the PDF steps it creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs, preserving animated GIFs. The SSTV PNG export is the final step:
 
 ```bat
@@ -1664,8 +1672,8 @@ python scripts/filter-all-posts.py --language cs --section volna-tvorba --format
 python scripts/export-site-morse.py --lang both
 python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "C:\Program Files\gs\gs10.07.1\bin\gswin64c.exe"
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
-python scripts/export-site-mom-like.py --lang cs --output exports/vojtamaur-web-export-mom-like.pdf
-python scripts/export-site-mom-like.py --lang en --output exports/vojtamaur-web-export-mom-like-en.pdf
+python scripts/export-site-mom-like.py --lang cs
+python scripts/export-site-mom-like.py --lang en
 python scripts/export-metaweb-pdf.py
 python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
 python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
@@ -1786,7 +1794,7 @@ Its default outputs are:
 
 ```text
 exports/vojtamaur-web-export-metaweb.epub
-exports/vojtamaur-web-export-metaweb.manifest.json
+exports/vojtamaur-web-export-metaweb.epub.manifest.json
 ```
 
 The Metaweb EPUB follows the semantic section order of `export-metaweb-pdf.py`:
@@ -2053,7 +2061,7 @@ The SSTV layout uses:
 Every successful run creates a new timestamped directory rather than mixing its frames with an earlier run. For example:
 
 ```text
-exports/sstv/pd120/<timestamp>-cs/
+exports/sstv/pd120/cs-<timestamp>/
   000001.png
   000002.png
   ...
@@ -2061,7 +2069,7 @@ exports/sstv/pd120/<timestamp>-cs/
   README.txt
 ```
 
-A preview stopped by the page limit has a directory name ending in `-preview`. `--output-dir` overrides the parent directory; the exporter still creates a new timestamped child inside it. The default `exports/` tree is already ignored by Git and remains outside the signed `dist/` build.
+A preview stopped by the page limit has `-preview` before its final timestamp. `--output-dir` overrides the parent directory; the exporter still creates a new timestamped child inside it. The default `exports/` tree is already ignored by Git and remains outside the signed `dist/` build.
 
 Use the numbered PNGs in filename order. `README.txt` identifies the selected mode and dimensions. `manifest.json` records the selection, article page ranges, translation status, rendered text and image references, native dimensions, fonts, source and PNG hashes, warnings, and whether the export is partial.
 
@@ -2475,7 +2483,7 @@ This flowing treatment also applies to source-code blocks in the PDF. The compan
 
 Unicode fallback fonts are used when installed. Characters unsupported by the available fonts, and supplementary-plane characters whose PDF Unicode mapping is not reliably supported by the renderer, are printed explicitly as `[U+XXXX]` (or a longer code point) in the PDF. The TXT preserves the original characters. Counts are reported on the console and in the manifest. Before replacing output files, the exporter verifies the PDF's page dimensions, absence of images and exact non-whitespace text against the prepared PDF content. The manifest includes this check, article selection, layout and SHA-256 hashes of the input, PDF and TXT.
 
-Each run replaces the PDF, TXT and manifest at the selected output path. Use distinct `--output` paths to retain separate language or section exports.
+Each default run creates a new timestamped PDF, TXT and manifest. An explicit `--output` replaces the files at that exact path; use distinct custom paths to retain experiments with different fonts, languages or sections.
 
 Examples:
 
@@ -3538,7 +3546,6 @@ Possible future directions for the project:
 - development of an interactive-fiction edition for the [IF Archive](https://www.ifarchive.org/), embedding the complete ARCHIVE.txt and ALL_POSTS.txt in a self-contained `.gblorb` text adventure, playable locally or in a browser via Parchment
 - evaluation of producing a laser-engraved glass archival copy of ALL_POSTS.txt, either as a solid glass cube with dense microtext distributed across all six faces or as a set of smaller glass plates; surface or subsurface engraving would be selected according to technical feasibility
 - creation of an additional offline archival copy on M-DISC optical media, containing the most important exports, source files, and offline builds of `vojtamaur.cz`
-- external validation and archival deployment of the optional PDF/A-2b editions now supported by the three manual PDF exporters (section 9.6.5)
 - creation of a ZIM edition of `vojtamaur.cz` for distribution and browsing through Kiwix, providing an additional standardized, self-contained offline representation of the website alongside the existing HTML-based USB build
 - donation of physical print editions to institutional collections: an artist’s-book edition of the Metaweb article to the [Franklin Furnace Archive](https://franklinfurnace.org/artist-books/), and printed editions of the Metaweb article and ALL_POSTS.txt to the [Internet Archive Physical Archive](https://openlibrary.org/bookdrive.en), providing additional long-term preservation within independent cultural and library institutions
 - experimental neural archival edition of `ALL_POSTS.txt`, training a small Transformer language model from scratch exclusively on the text corpus and deliberately overfitting it to memorize the original content within its neural weights, with the aim of reconstructing a substantial proportion of the original text (ideally 80–90% or more) from the trained model without access to the source file

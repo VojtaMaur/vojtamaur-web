@@ -21,6 +21,8 @@ public source when the page did not already provide a link.
 
 from __future__ import annotations
 
+from export_naming import add_arguments, stamped_path, timestamp_for
+
 import argparse
 import base64
 import contextlib
@@ -266,6 +268,7 @@ def parse_args() -> argparse.Namespace:
         help="When compression is enabled, also keep the original uncompressed PDF.",
     )
     pdf_common.add_arguments(parser, existing_images=True, existing_ghostscript=True)
+    add_arguments(parser)
     return parser.parse_args()
 
 
@@ -1333,6 +1336,7 @@ def write_manifest(
 
 def main() -> int:
     args = parse_args()
+    stamp = timestamp_for(args)
     pdf_common.prepare(args)
     args.site_url = normalize_site_url(args.site_url)
     project_root = Path(args.project_root).resolve()
@@ -1385,7 +1389,7 @@ def main() -> int:
                         for index, job in enumerate(jobs, start=1):
                             section_dir = output_dir / job.lang / safe_filename(job.post.section)
                             section_dir.mkdir(parents=True, exist_ok=True)
-                            out = section_dir / f"{safe_filename(job.post.slug)}.pdf"
+                            out = stamped_path(section_dir / f"{safe_filename(job.post.slug)}.pdf", stamp)
                             url = base_url + quote(job.url_path, safe="/%")
                             public_url = make_public_page_url(args.site_url, job.url_path)
                             print(f"[{index}/{len(jobs)}] {job.label}")
@@ -1420,7 +1424,7 @@ def main() -> int:
                         else:
                             lang_part = "cs-en" if args.lang == "both" else args.lang
                             section_part = "all" if not selected_sections else "-".join(selected_sections)
-                            combined_output = output_dir / f"vojtamaur-web-export-{section_part}-{lang_part}.pdf"
+                            combined_output = stamped_path(output_dir / f"vojtamaur-web-export-{section_part}-{lang_part}.pdf", stamp)
 
                         raw_combined = tmp_dir / "combined-uncompressed.pdf"
                         merge_pdfs(parts, raw_combined, args.title)
@@ -1431,7 +1435,7 @@ def main() -> int:
         server.shutdown()
         server.server_close()
 
-    manifest_path = output_dir / MANIFEST_NAME
+    manifest_path = stamped_path(output_dir / MANIFEST_NAME, stamp)
     if not args.no_manifest:
         write_manifest(manifest_path, args, jobs, outputs, project_root, dist_dir)
         outputs.append(manifest_path)

@@ -747,6 +747,69 @@ PARTIAL PAGE SNAPSHOTS:
 	https://web.archive.org/web/20260924094107/https://vojtamaur.cz/zivot-hromnickem-jezirku/
 	https://web.archive.org/web/20260924094134/https://vojtamaur.cz/zmrtvychvstani/
 	https://web.archive.org/web/20260924094157/https://vojtamaur.cz/zvysene-vnimani-rozdilu-svetlosti/
+	https://web.archive.org/web/20261005091314/https://vojtamaur.cz/
+	https://web.archive.org/web/20261005091422/https://vojtamaur.cz/af/
+	https://web.archive.org/web/20261005091539/https://vojtamaur.cz/ak/
+	https://web.archive.org/web/20261005091626/https://vojtamaur.cz/am/
+	https://web.archive.org/web/20261005091709/https://vojtamaur.cz/anti-jazyk/
+	https://web.archive.org/web/20261005091837/https://vojtamaur.cz/aplikace-google/
+	https://web.archive.org/web/20261005092105/https://vojtamaur.cz/as/
+	https://web.archive.org/web/20261005092148/https://vojtamaur.cz/autoportret-prakticka-maturitni-prace/
+	https://web.archive.org/web/20261005092244/https://vojtamaur.cz/az/
+	https://web.archive.org/web/20261005092334/https://vojtamaur.cz/barevny-prumer/
+	https://web.archive.org/web/20261005092701/https://vojtamaur.cz/be/
+	https://web.archive.org/web/20261005092746/https://vojtamaur.cz/bg/
+	https://web.archive.org/web/20261005092857/https://vojtamaur.cz/bs/
+	https://web.archive.org/web/20261005093052/https://vojtamaur.cz/cerv-epsilon/
+	https://web.archive.org/web/20261005093220/https://vojtamaur.cz/cestovani-anglie-2013-2015-2017/
+	https://web.archive.org/web/20261005093312/https://vojtamaur.cz/cestovani-cina-2017/
+	https://web.archive.org/web/20261005093410/https://vojtamaur.cz/cestovani-egypt-2012/
+	https://web.archive.org/web/20261005093536/https://vojtamaur.cz/cestovani-italie-benatky-2019/
+	https://web.archive.org/web/20261005093632/https://vojtamaur.cz/cestovani-izrael-2012/
+	https://web.archive.org/web/20261005093716/https://vojtamaur.cz/cestovani-kanarske-ostrovy-2012/
+	https://web.archive.org/web/20261005093848/https://vojtamaur.cz/cestovani-kenya-2012-2015/
+	https://web.archive.org/web/20261005093935/https://vojtamaur.cz/cestovani-maroko-2016/
+	https://web.archive.org/web/20261005094025/https://vojtamaur.cz/cestovani-mexiko-2018/
+	https://web.archive.org/web/20261005094158/https://vojtamaur.cz/cestovani-oman-2018/
+	https://web.archive.org/web/20261005094254/https://vojtamaur.cz/cestovani-polsko-mazury-2026/
+	https://web.archive.org/web/20261005094348/https://vojtamaur.cz/cestovani-portugalsko-2014/
+	https://web.archive.org/web/20261005094422/https://vojtamaur.cz/cestovani-recko-2020/
+	https://web.archive.org/web/20261005094552/https://vojtamaur.cz/cestovani-tanzanie-2019/
+	https://web.archive.org/web/20261005094708/https://vojtamaur.cz/cestovani/
+	https://web.archive.org/web/20261005094834/https://vojtamaur.cz/clipboard-smetiste/
+	https://web.archive.org/web/20261005094927/https://vojtamaur.cz/cy/
+	https://web.archive.org/web/20261005095100/https://vojtamaur.cz/da/
+	https://web.archive.org/web/20261005095141/https://vojtamaur.cz/de/
+	https://web.archive.org/web/20261005095224/https://vojtamaur.cz/docasne-entity/
+	https://web.archive.org/web/20261005095359/https://vojtamaur.cz/documentation/
+	https://web.archive.org/web/20261005095444/https://vojtamaur.cz/dullgpt/
+	https://web.archive.org/web/20261005095555/https://vojtamaur.cz/el/
+	https://web.archive.org/web/20261005095639/https://vojtamaur.cz/en/
+	https://web.archive.org/web/20261005095816/https://vojtamaur.cz/en/anti-jazyk/
+	https://web.archive.org/web/20261005095858/https://vojtamaur.cz/en/aplikace-google/
+	https://web.archive.org/web/20261005095943/https://vojtamaur.cz/en/autoportret-prakticka-maturitni-prace/
+	https://web.archive.org/web/20261005100038/https://vojtamaur.cz/en/barevny-prumer/
+	https://web.archive.org/web/20261005100321/https://vojtamaur.cz/en/cerv-epsilon/
+	https://web.archive.org/web/20261005100432/https://vojtamaur.cz/en/cestovani-anglie-2013-2015-2017/
+	https://web.archive.org/web/20261005100629/https://vojtamaur.cz/en/cestovani-cina-2017/
+	https://web.archive.org/web/20261005100724/https://vojtamaur.cz/en/cestovani-egypt-2012/
+	https://web.archive.org/web/20261005100808/https://vojtamaur.cz/en/cestovani-italie-2016/
+	https://web.archive.org/web/20261005100852/https://vojtamaur.cz/en/cestovani-italie-benatky-2019/
+	https://web.archive.org/web/20261005101022/https://vojtamaur.cz/en/cestovani-italie-benatky-2026/
+	https://web.archive.org/web/20261005101105/https://vojtamaur.cz/en/cestovani-izrael-2012/
+	https://web.archive.org/web/20261005101229/https://vojtamaur.cz/en/cestovani-kanarske-ostrovy-2012/
+	https://web.archive.org/web/20261005101313/https://vojtamaur.cz/en/cestovani-kenya-2012-2015/
+	https://web.archive.org/web/20261005101501/https://vojtamaur.cz/en/cestovani-maroko-2016/
+	https://web.archive.org/web/20261005101554/https://vojtamaur.cz/en/cestovani-mexiko-2018/
+	https://web.archive.org/web/20261005101650/https://vojtamaur.cz/en/cestovani-norsko-lofoty-2018/
+	https://web.archive.org/web/20261005101739/https://vojtamaur.cz/en/cestovani-oman-2018/
+	https://web.archive.org/web/20261005101823/https://vojtamaur.cz/en/cestovani-polsko-mazury-2026/
+	https://web.archive.org/web/20261005101913/https://vojtamaur.cz/en/cestovani-portugalsko-2014/
+	https://web.archive.org/web/20261005102003/https://vojtamaur.cz/en/cestovani-recko-2020/
+	https://web.archive.org/web/20261005102053/https://vojtamaur.cz/en/cestovani-tanzanie-2019/
+	https://web.archive.org/web/20261005102254/https://vojtamaur.cz/en/cestovani/
+	https://web.archive.org/web/20261005102339/https://vojtamaur.cz/en/clipboard-smetiste/
+	https://web.archive.org/web/20261005102424/https://vojtamaur.cz/en/docasne-entity/
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/

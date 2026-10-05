@@ -7,6 +7,8 @@ network access, build invocation or third-party dependencies are needed.
 
 from __future__ import annotations
 
+from export_naming import add_arguments, stamped_path, timestamp_for
+
 import argparse
 import hashlib
 import importlib.util
@@ -155,6 +157,7 @@ def main(argv=None) -> int:
     parser.add_argument("--lang", "--language", choices=("cs", "en", "both"), default="both", help="both writes one combined file (default: both)")
     parser.add_argument("-o", "--output", type=Path, help="ASCII .txt destination under exports/")
     parser.add_argument("--dry-run", action="store_true", help="validate and report without writing")
+    add_arguments(parser)
     args = parser.parse_args(argv)
 
     try:
@@ -167,7 +170,8 @@ def main(argv=None) -> int:
         compact.validate_requested_values(languages, compact.available_values(parsed.entries, "LANGUAGE"), "language")
         selected = compact.filtered_entries(parsed.entries, languages, None, None, None)
         default_name = f"ALL_POSTS__lang-{'+'.join(sorted(languages))}__section-all__format-morse.txt"
-        output = (root / (args.output or Path("exports") / default_name)).resolve()
+        output = ((root / args.output) if args.output is not None
+                  else stamped_path(root / "exports" / default_name, timestamp_for(args))).resolve()
         if output == source or not output.is_relative_to((root / "exports").resolve()) or output.suffix.lower() != ".txt":
             raise ValueError("Output must be a .txt file under exports/ and must not overwrite the input.")
 

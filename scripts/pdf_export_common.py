@@ -5,6 +5,8 @@ Ghostscript; structural checks and veraPDF are read-only.
 """
 from __future__ import annotations
 
+from export_naming import variant_path
+
 import argparse
 import dataclasses
 from decimal import Decimal
@@ -285,7 +287,7 @@ def process(original: Path, args) -> list[dict]:
     """Derive PDF/A or compress plain output; preserve original during trials."""
     if not args.pdfa and not args._ordinary_processing:
         return []
-    destination = original.with_name(original.stem + "-pdfa-2b.pdf") if args.pdfa else original
+    destination = variant_path(original, "pdfa-2b") if args.pdfa else original
     source_info = inspect(original)
     settings = args._pdf_settings
     if args.target_size:
@@ -350,7 +352,7 @@ def process(original: Path, args) -> list[dict]:
         checks = check_conversion(source_info, selected_path, pdfa=bool(args.pdfa))
         validation = validate_pdfa(selected_path, args) if args.pdfa else None
         if not args.pdfa and getattr(args, "keep_uncompressed", False):
-            shutil.copy2(original, original.with_name(original.stem + "-uncompressed.pdf"))
+            shutil.copy2(original, variant_path(original, "uncompressed"))
         selected_path.replace(destination)
     checks["uri_link_count"] = len(checks.pop("uri_links"))
     record = {"path": str(destination), "kind": "pdfa-2b" if args.pdfa else "pdf",

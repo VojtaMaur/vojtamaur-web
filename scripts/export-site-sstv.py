@@ -12,6 +12,8 @@ Selection comes from ALL_POSTS.txt; full text and images come from built HTML.
 
 from __future__ import annotations
 
+from export_naming import new_timestamp
+
 import argparse
 import base64
 import datetime as dt
@@ -625,8 +627,8 @@ def run(args):
             "Calibration and receive/decode testing remain a separate next step.\n"
             "manifest.json records reading order, source articles, image references and warnings.\n",
             encoding="utf-8")
-        stamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S-%f")
-        destination = output_parent / f"{stamp}-{args.lang}{'-preview' if partial else ''}"
+        stamp = new_timestamp()
+        destination = output_parent / f"{args.lang}{'-preview' if partial else ''}-{stamp}"
         folder.rename(destination)
     print(f"[sstv] {len(renderer.pages)} PNGs, {width} x {height}, {args.mode.upper()}")
     print(f"[sstv] Output: {destination}")

@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETED",
+  "output": "imports survive workspace reopen\n",
+  "returncode": 0,
+  "timed_out": false,
+  "output_truncated": false,
+  "container": "metaweb-swarm-9a27816372c14aa6aa131cf894015fb9",
+  "cleanup_ok": true
+}

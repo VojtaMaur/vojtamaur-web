@@ -1,0 +1,23 @@
+{
+  "run_id": "20261007-071555-76da44ad",
+  "original_candidates": 3,
+  "distinct_mechanisms_after_alias_fix": 2,
+  "docker_experiments": 0,
+  "package_installs": 0,
+  "requests": 38,
+  "provider_tokens": 538520,
+  "breached_request": "AGENT-005:8",
+  "old_search_count": 4,
+  "new_processed_search_count": 3,
+  "ignored_at_cap_ids": [
+    "ws_024188dc5bdd0c2b016ac5f49747b887d18c0efa3760d348c7"
+  ],
+  "qr_keys": [
+    "v1:qr-xmp:recovery-card:default",
+    "v1:qr-xmp:recovery-card:default"
+  ],
+  "captured_prior_candidates": 40,
+  "historical_ledgers_modified": false,
+  "paid_api_calls": 0,
+  "meaning": "Replay of recorded public research; not a new model run or proof of provider billing."
+}

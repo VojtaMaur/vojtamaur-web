@@ -1,0 +1,4 @@
+Install: COMPLETED [{'name': 'cbor2', 'version': '6.1.5'}, {'name': 'pillow', 'version': '12.3.0'}, {'name': 'qrcode', 'version': '8.2'}]
+Experiment: COMPLETED Real CBOR round-trip, QR PNG, persistent imports, no credentials, experiment network denied
+
+Reopen/persistence and container cleanup verified; paid API calls: 0

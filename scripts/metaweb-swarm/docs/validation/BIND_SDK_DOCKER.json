@@ -1,0 +1,15 @@
+{
+  "run": "G:\\metaweb-swarm-runs\\_validation\\windows-bind-20261007\\runs\\20261007-094903-1ddf1b4a",
+  "scripted_model": true,
+  "paid_api_calls": 0,
+  "source_export": "vojtamaur-web-wayback-20261005-111259-710608.txt",
+  "source_sha256": "152621d544ba4b4eb12065512f8f76361fbe8f414f0d73661ac06a5cda013fd8",
+  "status": "COMPLETED",
+  "idea_status": "PROTOTYPED",
+  "packages": 1,
+  "docker_experiments": 2,
+  "tests": 1,
+  "prototype_tested": true,
+  "experiment_output": "PASS round-trip, real export hash 152621d544ba4b4eb12065512f8f76361fbe8f414f0d73661ac06a5cda013fd8 bytes 5282 corruption rejected; no key; network denied\n",
+  "audit_verified": true
+}

@@ -1,0 +1,23 @@
+Prerequisites checked. Capturing project/context/exports for a new isolated run...
+C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\outputs\installed-launcher-smoke-runs\20261007-063526-e026123d
+Run: 20261007-063526-e026123d | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Synthesizer / Reporter
+Limits: 32 rounds, 2,000,000 tokens, 3600s; USD ceiling=None
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/1
+  AGENT-001 | Specialist: AGENT-010 Demo Optical Decoder Specialist [strong=gpt-5.4-mini]
+Round: AGENT-002 Loophole Archivist [flag] 1/4
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+Round: AGENT-003 Anomaly Engineer [strong] 1/4
+Round: AGENT-004 Format Mutant [strong] 1/4
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Infrastructure Scout [cheap] 1/4
+Round: AGENT-010 Demo Optical Decoder Specialist [strong] 1/4
+  AGENT-010 | IDEA-0003 PROTOTYPED: [DEMO] Local prototype fixture
+Round: AGENT-006 Evidence Auditor [strong] 1/2
+Round: AGENT-007 Role Architect [cheap] 1/1
+Round: AGENT-008 Prototyper [strong] 1/3
+Round: AGENT-009 Synthesizer / Reporter [flag] 1/1
+BLOCKED: Available research finished; unresolved human actions or technical blockers remain
+Report: C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\outputs\installed-launcher-smoke-runs\20261007-063526-e026123d\SWARM_REPORT.md

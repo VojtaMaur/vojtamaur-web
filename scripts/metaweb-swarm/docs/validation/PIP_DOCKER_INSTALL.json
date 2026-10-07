@@ -1,0 +1,68 @@
+{
+  "status": "COMPLETED",
+  "requirements": [
+    "Pillow",
+    "qrcode[pil]",
+    "cbor2"
+  ],
+  "phases": [
+    {
+      "status": "COMPLETED",
+      "output": "Collecting Pillow\n  Downloading pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)\nCollecting cbor2\n  Downloading cbor2-6.1.5-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (5.5 kB)\nCollecting qrcode[pil]\n  Downloading qrcode-8.2-py3-none-any.whl.metadata (17 kB)\nDownloading pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.9 MB)\nDownloading cbor2-6.1.5-cp311-cp311-manylinux_2_28_x86_64.whl (467 kB)\nDownloading qrcode-8.2-py3-none-any.whl (45 kB)\nSaved ./wheels/pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl\nSaved ./wheels/cbor2-6.1.5-cp311-cp311-manylinux_2_28_x86_64.whl\nSaved ./wheels/qrcode-8.2-py3-none-any.whl\n",
+      "returncode": 0,
+      "timed_out": false,
+      "output_truncated": false,
+      "container": "metaweb-swarm-18b92e3a465f40eca410b730d86d972a",
+      "cleanup_ok": true,
+      "phase": "FETCH_BUILD",
+      "network": "bridge",
+      "project_mounted": false
+    },
+    {
+      "status": "COMPLETED",
+      "output": "Looking in links: /wheels\nProcessing /wheels/pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl\nProcessing /wheels/cbor2-6.1.5-cp311-cp311-manylinux_2_28_x86_64.whl\nProcessing /wheels/qrcode-8.2-py3-none-any.whl\nInstalling collected packages: qrcode, Pillow, cbor2\nSuccessfully installed Pillow-12.3.0 cbor2-6.1.5 qrcode-8.2\n",
+      "returncode": 0,
+      "timed_out": false,
+      "output_truncated": false,
+      "container": "metaweb-swarm-3d8370a71dfa4b0293f527ae37d8123c",
+      "cleanup_ok": true,
+      "phase": "INSTALL",
+      "network": "none"
+    }
+  ],
+  "distributions": [
+    {
+      "name": "cbor2",
+      "version": "6.1.5"
+    },
+    {
+      "name": "pillow",
+      "version": "12.3.0"
+    },
+    {
+      "name": "qrcode",
+      "version": "8.2"
+    }
+  ],
+  "wheel_receipts": [
+    {
+      "file": "cbor2-6.1.5-cp311-cp311-manylinux_2_28_x86_64.whl",
+      "bytes": 467049,
+      "sha256": "dd3e4f08aaf25bca5db6274ac40e4d138b0e09890510c1fda20d5b7840e505fa"
+    },
+    {
+      "file": "pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "bytes": 6934408,
+      "sha256": "23d27a3e0307ec2244cc51e7287b919aa68d097504ebe19df4e76a98a3eea5bd"
+    },
+    {
+      "file": "qrcode-8.2-py3-none-any.whl",
+      "bytes": 45986,
+      "sha256": "16e64e0716c14960108e85d853062c9e8bba5ca8252c0b4d0231b9df4060ff4f"
+    }
+  ],
+  "production_modified": false,
+  "install_path": ".packages",
+  "wheel_bytes": 7447443,
+  "installed_bytes": 22861511
+}

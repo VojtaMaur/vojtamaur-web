@@ -1,0 +1,6 @@
+Executing <Task finished name='Task-38' coro=<PackageTests.test_receipts_persist_across_resume_and_production_is_unchanged() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_packages.py:105> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+----------------------------------------------------------------------
+Exported package bytes; unsupported POSIX mode updates: 1
+Ran 18 tests in 3.646s
+
+OK

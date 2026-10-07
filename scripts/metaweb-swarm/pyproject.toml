@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "metaweb-swarm"
+version = "0.3.8"
+description = "Auditable, isolated Metaweb research swarm"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+metaweb-swarm = "metaweb_swarm.cli:main"
+
+[project.optional-dependencies]
+openai = ["openai-agents==0.23.1", "openai==3.24.0", "pydantic==2.13.5"]
+
+[tool.setuptools.packages.find]
+include = ["metaweb_swarm*"]
+
+[tool.setuptools.data-files]
+"share/metaweb-swarm" = ["config.json", "config.research.json", "config.smoke.json", "README.md", "VALIDATION.md", "run-smoke.cmd"]
+"share/metaweb-swarm/docs" = ["docs/DOCKER_SETUP.md", "docs/EXECUTION_MODES.md", "docs/PROJECT_PROGRESS.md", "docs/START_HERE.md", "docs/RUN_REVIEW_20261007.md", "docs/PACKAGES.md", "docs/GENERATION_MEMORY.md", "docs/RUN_REVIEW_20261007_071555.md", "docs/RUN_REVIEW_20261007_080652.md", "docs/CANDIDATES_AND_SMOKE.md", "docs/RUN_REVIEW_20261007_093936.md", "docs/RUN_REVIEW_20261007_102933.md", "docs/RUN_REVIEW_20261007_104559.md"]
+"share/metaweb-swarm/docs/validation" = ["docs/validation/REGRESSIONS.log", "docs/validation/MODEL_TIERS.log", "docs/validation/SANDBOX_LAUNCHER.log", "docs/validation/SUPERVISED_LAUNCHER.log", "docs/validation/PIP_DOCKER.log", "docs/validation/PIP_DOCKER_INSTALL.json", "docs/validation/PIP_DOCKER_EXPERIMENT.json", "docs/validation/PIP_DOCKER_REOPEN.json", "docs/validation/PIP_REGRESSIONS.log", "docs/validation/GENERATION_REPLAY.json", "docs/validation/GENERATION_FOCUSED.log", "docs/validation/GENERATION_REGRESSIONS.log", "docs/validation/CANDIDATE_REGRESSIONS.log", "docs/validation/CANDIDATE_GATE_FINAL.log", "docs/validation/CANDIDATE_FOCUSED.log", "docs/validation/SDK_DOCKER_CHAIN.json", "docs/validation/SDK_DOCKER_CHAIN.log", "docs/validation/BIND_REGRESSIONS.log", "docs/validation/BIND_PACKAGE_FOCUSED.log", "docs/validation/BIND_SDK_DOCKER.json", "docs/validation/BIND_SDK_DOCKER.log"]
+"share/metaweb-swarm/context" = ["context/CORE.md", "context/CURRENT_STATE.md", "context/USER_NOTES.md", "context/REJECTED_IDEAS.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

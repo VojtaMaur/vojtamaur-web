@@ -1,0 +1,176 @@
+Executing <Task pending name='Task-39' coro=<Runner.run() running at G:\metaweb-swarm-env\Lib\site-packages\agents\run.py:332> wait_for=<Task pending name='Task-40' coro=<run_single_turn() running at G:\metaweb-swarm-env\Lib\site-packages\agents\run_internal\run_loop.py:2448> cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> cb=[_release_waiter(<Future pendi...events.py:428>)() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:431] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:680> took 0.109 seconds
+Run: 20261007-063431-4ca83223 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/1
+Run: 20261007-063432-ad24af17 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Run: 20261007-063432-463d2e1d | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 1 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Round: AGENT-002 Loophole Archivist [flag] 1/3
+Run: 20261007-063432-220cff8d | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 PROTOTYPED: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261007-063435-c2426dc6 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 2 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Round: AGENT-002 Loophole Archivist [flag] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+Round: AGENT-003 Anomaly Engineer [strong] 1/3
+Run: 20261007-063436-35722d34 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 PROTOTYPED: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261007-063439-3dd35252 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Run: 20261007-063440-5f0431ae | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 2/3
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 3/3
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+Round: AGENT-002 Loophole Archivist [flag] 2/3; AGENT-003 Anomaly Engineer [strong] 2/3; AGENT-004 Format Mutant [strong] 2/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 2/3; AGENT-006 Infrastructure Scout [cheap] 2/3; AGENT-007 Future Archaeologist [strong] 2/3
+Round: AGENT-002 Loophole Archivist [flag] 3/3; AGENT-003 Anomaly Engineer [strong] 3/3; AGENT-004 Format Mutant [strong] 3/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 3/3; AGENT-006 Infrastructure Scout [cheap] 3/3; AGENT-007 Future Archaeologist [strong] 3/3
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3; AGENT-008 Hostile Reviewer [flag] 2/3; AGENT-009 Evidence Auditor [strong] 2/3
+Round: AGENT-010 Role Architect [cheap] 2/3; AGENT-011 Prototyper [strong] 2/3; AGENT-008 Hostile Reviewer [flag] 3/3
+Round: AGENT-009 Evidence Auditor [strong] 3/3; AGENT-010 Role Architect [cheap] 3/3; AGENT-011 Prototyper [strong] 3/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 2/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 3/3
+Run: 20261007-063446-45f1ce68 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Run: 20261007-063446-45f1ce68 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 PROTOTYPED: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261007-063446-45f1ce68 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper, Demo Optical Decoder Specialist
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Run: 20261007-063449-8286f506 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+AGENT-001 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 2/3
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+AGENT-002 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-003 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-004 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+AGENT-005 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-006 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-007 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-002 Loophole Archivist [flag] 2/3; AGENT-003 Anomaly Engineer [strong] 2/3; AGENT-004 Format Mutant [strong] 2/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 2/3; AGENT-006 Infrastructure Scout [cheap] 2/3; AGENT-007 Future Archaeologist [strong] 2/3
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+AGENT-008 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-009 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-010 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-011 Prototyper [strong] 1/3; AGENT-008 Hostile Reviewer [flag] 2/3; AGENT-009 Evidence Auditor [strong] 2/3
+AGENT-011 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-010 Role Architect [cheap] 2/3; AGENT-011 Prototyper [strong] 2/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+AGENT-012 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-012 Synthesizer / Reporter [flag] 2/3
+Run: 20261007-063454-5884ee1d | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+AGENT-001 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+AGENT-002 BLOCKED: OSError: fixture disk unavailable
+AGENT-003 BLOCKED: OSError: fixture disk unavailable
+AGENT-004 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+AGENT-005 BLOCKED: OSError: fixture disk unavailable
+AGENT-006 BLOCKED: OSError: fixture disk unavailable
+AGENT-007 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+AGENT-008 BLOCKED: OSError: fixture disk unavailable
+AGENT-009 BLOCKED: OSError: fixture disk unavailable
+AGENT-010 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-011 Prototyper [strong] 1/3
+AGENT-011 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+AGENT-012 BLOCKED: OSError: fixture disk unavailable
+Executing <Task pending name='Task-1010' coro=<ExecutionModesTests.test_approval_required_queues_then_exact_decision_allows_execution() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_execution_modes.py:147> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+Executing <Task pending name='Task-1054' coro=<ExecutionModesTests.test_fake_sdk_timeout_retains_unknown_budget_across_reopen() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_execution_modes.py:284> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+Executing <Task pending name='Task-1154' coro=<ExecutionModesTests.test_other_agent_cannot_claim_experiment_as_its_test() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_execution_modes.py:187> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.234 seconds
+Executing <Task finished name='Task-1161' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:717> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.141 seconds
+Executing <Task finished name='Task-1171' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:717> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.172 seconds
+----------------------------------------------------------------------
+Ran 231 tests in 53.665s
+
+OK (skipped=1)

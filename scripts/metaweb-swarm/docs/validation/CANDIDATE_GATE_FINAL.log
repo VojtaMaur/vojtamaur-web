@@ -1,0 +1,5 @@
+Executing <Task pending name='Task-14' coro=<CandidateGateTests.test_real_sdk_semantic_gate_counts_cheap_usage_without_replacing_history() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_candidate_gate.py:118> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+----------------------------------------------------------------------
+Ran 8 tests in 2.197s
+
+OK

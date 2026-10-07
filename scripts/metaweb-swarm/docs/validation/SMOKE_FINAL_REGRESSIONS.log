@@ -1,0 +1,485 @@
+test_conditional_put_retries_same_bytes_and_does_not_overwrite_different_bytes (test_actions.HTTPActionTests.test_conditional_put_retries_same_bytes_and_does_not_overwrite_different_bytes) ... ok
+test_endpoint_credentials_queries_plain_http_and_api_key_reuse_are_rejected (test_actions.HTTPActionTests.test_endpoint_credentials_queries_plain_http_and_api_key_reuse_are_rejected) ... ok
+test_get_error_cannot_echo_resource_credential_into_host_audit (test_actions.HTTPActionTests.test_get_error_cannot_echo_resource_credential_into_host_audit) ... ok
+test_put_and_get_redirects_are_never_followed (test_actions.HTTPActionTests.test_put_and_get_redirects_are_never_followed) ... ok
+test_put_then_get_authentication_receipts_never_contain_credentials (test_actions.HTTPActionTests.test_put_then_get_authentication_receipts_never_contain_credentials) ... ok
+test_readback_hash_mismatch_never_reports_success (test_actions.HTTPActionTests.test_readback_hash_mismatch_never_reports_success) ... ok
+test_readback_resource_limit_is_enforced (test_actions.HTTPActionTests.test_readback_resource_limit_is_enforced) ... ok
+test_source_limit_prevents_even_first_http_request (test_actions.HTTPActionTests.test_source_limit_prevents_even_first_http_request) ... ok
+test_changed_source_and_resource_size_abort_before_side_effect (test_actions.LocalActionTests.test_changed_source_and_resource_size_abort_before_side_effect) ... ok
+test_filename_is_single_bounded_object_name (test_actions.LocalActionTests.test_filename_is_single_bounded_object_name) ... ok
+test_local_collision_never_overwrites_other_bytes (test_actions.LocalActionTests.test_local_collision_never_overwrites_other_bytes) ... ok
+test_local_copy_has_readback_receipt_and_exact_retry_is_idempotent (test_actions.LocalActionTests.test_local_copy_has_readback_receipt_and_exact_retry_is_idempotent) ... ok
+test_production_run_and_their_ancestors_are_forbidden_targets (test_actions.LocalActionTests.test_production_run_and_their_ancestors_are_forbidden_targets) ... ok
+test_resource_validation_keeps_only_free_explicit_capabilities (test_actions.LocalActionTests.test_resource_validation_keeps_only_free_explicit_capabilities) ... ok
+test_file_listing_pages_are_bounded_and_complete (test_backend.CoreTests.test_file_listing_pages_are_bounded_and_complete) ... ok
+test_history_limit_preserves_history (test_backend.CoreTests.test_history_limit_preserves_history) ... ok
+test_http_error_body_is_preserved_and_credentials_redacted (test_backend.CoreTests.test_http_error_body_is_preserved_and_credentials_redacted) ... ok
+test_interrupted_call_result_is_explicit_and_idempotent (test_backend.CoreTests.test_interrupted_call_result_is_explicit_and_idempotent) ... ok
+test_json_map_rejects_array (test_backend.CoreTests.test_json_map_rejects_array) ... ok
+test_model_must_be_explicit (test_backend.CoreTests.test_model_must_be_explicit) ... ok
+test_no_key_fails_without_loading_sdk (test_backend.CoreTests.test_no_key_fails_without_loading_sdk) ... ok
+test_all_tool_object_schemas_are_strict (test_backend.SDKTests.test_all_tool_object_schemas_are_strict) ... ok
+test_approval_only_queues_and_dict_payload_is_restored (test_backend.SDKTests.test_approval_only_queues_and_dict_payload_is_restored) ... ok
+test_bad_path_is_recoverable_and_audited (test_backend.SDKTests.test_bad_path_is_recoverable_and_audited) ... ok
+test_checkpoint_contains_completed_tools_before_next_model_request (test_backend.SDKTests.test_checkpoint_contains_completed_tools_before_next_model_request) ... ok
+test_host_budget_stops_before_any_model_request (test_backend.SDKTests.test_host_budget_stops_before_any_model_request) ... ok
+test_host_budget_stops_next_request_preserving_known_usage (test_backend.SDKTests.test_host_budget_stops_next_request_preserving_known_usage) ... ok
+test_max_turns_retains_completed_tool_and_usage (test_backend.SDKTests.test_max_turns_retains_completed_tool_and_usage) ... ok
+test_provider_failure_is_blocked_and_error_redacts_key (test_backend.SDKTests.test_provider_failure_is_blocked_and_error_redacts_key) ... ok
+test_real_sdk_final_schema_history_and_settings (test_backend.SDKTests.test_real_sdk_final_schema_history_and_settings) ... ok
+test_sdk_doctor_needs_no_key (test_backend.SDKTests.test_sdk_doctor_needs_no_key) ... ok
+test_search_sources_preserved_in_raw_and_durable_audit (test_backend.SDKTests.test_search_sources_preserved_in_raw_and_durable_audit) ... ok
+test_stable_idea_id_and_scores_mapped (test_backend.SDKTests.test_stable_idea_id_and_scores_mapped) ... ok
+test_timeout_known_usage_is_retained_unknown_usage_flagged (test_backend.SDKTests.test_timeout_known_usage_is_retained_unknown_usage_flagged) ... ok
+test_archive_priority_deep_line_and_hashed_receipt (test_baseline.BaselineTests.test_archive_priority_deep_line_and_hashed_receipt) ... ok
+test_atproto_different_titles_merge_same_mechanism (test_baseline.BaselineTests.test_atproto_different_titles_merge_same_mechanism) ... ok
+test_binary_tool_writes_exact_confined_bytes (test_baseline.BaselineTests.test_binary_tool_writes_exact_confined_bytes) ... ok
+test_coordinator_observations_cannot_be_candidates (test_baseline.BaselineTests.test_coordinator_observations_cannot_be_candidates) ... ok
+test_declined_direction_cannot_spawn (test_baseline.BaselineTests.test_declined_direction_cannot_spawn) ... ok
+test_distinct_explicit_mechanism_kind_not_collapsed (test_baseline.BaselineTests.test_distinct_explicit_mechanism_kind_not_collapsed) ... ok
+test_distinct_improvement_is_not_merged_into_existing_carrier (test_baseline.BaselineTests.test_distinct_improvement_is_not_merged_into_existing_carrier) ... ok
+test_emergent_discovery_requires_external_research (test_baseline.BaselineTests.test_emergent_discovery_requires_external_research) ... ok
+test_existing_carrier_cannot_claim_novel_without_comparison (test_baseline.BaselineTests.test_existing_carrier_cannot_claim_novel_without_comparison) ... ok
+test_future_handoff_does_not_force_completed_role_to_repeat (test_baseline.BaselineTests.test_future_handoff_does_not_force_completed_role_to_repeat) ... ok
+test_generic_features_do_not_promote_improvement_to_verified (test_baseline.BaselineTests.test_generic_features_do_not_promote_improvement_to_verified) ... ok
+test_last_active_round_is_workable_and_uses_extended_allowance (test_baseline.BaselineTests.test_last_active_round_is_workable_and_uses_extended_allowance) ... ok
+test_literal_search_does_not_match_osf_inside_other_word (test_baseline.BaselineTests.test_literal_search_does_not_match_osf_inside_other_word) ... ok
+test_long_perma_provider_extracts_short_alias (test_baseline.BaselineTests.test_long_perma_provider_extracts_short_alias) ... ok
+test_loophole_assignment_is_not_repository_scouting (test_baseline.BaselineTests.test_loophole_assignment_is_not_repository_scouting) ... ok
+test_matching_baseline_receipt_supports_known_classification (test_baseline.BaselineTests.test_matching_baseline_receipt_supports_known_classification) ... ok
+test_old_stop_messages_are_not_replayed_as_current_budget (test_baseline.BaselineTests.test_old_stop_messages_are_not_replayed_as_current_budget) ... ok
+test_osf_absence_is_not_proof_of_novelty (test_baseline.BaselineTests.test_osf_absence_is_not_proof_of_novelty) ... ok
+test_osf_unsupported_duplicate_rejection_preserves_candidate (test_baseline.BaselineTests.test_osf_unsupported_duplicate_rejection_preserves_candidate) ... ok
+test_renewable_contract_cannot_claim_one_time_payment (test_baseline.BaselineTests.test_renewable_contract_cannot_claim_one_time_payment) ... ok
+test_same_zenodo_mechanism_different_titles_has_one_id (test_baseline.BaselineTests.test_same_zenodo_mechanism_different_titles_has_one_id) ... ok
+test_structured_improvement_preserves_a_distinct_proposal (test_baseline.BaselineTests.test_structured_improvement_preserves_a_distinct_proposal) ... ok
+test_unobserved_citations_cannot_be_verified_by_reviewer (test_baseline.BaselineTests.test_unobserved_citations_cannot_be_verified_by_reviewer) ... ok
+test_unsupported_known_rejection_cannot_bypass_with_default_class (test_baseline.BaselineTests.test_unsupported_known_rejection_cannot_bypass_with_default_class) ... ok
+test_wacz_owner_rejection_is_enforced_on_submission (test_baseline.BaselineTests.test_wacz_owner_rejection_is_enforced_on_submission) ... ok
+test_bad_bounds_prices_and_usage_are_rejected_or_retained (test_budget.BudgetTests.test_bad_bounds_prices_and_usage_are_rejected_or_retained) ... ok
+test_concurrent_requests_share_host_lock_and_cannot_oversubscribe (test_budget.BudgetTests.test_concurrent_requests_share_host_lock_and_cannot_oversubscribe) ... ok
+test_exact_token_and_usd_boundary_is_allowed_without_float_drift (test_budget.BudgetTests.test_exact_token_and_usd_boundary_is_allowed_without_float_drift) ... ok
+test_explicit_incomplete_usage_keeps_reservation (test_budget.BudgetTests.test_explicit_incomplete_usage_keeps_reservation) ... ok
+test_failed_request_retains_unknown_hold_and_blocks_all_agents (test_budget.BudgetTests.test_failed_request_retains_unknown_hold_and_blocks_all_agents) ... ok
+test_known_settlement_releases_hold_but_does_not_double_account_usage (test_budget.BudgetTests.test_known_settlement_releases_hold_but_does_not_double_account_usage) ... ok
+test_legacy_unknown_usage_needs_explicit_reconciliation (test_budget.BudgetTests.test_legacy_unknown_usage_needs_explicit_reconciliation) ... ok
+test_media_inputs_need_explicit_model_specific_bound (test_budget.BudgetTests.test_media_inputs_need_explicit_model_specific_bound) ... ok
+test_missing_prices_fail_closed_only_when_dollars_are_enforced (test_budget.BudgetTests.test_missing_prices_fail_closed_only_when_dollars_are_enforced) ... ok
+test_one_active_request_per_agent_and_durable_sequence (test_budget.BudgetTests.test_one_active_request_per_agent_and_durable_sequence) ... ok
+test_operator_reconciliation_retains_note_and_original_unknown_hold (test_budget.BudgetTests.test_operator_reconciliation_retains_note_and_original_unknown_hold) ... ok
+test_preflight_reserves_full_request_before_execution (test_budget.BudgetTests.test_preflight_reserves_full_request_before_execution) ... ok
+test_process_resume_marks_orphan_reserved_requests_unknown (test_budget.BudgetTests.test_process_resume_marks_orphan_reserved_requests_unknown) ... ok
+test_search_count_exceeding_bound_is_not_silently_released (test_budget.BudgetTests.test_search_count_exceeding_bound_is_not_silently_released) ... ok
+test_spent_tokens_are_included_with_other_request_holds (test_budget.BudgetTests.test_spent_tokens_are_included_with_other_request_holds) ... ok
+test_text_bound_includes_utf8_tools_output_schema_and_framing (test_budget.BudgetTests.test_text_bound_includes_utf8_tools_output_schema_and_framing) ... ok
+test_unknown_usage_missing_fields_keeps_reservation (test_budget.BudgetTests.test_unknown_usage_missing_fields_keeps_reservation) ... ok
+test_usage_bound_breach_is_audited_and_fail_closed (test_budget.BudgetTests.test_usage_bound_breach_is_audited_and_fail_closed) ... ok
+test_usd_reserves_search_calls_and_all_token_prices (test_budget.BudgetTests.test_usd_reserves_search_calls_and_all_token_prices) ... ok
+test_files_only_cannot_claim_prototype (test_candidate_gate.CandidateGateTests.test_files_only_cannot_claim_prototype) ... ok
+test_input_export_even_renamed_cannot_be_a_prototype_receipt (test_candidate_gate.CandidateGateTests.test_input_export_even_renamed_cannot_be_a_prototype_receipt) ... Executing <Task pending name='Task-900' coro=<CandidateGateTests.test_input_export_even_renamed_cannot_be_a_prototype_receipt() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_candidate_gate.py:113> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+ok
+test_materially_different_payload_gets_own_id (test_candidate_gate.CandidateGateTests.test_materially_different_payload_gets_own_id) ... ok
+test_real_dns_duplicate_keeps_id_and_both_authors (test_candidate_gate.CandidateGateTests.test_real_dns_duplicate_keeps_id_and_both_authors) ... ok
+test_real_sdk_semantic_gate_counts_cheap_usage_without_replacing_history (test_candidate_gate.CandidateGateTests.test_real_sdk_semantic_gate_counts_cheap_usage_without_replacing_history) ... ok
+test_same_agent_family_label_is_not_proof_of_same_payload (test_candidate_gate.CandidateGateTests.test_same_agent_family_label_is_not_proof_of_same_payload) ... ok
+test_stale_or_unknown_comparison_cannot_merge (test_candidate_gate.CandidateGateTests.test_stale_or_unknown_comparison_cannot_merge) ... ok
+test_successful_test_promotes_but_changed_artifact_cannot_reuse_receipt (test_candidate_gate.CandidateGateTests.test_successful_test_promotes_but_changed_artifact_cannot_reuse_receipt) ... ok
+test_uncertain_retains_proposal_without_new_id_or_rejection (test_candidate_gate.CandidateGateTests.test_uncertain_retains_proposal_without_new_id_or_rejection) ... ok
+test_blocked_and_false_completion (test_core.PolicyTests.test_blocked_and_false_completion) ... ok
+test_completed_report_preserves_leads_without_reopening_assignment (test_core.PolicyTests.test_completed_report_preserves_leads_without_reopening_assignment) ... ok
+test_doctor_rejects_incompatible_sdk_even_with_key_and_package (test_core.PolicyTests.test_doctor_rejects_incompatible_sdk_even_with_key_and_package) ... ok
+test_piql_is_known (test_core.PolicyTests.test_piql_is_known) ... ok
+test_recurring_rejects_provider_not_mechanism (test_core.PolicyTests.test_recurring_rejects_provider_not_mechanism) ... ok
+test_runtime_cannot_be_inside_or_contain_production (test_core.PolicyTests.test_runtime_cannot_be_inside_or_contain_production) ... ok
+test_spawn_overlap_and_hard_limits (test_core.PolicyTests.test_spawn_overlap_and_hard_limits) ... ok
+test_stopping_with_leads_requires_continuation (test_core.PolicyTests.test_stopping_with_leads_requires_continuation) ... ok
+test_binary_artifact_uses_exact_bytes_and_keeps_proto_unverified (test_core.SchedulerTests.test_binary_artifact_uses_exact_bytes_and_keeps_proto_unverified) ... ok
+test_cancelled_experiment_finishes_cleanup_before_returning (test_core.SchedulerTests.test_cancelled_experiment_finishes_cleanup_before_returning) ... ok
+Run: 20261007-105515-95e00a7b | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/1
+test_cancelled_last_round_cannot_exceed_agent_limit (test_core.SchedulerTests.test_cancelled_last_round_cannot_exceed_agent_limit) ... ok
+test_cli_resume_extends_token_budget_durably (test_core.SchedulerTests.test_cli_resume_extends_token_budget_durably) ... ok
+Run: 20261007-105515-8ae462ed | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+test_crash_recovery_retains_usage_and_charges_uncertain_request (test_core.SchedulerTests.test_crash_recovery_retains_usage_and_charges_uncertain_request) ... ok
+Run: 20261007-105516-37e830ac | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 1 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+Round: AGENT-002 Loophole Archivist [flag] 1/3
+test_durable_usage_reconciles_without_double_counting (test_core.SchedulerTests.test_durable_usage_reconciles_without_double_counting) ... ok
+Run: 20261007-105516-8ab2c0b2 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 INVESTIGATING: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+test_full_demo_emergence_audit_approvals_reports_origin_unchanged (test_core.SchedulerTests.test_full_demo_emergence_audit_approvals_reports_origin_unchanged) ... ok
+Run: 20261007-105519-def4e739 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 2 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+Round: AGENT-002 Loophole Archivist [flag] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+Round: AGENT-003 Anomaly Engineer [strong] 1/3
+test_global_limit_is_distinct_and_count_reserved (test_core.SchedulerTests.test_global_limit_is_distinct_and_count_reserved) ... ok
+Run: 20261007-105520-b060fa0b | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 INVESTIGATING: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+test_human_gate_payload_binding_and_unblock (test_core.SchedulerTests.test_human_gate_payload_binding_and_unblock) ... ok
+test_lock_prevents_two_writers (test_core.SchedulerTests.test_lock_prevents_two_writers) ... ok
+Run: 20261007-105523-23134cad | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+test_missing_response_usage_is_durable_before_crash (test_core.SchedulerTests.test_missing_response_usage_is_durable_before_crash) ... ok
+Run: 20261007-105524-e93cdf00 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 2/3
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 3/3
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+Round: AGENT-002 Loophole Archivist [flag] 2/3; AGENT-003 Anomaly Engineer [strong] 2/3; AGENT-004 Format Mutant [strong] 2/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 2/3; AGENT-006 Infrastructure Scout [cheap] 2/3; AGENT-007 Future Archaeologist [strong] 2/3
+Round: AGENT-002 Loophole Archivist [flag] 3/3; AGENT-003 Anomaly Engineer [strong] 3/3; AGENT-004 Format Mutant [strong] 3/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 3/3; AGENT-006 Infrastructure Scout [cheap] 3/3; AGENT-007 Future Archaeologist [strong] 3/3
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3; AGENT-008 Hostile Reviewer [flag] 2/3; AGENT-009 Evidence Auditor [strong] 2/3
+Round: AGENT-010 Role Architect [cheap] 2/3; AGENT-011 Prototyper [strong] 2/3; AGENT-008 Hostile Reviewer [flag] 3/3
+Round: AGENT-009 Evidence Auditor [strong] 3/3; AGENT-010 Role Architect [cheap] 3/3; AGENT-011 Prototyper [strong] 3/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+test_model_leads_exhaust_round_limit (test_core.SchedulerTests.test_model_leads_exhaust_round_limit) ... ok
+test_owner_only_completion_is_requeued_for_external_discovery (test_core.SchedulerTests.test_owner_only_completion_is_requeued_for_external_discovery) ... ok
+Run: 20261007-105530-6e80cea4 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+Run: 20261007-105530-6e80cea4 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 INVESTIGATING: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261007-105530-6e80cea4 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper, Demo Optical Decoder Specialist
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+test_pause_and_resume_dont_repeat_finished_roles (test_core.SchedulerTests.test_pause_and_resume_dont_repeat_finished_roles) ... ok
+Run: 20261007-105534-ce5fb6b6 | autonomous | sandbox-only | experiments=disabled
+  strong = demo-fixture (no API calls) | Prototyper
+  flag = demo-fixture (no API calls) | Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+Task: SDK / PyPI / Docker round-trip and corruption test; no external deposit
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-011 Prototyper [strong] 2/3
+Round: AGENT-011 Prototyper [strong] 3/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+test_smoke_cannot_complete_from_success_claim_without_test_receipt (test_core.SchedulerTests.test_smoke_cannot_complete_from_success_claim_without_test_receipt) ... ok
+Run: 20261007-105535-c322827b | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+AGENT-001 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 2/3
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+AGENT-002 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-003 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-004 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+AGENT-005 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-006 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-007 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-002 Loophole Archivist [flag] 2/3; AGENT-003 Anomaly Engineer [strong] 2/3; AGENT-004 Format Mutant [strong] 2/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 2/3; AGENT-006 Infrastructure Scout [cheap] 2/3; AGENT-007 Future Archaeologist [strong] 2/3
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+AGENT-008 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-009 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-010 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-011 Prototyper [strong] 1/3; AGENT-008 Hostile Reviewer [flag] 2/3; AGENT-009 Evidence Auditor [strong] 2/3
+AGENT-011 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-010 Role Architect [cheap] 2/3; AGENT-011 Prototyper [strong] 2/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+AGENT-012 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-012 Synthesizer / Reporter [flag] 2/3
+test_turn_quantum_continues_without_repeating_completed_tools (test_core.SchedulerTests.test_turn_quantum_continues_without_repeating_completed_tools) ... ok
+Run: 20261007-105540-5a170471 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+AGENT-001 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+AGENT-002 BLOCKED: OSError: fixture disk unavailable
+AGENT-003 BLOCKED: OSError: fixture disk unavailable
+AGENT-004 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+AGENT-005 BLOCKED: OSError: fixture disk unavailable
+AGENT-006 BLOCKED: OSError: fixture disk unavailable
+AGENT-007 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+AGENT-008 BLOCKED: OSError: fixture disk unavailable
+AGENT-009 BLOCKED: OSError: fixture disk unavailable
+AGENT-010 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-011 Prototyper [strong] 1/3
+AGENT-011 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+AGENT-012 BLOCKED: OSError: fixture disk unavailable
+test_workspace_setup_failure_is_blocked_and_reports_settled (test_core.SchedulerTests.test_workspace_setup_failure_is_blocked_and_reports_settled) ... ok
+test_actual_orcid_mislabeled_kind_and_paraphrase_merge (test_dedup.DedupTests.test_actual_orcid_mislabeled_kind_and_paraphrase_merge) ... ok
+test_actual_s3_titles_and_mechanism_prose_merge (test_dedup.DedupTests.test_actual_s3_titles_and_mechanism_prose_merge) ... ok
+test_aws_amazon_aliases_and_generic_fallback_are_supported (test_dedup.DedupTests.test_aws_amazon_aliases_and_generic_fallback_are_supported) ... ok
+test_blocker_preserves_prototype_progress (test_dedup.DedupTests.test_blocker_preserves_prototype_progress) ... ok
+test_conflict_survives_later_weak_review_without_losing_progress (test_dedup.DedupTests.test_conflict_survives_later_weak_review_without_losing_progress) ... ok
+test_contributors_and_immutable_claims_survive_review (test_dedup.DedupTests.test_contributors_and_immutable_claims_survive_review) ... ok
+test_explicit_id_cannot_replace_known_family_with_unknown_mechanism (test_dedup.DedupTests.test_explicit_id_cannot_replace_known_family_with_unknown_mechanism) ... ok
+test_explicit_id_does_not_repurpose_known_mechanism (test_dedup.DedupTests.test_explicit_id_does_not_repurpose_known_mechanism) ... ok
+test_explicit_other_provider_citing_aws_is_never_amazon (test_dedup.DedupTests.test_explicit_other_provider_citing_aws_is_never_amazon) ... ok
+test_generic_carrier_improvement_needs_scope_not_prose_hash (test_dedup.DedupTests.test_generic_carrier_improvement_needs_scope_not_prose_hash) ... ok
+test_host_policy_rejection_is_sticky (test_dedup.DedupTests.test_host_policy_rejection_is_sticky) ... ok
+test_incidental_orcid_reference_does_not_change_other_provider (test_dedup.DedupTests.test_incidental_orcid_reference_does_not_change_other_provider) ... ok
+test_invalid_key_and_scope_are_rejected (test_dedup.DedupTests.test_invalid_key_and_scope_are_rejected) ... ok
+test_legacy_snapshot_has_explicit_provenance_limitation (test_dedup.DedupTests.test_legacy_snapshot_has_explicit_provenance_limitation) ... ok
+test_novelty_prose_changes_do_not_split_recognized_mechanism (test_dedup.DedupTests.test_novelty_prose_changes_do_not_split_recognized_mechanism) ... ok
+test_orcid_embedded_content_is_distinct_from_pointer (test_dedup.DedupTests.test_orcid_embedded_content_is_distinct_from_pointer) ... ok
+test_prototype_requires_artifact_receipt_and_completion_requires_host_receipt (test_dedup.DedupTests.test_prototype_requires_artifact_receipt_and_completion_requires_host_receipt) ... ok
+test_real_cc_rel_scope_aliases_merge_without_collapsing_other_features (test_dedup.DedupTests.test_real_cc_rel_scope_aliases_merge_without_collapsing_other_features) ... ok
+test_real_qr_duplicate_with_same_claim_and_different_agent_key_merges (test_dedup.DedupTests.test_real_qr_duplicate_with_same_claim_and_different_agent_key_merges) ... ok
+test_s3_compatible_third_party_is_not_amazon (test_dedup.DedupTests.test_s3_compatible_third_party_is_not_amazon) ... ok
+test_s3_scope_variants_are_not_collapsed (test_dedup.DedupTests.test_s3_scope_variants_are_not_collapsed) ... ok
+test_soft_rejection_conflict_requires_review_and_retains_evidence (test_dedup.DedupTests.test_soft_rejection_conflict_requires_review_and_retains_evidence) ... ok
+test_unknown_explicit_key_and_scope_are_normalized (test_dedup.DedupTests.test_unknown_explicit_key_and_scope_are_normalized) ... ok
+test_unknown_paraphrases_do_not_fuzzy_merge (test_dedup.DedupTests.test_unknown_paraphrases_do_not_fuzzy_merge) ... ok
+test_weak_reviewer_cannot_erase_checked_evidence_or_upgrade_itself (test_dedup.DedupTests.test_weak_reviewer_cannot_erase_checked_evidence_or_upgrade_itself) ... ok
+test_drip_http_headers_cannot_outlive_process_deadline (test_deposit_deadline.DepositDeadlineTests.test_drip_http_headers_cannot_outlive_process_deadline) ... ok
+test_failed_child_returns_only_generic_error_no_remote_or_local_secret (test_deposit_deadline.DepositDeadlineTests.test_failed_child_returns_only_generic_error_no_remote_or_local_secret) ... ok
+test_local_child_is_verified_and_environment_excludes_host_credentials (test_deposit_deadline.DepositDeadlineTests.test_local_child_is_verified_and_environment_excludes_host_credentials) ... ok
+test_approval_disabled_deposit_has_exact_readback_and_no_hidden_gate (test_execution_modes.ExecutionModesTests.test_approval_disabled_deposit_has_exact_readback_and_no_hidden_gate) ... ok
+test_approval_required_queues_then_exact_decision_allows_execution (test_execution_modes.ExecutionModesTests.test_approval_required_queues_then_exact_decision_allows_execution) ... Executing <Task pending name='Task-1239' coro=<ExecutionModesTests.test_approval_required_queues_then_exact_decision_allows_execution() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_execution_modes.py:147> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.235 seconds
+ok
+test_autonomous_sandbox_executes_local_code_but_deposit_is_blocked (test_execution_modes.ExecutionModesTests.test_autonomous_sandbox_executes_local_code_but_deposit_is_blocked) ... ok
+test_changed_artifact_after_successful_test_cannot_publish (test_execution_modes.ExecutionModesTests.test_changed_artifact_after_successful_test_cannot_publish) ... ok
+test_exit_zero_without_bound_artifact_cannot_certify_prototype (test_execution_modes.ExecutionModesTests.test_exit_zero_without_bound_artifact_cannot_certify_prototype) ... ok
+test_external_action_limit_prevents_second_write (test_execution_modes.ExecutionModesTests.test_external_action_limit_prevents_second_write) ... ok
+test_external_byte_limit_prevents_any_write (test_execution_modes.ExecutionModesTests.test_external_byte_limit_prevents_any_write) ... ok
+test_failed_docker_exit_cannot_be_recorded_as_successful_test (test_execution_modes.ExecutionModesTests.test_failed_docker_exit_cannot_be_recorded_as_successful_test) ... ok
+test_fake_sdk_timeout_retains_unknown_budget_across_reopen (test_execution_modes.ExecutionModesTests.test_fake_sdk_timeout_retains_unknown_budget_across_reopen) ... Executing <Task pending name='Task-1283' coro=<ExecutionModesTests.test_fake_sdk_timeout_retains_unknown_budget_across_reopen() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_execution_modes.py:284> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+ok
+test_fake_sdk_uses_real_engine_budget_reservation_and_settlement (test_execution_modes.ExecutionModesTests.test_fake_sdk_uses_real_engine_budget_reservation_and_settlement) ... ok
+test_materialize_export_above_old_20mb_limit (test_execution_modes.ExecutionModesTests.test_materialize_export_above_old_20mb_limit) ... ok
+test_materialized_export_captured_by_test_can_deposit_exact_original (test_execution_modes.ExecutionModesTests.test_materialized_export_captured_by_test_can_deposit_exact_original) ... ok
+test_materialized_export_is_independent_and_hash_bound (test_execution_modes.ExecutionModesTests.test_materialized_export_is_independent_and_hash_bound) ... ok
+test_other_agent_cannot_claim_experiment_as_its_test (test_execution_modes.ExecutionModesTests.test_other_agent_cannot_claim_experiment_as_its_test) ... ok
+test_pause_resume_preserves_research_and_audit_chain (test_execution_modes.ExecutionModesTests.test_pause_resume_preserves_research_and_audit_chain) ... Executing <Task finished name='Task-1396' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:864> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.344 seconds
+ok
+test_submit_deduplicates_paraphrases_and_retains_agent_provenance (test_execution_modes.ExecutionModesTests.test_submit_deduplicates_paraphrases_and_retains_agent_provenance) ... ok
+test_supervised_research_can_finish_without_rejecting_good_ideas (test_execution_modes.ExecutionModesTests.test_supervised_research_can_finish_without_rejecting_good_ideas) ... Executing <Task finished name='Task-1406' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:864> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.156 seconds
+ok
+test_supervised_waits_for_selection_then_runs_without_rejecting_candidate (test_execution_modes.ExecutionModesTests.test_supervised_waits_for_selection_then_runs_without_rejecting_candidate) ... ok
+test_unknown_resource_and_disabled_experiments_are_bounded (test_execution_modes.ExecutionModesTests.test_unknown_resource_and_disabled_experiments_are_bounded) ... ok
+test_untested_export_cannot_bypass_test_with_another_artifact (test_execution_modes.ExecutionModesTests.test_untested_export_cannot_bypass_test_with_another_artifact) ... ok
+test_explicit_selection_is_relative_and_not_recursive (test_export_intake.ExportIntakeTests.test_explicit_selection_is_relative_and_not_recursive) ... ok
+test_junction_export_root_and_explicit_nested_path_are_refused (test_export_intake.ExportIntakeTests.test_junction_export_root_and_explicit_nested_path_are_refused) ... ok
+test_missing_exports_retains_empty_manifest_and_rejects_explicit_selection (test_export_intake.ExportIntakeTests.test_missing_exports_retains_empty_manifest_and_rejects_explicit_selection) ... ok
+test_only_allowlisted_public_payloads_are_copied_and_hashed (test_export_intake.ExportIntakeTests.test_only_allowlisted_public_payloads_are_copied_and_hashed) ... ok
+test_production_and_export_intake_cannot_overlap (test_export_intake.ExportIntakeTests.test_production_and_export_intake_cannot_overlap) ... ok
+test_resume_never_overwrites_original_payloads (test_export_intake.ExportIntakeTests.test_resume_never_overwrites_original_payloads) ... ok
+test_size_limits_abort_without_partial_intake_or_source_mutation (test_export_intake.ExportIntakeTests.test_size_limits_abort_without_partial_intake_or_source_mutation) ... ok
+test_text_credentials_rejected_but_opaque_owner_zip_is_not_extracted (test_export_intake.ExportIntakeTests.test_text_credentials_rejected_but_opaque_owner_zip_is_not_extracted) ... ok
+test_cancelled_failed_worker_persists_unknown_and_never_retries (test_external_recovery.ExternalRecoveryTests.test_cancelled_failed_worker_persists_unknown_and_never_retries) ... ok
+test_cancelled_success_persists_receipt_and_marks_approval_executed (test_external_recovery.ExternalRecoveryTests.test_cancelled_success_persists_receipt_and_marks_approval_executed) ... Executing <Task pending name='Task-1437' coro=<ExternalRecoveryTests.test_cancelled_success_persists_receipt_and_marks_approval_executed() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_external_recovery.py:42> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\futures.py:387, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.141 seconds
+ok
+test_inflight_candidate_revision_keeps_current_aggregate_completion (test_external_recovery.ExternalRecoveryTests.test_inflight_candidate_revision_keeps_current_aggregate_completion) ... ok
+test_all_prior_candidates_are_queryable_and_old_ledgers_unchanged (test_generation_recovery.GenerationTests.test_all_prior_candidates_are_queryable_and_old_ledgers_unchanged) ... ok
+test_binding_owner_rejection_takes_precedence_over_prior_deferral (test_generation_recovery.GenerationTests.test_binding_owner_rejection_takes_precedence_over_prior_deferral) ... ok
+test_coordinator_cannot_create_a_discovery_in_novelty_first (test_generation_recovery.GenerationTests.test_coordinator_cannot_create_a_discovery_in_novelty_first) ... ok
+Run: 20261007-105552-f2ad171a | supervised | sandbox-only | experiments=disabled
+  cheap = UNSET | Infrastructure Scout, Role Architect
+  strong = UNSET | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = UNSET | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+Prior work: novelty-first
+test_global_unknown_request_stops_scheduler_before_cascade (test_generation_recovery.GenerationTests.test_global_unknown_request_stops_scheduler_before_cascade) ... ok
+test_known_response_at_api_cap_settles_with_ignored_attempt_audited (test_generation_recovery.GenerationTests.test_known_response_at_api_cap_settles_with_ignored_attempt_audited) ... ok
+test_real_composite_qr_card_merges_without_becoming_orcid_record (test_generation_recovery.GenerationTests.test_real_composite_qr_card_merges_without_becoming_orcid_record) ... ok
+test_unchanged_discovery_is_deferred_not_rejected_and_local_continuation_is_allowed (test_generation_recovery.GenerationTests.test_unchanged_discovery_is_deferred_not_rejected_and_local_continuation_is_allowed) ... ok
+test_unknown_or_genuinely_excessive_search_work_is_not_silently_ignored (test_generation_recovery.GenerationTests.test_unknown_or_genuinely_excessive_search_work_is_not_silently_ignored) ... ok
+test_real_sdk_preserves_three_completed_plus_ignored_attempt (test_generation_recovery.SearchSDKTests.test_real_sdk_preserves_three_completed_plus_ignored_attempt) ... ok
+test_compaction_keeps_call_result_pairs_and_archives_excerpts (test_memory_research.MemoryResearchTests.test_compaction_keeps_call_result_pairs_and_archives_excerpts) ... ok
+test_compaction_preserves_parallel_call_group (test_memory_research.MemoryResearchTests.test_compaction_preserves_parallel_call_group) ... ok
+test_negative_audit_is_observation_not_candidate (test_memory_research.MemoryResearchTests.test_negative_audit_is_observation_not_candidate) ... ok
+test_owner_sources_do_not_count_as_external (test_memory_research.MemoryResearchTests.test_owner_sources_do_not_count_as_external) ... ok
+test_research_roster_selection_and_distinct_assignments (test_memory_research.MemoryResearchTests.test_research_roster_selection_and_distinct_assignments) ... ok
+test_shared_state_omits_revision_chain_and_caps_summaries (test_memory_research.MemoryResearchTests.test_shared_state_omits_revision_chain_and_caps_summaries) ... ok
+test_console_suppresses_identical_updates_but_shows_status_change (test_model_tiers.ModelTierTests.test_console_suppresses_identical_updates_but_shows_status_change) ... ok
+test_dollar_limits_require_prices_for_expensive_tiers (test_model_tiers.ModelTierTests.test_dollar_limits_require_prices_for_expensive_tiers) ... ok
+test_init_global_override_sets_all_tiers_and_snapshots_configuration (test_model_tiers.ModelTierTests.test_init_global_override_sets_all_tiers_and_snapshots_configuration) ... ok
+test_invalid_tiers_prices_and_assignments (test_model_tiers.ModelTierTests.test_invalid_tiers_prices_and_assignments) ... ok
+test_legacy_config_uses_global_model_for_every_role (test_model_tiers.ModelTierTests.test_legacy_config_uses_global_model_for_every_role) ... ok
+test_legacy_reconciliation_preserves_previously_accounted_model_usage (test_model_tiers.ModelTierTests.test_legacy_reconciliation_preserves_previously_accounted_model_usage) ... ok
+test_real_sdk_calls_three_models_and_accounts_each_across_resume (test_model_tiers.ModelTierTests.test_real_sdk_calls_three_models_and_accounts_each_across_resume) ... ok
+test_real_sdk_routes_models_and_reporter_fits_after_discovery_reservation_fails (test_model_tiers.ModelTierTests.test_real_sdk_routes_models_and_reporter_fits_after_discovery_reservation_fails) ... ok
+test_search_is_absent_for_synthesis_coordination_and_local (test_model_tiers.ModelTierTests.test_search_is_absent_for_synthesis_coordination_and_local) ... ok
+test_seed_assignments_emergent_default_and_operator_override (test_model_tiers.ModelTierTests.test_seed_assignments_emergent_default_and_operator_override) ... ok
+test_start_missing_key_leaves_no_run_and_calls_no_api (test_model_tiers.ModelTierTests.test_start_missing_key_leaves_no_run_and_calls_no_api) ... ok
+test_actual_copy_permission_failure_is_not_hidden (test_packages.PackageTests.test_actual_copy_permission_failure_is_not_hidden) ... ok
+test_any_package_versions_extras_without_allowlist (test_packages.PackageTests.test_any_package_versions_extras_without_allowlist) ... ok
+test_cancellation_waits_for_cleanup_then_records_receipt (test_packages.PackageTests.test_cancellation_waits_for_cleanup_then_records_receipt) ... ok
+test_configuration_validation (test_packages.PackageTests.test_configuration_validation) ... ok
+test_failed_fetch_is_bounded_and_never_starts_install (test_packages.PackageTests.test_failed_fetch_is_bounded_and_never_starts_install) ... ok
+test_failed_worker_after_cancel_is_audited_and_unfinished_work_blocks_retry (test_packages.PackageTests.test_failed_worker_after_cancel_is_audited_and_unfinished_work_blocks_retry) ... ok
+test_online_fetch_has_no_project_offline_install_has_readonly_wheels (test_packages.PackageTests.test_online_fetch_has_no_project_offline_install_has_readonly_wheels) ... ok
+test_receipts_persist_across_resume_and_production_is_unchanged (test_packages.PackageTests.test_receipts_persist_across_resume_and_production_is_unchanged) ... ok
+test_supervised_disabled_attempt_and_runtime_limits (test_packages.PackageTests.test_supervised_disabled_attempt_and_runtime_limits) ... ok
+test_unsupported_posix_modes_do_not_fail_wheel_byte_export (test_packages.PackageTests.test_unsupported_posix_modes_do_not_fail_wheel_byte_export) ... ok
+test_wheel_byte_limit_stops_before_install (test_packages.PackageTests.test_wheel_byte_limit_stops_before_install) ... ok
+test_capture_excludes_credentials_from_allowed_text (test_reporting_context.ContextTests.test_capture_excludes_credentials_from_allowed_text) ... ok
+test_live_error_is_not_fabricated_evidence (test_reporting_context.ContextTests.test_live_error_is_not_fabricated_evidence) ... ok
+test_missing_sources_are_explicit_and_user_piql_is_retained (test_reporting_context.ContextTests.test_missing_sources_are_explicit_and_user_piql_is_retained) ... ok
+test_private_key_redaction_preserves_public_key (test_reporting_context.ContextTests.test_private_key_redaction_preserves_public_key) ... ok
+test_public_dns_cannot_resolve_to_private_network (test_reporting_context.ContextTests.test_public_dns_cannot_resolve_to_private_network) ... ok
+test_json_reports_remain_valid_after_secret_redaction (test_reporting_context.ReportingTests.test_json_reports_remain_valid_after_secret_redaction) ... ok
+test_report_preserves_blockers_and_does_not_invent_completion (test_reporting_context.ReportingTests.test_report_preserves_blockers_and_does_not_invent_completion) ... ok
+test_timeline_summarizes_model_payloads_but_keeps_usage_and_raw_link (test_reporting_context.ReportingTests.test_timeline_summarizes_model_payloads_but_keeps_usage_and_raw_link) ... ok
+test_truncated_audit_is_reported (test_reporting_context.ReportingTests.test_truncated_audit_is_reported) ... ok
+test_artifacts_rejections_failures_and_receipts_are_distinct (test_run_memory.RunMemoryTests.test_artifacts_rejections_failures_and_receipts_are_distinct) ... ok
+test_atomic_derived_index_and_current_state_never_change_old_runs (test_run_memory.RunMemoryTests.test_atomic_derived_index_and_current_state_never_change_old_runs) ... ok
+test_checkpoint_fallback_and_oversize_corruption_are_bounded (test_run_memory.RunMemoryTests.test_checkpoint_fallback_and_oversize_corruption_are_bounded) ... ok
+test_demo_runs_are_not_real_research_memory_by_default (test_run_memory.RunMemoryTests.test_demo_runs_are_not_real_research_memory_by_default) ... ok
+test_external_receipt_uses_current_host_verified_action_contract (test_run_memory.RunMemoryTests.test_external_receipt_uses_current_host_verified_action_contract) ... ok
+test_linked_prior_run_and_linked_output_are_refused (test_run_memory.RunMemoryTests.test_linked_prior_run_and_linked_output_are_refused) ... ok
+test_memory_is_short_redacted_and_latest_first (test_run_memory.RunMemoryTests.test_memory_is_short_redacted_and_latest_first) ... ok
+test_readonly_sqlite_is_authoritative_over_stale_projection (test_run_memory.RunMemoryTests.test_readonly_sqlite_is_authoritative_over_stale_projection) ... ok
+test_terminal_limits_and_blockers_retained_but_active_runs_omitted (test_run_memory.RunMemoryTests.test_terminal_limits_and_blockers_retained_but_active_runs_omitted) ... ok
+test_wal_bearing_snapshot_uses_labelled_projection_without_sqlite_side_effects (test_run_memory.RunMemoryTests.test_wal_bearing_snapshot_uses_labelled_projection_without_sqlite_side_effects) ... ok
+test_docker_check_only_reads_daemon_and_local_image_without_secrets (test_scheduling.SchedulingTests.test_docker_check_only_reads_daemon_and_local_image_without_secrets) ... ok
+test_docker_missing_daemon_is_actionable (test_scheduling.SchedulingTests.test_docker_missing_daemon_is_actionable) ... ok
+test_fair_same_phase_quantum (test_scheduling.SchedulingTests.test_fair_same_phase_quantum) ... ok
+test_init_model_override_is_snapshotted_without_editing_profile (test_scheduling.SchedulingTests.test_init_model_override_is_snapshotted_without_editing_profile) ... ok
+test_invalid_round_cap_rejected (test_scheduling.SchedulingTests.test_invalid_round_cap_rejected) ... ok
+test_research_profile_reaches_prototyper_and_reporter_with_emergence (test_scheduling.SchedulingTests.test_research_profile_reaches_prototyper_and_reporter_with_emergence) ... ok
+test_reserve_keeps_concurrent_batch_from_consuming_final_step (test_scheduling.SchedulingTests.test_reserve_keeps_concurrent_batch_from_consuming_final_step) ... ok
+test_role_limits_allow_manual_extension_and_legacy_configs (test_scheduling.SchedulingTests.test_role_limits_allow_manual_extension_and_legacy_configs) ... ok
+test_windows_utf8_bom_profile_is_accepted (test_scheduling.SchedulingTests.test_windows_utf8_bom_profile_is_accepted) ... ok
+test_new_tool_schemas_are_closed_and_no_key_probe_works (test_sdk_tools.CapabilitySDKTests.test_new_tool_schemas_are_closed_and_no_key_probe_works) ... ok
+test_optional_mechanism_identity_fields_survive_sdk (test_sdk_tools.CapabilitySDKTests.test_optional_mechanism_identity_fields_survive_sdk) ... ok
+test_package_tool_forwards_names_and_idea_through_real_sdk (test_sdk_tools.CapabilitySDKTests.test_package_tool_forwards_names_and_idea_through_real_sdk) ... ok
+test_prior_work_tool_forwards_exact_terms_and_provenance (test_sdk_tools.CapabilitySDKTests.test_prior_work_tool_forwards_exact_terms_and_provenance) ... ok
+test_public_export_tools_forward_exact_inputs_and_hashes (test_sdk_tools.CapabilitySDKTests.test_public_export_tools_forward_exact_inputs_and_hashes) ... ok
+test_reporter_receives_only_observation_tools (test_sdk_tools.CapabilitySDKTests.test_reporter_receives_only_observation_tools) ... ok
+test_test_and_critique_and_deposit_remain_host_decisions (test_sdk_tools.CapabilitySDKTests.test_test_and_critique_and_deposit_remain_host_decisions) ... ok
+test_attach_client_failure_still_cleans_container (test_workspace.DockerTests.test_attach_client_failure_still_cleans_container) ... ok
+test_docker_has_only_workspace_mount_and_no_host_secrets (test_workspace.DockerTests.test_docker_has_only_workspace_mount_and_no_host_secrets) ... ok
+test_docker_rejects_ordinary_project_directory (test_workspace.DockerTests.test_docker_rejects_ordinary_project_directory) ... ok
+test_independent_watchdog_exit_is_limit_reached (test_workspace.DockerTests.test_independent_watchdog_exit_is_limit_reached) ... ok
+test_output_collection_is_bounded (test_workspace.DockerTests.test_output_collection_is_bounded) ... ok
+test_timeout_kills_and_removes_named_container (test_workspace.DockerTests.test_timeout_kills_and_removes_named_container) ... ok
+test_binary_manifest_has_exact_added_deleted_and_changed_content (test_workspace.WorkspaceTests.test_binary_manifest_has_exact_added_deleted_and_changed_content) ... ok
+test_configured_large_file_survives_workspace_and_patch_export (test_workspace.WorkspaceTests.test_configured_large_file_survives_workspace_and_patch_export) ... ok
+test_credential_content_is_excluded_without_exposing_its_value (test_workspace.WorkspaceTests.test_credential_content_is_excluded_without_exposing_its_value) ... ok
+test_export_cannot_write_inside_snapshot_or_source (test_workspace.WorkspaceTests.test_export_cannot_write_inside_snapshot_or_source) ... ok
+test_git_snapshot_preserves_uncommitted_content_and_omits_untracked (test_workspace.WorkspaceTests.test_git_snapshot_preserves_uncommitted_content_and_omits_untracked) ... ok
+test_manifest_hashes_copied_bytes_if_source_changes_after_read (test_workspace.WorkspaceTests.test_manifest_hashes_copied_bytes_if_source_changes_after_read) ... ok
+test_read_file_rejects_binary_content_with_clear_error (test_workspace.WorkspaceTests.test_read_file_rejects_binary_content_with_clear_error) ... ok
+test_size_limits_leave_no_partial_snapshot (test_workspace.WorkspaceTests.test_size_limits_leave_no_partial_snapshot) ... ok
+test_snapshot_cannot_be_inside_project (test_workspace.WorkspaceTests.test_snapshot_cannot_be_inside_project) ... ok
+test_snapshot_excludes_secrets_caches_archives_and_bundle (test_workspace.WorkspaceTests.test_snapshot_excludes_secrets_caches_archives_and_bundle) ... ok
+test_symlinks_are_excluded_from_snapshot_and_blocked_in_file_tools (test_workspace.WorkspaceTests.test_symlinks_are_excluded_from_snapshot_and_blocked_in_file_tools) ... skipped "Symlink creation unavailable: [WinError 1314] Klient nen� dr�itelem po�adovan�ho opr�vn�n�: 'C:\\\\Users\\\\Vojta\\\\AppData\\\\Local\\\\Temp\\\\tmpicw4a0tp\\\\outside.txt' -> 'C:\\\\Users\\\\Vojta\\\\AppData\\\\Local\\\\Temp\\\\tmpicw4a0tp\\\\project\\\\link.txt'"
+test_text_patch_applies_to_a_separate_review_copy (test_workspace.WorkspaceTests.test_text_patch_applies_to_a_separate_review_copy) ... ok
+test_windows_junction_cannot_escape_or_enter_snapshot (test_workspace.WorkspaceTests.test_windows_junction_cannot_escape_or_enter_snapshot) ... ok
+test_windows_reparse_attribute_is_detected (test_workspace.WorkspaceTests.test_windows_reparse_attribute_is_detected) ... ok
+test_workspace_copy_is_independent_and_resume_preserves_changes (test_workspace.WorkspaceTests.test_workspace_copy_is_independent_and_resume_preserves_changes) ... ok
+test_workspace_rejects_path_traversal_and_windows_aliases (test_workspace.WorkspaceTests.test_workspace_rejects_path_traversal_and_windows_aliases) ... ok
+
+----------------------------------------------------------------------
+Ran 265 tests in 64.575s
+
+OK (skipped=1)
+Exported package bytes; unsupported POSIX mode updates: 1

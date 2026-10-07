@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETED",
+  "output": "PASS existing CBOR specimen, byte equality, SHA256 and mutation check 225212\n",
+  "returncode": 0,
+  "timed_out": false,
+  "output_truncated": false,
+  "container": "metaweb-swarm-44cf31abda3c48feb504172130e2d763",
+  "cleanup_ok": true
+}

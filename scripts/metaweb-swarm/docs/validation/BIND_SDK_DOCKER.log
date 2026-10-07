@@ -1,0 +1,33 @@
+Run: 20261007-094903-1ddf1b4a | autonomous | sandbox-only | experiments=docker
+  strong = gpt-5.4-mini | Prototyper
+  flag = gpt-5.4-mini | Synthesizer / Reporter
+Limits: 4 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: pypi | Docker experiments: network none
+Prior work: continue
+Dedupe: current run only | ambiguous proposals: gpt-5.4-mini
+Task: SDK / PyPI / Docker round-trip and corruption test; no external deposit
+Round: AGENT-001 Prototyper [strong] 1/3
+  AGENT-001 | pip: cbor2 started
+  AGENT-001 | pip: cbor2 COMPLETED
+  AGENT-001 | IDEA-0001 INVESTIGATING: CBOR sandbox integration test
+  AGENT-001 | Docker: IDEA-0001 started
+  AGENT-001 | Docker: IDEA-0001 COMPLETED, exit=0
+  AGENT-001 | Docker: IDEA-0001 started
+  AGENT-001 | Docker: IDEA-0001 COMPLETED, exit=0
+  AGENT-001 | Test: IDEA-0001 recorded (execution receipt; assertions require review)
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+{
+  "run": "G:\\metaweb-swarm-runs\\_validation\\windows-bind-20261007\\runs\\20261007-094903-1ddf1b4a",
+  "scripted_model": true,
+  "paid_api_calls": 0,
+  "source_export": "vojtamaur-web-wayback-20261005-111259-710608.txt",
+  "source_sha256": "152621d544ba4b4eb12065512f8f76361fbe8f414f0d73661ac06a5cda013fd8",
+  "status": "COMPLETED",
+  "idea_status": "PROTOTYPED",
+  "packages": 1,
+  "docker_experiments": 2,
+  "tests": 1,
+  "prototype_tested": true,
+  "experiment_output": "PASS round-trip, real export hash 152621d544ba4b4eb12065512f8f76361fbe8f414f0d73661ac06a5cda013fd8 bytes 5282 corruption rejected; no key; network denied\n",
+  "audit_verified": true
+}

@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETED",
+  "output": "Real CBOR round-trip, QR PNG, persistent imports, no credentials, experiment network denied\n",
+  "returncode": 0,
+  "timed_out": false,
+  "output_truncated": false,
+  "container": "metaweb-swarm-9e0a0918ce5b4072a6c98c5e4f98fad1",
+  "cleanup_ok": true
+}

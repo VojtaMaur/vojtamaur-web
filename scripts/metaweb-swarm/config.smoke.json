@@ -1,0 +1,23 @@
+{
+  "model": "gpt-5.4-mini",
+  "model_tiers": {"cheap": "gpt-5.4-mini", "strong": "gpt-5.4-mini", "flag": "gpt-5.4-mini"},
+  "seed_roles": ["Prototyper", "Synthesizer / Reporter"],
+  "max_concurrent_agents": 1,
+  "max_agents": 2,
+  "max_agent_rounds": 3,
+  "role_round_limits": {"Prototyper": 3, "Synthesizer / Reporter": 1},
+  "max_steps": 4,
+  "max_turns": 18,
+  "step_timeout_seconds": 480,
+  "max_total_tokens": 500000,
+  "max_active_seconds": 1200,
+  "run_mode": "autonomous",
+  "external_scope": "sandbox-only",
+  "approval_required": true,
+  "experiments": "docker",
+  "package_installation": "pypi",
+  "max_package_installs_per_agent": 2,
+  "prior_work_policy": "continue",
+  "semantic_dedupe": true,
+  "sandbox_smoke_test": true
+}

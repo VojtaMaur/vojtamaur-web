@@ -1,0 +1,8 @@
+  AGENT-001 | Target: upload.ardrive.io AUTHENTICATION_UNVERIFIED
+Executing <Task finished name='Task-8' coro=<RoutingTests.test_known_qualification_routes_even_with_other_missing_details() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_carrier_routing.py:95> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+Executing <Task pending name='Task-30' coro=<RoutingTests.test_real_sdk_screen_then_document_no_paid_inference() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_carrier_routing.py:165> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+Executing <Task finished name='Task-162' coro=<RoutingTests.test_unsafe_redirects_never_emit_target_or_follow() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_carrier_routing.py:131> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+----------------------------------------------------------------------
+Ran 11 tests in 7.310s
+
+OK

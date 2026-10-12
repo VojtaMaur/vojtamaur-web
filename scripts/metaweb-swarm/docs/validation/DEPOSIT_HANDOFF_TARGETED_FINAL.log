@@ -1,0 +1,51 @@
+Executing <Task pending name='Task-2' coro=<HandoffTests.test_actual_sdk_receives_typed_flow_and_reports_retention_permission() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:146> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: 127.0.0.1 RESOURCE_LIMIT
+  AGENT-001 | Target: 127.0.0.1 MULTI_STEP_EXECUTION_UNAVAILABLE
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-86' coro=<HandoffTests.test_checkpoint_resume_retains_candidate_and_restores_dependency() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:87> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: gitlab.com POLICY_FORBIDDEN
+  AGENT-001 | Target: Source-backed fixture carrier TARGET_DETAILS_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-100' coro=<HandoffTests.test_later_model_submission_reuses_same_id_and_provenance() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:42> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-107' coro=<HandoffTests.test_local_dependency_reopens_after_exact_current_independent_pass() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:75> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+  AGENT-001 | Target: 127.0.0.1 UPLOAD_FLOW_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+  AGENT-001 | Target: 127.0.0.1 RESOURCE_LIMIT
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task finished name='Task-130' coro=<HandoffTests.test_new_qualification_reopens_completed_auditor() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:130> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task finished name='Task-137' coro=<HandoffTests.test_old_qualification_never_rolls_new_candidate_back() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:51> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.157 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Run: 20261012-100008-e8b183a6 | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Loophole Archivist, Synthesizer / Reporter
+Limits: 20 rounds, 1,500,000 tokens, 2400s; USD ceiling=5.0
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=required | max requests=60 | external actions=1 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: FOCUSED REAL-EXPORT DEPOSIT TRIAL: discover one materially new independent FREE carrier, preserve the exact retained Metaweb EPUB and verify its bytes by independent public download. Prefer durable custody over pointe... | role-specific tools
+  AGENT-001 | IDEA-0001 BLOCKED: Source-backed fixture carrier - exact retained export deposit
+Round: AGENT-002 Evidence Auditor [strong] 1/3
+Executing <Task pending name='Task-144' coro=<HandoffTests.test_real_resume_scheduler_runs_audit_then_refreshes_report_once() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:169> wait_for=<_GatheringFuture pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:709> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.156 seconds
+Round: AGENT-004 Synthesizer / Reporter [flag] 2/2
+Run: 20261012-100008-e8b183a6 | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Loophole Archivist, Synthesizer / Reporter
+Limits: 20 rounds, 1,500,000 tokens, 2400s; USD ceiling=5.0
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=required | max requests=60 | external actions=1 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: FOCUSED REAL-EXPORT DEPOSIT TRIAL: discover one materially new independent FREE carrier, preserve the exact retained Metaweb EPUB and verify its bytes by independent public download. Prefer durable custody over pointe... | role-specific tools
+Executing <Task finished name='Task-144' coro=<HandoffTests.test_real_resume_scheduler_runs_audit_then_refreshes_report_once() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:152> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-212' coro=<FocusedTests.test_sdk_role_tools_and_actual_document_tool_dispatch() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_focused_tasking.py:130> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.188 seconds
+----------------------------------------------------------------------
+Ran 21 tests in 15.579s
+
+OK

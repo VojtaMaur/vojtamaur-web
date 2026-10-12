@@ -140,3 +140,9 @@ connectors are free configured local-directory/HTTP PUT resources; account and
 payment executors are not implemented. USD enforcement depends on correct
 operator price ceilings/search bounds. Writable Docker bind mounts still lack
 a hard disk quota. These are open work, not passed tests.
+
+
+2026-10-08 / 0.5.0: 328 regression tests, OK (one Windows symlink-permission skip), including 7 new focused task/document tests and actual SDK dispatch through a controlled model. No provider inference/public upload. Evidence: docs/validation/FOCUSED_TASKING_REGRESSIONS.log; original focused subset: FOCUSED_TASKING_TARGETED.log (40). New profile requires a user-run real research execution to assess model behavior; transport and task persistence are tested independently.
+
+
+2026-10-08 / 0.5.1: 336 regression tests, OK (one Windows symlink-permission skip). Named-field qualification including unknown endpoint/auth; shared public HTTP read with hash/tamper/private/traversal checks; SDK dispatch; independent audit and exact approval retained. Actual old-run 20261008-113459-2fb32e3b: all four successful public GET artifacts readable by new legacy reader without modifying the run or HTTP. Evidence: docs/validation/AUDIT_QUALIFICATION_REGRESSIONS.log; old-run proof in Codex outputs/AUDIT_QUALIFICATION_LEGACY_PROOF.json. Subsequent targeted report checks cover shared audit artifact inventory and qualification summary. No paid model inference/public deposit by development process.

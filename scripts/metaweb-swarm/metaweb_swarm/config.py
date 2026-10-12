@@ -29,7 +29,7 @@ def validate_config(config):
         raise ValueError("run_mode must be supervised or autonomous")
     if config.get("external_scope", "sandbox-only") not in ("sandbox-only", "external"):
         raise ValueError("external_scope must be sandbox-only or external")
-    for field in ("approval_required", "include_exports", "semantic_dedupe", "sandbox_smoke_test"):
+    for field in ("approval_required", "include_exports", "semantic_dedupe", "sandbox_smoke_test", "http_smoke_test", "require_independent_http_review", "require_deposit_qualification", "carrier_screening", "require_explicit_upload_flow", "allow_known_carrier_improvements"):
         if field in config and type(config[field]) is not bool:
             raise ValueError(f"{field} must be boolean")
     for field in ("max_external_actions", "max_external_bytes"):
@@ -38,8 +38,25 @@ def validate_config(config):
     for field in ("max_export_file_bytes", "max_export_total_bytes", "max_web_search_calls_per_request", "max_web_search_context_tokens_per_call"):
         if field in config and (type(config[field]) is not int or config[field] < 1):
             raise ValueError(f"{field} must be a positive integer")
+    exports = config.get("export_filenames")
+    if exports is not None and (not isinstance(exports, list) or not exports or any(not isinstance(item, str) or not item.strip() for item in exports)):
+        raise ValueError("export_filenames must be a nonempty list of export-relative file names or null")
+    if config.get("task_style", "research") not in {"research", "focused"}:
+        raise ValueError("task_style must be research or focused")
+    assignments = config.get("role_assignments", {})
+    if not isinstance(assignments, dict) or any(not isinstance(k, str) or not 1 <= len(k.strip()) <= 160 or not isinstance(v, str) or not 1 <= len(v.strip()) <= 4000 for k, v in assignments.items()):
+        raise ValueError("role_assignments must map role names to nonempty assignments up to 4000 characters")
+    objective = config.get("operator_objective")
+    if objective is not None and (not isinstance(objective, str) or not 1 <= len(objective.strip()) <= 12000):
+        raise ValueError("operator_objective must be nonempty text up to 12000 characters or null")
+    if config.get("require_deposit_qualification") and not config.get("require_independent_http_review"):
+        raise ValueError("Deposit qualification requires independent HTTP review")
     from .actions import validate_resources
     validate_resources(config.get("external_resources", []))
+    from .http_transport import validate_http_config
+    validate_http_config(config)
+    from .http_smoke import validate_profile
+    validate_profile(config)
     from .roles import SEED_ROLES
     overrides = config.get("role_round_limits", {})
     if not isinstance(overrides, dict) or any(not isinstance(k, str) or not k.strip() or len(k) > 160 or type(v) is not int or v < 1 for k, v in overrides.items()):

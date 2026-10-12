@@ -1,11 +1,19 @@
 # Spuštění a modely
 
+Aktualizace 0.6.1 opravuje návraty k registrovanému Zenodu/Figshare a dokumenty cizích poskytovatelů: [nové služby a scope](CARRIER_SCOPE.md). Další run spustíš stejným run-deposit-trial.cmd; je to fresh placený výzkum. Limity/grants se nenavyšují.
+
+Pro vícekrokové API už je připravený [obecný realizátor a CMD bez dalšího modelového kola](DEPOSIT_EXECUTOR.md). Než pošleme skutečný export, ověříme přijetí formátu, podmínky a případně přidělíme vlastní swarm účet/klíč. Stávající run/granty/limity se instalací nemění.
+
+Pro nový **skutečný výzkum**: spusť `run-deposit-trial.cmd` v CMD ve složce projektu s nastaveným OPENAI_API_KEY. Vytvoří nový izolovaný běh pro připravený EPUB, konkrétní nezávislý audit a případné schválení uploadu. [Návod](DEPOSIT_TRIAL.md), [vlastní zadání a nový focused režim](FOCUSED_TASKS.md).
+
+Docker/PyPI i lokální a veřejný HTTP round-trip už byly ověřeny. Níže uvedené smoke spouštěče jsou diagnostika při změně prostředí, ne povinný krok před každým výzkumem.
+
 Všechny následující soubory patří projektu `scripts/metaweb-swarm/`. Žádný spouštěč
 nepotřebuje adresář chatu ani dočasné `outputs/` z Codexu.
 
 ## Nový autonomous sandbox běh ve Windows CMD
 
-Před obecným výzkumem v 0.3.3 spusť `run-smoke.cmd` ve stejné složce/CMD.
+Historický Docker smoke (0.3.3/0.3.4): spusť `run-smoke.cmd` ve stejné složce/CMD.
 Oprava 0.3.4 řeší pip/chmod na disku G:; po jejím nainstalování spusť tentýž
 příkaz znovu pro fresh run. [Audit prvního testu](RUN_REVIEW_20261007_093936.md).
 Založí fresh run se dvěma rolemi pro cílené ověření balíčku, Dockeru a skutečné
@@ -196,3 +204,9 @@ parametry dle [README](../README.md), až po kontrole skutečné příčiny zast
 Čti `SWARM_REPORT.md`, `TIMELINE.md`, `ideas.jsonl`, `manifest.json` a Docker
 receipts v auditu. Kontroluj soubory a test assertions, ne pouze `returncode=0`.
 **PROTOTYPED není důkaz standardní kompatibility ani externího uložení.**
+
+## HTTP ruce (0.4.0)
+`run-http.cmd` = fresh obecný HTTP external run, approval required, credentials prázdné. `run-http.cmd --approval disabled` = bez approval. `run-sandbox.cmd` dál nepovolí externí zápis; `run-smoke.cmd` ověřuje Docker. Viz [HTTP_ACCESS.md](HTTP_ACCESS.md).
+
+
+Cílený běh s jedním skutečným exportem: `run-deposit-trial.cmd`; postup schválení a pokračování viz [DEPOSIT_TRIAL.md](DEPOSIT_TRIAL.md).

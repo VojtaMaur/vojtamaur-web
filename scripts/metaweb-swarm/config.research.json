@@ -46,5 +46,13 @@
   "max_package_installs_per_agent": 8,
   "max_package_bytes": 536870912,
   "prior_work_policy": "continue",
-  "semantic_dedupe": true
+  "semantic_dedupe": true,
+  "http_access": "read-only",
+  "http_credentials": [],
+  "http_test_origins": [],
+  "max_http_requests": 100,
+  "max_http_request_bytes": 16777216,
+  "max_http_response_bytes": 16777216,
+  "max_http_total_bytes": 134217728,
+  "http_timeout_seconds": 30
 }

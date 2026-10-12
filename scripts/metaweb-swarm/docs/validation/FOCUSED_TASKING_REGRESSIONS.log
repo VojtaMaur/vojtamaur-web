@@ -1,0 +1,366 @@
+Executing <Task finished name='Task-1115' coro=<CandidateGateTests.test_generated_outputs_can_be_declared_after_captured_experiment() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_candidate_gate.py:118> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.235 seconds
+Executing <Task pending name='Task-1121' coro=<CandidateGateTests.test_input_export_even_renamed_cannot_be_a_prototype_receipt() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_candidate_gate.py:146> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.141 seconds
+Executing <Task pending name='Task-1139' coro=<CandidateGateTests.test_real_sdk_semantic_gate_counts_cheap_usage_without_replacing_history() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_candidate_gate.py:165> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+Executing <Task finished name='Task-1297' coro=<CandidateGateTests.test_successful_test_promotes_but_changed_artifact_cannot_reuse_receipt() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_candidate_gate.py:105> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Run: 20261008-113104-169c891e | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/1
+Run: 20261008-113105-1e825587 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Run: 20261008-113105-5cc224c8 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 1 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-002 Loophole Archivist [flag] 1/3
+Run: 20261008-113106-c2b30bdc | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 INVESTIGATING: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261008-113110-5df88334 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 2 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-002 Loophole Archivist [flag] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+Round: AGENT-003 Anomaly Engineer [strong] 1/3
+Run: 20261008-113111-68cf26aa | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 INVESTIGATING: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261008-113115-9b3e79f3 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Run: 20261008-113115-43cf95a7 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 2/3
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 3/3
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+Round: AGENT-002 Loophole Archivist [flag] 2/3; AGENT-003 Anomaly Engineer [strong] 2/3; AGENT-004 Format Mutant [strong] 2/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 2/3; AGENT-006 Infrastructure Scout [cheap] 2/3; AGENT-007 Future Archaeologist [strong] 2/3
+Round: AGENT-002 Loophole Archivist [flag] 3/3; AGENT-003 Anomaly Engineer [strong] 3/3; AGENT-004 Format Mutant [strong] 3/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 3/3; AGENT-006 Infrastructure Scout [cheap] 3/3; AGENT-007 Future Archaeologist [strong] 3/3
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3; AGENT-008 Hostile Reviewer [flag] 2/3; AGENT-009 Evidence Auditor [strong] 2/3
+Round: AGENT-010 Role Architect [cheap] 2/3; AGENT-011 Prototyper [strong] 2/3; AGENT-008 Hostile Reviewer [flag] 3/3
+Round: AGENT-009 Evidence Auditor [strong] 3/3; AGENT-010 Role Architect [cheap] 3/3; AGENT-011 Prototyper [strong] 3/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261008-113123-a146f00a | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Run: 20261008-113123-a146f00a | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 INVESTIGATING: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261008-113123-a146f00a | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper, Demo Optical Decoder Specialist
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Run: 20261008-113127-a2319e0d | autonomous | sandbox-only | experiments=disabled
+  strong = demo-fixture (no API calls) | Prototyper
+  flag = demo-fixture (no API calls) | Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: SDK / PyPI / Docker round-trip and corruption test; no external deposit
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-011 Prototyper [strong] 2/3
+Round: AGENT-011 Prototyper [strong] 3/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261008-113128-01727bd1 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+AGENT-001 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 2/3
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+AGENT-002 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-003 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-004 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+AGENT-005 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-006 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-007 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-002 Loophole Archivist [flag] 2/3; AGENT-003 Anomaly Engineer [strong] 2/3; AGENT-004 Format Mutant [strong] 2/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 2/3; AGENT-006 Infrastructure Scout [cheap] 2/3; AGENT-007 Future Archaeologist [strong] 2/3
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+AGENT-008 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-009 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-010 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-011 Prototyper [strong] 1/3; AGENT-008 Hostile Reviewer [flag] 2/3; AGENT-009 Evidence Auditor [strong] 2/3
+AGENT-011 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-010 Role Architect [cheap] 2/3; AGENT-011 Prototyper [strong] 2/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+AGENT-012 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-012 Synthesizer / Reporter [flag] 2/3
+Run: 20261008-113133-c18b90e5 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+AGENT-001 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+AGENT-002 BLOCKED: OSError: fixture disk unavailable
+AGENT-003 BLOCKED: OSError: fixture disk unavailable
+AGENT-004 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+AGENT-005 BLOCKED: OSError: fixture disk unavailable
+AGENT-006 BLOCKED: OSError: fixture disk unavailable
+AGENT-007 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+AGENT-008 BLOCKED: OSError: fixture disk unavailable
+AGENT-009 BLOCKED: OSError: fixture disk unavailable
+AGENT-010 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-011 Prototyper [strong] 1/3
+AGENT-011 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+AGENT-012 BLOCKED: OSError: fixture disk unavailable
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+  AGENT-001 | Target: 127.0.0.1 PRIMARY_SOURCES_REQUIRED
+  AGENT-001 | Target: example.org READY_FOR_AUDIT
+  AGENT-001 | Target: other.example.org ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-1562' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_deposit_qualification.py:72> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Executing <Task pending name='Task-1562' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_deposit_qualification.py:87> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.235 seconds
+Executing <Task finished name='Task-1562' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_deposit_qualification.py:64> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+  AGENT-001 | Target: gitlab.com POLICY_FORBIDDEN
+  AGENT-001 | Target: api.github.com POLICY_FORBIDDEN
+  AGENT-001 | Target: codeberg.org POLICY_FORBIDDEN
+  AGENT-001 | Target: vojtamaur.cz POLICY_FORBIDDEN
+  AGENT-001 | Target: gitlab.com. POLICY_FORBIDDEN
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-1577' coro=<QualificationTests.test_missing_grant_is_blocked_lead_not_rejected_mechanism() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_deposit_qualification.py:57> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Run: 20261008-113139-24a453d2 | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Loophole Archivist, Synthesizer / Reporter
+Limits: 20 rounds, 1,500,000 tokens, 2400s; USD ceiling=5.0
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=required | max requests=60 | external actions=1 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: FOCUSED REAL-EXPORT DEPOSIT TRIAL: discover one materially new independent FREE carrier, preserve the exact retained Metaweb EPUB and verify its bytes by independent public download. Prefer durable custody over pointe... | role-specific tools
+Round: AGENT-001 Loophole Archivist [flag] 1/4
+Executing <Task finished name='Task-1585' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.125 seconds
+  AGENT-002 | NO_ADMITTED_DISCOVERY_CANDIDATE; no paid role dispatch
+  AGENT-003 | NO_INDEPENDENTLY_APPROVED_DEPOSIT_PLAN; no paid role dispatch
+Round: AGENT-004 Synthesizer / Reporter [flag] 1/2
+Executing <Task finished name='Task-1586' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.172 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-1591' coro=<QualificationTests.test_plan_change_invalidates_old_audit() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_deposit_qualification.py:145> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task finished name='Task-1591' coro=<QualificationTests.test_plan_change_invalidates_old_audit() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_deposit_qualification.py:142> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.140 seconds
+  AGENT-001 | Target: 127.0.0.1 RESOURCE_LIMIT
+  AGENT-001 | Target: known.example.org BASELINE_COMPARISON_REQUIRED
+  AGENT-001 | Target: known.example.org ALREADY_KNOWN_BASELINE
+Executing <Task finished name='Task-1600' coro=<QualificationTests.test_resource_failure_and_archive_mention_are_separate() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_deposit_qualification.py:99> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+Executing <Task pending name='Task-1614' coro=<ExecutionModesTests.test_approval_required_queues_then_exact_decision_allows_execution() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_execution_modes.py:147> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Executing <Task pending name='Task-1658' coro=<ExecutionModesTests.test_fake_sdk_timeout_retains_unknown_budget_across_reopen() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_execution_modes.py:284> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Executing <Task finished name='Task-1786' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.172 seconds
+Executing <Task finished name='Task-1796' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.156 seconds
+Executing <Task pending name='Task-1827' coro=<ExternalRecoveryTests.test_cancelled_success_persists_receipt_and_marks_approval_executed() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_external_recovery.py:42> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\futures.py:387, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+Executing <Task pending name='Task-1843' coro=<FocusedTests.test_changed_response_not_reused_and_empty_or_binary_not_read_claims() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_focused_tasking.py:83> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.281 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-1881' coro=<FocusedTests.test_sdk_role_tools_and_actual_document_tool_dispatch() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_focused_tasking.py:130> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.188 seconds
+Run: 20261008-113158-49b2034b | supervised | sandbox-only | experiments=disabled
+  cheap = UNSET | Infrastructure Scout, Role Architect
+  strong = UNSET | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = UNSET | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: novelty-first
+Run: 20261008-113159-c345025e | autonomous | external | experiments=disabled
+  strong = gpt-5.4-mini | Prototyper
+  flag = gpt-5.4-mini | Synthesizer / Reporter
+Limits: 5 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=disabled | max requests=12 | external actions=1 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: public HTTPS service docs -> upload -> download -> SHA256 receipt; integration test
+Round: AGENT-001 Prototyper [strong] 1/3
+Executing <Task pending name='Task-2057' coro=<Engine.step() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:1003> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.219 seconds
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=101
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=75
+  AGENT-001 | HTTP: POST COMPLETED, code=200, bytes=41
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=44
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=115
+  AGENT-001 | HTTP public smoke: PASS, docs/terms read + upload + download + matching SHA256
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+Executing <Task pending name='Task-2349' coro=<Engine.step() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:1003> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.157 seconds
+Executing <Task finished name='Task-2056' coro=<PublicSmokeTests.test_actual_sdk_learns_non_provider_specific_protocol() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_public_smoke.py:122> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.219 seconds
+Executing <Task pending name='Task-2392' coro=<PublicSmokeTests.test_public_round_trip_and_truthful_report() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_public_smoke.py:61> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.141 seconds
+Run: 20261008-113203-e420f517 | autonomous | external | experiments=disabled
+  strong = gpt-5.4-mini | Prototyper
+  flag = gpt-5.4-mini | Synthesizer / Reporter
+Limits: 5 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=disabled | max requests=12 | external actions=3 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: local service docs -> upload -> download -> SHA256 receipt; integration test
+Round: AGENT-001 Prototyper [strong] 1/3
+Executing <Task pending name='Task-2410' coro=<Engine.step() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:1003> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.125 seconds
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=393
+  AGENT-001 | HTTP: POST COMPLETED, code=201, bytes=70
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=78
+  AGENT-001 | HTTP smoke: PASS, docs read + upload + download + matching SHA256
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+Executing <Task pending name='Task-2570' coro=<Engine.step() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:1003> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.141 seconds
+Executing <Task finished name='Task-2409' coro=<SmokeTests.test_actual_sdk_tools_and_service_through_full_engine() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_smoke.py:133> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.187 seconds
+Executing <Task finished name='Task-2597' coro=<SmokeTests.test_documentation_read_and_byte_evidence_are_mandatory() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_smoke.py:96> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.156 seconds
+Run: 20261008-113205-e6f10b50 | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Prototyper
+  flag = demo-fixture (no API calls) | Synthesizer / Reporter
+Limits: 5 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=disabled | max requests=12 | external actions=3 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: local service docs -> upload -> download -> SHA256 receipt; integration test
+Round: AGENT-001 Prototyper [strong] 1/3
+Executing <Task pending name='Task-2606' coro=<Engine.step() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:1003> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.109 seconds
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=393
+  AGENT-001 | HTTP: POST COMPLETED, code=201, bytes=70
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=78
+  AGENT-001 | HTTP smoke: PASS, docs read + upload + download + matching SHA256
+Executing <Task finished name='Task-2606' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.110 seconds
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+Executing <Task finished name='Task-2610' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.156 seconds
+Executing <Task finished name='Task-2605' coro=<SmokeTests.test_full_round_trip_and_report_not_preservation_deposit() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_smoke.py:52> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.188 seconds
+Run: 20261008-113206-b83bd847 | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Prototyper
+  flag = demo-fixture (no API calls) | Synthesizer / Reporter
+Limits: 5 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=disabled | max requests=12 | external actions=3 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: local service docs -> upload -> download -> SHA256 receipt; integration test
+Round: AGENT-001 Prototyper [strong] 1/3
+Executing <Task finished name='Task-2616' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.156 seconds
+Round: AGENT-001 Prototyper [strong] 2/3
+Executing <Task finished name='Task-2617' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.125 seconds
+Round: AGENT-001 Prototyper [strong] 3/3
+Executing <Task finished name='Task-2618' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.156 seconds
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+Executing <Task finished name='Task-2619' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.156 seconds
+Run: 20261008-113207-2c708af7 | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Prototyper
+  flag = demo-fixture (no API calls) | Synthesizer / Reporter
+Limits: 5 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=disabled | max requests=12 | external actions=3 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: local service docs -> upload -> download -> SHA256 receipt; integration test
+Round: AGENT-001 Prototyper [strong] 1/3
+Executing <Task pending name='Task-2615' coro=<SmokeTests.test_missing_receipt_cannot_claim_complete_and_real_blockers_remain() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_smoke.py:80> wait_for=<_GatheringFuture pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:709> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.313 seconds
+Executing <Task finished name='Task-2620' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.156 seconds
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+Executing <Task finished name='Task-2621' coro=<Engine.step() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:972> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.156 seconds
+Executing <Task finished name='Task-2615' coro=<SmokeTests.test_missing_receipt_cannot_claim_complete_and_real_blockers_remain() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_smoke.py:70> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.328 seconds
+Executing <Task pending name='Task-2631' coro=<SmokeTests.test_restart_keeps_object_and_pause_blocks_network() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_smoke.py:129> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+Executing <Task finished name='Task-2631' coro=<SmokeTests.test_restart_keeps_object_and_pause_blocks_network() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_smoke.py:113> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Executing <Task finished name='Task-3102' coro=<PackageTests.test_receipts_persist_across_resume_and_production_is_unchanged() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_packages.py:105> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+----------------------------------------------------------------------
+Ran 328 tests in 103.972s
+
+OK (skipped=1)
+Exported package bytes; unsupported POSIX mode updates: 1

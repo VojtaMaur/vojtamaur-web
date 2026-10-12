@@ -1,0 +1,34 @@
+Run: 20261008-083556-82340157 | autonomous | external | experiments=disabled
+  strong = gpt-5.4-mini | Prototyper
+  flag = gpt-5.4-mini | Synthesizer / Reporter
+Limits: 5 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=disabled | max requests=12 | external actions=1 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: public HTTPS service docs -> upload -> download -> SHA256 receipt; integration test
+Round: AGENT-001 Prototyper [strong] 1/3
+test_actual_sdk_learns_non_provider_specific_protocol (tests.test_http_public_smoke.PublicSmokeTests.test_actual_sdk_learns_non_provider_specific_protocol) ... Executing <Task pending name='Task-3' coro=<Engine.step() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:932> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.172 seconds
+Executing <Task pending name='Task-4' coro=<Runner.run() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\sdk-venv\Lib\site-packages\agents\run.py:332> wait_for=<Task pending name='Task-5' coro=<run_single_turn() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\sdk-venv\Lib\site-packages\agents\run_internal\run_loop.py:2448> cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> cb=[_release_waiter(<Future pendi...events.py:428>)() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:431] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:680> took 0.140 seconds
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=101
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=75
+  AGENT-001 | HTTP: POST COMPLETED, code=200, bytes=41
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=44
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=115
+  AGENT-001 | HTTP public smoke: PASS, docs/terms read + upload + download + matching SHA256
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+Executing <Task pending name='Task-2' coro=<PublicSmokeTests.test_actual_sdk_learns_non_provider_specific_protocol() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_public_smoke.py:172> wait_for=<_GatheringFuture pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:709> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+Executing <Task pending name='Task-295' coro=<Engine.step() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\engine.py:932> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.265 seconds
+Executing <Task finished name='Task-304' coro=<_make_hooks.<locals>.AuditHooks.on_llm_start() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\metaweb_swarm\backend.py:422> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:680> took 0.125 seconds
+Executing <Task finished name='Task-2' coro=<PublicSmokeTests.test_actual_sdk_learns_non_provider_specific_protocol() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_public_smoke.py:122> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.390 seconds
+ok
+test_docs_scope_synthetic_payload_and_one_attempt_guard (tests.test_http_public_smoke.PublicSmokeTests.test_docs_scope_synthetic_payload_and_one_attempt_guard) ... ok
+test_invalid_operator_grants (tests.test_http_public_smoke.PublicSmokeTests.test_invalid_operator_grants) ... ok
+test_paginated_document_reads_cover_full_response (tests.test_http_public_smoke.PublicSmokeTests.test_paginated_document_reads_cover_full_response) ... ok
+test_public_round_trip_and_truthful_report (tests.test_http_public_smoke.PublicSmokeTests.test_public_round_trip_and_truthful_report) ... Executing <Task finished name='Task-338' coro=<PublicSmokeTests.test_public_round_trip_and_truthful_report() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_http_public_smoke.py:59> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+ok
+test_uncertain_upload_cannot_retry_with_new_bytes_or_path (tests.test_http_public_smoke.PublicSmokeTests.test_uncertain_upload_cannot_retry_with_new_bytes_or_path) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 6.033s
+
+OK

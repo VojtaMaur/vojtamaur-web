@@ -4,10 +4,8 @@ import os
 import re
 import shutil
 import time
-import urllib.error
-import urllib.request
 from pathlib import Path
-from urllib.parse import quote, urlsplit
+from urllib.parse import quote, urlsplit, urlunsplit
 
 from .context import _is_link
 
@@ -44,11 +42,15 @@ def validate_resources(resources):
             if (parsed.scheme != "https" and not (parsed.scheme == "http" and loopback and resource.get("allow_loopback_http") is True)) or not parsed.hostname or parsed.username or parsed.password or parsed.query or parsed.fragment:
                 raise ValueError("PUT endpoint must be HTTPS without embedded credentials/query; explicit loopback HTTP is for tests")
             name = resource.get("credential_env", "")
-            runtime_names = {"PATH", "HOME", "TMP", "TEMP", "WINDIR", "SYSTEMROOT", "USERPROFILE", "LOCALAPPDATA", "APPDATA", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY"}
-            if name and (not isinstance(name, str) or not re.fullmatch(r"[A-Z][A-Z0-9_]{1,79}", name) or name.startswith(("OPENAI", "PYTHON", "DOCKER")) or name in runtime_names):
-                raise ValueError("Use a dedicated resource credential environment variable")
+            if name and (not isinstance(name, str) or not re.fullmatch(r"META_SWARM_CRED_[A-Z0-9_]+", name)):
+                raise ValueError("Use a dedicated META_SWARM_CRED_* resource credential environment variable")
             if resource.get("authorization_scheme", "Bearer") not in {"Bearer", "Basic"}:
                 raise ValueError("Only Bearer/Basic resource authorization is supported")
+            # Legacy deposits share the generic transport's protections. Keeping
+            # this check at configuration time also rejects old forge grants.
+            from .http_transport import normalize_request
+            normalize_request({"method": "PUT", "url": resource["endpoint"]},
+                              _http_config(resource, 30), None)
         else:
             raise ValueError("Resource kind must be local_directory or http_put")
 
@@ -90,14 +92,31 @@ def safe_directory(directory, forbidden):
     return directory
 
 
-class NoRedirect(urllib.request.HTTPRedirectHandler):
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
-        fp.close()
-        raise ValueError("Resource redirects are forbidden")
+def _http_config(resource, timeout):
+    """Translate the narrow legacy resource into the general host transport."""
+    from .http_transport import DEFAULTS
+    config = dict(DEFAULTS, http_access="enabled", http_timeout_seconds=timeout,
+                  max_http_request_bytes=resource["max_bytes"],
+                  max_http_response_bytes=resource["max_bytes"])
+    parts = urlsplit(resource["endpoint"])
+    if resource.get("allow_loopback_http") is True and parts.scheme == "http":
+        config["http_test_origins"] = [urlunsplit((parts.scheme, parts.netloc, "", "", ""))]
+    if resource.get("credential_env"):
+        config["http_credentials"] = [{"id": "legacy-deposit", "env": resource["credential_env"],
+                                       "hosts": [parts.hostname], "header": "Authorization",
+                                       "scheme": resource.get("authorization_scheme", "Bearer")}]
+    return config
+
+
+class _DepositWorkspace:
+    """Only a reviewed source basename is passed into normalization."""
+    def __init__(self, source):
+        self.root = Path(source).parent
 
 
 def execute_deposit(resource, source, name, expected, forbidden, timeout=30):
     """One reserved deposit attempt, read-back verified; exact retry handled by caller."""
+    validate_resources([resource])
     if digest_file(source, resource["max_bytes"]) != expected:
         raise ValueError("Source changed after action was bound/approved")
     if resource["kind"] == "local_directory":
@@ -120,46 +139,41 @@ def execute_deposit(resource, source, name, expected, forbidden, timeout=30):
         return {"location": str(target), **expected, "host_verified": True, "verification": "independent SHA256 read-back"}
     endpoint = resource["endpoint"].rstrip("/") + "/" + quote(name, safe="")
     headers = {"Content-Type": "application/octet-stream", "If-None-Match": "*", "X-Content-SHA256": expected["sha256"]}
-    credential_name = resource.get("credential_env")
-    if credential_name:
-        credential = os.environ.get(credential_name)
-        if not credential or any(c in credential for c in "\r\n"):
-            raise ValueError("Configured resource credential is unavailable/invalid")
-        headers["Authorization"] = resource.get("authorization_scheme", "Bearer") + " " + credential
-    opener = urllib.request.build_opener(NoRedirect())
+    from .http_transport import execute_request, normalize_request
+    config = _http_config(resource, timeout)
+    workspace = _DepositWorkspace(source)
     deadline = time.monotonic() + timeout
-    # Bounded file payload, no agent-supplied headers, credentials never leave this host connector.
-    payload = Path(source).read_bytes()
-    if len(payload) != expected["bytes"] or hashlib.sha256(payload).hexdigest() != expected["sha256"]:
+    credential = "legacy-deposit" if resource.get("credential_env") else ""
+    descriptor, upload = normalize_request({"method": "PUT", "url": endpoint, "headers": headers,
+                                          "upload_path": Path(source).name, "credential_id": credential},
+                                         config, workspace)
+    if {"bytes": descriptor["bytes"], "sha256": descriptor["body_sha256"]} != expected:
         raise ValueError("Deposit source changed while preparing upload")
-    try:
-        with opener.open(urllib.request.Request(endpoint, data=payload, headers=headers, method="PUT"), timeout=max(.1, deadline-time.monotonic())) as response:
-            if response.status not in (200, 201, 204):
-                raise ValueError("PUT endpoint did not accept the object")
-    except urllib.error.HTTPError as error:
-        # Conditional PUT collision is recoverable only by independently reading the exact same bytes.
-        code = error.code
-        error.close()
-        if code not in (409, 412):
-            raise ValueError(f"PUT failed with HTTP {code}") from None
-    digest, size = hashlib.sha256(), 0
-    read_headers = {k: v for k, v in headers.items() if k == "Authorization"}
-    try:
-        with opener.open(urllib.request.Request(endpoint, headers=read_headers, method="GET"), timeout=max(.1, deadline-time.monotonic())) as response:
-            while True:
-                if time.monotonic() >= deadline:
-                    raise TimeoutError("Deposit verification deadline reached")
-                chunk = response.read(65536)
-                if not chunk:
-                    break
-                size += len(chunk)
-                if size > resource["max_bytes"]:
-                    raise ValueError("Read-back exceeds resource size limit")
-                digest.update(chunk)
-    except urllib.error.HTTPError as error:
-        code = error.code
-        error.close()
-        raise ValueError(f"Deposit verification failed with HTTP {code}") from None
-    if {"bytes": size, "sha256": digest.hexdigest()} != expected:
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise TimeoutError("Deposit upload deadline reached")
+    accepted, _ = execute_request(upload, config, remaining)
+    code = accepted.get("status")
+    if isinstance(code, int) and 300 <= code < 400:
+        raise ValueError("Resource redirects are forbidden")
+    if accepted.get("outcome_uncertain") or accepted.get("timed_out"):
+        raise ValueError("PUT outcome uncertain; reconcile destination")
+    # Conditional PUT collision is recoverable only by reading the exact bytes.
+    if code not in (200, 201, 204, 409, 412):
+        raise ValueError(f"PUT failed with HTTP {code}")
+    _, download = normalize_request({"method": "GET", "url": endpoint, "credential_id": credential},
+                                    config, workspace)
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise TimeoutError("Deposit verification deadline reached")
+    observed, _ = execute_request(download, config, remaining)
+    code = observed.get("status")
+    if isinstance(code, int) and 300 <= code < 400:
+        raise ValueError("Resource redirects are forbidden")
+    if observed.get("truncated") or observed.get("response_bytes", 0) > resource["max_bytes"]:
+        raise ValueError("Read-back exceeds resource size limit")
+    if code != 200 or observed.get("timed_out") or observed.get("error"):
+        raise ValueError(f"Deposit verification failed with HTTP {code}")
+    if {"bytes": observed.get("response_bytes"), "sha256": observed.get("raw_sha256")} != expected:
         raise ValueError("Uploaded object could not be independently verified")
     return {"location": endpoint, **expected, "host_verified": True, "verification": "HTTP GET SHA256 read-back"}

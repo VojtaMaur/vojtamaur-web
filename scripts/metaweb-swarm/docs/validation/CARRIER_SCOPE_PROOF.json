@@ -1,0 +1,9 @@
+{
+  "version": "0.6.1",
+  "full_tests": 414,
+  "skipped": 1,
+  "paid_api_calls": 0,
+  "public_uploads": 0,
+  "actual_run_unchanged": true,
+  "models_grants_budgets_approvals_unchanged": true
+}

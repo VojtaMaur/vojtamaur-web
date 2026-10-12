@@ -148,14 +148,14 @@ class HTTPActionTests(ActionFixture):
 
     def test_put_then_get_authentication_receipts_never_contain_credentials(self):
         secret = "fixture-deposit-secret"
-        self.resource["credential_env"] = "SWARM_FIXTURE_CREDENTIAL"
+        self.resource["credential_env"] = "META_SWARM_CRED_FIXTURE"
         validate_resources([self.resource])
-        with patch.dict(os.environ, {"SWARM_FIXTURE_CREDENTIAL": secret}):
+        with patch.dict(os.environ, {"META_SWARM_CRED_FIXTURE": secret}):
             receipt = self.deposit()
         self.assertTrue(receipt["host_verified"])
         self.assertEqual([item["method"] for item in self.server.requests], ["PUT", "GET"])
         self.assertEqual(self.server.requests[0]["headers"]["If-None-Match"], "*")
-        self.assertEqual(self.server.requests[0]["headers"]["X-Content-Sha256"], self.expected["sha256"])
+        self.assertEqual({key.lower(): value for key, value in self.server.requests[0]["headers"].items()}["x-content-sha256"], self.expected["sha256"])
         self.assertTrue(all(item["headers"]["Authorization"] == "Bearer " + secret for item in self.server.requests))
         self.assertNotIn(secret, json.dumps(receipt))
         self.assertNotIn("Authorization", json.dumps(receipt))
@@ -197,15 +197,42 @@ class HTTPActionTests(ActionFixture):
 
     def test_get_error_cannot_echo_resource_credential_into_host_audit(self):
         secret = "fixture-deposit-secret"
-        self.resource["credential_env"] = "SWARM_FIXTURE_CREDENTIAL"
+        self.resource["credential_env"] = "META_SWARM_CRED_FIXTURE"
         self.server.get_error_reason = secret
-        with patch.dict(os.environ, {"SWARM_FIXTURE_CREDENTIAL": secret}):
+        with patch.dict(os.environ, {"META_SWARM_CRED_FIXTURE": secret}):
             with self.assertRaises((ValueError, OSError)) as caught:
                 self.deposit()
         self.assertNotIn(secret, str(caught.exception))
 
     def test_endpoint_credentials_queries_plain_http_and_api_key_reuse_are_rejected(self):
         for field, value in (("endpoint", "http://example.org/objects"), ("endpoint", "https://user:pass@example.org/objects"),
-                             ("endpoint", "https://example.org/objects?secret=token"), ("credential_env", "OPENAI_API_KEY")):
+                             ("endpoint", "https://example.org/objects?secret=token"), ("credential_env", "OPENAI_API_KEY"),
+                             ("credential_env", "GITHUB_TOKEN"), ("credential_env", "GITLAB_TOKEN"),
+                             ("credential_env", "CODEBERG_TOKEN"), ("credential_env", "SWARM_FIXTURE_CREDENTIAL")):
             with self.assertRaises(ValueError):
                 validate_resources([dict(self.resource, **{field: value})])
+
+    def test_legacy_adapter_cannot_bypass_forge_production_or_private_address_protection(self):
+        for endpoint in ("https://api.github.com/repos/owner/site", "https://gitlab.com/api/v4/projects/1",
+                         "https://codeberg.org/api/v1/repos/owner/site", "https://vojtamaur.cz/objects",
+                         "https://127.0.0.1/objects", "https://10.0.0.1/objects", "https://[::1]/objects"):
+            with self.subTest(endpoint=endpoint), self.assertRaises(ValueError):
+                validate_resources([dict(self.resource, endpoint=endpoint)])
+        self.assertFalse(self.server.requests)
+
+    def test_ambient_forge_credentials_and_proxies_do_not_authenticate_legacy_deposit(self):
+        with patch.dict(os.environ, {"GITHUB_TOKEN": "fixture-owner-github", "GITLAB_TOKEN": "fixture-owner-gitlab",
+                                    "CODEBERG_TOKEN": "fixture-owner-codeberg", "HTTP_PROXY": "http://127.0.0.1:1",
+                                    "HTTPS_PROXY": "http://127.0.0.1:1", "ALL_PROXY": "http://127.0.0.1:1"}):
+            self.assertTrue(self.deposit()["host_verified"])
+        self.assertTrue(all("Authorization" not in request["headers"] and "Cookie" not in request["headers"]
+                            for request in self.server.requests))
+
+    def test_legacy_adapter_uses_public_dns_validation_before_network_connect(self):
+        self.resource.update(endpoint="https://public-fixture.example/objects", allow_loopback_http=False)
+        with patch("metaweb_swarm.http_transport.socket.getaddrinfo", return_value=[
+            (2, 1, 6, "", ("127.0.0.1", 443))
+        ]), patch("metaweb_swarm.http_transport.socket.socket") as socket_factory:
+            with self.assertRaisesRegex(ValueError, "non-public"):
+                self.deposit()
+        socket_factory.assert_not_called()

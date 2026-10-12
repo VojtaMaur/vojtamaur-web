@@ -181,6 +181,17 @@ if SDK_AVAILABLE:
 
 @unittest.skipUnless(SDK_AVAILABLE, "Install requirements-openai.txt for SDK integration tests")
 class SDKTests(unittest.IsolatedAsyncioTestCase):
+    async def test_focused_operator_objective_reaches_system_instructions(self):
+        provider = FakeProvider([final_response()])
+        config = dict(CONFIG, operator_objective='Choose one real export; prepare an approved HTTP deposit.')
+        agent = dict(AGENT, mission='Generic role must invent an encoder')
+        await OpenAIBackend(provider).step(agent, 'operator context', [], Tools(), config)
+        args, kwargs = provider.model.calls[0]
+        instructions = kwargs.get('system_instructions', args[0] if args else '')
+        self.assertIn(config['operator_objective'], instructions)
+        self.assertIn('overrides generic seed mission', instructions)
+        self.assertNotIn('Generic role must invent an encoder', instructions)
+
     async def test_real_sdk_final_schema_history_and_settings(self):
         provider = FakeProvider([final_response()])
         tools = Tools()

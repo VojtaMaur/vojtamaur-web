@@ -1,0 +1,25 @@
+test_ambient_tokens_not_loaded_and_protected_writes_denied (test_http_tools.HttpToolsTests.test_ambient_tokens_not_loaded_and_protected_writes_denied) ... ok
+test_copy_receipt_does_not_resolve_unknown_payment_or_accept_delete (test_http_tools.HttpToolsTests.test_copy_receipt_does_not_resolve_unknown_payment_or_accept_delete) ... ok
+test_discover_upload_download_verify_without_connector_or_approval (test_http_tools.HttpToolsTests.test_discover_upload_download_verify_without_connector_or_approval) ... ok
+test_real_sdk_invokes_generic_http_tool (test_http_tools.HttpToolsTests.test_real_sdk_invokes_generic_http_tool) ... ok
+test_scope_supervision_approval_binding_and_resume (test_http_tools.HttpToolsTests.test_scope_supervision_approval_binding_and_resume) ... ok
+test_shared_limits_and_pause_are_enforced_without_network (test_http_tools.HttpToolsTests.test_shared_limits_and_pause_are_enforced_without_network) ... ok
+test_uncertain_attempt_does_not_repeat_after_crash_or_rewording (test_http_tools.HttpToolsTests.test_uncertain_attempt_does_not_repeat_after_crash_or_rewording) ... ok
+test_ambient_proxy_credentials_are_never_used (test_http_transport.HttpTransportTests.test_ambient_proxy_credentials_are_never_used) ... ok
+test_approval_binding_includes_redacted_wire_values_and_grants (test_http_transport.HttpTransportTests.test_approval_binding_includes_redacted_wire_values_and_grants) ... ok
+test_binary_roundtrip_and_confined_upload (test_http_transport.HttpTransportTests.test_binary_roundtrip_and_confined_upload) ... ok
+test_dedicated_credential_and_response_redaction (test_http_transport.HttpTransportTests.test_dedicated_credential_and_response_redaction) ... ok
+test_dns_all_addresses_checked_and_resolution_deadline (test_http_transport.HttpTransportTests.test_dns_all_addresses_checked_and_resolution_deadline) ... ok
+test_explicit_test_origins_are_loopback_only_and_redaction_recursive (test_http_transport.HttpTransportTests.test_explicit_test_origins_are_loopback_only_and_redaction_recursive) ... ok
+test_header_url_method_and_protected_site_restrictions (test_http_transport.HttpTransportTests.test_header_url_method_and_protected_site_restrictions) ... ok
+test_http_10_close_delimited_response_keeps_socket_alive_until_reader_finishes (test_http_transport.HttpTransportTests.test_http_10_close_delimited_response_keeps_socket_alive_until_reader_finishes) ... ok
+test_json_query_methods_and_http_error (test_http_transport.HttpTransportTests.test_json_query_methods_and_http_error) ... ok
+test_limits_truncation_and_total_deadline (test_http_transport.HttpTransportTests.test_limits_truncation_and_total_deadline) ... ok
+test_multipart_deterministic_exact_file_bytes (test_http_transport.HttpTransportTests.test_multipart_deterministic_exact_file_bytes) ... ok
+test_public_socket_is_pinned_and_tls_uses_original_hostname (test_http_transport.HttpTransportTests.test_public_socket_is_pinned_and_tls_uses_original_hostname) ... ok
+test_redirect_not_followed_and_no_cookie_jar (test_http_transport.HttpTransportTests.test_redirect_not_followed_and_no_cookie_jar) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 6.727s
+
+OK

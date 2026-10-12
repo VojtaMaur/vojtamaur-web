@@ -1,4 +1,16 @@
+Aktuálně 0.6.1: [výběr skutečně nových služeb a dokumentace vázaná na provider/origin](docs/CARRIER_SCOPE.md). Zenodo/Figshare z ARCHIVE.txt v cíleném deposit běhu neprojdou přes generic improvement. FREE upload může vyžadovat vlastní swarm účet.
+
+Aktuálně 0.6.0: [obecný vícekrokový HTTP realizátor](docs/DEPOSIT_EXECUTOR.md), stav po každém kroku, jeden approval na konkrétní postup a veřejný SHA256 read-back. Placené smokes není třeba opakovat.
+
 # Metaweb agent swarm
+
+Aktualizace 0.5.5: [věcné zamítnutí versus setup, dokončení auditora a uložení protokolu](docs/REVIEW_AND_FLOW.md).
+
+Aktualizace 0.5.4: [uložení kandidátů čekajících na účet, resume a celý upload protokol](docs/DEPOSIT_HANDOFF.md).
+
+Aktualizace 0.5.3: [účetní kontrola nedokončeného web search, audit a další běh](docs/SEARCH_ACCOUNTING.md).
+
+Aktuální další krok: `run-deposit-trial.cmd` — nový skutečný výzkum konkrétního nezávislého nosiče zachyceného EPUB, s nezávislým auditem a human approval před uploadem. [Spuštění a kontrola služeb](docs/CARRIER_ROUTING.md). Úspěšné Docker a lokální/veřejné HTTP smoke testy jsou už doložené; opakuj je při změně infrastruktury.
 
 Výzkumný a realizační framework pro Metaweb Vojty Maura. Agenti hledají, ověřují a kritizují preservation mechanisms, navrhují specialisty a mohou vytvářet a testovat prototypy. Každý má soukromou kopii projektu. Produkční `G:\vojtamaur-web` se při běhu pouze čte; změny zdroje se vracejí jako reviewable patche a artefakty.
 
@@ -7,7 +19,7 @@ Prioritou je uchování **připravených buildů a exportů** webu bez potřeby 
 Tato dokumentace patří frameworku; do veřejné dokumentace vojtamaur.cz se zatím nepřidává. Průběžný stav: [PROJECT_PROGRESS.md](docs/PROJECT_PROGRESS.md). Podrobnosti režimů: [EXECUTION_MODES.md](docs/EXECUTION_MODES.md). Docker: [DOCKER_SETUP.md](docs/DOCKER_SETUP.md).
 
 **Začni zde: [Spuštění v CMD, modelové tiery a resume](docs/START_HERE.md).**
-Před dalším výzkumem spusť `run-smoke.cmd`: cílený cheap-model test PyPI → Docker →
+Pro prvotní ověření nové Docker instalace slouží `run-smoke.cmd`: cheap-model test PyPI → Docker →
 funkční obnova exportu. [Deduplikace a význam PROTOTYPED](docs/CANDIDATES_AND_SMOKE.md).
 Přímo v projektu jsou `run-sandbox.cmd` a `run-supervised.cmd`; nepotřebují soubory
 z Codexu. `run-sandbox.cmd` ověří prerequisites, založí nový autonomous Docker run
@@ -291,3 +303,12 @@ G:\metaweb-swarm-env\Scripts\python.exe -m unittest discover -s tests -v
 Offline testy ověřují workspace/policy, dedup/provenance, režimy, exports, memory, rezervace, checkpointy, audit a mock SDK/connector workflows. Živý Docker smoke je samostatná evidence; mock executor/demo jej nenahradí. Local/HTTP fixture ověřuje konkrétní bajty a read-back, nikoli dlouhodobou dostupnost veřejné služby. Počet prošlých testů čti z konkrétního test logu; dokumentace jej nefixuje.
 
 Staré běhy zachovávají snapshots, role missions, IDEA IDs, config a audit. Chybějící nová policy pole se interpretují konzervativně jako supervised, sandbox-only, approval required. Nové režimy/zadání zkoušej v čistém novém runu. Placené acceptance testy nového API flow jsou oddělené od offline kontrol a od již provedených historických živých pokusů.
+
+## Obecné HTTP/API nástroje (0.4.0)
+Agent může číst dokumentaci nových služeb, sestavit HTTP/API požadavky, uploadovat vlastní soubory a stáhnout odpověď bez provider connectoru. Nový `run-http.cmd` vytváří external run s approval required; `run-http.cmd --approval disabled` ho skutečně vypne. Hostitelské účty se nepřebírají, forge/site zápisy jsou blokované. [Úplný návod, konfigurace a bezpečnostní model](docs/HTTP_ACCESS.md).
+
+
+Cílený běh s jedním skutečným exportem: `run-deposit-trial.cmd`; postup schválení a pokračování viz [DEPOSIT_TRIAL.md](docs/DEPOSIT_TRIAL.md).
+
+
+Aktuální cílený výzkum a vlastní zadání: [FOCUSED_TASKS.md](docs/FOCUSED_TASKS.md). `run-deposit-trial.cmd` hledá a posuzuje skutečné uložení připraveného exportu; `--task` / `--task-file` zadává konkrétní cíl nového běhu. read_document zpřístupní čitelnou externí dokumentaci přímo agentovi.

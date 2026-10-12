@@ -1,0 +1,97 @@
+{
+  "run_id": "20261008-123103-808f0f46",
+  "read_only": true,
+  "network_calls": 0,
+  "paid_model_calls": 0,
+  "screen_status": "EXISTING_LAYER",
+  "registered_entries": [
+    {
+      "path": "context/live-3.txt",
+      "document_sha256": "394687d3ce608171a8a6d60c4f4fe60240e56d6a0fba9dd10442e3c343c53387",
+      "label": "ArDrive / Arweave",
+      "label_line": 30,
+      "url_line": 31,
+      "url": "https://db6beycsnxhli2vxsahgn3ajpsi6qv5alttkr4d3sfwrj7uurqfq.ardrive.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/",
+      "section": "ALTERNATIVE DEPLOYMENTS"
+    },
+    {
+      "path": "context/live-3.txt",
+      "document_sha256": "394687d3ce608171a8a6d60c4f4fe60240e56d6a0fba9dd10442e3c343c53387",
+      "label": "ArDrive / Arweave",
+      "label_line": 30,
+      "url_line": 32,
+      "url": "https://arweave.net/GHwSYFJtzrRqt5AOZuwJfJHoV6Bc5qjwe5FtFP6UjAs/",
+      "section": "ALTERNATIVE DEPLOYMENTS"
+    },
+    {
+      "path": "context/live-3.txt",
+      "document_sha256": "394687d3ce608171a8a6d60c4f4fe60240e56d6a0fba9dd10442e3c343c53387",
+      "label": "Arweave / ArDrive",
+      "label_line": 120,
+      "url_line": 121,
+      "url": "https://app.ardrive.io/#/file/6777b483-0ece-40d1-93c5-80e06bcfb757/view",
+      "section": "ARCHIVAL COPIES AND DISTRIBUTIONS"
+    },
+    {
+      "path": "context/live-3.txt",
+      "document_sha256": "394687d3ce608171a8a6d60c4f4fe60240e56d6a0fba9dd10442e3c343c53387",
+      "label": "Arweave / ArDrive",
+      "label_line": 120,
+      "url_line": 122,
+      "url": "https://arweave.net/wMdvaavAZL1QKGvdkIfh6NCB7u_NCX368IsR48sJP7c",
+      "section": "ARCHIVAL COPIES AND DISTRIBUTIONS"
+    },
+    {
+      "path": "context/live-3.txt",
+      "document_sha256": "394687d3ce608171a8a6d60c4f4fe60240e56d6a0fba9dd10442e3c343c53387",
+      "label": "Arweave / ArDrive",
+      "label_line": 120,
+      "url_line": 123,
+      "url": "https://app.ardrive.io/#/file/1ff99024-312f-499b-8d92-18707866a178/view",
+      "section": "ARCHIVAL COPIES AND DISTRIBUTIONS"
+    },
+    {
+      "path": "context/live-3.txt",
+      "document_sha256": "394687d3ce608171a8a6d60c4f4fe60240e56d6a0fba9dd10442e3c343c53387",
+      "label": "Arweave / ArDrive",
+      "label_line": 120,
+      "url_line": 124,
+      "url": "https://arweave.net/km-NeXucy8QrZjErPSd31cTKpnV95iHiKa14HNBafhU",
+      "section": "ARCHIVAL COPIES AND DISTRIBUTIONS"
+    },
+    {
+      "path": "context/live-3.txt",
+      "document_sha256": "394687d3ce608171a8a6d60c4f4fe60240e56d6a0fba9dd10442e3c343c53387",
+      "label": "Arweave / ArDrive",
+      "label_line": 120,
+      "url_line": 125,
+      "url": "https://app.ardrive.io/#/file/66d612dc-f6f6-433c-a87e-5f84be24ffe7/view",
+      "section": "ARCHIVAL COPIES AND DISTRIBUTIONS"
+    },
+    {
+      "path": "context/live-3.txt",
+      "document_sha256": "394687d3ce608171a8a6d60c4f4fe60240e56d6a0fba9dd10442e3c343c53387",
+      "label": "Arweave / ArDrive",
+      "label_line": 120,
+      "url_line": 126,
+      "url": "https://arweave.net/6PFPqk0gLwFlvNk55CIpyjGtHvsqBgLJ21RaCvCd3Vc",
+      "section": "ARCHIVAL COPIES AND DISTRIBUTIONS"
+    }
+  ],
+  "document_gate": {
+    "provider": "ArDrive",
+    "source_id": "SCREEN-cf8bcd4cb83e01e55c30",
+    "reason": "SWITCH_CARRIER_REQUIRED",
+    "next_action": "Search a DIFFERENT carrier now; do not spend more document calls on this unchanged direction. A genuine improvement needs separate baseline_behavior, proposed_change and validation_plan.",
+    "status": "DEFERRED"
+  },
+  "historical_redirect_hint": {
+    "status": "DEFERRED",
+    "reason": "DOCUMENT_REDIRECT_REQUIRES_GET",
+    "request_id": "HTTP-36fe9edc67814002",
+    "http_status": 301,
+    "redirect_url": "https://ardrive.io/",
+    "meaning": "No redirect followed and no document-read claim recorded.",
+    "next_action": "Call read_document on redirect_url explicitly. No credentials/cookies are forwarded; full HTTP validation runs again."
+  }
+}

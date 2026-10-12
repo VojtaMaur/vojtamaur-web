@@ -21,7 +21,12 @@ def seed_agents(config):
     roster = [s for s in SEED_ROLES if not selected or s[1] in selected]
     if config["max_agents"] < len(roster):
         raise ValueError("max_agents must allow the selected seed roles")
-    return [assign_model(config, new_agent(f"AGENT-{n:03d}", role, mission, phase)) for n, (phase, role, mission) in enumerate(roster, 1)]
+    agents = []
+    for n, (phase, role, mission) in enumerate(roster, 1):
+        if config.get('require_independent_http_review'):
+            phase = {'Prototyper': 3, 'Synthesizer / Reporter': 4}.get(role, phase)
+        agents.append(assign_model(config, new_agent(f"AGENT-{n:03d}", role, config.get("role_assignments", {}).get(role, mission), phase)))
+    return agents
 
 
 def new_agent(agent_id, role, mission, phase=1, parent_id=None, depth=0, reason="Seed role"):

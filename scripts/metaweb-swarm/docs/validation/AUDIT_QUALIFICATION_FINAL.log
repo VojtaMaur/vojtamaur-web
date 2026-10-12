@@ -1,0 +1,15 @@
+Executing <Task finished name='Task-12' coro=<AuditQualificationTests.test_reporter_reads_shared_response_without_own_receipt_and_after_private_change() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_audit_qualification.py:41> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Executing <Task pending name='Task-18' coro=<AuditQualificationTests.test_sdk_named_defaults_and_cross_role_read_dispatch() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_audit_qualification.py:124> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.156 seconds
+  AGENT-001 | Target: Documented unresolved service TARGET_DETAILS_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-147' coro=<AuditQualificationTests.test_shared_reads_never_satisfy_independent_auditor() running at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_audit_qualification.py:103> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: Source-backed fixture carrier TARGET_DETAILS_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 AUTHENTICATION_UNVERIFIED
+  AGENT-001 | Target: 127.0.0.1 BASELINE_COMPARISON_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: gitlab.com POLICY_FORBIDDEN
+Executing <Task finished name='Task-162' coro=<AuditQualificationTests.test_unresolved_endpoint_auth_and_known_claims_are_audited_not_invented() done, defined at C:\Users\Vojta\Documents\Codex\2026-10-06\referenced-chatgpt-conversation-this-is-an\work\metaweb-swarm\tests\test_audit_qualification.py:25> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+----------------------------------------------------------------------
+Ran 17 tests in 6.008s
+
+OK

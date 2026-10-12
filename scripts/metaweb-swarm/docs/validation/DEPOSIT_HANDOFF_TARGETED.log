@@ -1,0 +1,202 @@
+Executing <Task pending name='Task-2' coro=<HandoffTests.test_actual_sdk_receives_typed_flow_and_reports_retention_permission() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:144> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-86' coro=<HandoffTests.test_checkpoint_resume_retains_candidate_and_restores_dependency() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:85> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: gitlab.com POLICY_FORBIDDEN
+  AGENT-001 | Target: Source-backed fixture carrier TARGET_DETAILS_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-100' coro=<HandoffTests.test_later_model_submission_reuses_same_id_and_provenance() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:40> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-107' coro=<HandoffTests.test_local_dependency_reopens_after_exact_current_independent_pass() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:73> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+  AGENT-001 | Target: 127.0.0.1 UPLOAD_FLOW_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task finished name='Task-130' coro=<HandoffTests.test_new_qualification_reopens_completed_auditor() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:128> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.156 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task finished name='Task-137' coro=<HandoffTests.test_old_qualification_never_rolls_new_candidate_back() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:49> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.156 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-151' coro=<HandoffTests.test_resume_releases_only_satisfied_dependency_block_not_approval() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:58> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+  AGENT-001 | Target: 127.0.0.1 PRIMARY_SOURCES_REQUIRED
+  AGENT-001 | Target: example.org READY_FOR_AUDIT
+  AGENT-001 | Target: other.example.org ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-254' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:74> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Executing <Task pending name='Task-254' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:89> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.218 seconds
+  AGENT-001 | Target: gitlab.com POLICY_FORBIDDEN
+  AGENT-001 | Target: api.github.com POLICY_FORBIDDEN
+  AGENT-001 | Target: codeberg.org POLICY_FORBIDDEN
+  AGENT-001 | Target: vojtamaur.cz POLICY_FORBIDDEN
+  AGENT-001 | Target: gitlab.com. POLICY_FORBIDDEN
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-269' coro=<QualificationTests.test_missing_grant_is_blocked_lead_not_rejected_mechanism() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:59> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+Run: 20261012-095819-431293fe | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Loophole Archivist, Synthesizer / Reporter
+Limits: 20 rounds, 1,500,000 tokens, 2400s; USD ceiling=5.0
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=required | max requests=60 | external actions=1 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: FOCUSED REAL-EXPORT DEPOSIT TRIAL: discover one materially new independent FREE carrier, preserve the exact retained Metaweb EPUB and verify its bytes by independent public download. Prefer durable custody over pointe... | role-specific tools
+Round: AGENT-001 Loophole Archivist [flag] 1/4
+Executing <Task finished name='Task-277' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:983> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.125 seconds
+  AGENT-002 | NO_ADMITTED_DISCOVERY_CANDIDATE; no paid role dispatch
+  AGENT-003 | NO_INDEPENDENTLY_APPROVED_DEPOSIT_PLAN; no paid role dispatch
+Round: AGENT-004 Synthesizer / Reporter [flag] 1/2
+Executing <Task pending name='Task-276' coro=<QualificationTests.test_no_qualified_candidate_skips_downstream_model_work() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:128> wait_for=<_GatheringFuture pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:709> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.188 seconds
+Executing <Task finished name='Task-278' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:983> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.141 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-283' coro=<QualificationTests.test_plan_change_invalidates_old_audit() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:147> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task finished name='Task-283' coro=<QualificationTests.test_plan_change_invalidates_old_audit() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:144> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.140 seconds
+  AGENT-001 | Target: 127.0.0.1 RESOURCE_LIMIT
+  AGENT-001 | Target: known.example.org BASELINE_COMPARISON_REQUIRED
+  AGENT-001 | Target: known.example.org ALREADY_KNOWN_BASELINE
+Executing <Task finished name='Task-292' coro=<QualificationTests.test_resource_failure_and_archive_mention_are_separate() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:101> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-337' coro=<FocusedTests.test_sdk_role_tools_and_actual_document_tool_dispatch() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_focused_tasking.py:130> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+Executing <Task finished name='Task-423' coro=<AuditQualificationTests.test_reporter_reads_shared_response_without_own_receipt_and_after_private_change() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_audit_qualification.py:41> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.141 seconds
+Executing <Task pending name='Task-429' coro=<AuditQualificationTests.test_sdk_named_defaults_and_cross_role_read_dispatch() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_audit_qualification.py:124> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+  AGENT-001 | Target: Documented unresolved service TARGET_DETAILS_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-562' coro=<AuditQualificationTests.test_shared_reads_never_satisfy_independent_auditor() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_audit_qualification.py:103> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+  AGENT-001 | Target: Source-backed fixture carrier TARGET_DETAILS_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 AUTHENTICATION_UNVERIFIED
+  AGENT-001 | Target: 127.0.0.1 BASELINE_COMPARISON_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: gitlab.com POLICY_FORBIDDEN
+Executing <Task finished name='Task-577' coro=<AuditQualificationTests.test_unresolved_endpoint_auth_and_known_claims_are_audited_not_invented() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_audit_qualification.py:25> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+======================================================================
+ERROR: test_actual_sdk_receives_typed_flow_and_reports_retention_permission (tests.test_deposit_handoff.HandoffTests.test_actual_sdk_receives_typed_flow_and_reports_retention_permission)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\unittest\async_case.py", line 90, in _callTestMethod
+    if self._callMaybeAsync(method) is not None:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\unittest\async_case.py", line 112, in _callMaybeAsync
+    return self._asyncioRunner.run(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py", line 146, in test_actual_sdk_receives_typed_flow_and_reports_retention_permission
+    self.assertTrue(output['admissible']);self.assertEqual(output['admission_kind'],'BLOCKED_LEAD')
+                    ~~~~~~^^^^^^^^^^^^^^
+KeyError: 'admissible'
+
+======================================================================
+ERROR: test_authenticated_read_also_counts_and_extra_limits_do_not_create_executor (tests.test_deposit_handoff.HandoffTests.test_authenticated_read_also_counts_and_extra_limits_do_not_create_executor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\unittest\async_case.py", line 90, in _callTestMethod
+    if self._callMaybeAsync(method) is not None:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\unittest\async_case.py", line 112, in _callMaybeAsync
+    return self._asyncioRunner.run(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py", line 108, in test_authenticated_read_also_counts_and_extra_limits_do_not_create_executor
+    q=await self.qualified(operation_steps=steps)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py", line 26, in qualified
+    return self.api.check_deposit_target(self.plan(**changes))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py", line 330, in check_deposit_target
+    return assess(self, plan)
+           ^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\deposit_qualification.py", line 73, in assess
+    flow = assess_flow(plan, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\deposit_qualification.py", line 36, in assess_flow
+    raise ValueError('Flow must send the exact export once and start with the declared method')
+ValueError: Flow must send the exact export once and start with the declared method
+
+======================================================================
+ERROR: test_missing_or_invalid_flow_cannot_be_ready (tests.test_deposit_handoff.HandoffTests.test_missing_or_invalid_flow_cannot_be_ready)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\unittest\async_case.py", line 90, in _callTestMethod
+    if self._callMaybeAsync(method) is not None:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\unittest\async_case.py", line 112, in _callMaybeAsync
+    return self._asyncioRunner.run(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py", line 119, in test_missing_or_invalid_flow_cannot_be_ready
+    q=self.api.check_deposit_target(self.plan(operation_steps=single()))
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py", line 330, in check_deposit_target
+    return assess(self, plan)
+           ^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\deposit_qualification.py", line 73, in assess
+    flow = assess_flow(plan, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\deposit_qualification.py", line 36, in assess_flow
+    raise ValueError('Flow must send the exact export once and start with the declared method')
+ValueError: Flow must send the exact export once and start with the declared method
+
+======================================================================
+ERROR: test_multistep_count_cannot_be_understated_and_is_retained_not_rejected (tests.test_deposit_handoff.HandoffTests.test_multistep_count_cannot_be_understated_and_is_retained_not_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\unittest\async_case.py", line 90, in _callTestMethod
+    if self._callMaybeAsync(method) is not None:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\unittest\async_case.py", line 112, in _callMaybeAsync
+    return self._asyncioRunner.run(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py", line 97, in test_multistep_count_cannot_be_understated_and_is_retained_not_rejected
+    q=await self.qualified(authentication='ACCOUNT_REQUIRED',operation_steps=multi(),required_external_actions=1)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py", line 26, in qualified
+    return self.api.check_deposit_target(self.plan(**changes))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py", line 330, in check_deposit_target
+    return assess(self, plan)
+           ^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\deposit_qualification.py", line 73, in assess
+    flow = assess_flow(plan, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\deposit_qualification.py", line 36, in assess_flow
+    raise ValueError('Flow must send the exact export once and start with the declared method')
+ValueError: Flow must send the exact export once and start with the declared method
+
+======================================================================
+FAIL: test_prompt_mission_and_policy_are_focused_and_retained (tests.test_focused_tasking.FocusedTests.test_prompt_mission_and_policy_are_focused_and_retained)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\unittest\async_case.py", line 90, in _callTestMethod
+    if self._callMaybeAsync(method) is not None:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\unittest\async_case.py", line 117, in _callMaybeAsync
+    return self._asyncioTestContext.run(func, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_focused_tasking.py", line 109, in test_prompt_mission_and_policy_are_focused_and_retained
+    self.assertLess(len(prompt),9000)
+AssertionError: 9775 not less than 9000
+
+----------------------------------------------------------------------
+Ran 37 tests in 27.509s
+
+FAILED (failures=1, errors=4)

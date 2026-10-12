@@ -1,0 +1,6 @@
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-7' coro=<ScopeTests.test_free_account_based_new_candidate_is_admitted_and_saved_blocked() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_carrier_scope.py:72> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+----------------------------------------------------------------------
+Ran 3 tests in 1.827s
+
+OK

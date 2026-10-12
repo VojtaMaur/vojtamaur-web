@@ -32,6 +32,7 @@ def normalize_idea(data):
               ("title", "mechanism", "provider", "summary", "novelty", "blocker", "next_action", "rejection_reason")}
     if re.search(r"no (?:novel|new) preservation mechanism|audit conclusion|evidence review only|^n/a|coverage baseline map|organizational gap analysis|not itself a preservation mechanism|role-gap observation|need for a .*specialist", result["title"] + " " + result["mechanism"], re.I):
         raise ValueError("General audit conclusions are observations: use note, not submit_idea. Submit a concrete preservation mechanism or improvement.")
+    result["qualification_id"] = text_field(data, "qualification_id", 100)
     result["status"] = data.get("status", "DISCOVERED")
     result["payment"] = data.get("payment", "UNKNOWN")
     renewal = data.get("requires_ongoing_payments")

@@ -178,7 +178,7 @@ def _known_usage(actual_usage):
 
 
 def settle(state, agent_or_reservation, actual_usage):
-    """Known response removes its reservation; unknown/breached responses retain it.
+    """Known response removes its reservation; unknown or uncovered breaches retain it.
 
     Return the durable settlement record or reconciliation reason. Does NOT add
     usage counters: settle and the existing response accounting must be one atomic
@@ -194,13 +194,29 @@ def settle(state, agent_or_reservation, actual_usage):
         return "HUMAN_BUDGET_RECONCILIATION_REQUIRED"
     bounds = {"input_tokens": record["input_upper_tokens"], "output_tokens": record["output_upper_tokens"],
               "total_tokens": record["total_upper_tokens"], "web_search_calls": record["max_search_calls"]}
-    if any(usage[k] > bounds[k] for k in USAGE_KEYS):
+    # A completed provider response can contain unfinished extra search items.
+    # Keep them conservatively charged; only a trusted host observation and
+    # existing token + USD headroom can close this ambiguity. Never expand a hold.
+    search_excess = usage["web_search_calls"] - bounds["web_search_calls"]
+    unfinished = actual_usage.get("unfinished_search_attempts_at_cap", 0)
+    token_bounds_ok = all(usage[k] <= bounds[k] for k in ("input_tokens", "output_tokens", "total_tokens"))
+    cost = _cost(usage, record["price_ceilings"]) if record["usd_upper"] is not None else None
+    covered_search_ambiguity = (token_bounds_ok and search_excess > 0 and type(unfinished) is int
+                               and unfinished == search_excess and cost is not None
+                               and cost <= _money(record["usd_upper"], "reserved USD"))
+    if any(usage[k] > bounds[k] for k in USAGE_KEYS) and not covered_search_ambiguity:
         record["observed_usage"] = usage
         mark_unknown(state, record["id"], "Observed usage exceeded configured reservation bound")
         state.setdefault("budget_breaches", []).append({"id": record["id"], "usage": usage, "bounds": bounds, "time": now()})
         return "RESERVATION_BOUND_EXCEEDED: reconcile limits/pricing before another request"
     closed = dict(copy.deepcopy(record), status="SETTLED", settled_at=now(), actual_usage=usage)
     closed["actual_usd_at_reserved_prices"] = str(_cost(usage, record["price_ceilings"])) if record["usd_upper"] is not None else None
+    if covered_search_ambiguity:
+        closed["search_accounting_overage"] = {
+            "unfinished_attempts": unfinished, "accounted_searches": usage["web_search_calls"],
+            "requested_search_cap": record["max_search_calls"], "reserved_usd": record["usd_upper"],
+            "conservative_actual_usd": str(cost),
+            "meaning": "Unfinished items remain charged conservatively. Known token usage and conservative USD fit the pre-request reservation; not proof of provider billing or free searches."}
     state.setdefault("budget_settlements", {})[record["id"]] = closed
     del state["budget_reservations"][record["id"]]
     return copy.deepcopy(closed)

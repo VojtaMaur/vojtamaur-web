@@ -1,0 +1,15 @@
+{
+  "run_id": "20261012-092352-fd4b9ba8",
+  "backup": "C:\\Users\\Vojta\\Documents\\Codex\\2026-10-06\\referenced-chatgpt-conversation-this-is-an\\outputs\\REVIEW_FLOW_BACKUP_20261012-122658\\run-before-correction",
+  "candidate_id": "IDEA-0001",
+  "candidate_status": "BLOCKED",
+  "critique_verdict": "REVISE",
+  "required_external_actions": 3,
+  "flow_source_sha256": "0d7b2af69569ff86decdb44273aa95a718077ba545852e2dc7ff5e994dc7f5ef",
+  "run_status": "BLOCKED",
+  "api_calls": 0,
+  "external_actions": 0,
+  "new_independent_model_review": false,
+  "usage_and_settings_unchanged": true,
+  "new_qualification_id": "QUAL-f68caae831cc8676cbb7"
+}

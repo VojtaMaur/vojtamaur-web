@@ -1,0 +1,12 @@
+{
+  "version": "0.6.0",
+  "full_tests": 404,
+  "full_skipped": 1,
+  "final_targeted_tests": 83,
+  "installed_roundtrip_cli_resume_tests": 3,
+  "legacy_gap_compatibility_checked": true,
+  "configs_unchanged": true,
+  "actual_run_unchanged": true,
+  "paid_api_calls": 0,
+  "public_uploads": 0
+}

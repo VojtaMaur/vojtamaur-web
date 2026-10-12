@@ -1,0 +1,35 @@
+{
+  "description": "Real public HTTPS read; no model call, no credentials, no external mutation",
+  "url": "https://vojtamaur.cz/ARCHIVE.txt",
+  "metadata": {
+    "status": 200,
+    "headers": {
+      "Date": "Wed, 07 Oct 2026 13:01:53 GMT",
+      "Server": "Apache",
+      "Upgrade": "h2c,h2",
+      "Connection": "Upgrade, close",
+      "Last-Modified": "Thu, 01 Oct 2026 07:03:04 GMT",
+      "ETag": "\"130d5-65cc201d2cd59\"",
+      "Accept-Ranges": "bytes",
+      "Content-Length": "78037",
+      "Cache-Control": "max-age=2592000",
+      "Expires": "Fri, 06 Nov 2026 13:01:53 GMT",
+      "Vary": "Accept-Encoding,User-Agent",
+      "X-SERVER": "WH50",
+      "Content-Type": "text/plain"
+    },
+    "request_bytes": 0,
+    "response_bytes": 78037,
+    "stored_bytes": 78037,
+    "truncated": false,
+    "timed_out": false,
+    "outcome_uncertain": false,
+    "redirected": false,
+    "url": "https://vojtamaur.cz/ARCHIVE.txt",
+    "raw_sha256": "394687d3ce608171a8a6d60c4f4fe60240e56d6a0fba9dd10442e3c343c53387",
+    "stored_sha256": "394687d3ce608171a8a6d60c4f4fe60240e56d6a0fba9dd10442e3c343c53387",
+    "sanitized": false,
+    "headers_bytes": 385
+  },
+  "contains_archive_text": true
+}

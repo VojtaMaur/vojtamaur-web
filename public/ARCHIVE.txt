@@ -124,6 +124,8 @@ ARCHIVAL COPIES AND DISTRIBUTIONS:
 	https://arweave.net/6PFPqk0gLwFlvNk55CIpyjGtHvsqBgLJ21RaCvCd3Vc
 	https://app.ardrive.io/#/file/e8b41773-52b4-4f48-affa-722e793e1410/view
 	https://arweave.net/VKUOvzKC7SDh1JS41csWBX1JFlhtM-2Ia3GXnNWWjR8
+	Webarchiv / National Library of the Czech Republic (selected for regular archiving under a signed licence agreement; scheduled for capture four times per year, starting October 2026)
+	https://wayback.webarchiv.cz/wayback/*/https://vojtamaur.cz/
 	Internet Archive
 	https://archive.org/details/vojtamaur-2026-04
 	https://archive.org/details/vojtamaur-2026-05
@@ -1091,6 +1093,3 @@ PARTIAL PAGE SNAPSHOTS:
 	https://perma.cc/DJ57-N96F
 	https://perma.cc/F5L2-UEMP
 	https://perma.cc/KTS7-GPSC
-	Webarchiv / National Library of the Czech Republic (Captures can be viewed at the National Library of the Czech Republic.)
-	https://wayback.webarchiv.cz/wayback/*/https://vojtamaur.cz/
-	

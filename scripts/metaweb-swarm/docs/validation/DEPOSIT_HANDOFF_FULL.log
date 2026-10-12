@@ -1,0 +1,434 @@
+Executing <Task finished name='Task-12' coro=<AuditQualificationTests.test_reporter_reads_shared_response_without_own_receipt_and_after_private_change() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_audit_qualification.py:41> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.140 seconds
+Executing <Task pending name='Task-18' coro=<AuditQualificationTests.test_sdk_named_defaults_and_cross_role_read_dispatch() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_audit_qualification.py:124> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.156 seconds
+  AGENT-001 | Target: Documented unresolved service TARGET_DETAILS_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-151' coro=<AuditQualificationTests.test_shared_reads_never_satisfy_independent_auditor() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_audit_qualification.py:103> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: Source-backed fixture carrier TARGET_DETAILS_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 AUTHENTICATION_UNVERIFIED
+  AGENT-001 | Target: 127.0.0.1 BASELINE_COMPARISON_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: gitlab.com POLICY_FORBIDDEN
+Executing <Task finished name='Task-166' coro=<AuditQualificationTests.test_unresolved_endpoint_auth_and_known_claims_are_audited_not_invented() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_audit_qualification.py:25> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.140 seconds
+Executing <Task pending name='Task-1236' coro=<SDKTests.test_timeout_known_usage_is_retained_unknown_usage_flagged() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_backend.py:275> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+Executing <Task finished name='Task-1348' coro=<CandidateGateTests.test_generated_outputs_can_be_declared_after_captured_experiment() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_candidate_gate.py:118> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.157 seconds
+Executing <Task pending name='Task-1554' coro=<RoutingTests.test_known_qualification_routes_even_with_other_missing_details() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_carrier_routing.py:98> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.187 seconds
+  AGENT-001 | Target: upload.ardrive.io AUTHENTICATION_UNVERIFIED
+Executing <Task finished name='Task-1554' coro=<RoutingTests.test_known_qualification_routes_even_with_other_missing_details() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_carrier_routing.py:95> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+Executing <Task finished name='Task-1708' coro=<RoutingTests.test_unsafe_redirects_never_emit_target_or_follow() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_carrier_routing.py:131> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+Run: 20261012-100248-f1cf5623 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/1
+Run: 20261012-100248-a6c3b9d9 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Run: 20261012-100248-1b5415f3 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 1 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-002 Loophole Archivist [flag] 1/3
+Run: 20261012-100249-062afeff | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 INVESTIGATING: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261012-100251-e69de260 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 2 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-002 Loophole Archivist [flag] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+Round: AGENT-003 Anomaly Engineer [strong] 1/3
+Run: 20261012-100252-0a8dbdcb | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 INVESTIGATING: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261012-100255-650115f2 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Run: 20261012-100256-b61ae144 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 2/3
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 3/3
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+Round: AGENT-002 Loophole Archivist [flag] 2/3; AGENT-003 Anomaly Engineer [strong] 2/3; AGENT-004 Format Mutant [strong] 2/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 2/3; AGENT-006 Infrastructure Scout [cheap] 2/3; AGENT-007 Future Archaeologist [strong] 2/3
+Round: AGENT-002 Loophole Archivist [flag] 3/3; AGENT-003 Anomaly Engineer [strong] 3/3; AGENT-004 Format Mutant [strong] 3/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 3/3; AGENT-006 Infrastructure Scout [cheap] 3/3; AGENT-007 Future Archaeologist [strong] 3/3
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3; AGENT-008 Hostile Reviewer [flag] 2/3; AGENT-009 Evidence Auditor [strong] 2/3
+Round: AGENT-010 Role Architect [cheap] 2/3; AGENT-011 Prototyper [strong] 2/3; AGENT-008 Hostile Reviewer [flag] 3/3
+Round: AGENT-009 Evidence Auditor [strong] 3/3; AGENT-010 Role Architect [cheap] 3/3; AGENT-011 Prototyper [strong] 3/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261012-100301-69df8284 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Run: 20261012-100301-69df8284 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+  AGENT-001 | Specialist: AGENT-013 Demo Optical Decoder Specialist [strong=None]
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+  AGENT-002 | IDEA-0001 BLOCKED: [DEMO] Account-gated example
+  AGENT-004 | IDEA-0002 BLOCKED: [DEMO] One-time archival fee
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+  AGENT-005 | IDEA-0003 REJECTED: [DEMO] Subscription provider
+  AGENT-007 | IDEA-0004 REJECTED: [DEMO] PiqlFilm / Arctic World Archive
+Round: AGENT-013 Demo Optical Decoder Specialist [strong] 1/3
+  AGENT-013 | IDEA-0005 INVESTIGATING: [DEMO] Local prototype fixture
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261012-100301-69df8284 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper, Demo Optical Decoder Specialist
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Run: 20261012-100304-98d18af9 | autonomous | sandbox-only | experiments=disabled
+  strong = demo-fixture (no API calls) | Prototyper
+  flag = demo-fixture (no API calls) | Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: SDK / PyPI / Docker round-trip and corruption test; no external deposit
+Round: AGENT-011 Prototyper [strong] 1/3
+Round: AGENT-011 Prototyper [strong] 2/3
+Round: AGENT-011 Prototyper [strong] 3/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+Run: 20261012-100305-36bde5fb | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+AGENT-001 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 2/3
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+AGENT-002 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-003 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-004 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+AGENT-005 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-006 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-007 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-002 Loophole Archivist [flag] 2/3; AGENT-003 Anomaly Engineer [strong] 2/3; AGENT-004 Format Mutant [strong] 2/3
+Round: AGENT-005 Failure-Domain Hunter [strong] 2/3; AGENT-006 Infrastructure Scout [cheap] 2/3; AGENT-007 Future Archaeologist [strong] 2/3
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+AGENT-008 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-009 PENDING: Work checkpointed; continuing in next bounded round
+AGENT-010 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-011 Prototyper [strong] 1/3; AGENT-008 Hostile Reviewer [flag] 2/3; AGENT-009 Evidence Auditor [strong] 2/3
+AGENT-011 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-010 Role Architect [cheap] 2/3; AGENT-011 Prototyper [strong] 2/3
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+AGENT-012 PENDING: Work checkpointed; continuing in next bounded round
+Round: AGENT-012 Synthesizer / Reporter [flag] 2/3
+Run: 20261012-100309-9a9a36a5 | autonomous | sandbox-only | experiments=disabled
+  cheap = demo-fixture (no API calls) | Infrastructure Scout, Role Architect
+  strong = demo-fixture (no API calls) | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Round: AGENT-001 Meta-Archivist / Orchestrator [flag] 1/3
+AGENT-001 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-002 Loophole Archivist [flag] 1/3; AGENT-003 Anomaly Engineer [strong] 1/3; AGENT-004 Format Mutant [strong] 1/3
+AGENT-002 BLOCKED: OSError: fixture disk unavailable
+AGENT-003 BLOCKED: OSError: fixture disk unavailable
+AGENT-004 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-005 Failure-Domain Hunter [strong] 1/3; AGENT-006 Infrastructure Scout [cheap] 1/3; AGENT-007 Future Archaeologist [strong] 1/3
+AGENT-005 BLOCKED: OSError: fixture disk unavailable
+AGENT-006 BLOCKED: OSError: fixture disk unavailable
+AGENT-007 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-008 Hostile Reviewer [flag] 1/3; AGENT-009 Evidence Auditor [strong] 1/3; AGENT-010 Role Architect [cheap] 1/3
+AGENT-008 BLOCKED: OSError: fixture disk unavailable
+AGENT-009 BLOCKED: OSError: fixture disk unavailable
+AGENT-010 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-011 Prototyper [strong] 1/3
+AGENT-011 BLOCKED: OSError: fixture disk unavailable
+Round: AGENT-012 Synthesizer / Reporter [flag] 1/3
+AGENT-012 BLOCKED: OSError: fixture disk unavailable
+  AGENT-001 | Target: 127.0.0.1 RESOURCE_LIMIT
+  AGENT-001 | Target: 127.0.0.1 MULTI_STEP_EXECUTION_UNAVAILABLE
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-1967' coro=<HandoffTests.test_checkpoint_resume_retains_candidate_and_restores_dependency() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:91> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: gitlab.com POLICY_FORBIDDEN
+  AGENT-001 | Target: Source-backed fixture carrier TARGET_DETAILS_REQUIRED
+Executing <Task pending name='Task-1981' coro=<HandoffTests.test_later_model_submission_reuses_same_id_and_provenance() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:43> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task finished name='Task-1981' coro=<HandoffTests.test_later_model_submission_reuses_same_id_and_provenance() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:42> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-1988' coro=<HandoffTests.test_local_dependency_reopens_after_exact_current_independent_pass() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:79> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+  AGENT-001 | Target: 127.0.0.1 UPLOAD_FLOW_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+  AGENT-001 | Target: 127.0.0.1 RESOURCE_LIMIT
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task finished name='Task-2011' coro=<HandoffTests.test_new_qualification_reopens_completed_auditor() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:134> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.156 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task finished name='Task-2018' coro=<HandoffTests.test_old_qualification_never_rolls_new_candidate_back() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:55> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.141 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Run: 20261012-100318-bdb79b7a | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Loophole Archivist, Synthesizer / Reporter
+Limits: 20 rounds, 1,500,000 tokens, 2400s; USD ceiling=5.0
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=required | max requests=60 | external actions=1 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: FOCUSED REAL-EXPORT DEPOSIT TRIAL: discover one materially new independent FREE carrier, preserve the exact retained Metaweb EPUB and verify its bytes by independent public download. Prefer durable custody over pointe... | role-specific tools
+  AGENT-001 | IDEA-0001 BLOCKED: Source-backed fixture carrier - exact retained export deposit
+Round: AGENT-002 Evidence Auditor [strong] 1/3
+Executing <Task pending name='Task-2025' coro=<HandoffTests.test_real_resume_scheduler_runs_audit_then_refreshes_report_once() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:173> wait_for=<_GatheringFuture pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:709> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.140 seconds
+Round: AGENT-004 Synthesizer / Reporter [flag] 2/2
+Run: 20261012-100318-bdb79b7a | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Loophole Archivist, Synthesizer / Reporter
+Limits: 20 rounds, 1,500,000 tokens, 2400s; USD ceiling=5.0
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=required | max requests=60 | external actions=1 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: FOCUSED REAL-EXPORT DEPOSIT TRIAL: discover one materially new independent FREE carrier, preserve the exact retained Metaweb EPUB and verify its bytes by independent public download. Prefer durable custody over pointe... | role-specific tools
+Executing <Task finished name='Task-2025' coro=<HandoffTests.test_real_resume_scheduler_runs_audit_then_refreshes_report_once() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:156> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.235 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-2041' coro=<HandoffTests.test_resume_releases_only_satisfied_dependency_block_not_approval() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_handoff.py:64> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task pending name='Task-2055' coro=<QualificationTests.test_actual_sdk_dispatches_qualification_tool_without_paid_api() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:138> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+  AGENT-001 | Target: 127.0.0.1 PRIMARY_SOURCES_REQUIRED
+  AGENT-001 | Target: example.org READY_FOR_AUDIT
+  AGENT-001 | Target: other.example.org ACCOUNT_SETUP_REQUIRED
+Executing <Task pending name='Task-2144' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:67> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-2144' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:74> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.219 seconds
+Executing <Task pending name='Task-2144' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:89> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.250 seconds
+Executing <Task finished name='Task-2144' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:66> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+  AGENT-001 | Target: gitlab.com POLICY_FORBIDDEN
+  AGENT-001 | Target: api.github.com POLICY_FORBIDDEN
+  AGENT-001 | Target: codeberg.org POLICY_FORBIDDEN
+  AGENT-001 | Target: vojtamaur.cz POLICY_FORBIDDEN
+  AGENT-001 | Target: gitlab.com. POLICY_FORBIDDEN
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-2159' coro=<QualificationTests.test_missing_grant_is_blocked_lead_not_rejected_mechanism() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:59> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Run: 20261012-100327-d8e5275f | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Loophole Archivist, Synthesizer / Reporter
+Limits: 20 rounds, 1,500,000 tokens, 2400s; USD ceiling=5.0
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=required | max requests=60 | external actions=1 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: FOCUSED REAL-EXPORT DEPOSIT TRIAL: discover one materially new independent FREE carrier, preserve the exact retained Metaweb EPUB and verify its bytes by independent public download. Prefer durable custody over pointe... | role-specific tools
+Round: AGENT-001 Loophole Archivist [flag] 1/4
+Executing <Task finished name='Task-2167' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.157 seconds
+  AGENT-002 | NO_ADMITTED_DISCOVERY_CANDIDATE; no paid role dispatch
+  AGENT-003 | NO_INDEPENDENTLY_APPROVED_DEPOSIT_PLAN; no paid role dispatch
+Round: AGENT-004 Synthesizer / Reporter [flag] 1/2
+Executing <Task finished name='Task-2168' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.172 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-2173' coro=<QualificationTests.test_plan_change_invalidates_old_audit() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:147> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.156 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task finished name='Task-2173' coro=<QualificationTests.test_plan_change_invalidates_old_audit() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:144> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.187 seconds
+  AGENT-001 | Target: 127.0.0.1 RESOURCE_LIMIT
+  AGENT-001 | Target: known.example.org BASELINE_COMPARISON_REQUIRED
+  AGENT-001 | Target: known.example.org ALREADY_KNOWN_BASELINE
+Executing <Task finished name='Task-2182' coro=<QualificationTests.test_resource_failure_and_archive_mention_are_separate() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:101> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.140 seconds
+Executing <Task pending name='Task-2196' coro=<ExecutionModesTests.test_approval_required_queues_then_exact_decision_allows_execution() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_execution_modes.py:147> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Executing <Task pending name='Task-2240' coro=<ExecutionModesTests.test_fake_sdk_timeout_retains_unknown_budget_across_reopen() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_execution_modes.py:284> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.141 seconds
+Executing <Task pending name='Task-2356' coro=<ExecutionModesTests.test_materialized_export_captured_by_test_can_deposit_exact_original() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_execution_modes.py:244> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+Executing <Task pending name='Task-2373' coro=<ExecutionModesTests.test_pause_resume_preserves_research_and_audit_chain() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_execution_modes.py:271> wait_for=<_GatheringFuture pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:709> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+Executing <Task finished name='Task-2374' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.203 seconds
+Executing <Task finished name='Task-2384' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.203 seconds
+Executing <Task pending name='Task-2407' coro=<ExternalRecoveryTests.test_cancelled_failed_worker_persists_unknown_and_never_retries() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_external_recovery.py:59> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+Executing <Task pending name='Task-2415' coro=<ExternalRecoveryTests.test_cancelled_success_persists_receipt_and_marks_approval_executed() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_external_recovery.py:42> wait_for=<Future pending cb=[_chain_future.<locals>._call_check_cancel() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\futures.py:387, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+Executing <Task pending name='Task-2423' coro=<ExternalRecoveryTests.test_inflight_candidate_revision_keeps_current_aggregate_completion() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_external_recovery.py:84> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.157 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-2445' coro=<FocusedTests.test_document_reads_satisfy_independent_qualification_not_search_links() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_focused_tasking.py:103> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Executing <Task pending name='Task-2469' coro=<FocusedTests.test_sdk_role_tools_and_actual_document_tool_dispatch() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_focused_tasking.py:130> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+Run: 20261012-100346-1ea5617d | supervised | sandbox-only | experiments=disabled
+  cheap = UNSET | Infrastructure Scout, Role Architect
+  strong = UNSET | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = UNSET | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: novelty-first
+Run: 20261012-100347-90e9e133 | autonomous | external | experiments=disabled
+  strong = gpt-5.4-mini | Prototyper
+  flag = gpt-5.4-mini | Synthesizer / Reporter
+Limits: 5 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=disabled | max requests=12 | external actions=1 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: public HTTPS service docs -> upload -> download -> SHA256 receipt; integration test
+Round: AGENT-001 Prototyper [strong] 1/3
+Executing <Task pending name='Task-2653' coro=<Engine.step() running at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:1021> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.187 seconds
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=101
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=75
+  AGENT-001 | HTTP: POST COMPLETED, code=200, bytes=41
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=44
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=115
+  AGENT-001 | HTTP public smoke: PASS, docs/terms read + upload + download + matching SHA256
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+Executing <Task pending name='Task-2652' coro=<PublicSmokeTests.test_actual_sdk_learns_non_provider_specific_protocol() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_public_smoke.py:172> wait_for=<_GatheringFuture pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:709> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.140 seconds
+Executing <Task pending name='Task-2945' coro=<Engine.step() running at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:1021> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.188 seconds
+Executing <Task finished name='Task-2652' coro=<PublicSmokeTests.test_actual_sdk_learns_non_provider_specific_protocol() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_public_smoke.py:122> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.235 seconds
+Run: 20261012-100352-4bbcb61f | autonomous | external | experiments=disabled
+  strong = gpt-5.4-mini | Prototyper
+  flag = gpt-5.4-mini | Synthesizer / Reporter
+Limits: 5 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=disabled | max requests=12 | external actions=3 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: local service docs -> upload -> download -> SHA256 receipt; integration test
+Round: AGENT-001 Prototyper [strong] 1/3
+Executing <Task pending name='Task-3005' coro=<SmokeTests.test_actual_sdk_tools_and_service_through_full_engine() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_smoke.py:164> wait_for=<_GatheringFuture pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:709> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Executing <Task pending name='Task-3006' coro=<Engine.step() running at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:1021> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.141 seconds
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=393
+  AGENT-001 | HTTP: POST COMPLETED, code=201, bytes=70
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=78
+  AGENT-001 | HTTP smoke: PASS, docs read + upload + download + matching SHA256
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+Executing <Task pending name='Task-3166' coro=<Engine.step() running at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:1021> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.172 seconds
+Executing <Task finished name='Task-3005' coro=<SmokeTests.test_actual_sdk_tools_and_service_through_full_engine() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_smoke.py:133> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.188 seconds
+Executing <Task finished name='Task-3193' coro=<SmokeTests.test_documentation_read_and_byte_evidence_are_mandatory() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_smoke.py:96> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+Run: 20261012-100355-9e69021c | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Prototyper
+  flag = demo-fixture (no API calls) | Synthesizer / Reporter
+Limits: 5 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=disabled | max requests=12 | external actions=3 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: local service docs -> upload -> download -> SHA256 receipt; integration test
+Round: AGENT-001 Prototyper [strong] 1/3
+Executing <Task pending name='Task-3202' coro=<Engine.step() running at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:1021> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[gather.<locals>._done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:764] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.125 seconds
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=393
+  AGENT-001 | HTTP: POST COMPLETED, code=201, bytes=70
+  AGENT-001 | HTTP: GET COMPLETED, code=200, bytes=78
+  AGENT-001 | HTTP smoke: PASS, docs read + upload + download + matching SHA256
+Executing <Task finished name='Task-3202' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.125 seconds
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+Executing <Task finished name='Task-3206' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.172 seconds
+Executing <Task finished name='Task-3201' coro=<SmokeTests.test_full_round_trip_and_report_not_preservation_deposit() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_smoke.py:52> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.281 seconds
+Run: 20261012-100356-56efa331 | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Prototyper
+  flag = demo-fixture (no API calls) | Synthesizer / Reporter
+Limits: 5 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=disabled | max requests=12 | external actions=3 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: local service docs -> upload -> download -> SHA256 receipt; integration test
+Round: AGENT-001 Prototyper [strong] 1/3
+Executing <Task finished name='Task-3212' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.172 seconds
+Round: AGENT-001 Prototyper [strong] 2/3
+Executing <Task finished name='Task-3213' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.157 seconds
+Round: AGENT-001 Prototyper [strong] 3/3
+Executing <Task finished name='Task-3214' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.156 seconds
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+Executing <Task finished name='Task-3215' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.157 seconds
+Run: 20261012-100357-cb04fe28 | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Prototyper
+  flag = demo-fixture (no API calls) | Synthesizer / Reporter
+Limits: 5 rounds, 500,000 tokens, 1200s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=disabled | max requests=12 | external actions=3 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: local service docs -> upload -> download -> SHA256 receipt; integration test
+Round: AGENT-001 Prototyper [strong] 1/3
+Executing <Task pending name='Task-3211' coro=<SmokeTests.test_missing_receipt_cannot_claim_complete_and_real_blockers_remain() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_smoke.py:80> wait_for=<_GatheringFuture pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:709> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.343 seconds
+Executing <Task finished name='Task-3216' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.157 seconds
+Round: AGENT-002 Synthesizer / Reporter [flag] 1/1
+Executing <Task finished name='Task-3217' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:990> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.157 seconds
+Executing <Task finished name='Task-3211' coro=<SmokeTests.test_missing_receipt_cannot_claim_complete_and_real_blockers_remain() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_smoke.py:70> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+Executing <Task pending name='Task-3227' coro=<SmokeTests.test_restart_keeps_object_and_pause_blocks_network() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_smoke.py:129> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Executing <Task finished name='Task-3227' coro=<SmokeTests.test_restart_keeps_object_and_pause_blocks_network() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_smoke.py:113> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.110 seconds
+Executing <Task pending name='Task-3260' coro=<HttpToolsTests.test_independent_review_required_before_approval_or_upload() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_tools.py:115> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Executing <Task pending name='Task-3416' coro=<HttpToolsTests.test_scope_supervision_approval_binding_and_resume() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_http_tools.py:79> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+----------------------------------------------------------------------
+Exported package bytes; unsupported POSIX mode updates: 1
+Ran 371 tests in 126.661s
+
+OK (skipped=1)

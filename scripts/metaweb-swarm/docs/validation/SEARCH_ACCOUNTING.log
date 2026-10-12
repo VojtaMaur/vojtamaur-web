@@ -1,0 +1,12 @@
+Run: 20261012-091739-560782ed | supervised | sandbox-only | experiments=disabled
+  cheap = UNSET | Infrastructure Scout, Role Architect
+  strong = UNSET | Anomaly Engineer, Format Mutant, Failure-Domain Hunter, Future Archaeologist, Evidence Auditor, Prototyper
+  flag = UNSET | Meta-Archivist / Orchestrator, Loophole Archivist, Hostile Reviewer, Synthesizer / Reporter
+Limits: 48 rounds, 300,000 tokens, 3600s; USD ceiling=None
+Packages: disabled | Docker experiments: network none
+HTTP: read-only | approvals=required | max requests=100 | external actions=5 | dedicated credentials=0 | host accounts unavailable
+Prior work: novelty-first
+----------------------------------------------------------------------
+Ran 58 tests in 9.196s
+
+OK

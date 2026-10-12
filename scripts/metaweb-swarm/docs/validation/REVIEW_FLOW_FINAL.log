@@ -1,0 +1,71 @@
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-2' coro=<ContractTests.test_audit_completed_with_setup_handoff_does_not_become_continue_or_rejected_role() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:70> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-9' coro=<ContractTests.test_audit_without_current_critique_cannot_claim_completed() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:82> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task pending name='Task-16' coro=<ContractTests.test_evidence_gap_never_rejects_even_with_source_and_missing_format_fact() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:38> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.140 seconds
+  AGENT-001 | Target: 127.0.0.1 UPLOAD_FLOW_REQUIRED
+  AGENT-001 | Target: 127.0.0.1 RESOURCE_LIMIT
+Executing <Task finished name='Task-24' coro=<ContractTests.test_flow_capture_requalifies_same_candidate_and_derives_three_actions() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:88> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.219 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task pending name='Task-31' coro=<ContractTests.test_genuine_failure_requires_independent_read_and_explicit_failure_fact() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:54> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.156 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task pending name='Task-39' coro=<ContractTests.test_invented_failure_fact_or_changed_source_cannot_ground_rejection() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:151> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.140 seconds
+  AGENT-001 | Target: 127.0.0.1 UPLOAD_FLOW_REQUIRED
+Executing <Task pending name='Task-47' coro=<ContractTests.test_model_ignoring_required_flow_is_blocked_without_repeat_or_success_claim() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:135> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.312 seconds
+  AGENT-001 | Target: 127.0.0.1 UPLOAD_FLOW_REQUIRED
+Executing <Task finished name='Task-90' coro=<ContractTests.test_other_role_or_wrong_qualification_cannot_change_flow() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:109> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-97' coro=<ContractTests.test_owner_cannot_certify_its_own_negative_claim() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:64> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.156 seconds
+  AGENT-001 | Target: 127.0.0.1 UPLOAD_FLOW_REQUIRED
+Executing <Task pending name='Task-104' coro=<ContractTests.test_sdk_forces_flow_tool_once_and_engine_completes_handoff() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:122> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.265 seconds
+  AGENT-001 | Target: 127.0.0.1 RESOURCE_LIMIT
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task pending name='Task-183' coro=<ContractTests.test_sdk_typed_review_cannot_replace_setup_with_rejection() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:146> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.188 seconds
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-264' coro=<ContractTests.test_setup_reject_is_revise_and_requested_verdict_is_preserved() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:27> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+  AGENT-001 | Target: 127.0.0.1 UPLOAD_FLOW_REQUIRED
+Executing <Task finished name='Task-271' coro=<ContractTests.test_unknown_flow_is_explicit_and_never_fabricates_steps() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_review_flow_contract.py:101> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.140 seconds
+Executing <Task pending name='Task-278' coro=<QualificationTests.test_actual_sdk_dispatches_qualification_tool_without_paid_api() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:138> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+  AGENT-001 | Target: 127.0.0.1 PRIMARY_SOURCES_REQUIRED
+  AGENT-001 | Target: example.org READY_FOR_AUDIT
+  AGENT-001 | Target: other.example.org ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-364' coro=<QualificationTests.test_dedicated_grant_is_host_scoped_and_no_secret_recorded() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:110> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-371' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:74> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.172 seconds
+Executing <Task pending name='Task-371' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:89> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.281 seconds
+Executing <Task finished name='Task-371' coro=<QualificationTests.test_exact_reviewed_export_approval_resume_and_readback() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:66> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.109 seconds
+  AGENT-001 | Target: gitlab.com POLICY_FORBIDDEN
+  AGENT-001 | Target: api.github.com POLICY_FORBIDDEN
+  AGENT-001 | Target: codeberg.org POLICY_FORBIDDEN
+  AGENT-001 | Target: vojtamaur.cz POLICY_FORBIDDEN
+  AGENT-001 | Target: gitlab.com. POLICY_FORBIDDEN
+  AGENT-001 | Target: 127.0.0.1 ACCOUNT_SETUP_REQUIRED
+Executing <Task finished name='Task-386' coro=<QualificationTests.test_missing_grant_is_blocked_lead_not_rejected_mechanism() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:59> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+Run: 20261012-104307-617f7530 | autonomous | external | experiments=disabled
+  strong = demo-fixture (no API calls) | Evidence Auditor, Prototyper
+  flag = demo-fixture (no API calls) | Loophole Archivist, Synthesizer / Reporter
+Limits: 20 rounds, 1,500,000 tokens, 2400s; USD ceiling=5.0
+Packages: disabled | Docker experiments: network none
+HTTP: enabled | approvals=required | max requests=60 | external actions=1 | dedicated credentials=0 | host accounts unavailable
+Prior work: continue
+Task: FOCUSED REAL-EXPORT DEPOSIT TRIAL: discover one materially new independent FREE carrier, preserve the exact retained Metaweb EPUB and verify its bytes by independent public download. Prefer durable custody over pointe... | role-specific tools
+Round: AGENT-001 Loophole Archivist [flag] 1/4
+Executing <Task finished name='Task-394' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:1009> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.156 seconds
+  AGENT-002 | NO_ADMITTED_DISCOVERY_CANDIDATE; no paid role dispatch
+  AGENT-003 | NO_INDEPENDENTLY_APPROVED_DEPOSIT_PLAN; no paid role dispatch
+Round: AGENT-004 Synthesizer / Reporter [flag] 1/2
+Executing <Task finished name='Task-395' coro=<Engine.step() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\metaweb_swarm\engine.py:1009> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:384> took 0.172 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task pending name='Task-400' coro=<QualificationTests.test_plan_change_invalidates_old_audit() running at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:147> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\tasks.py:908, Task.task_wakeup()] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:428> cb=[_run_until_complete_cb() at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:181] created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.156 seconds
+  AGENT-001 | Target: 127.0.0.1 READY_FOR_AUDIT
+Executing <Task finished name='Task-400' coro=<QualificationTests.test_plan_change_invalidates_old_audit() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:144> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.188 seconds
+  AGENT-001 | Target: 127.0.0.1 RESOURCE_LIMIT
+  AGENT-001 | Target: known.example.org BASELINE_COMPARISON_REQUIRED
+  AGENT-001 | Target: known.example.org ALREADY_KNOWN_BASELINE
+Executing <Task finished name='Task-409' coro=<QualificationTests.test_resource_failure_and_archive_mention_are_separate() done, defined at G:\vojtamaur-web\scripts\metaweb-swarm\tests\test_deposit_qualification.py:101> result=None created at C:\Users\Vojta\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:100> took 0.125 seconds
+----------------------------------------------------------------------
+Ran 31 tests in 19.658s
+
+OK

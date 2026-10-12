@@ -1,0 +1,78 @@
+{
+  "requests": [
+    {
+      "url": "https://tmpfiles.org/api",
+      "status": "COMPLETED",
+      "response": {
+        "status": 200,
+        "headers": {
+          "Date": "Thu, 08 Oct 2026 08:13:09 GMT",
+          "Content-Type": "text/html; charset=utf-8",
+          "Transfer-Encoding": "chunked",
+          "Connection": "close",
+          "Server": "cloudflare",
+          "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+          "X-Powered-By": "PHP/8.4.25",
+          "Cache-Control": "no-cache, private",
+          "cf-cache-status": "DYNAMIC",
+          "Server-Timing": "cfEdge;dur=9,cfOrigin;dur=72",
+          "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=KMYDMGBQVoB90%2BP%2F9RvZs9SWLsQElSw8i13BmaRCd3VaHmixgVnlfPcrFkMrZZgWF%2B%2BaEO1qJ0d695TfCpUPNeXOzJIKSMmGjunG0JzZzVKBCQz7TdlbE9AzAxqXWuA%3D\"}]}",
+          "CF-RAY": "a473af476c3adc80-FRA",
+          "alt-svc": "h3=\":443\"; ma=86400"
+        },
+        "request_bytes": 0,
+        "response_bytes": 3910,
+        "stored_bytes": 3910,
+        "truncated": false,
+        "timed_out": false,
+        "outcome_uncertain": false,
+        "redirected": false,
+        "url": "https://tmpfiles.org/api",
+        "raw_sha256": "dfc7f609a5eb49ab88475de7ca6c153659ec74ffc3461d0714a3d986905adfe6",
+        "stored_sha256": "dfc7f609a5eb49ab88475de7ca6c153659ec74ffc3461d0714a3d986905adfe6",
+        "sanitized": false,
+        "headers_bytes": 1636,
+        "path": "http/HTTP-bf4e1a637fa04f65.bin"
+      },
+      "error": null
+    },
+    {
+      "url": "https://tmpfiles.org/tos",
+      "status": "COMPLETED",
+      "response": {
+        "status": 200,
+        "headers": {
+          "Date": "Thu, 08 Oct 2026 08:13:10 GMT",
+          "Content-Type": "text/html; charset=utf-8",
+          "Transfer-Encoding": "chunked",
+          "Connection": "close",
+          "Server": "cloudflare",
+          "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+          "X-Powered-By": "PHP/8.4.25",
+          "Cache-Control": "no-cache, private",
+          "cf-cache-status": "DYNAMIC",
+          "Server-Timing": "cfEdge;dur=23,cfOrigin;dur=72",
+          "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=mm6%2FTQRahSHVaTVkFk79R55QcD4nnl3K%2BNHStbZmA6WDnC3nh1NCqxRTNzCae37HoTxHQb7Nx7FMO%2BSP1f2W9XfKPL9QBQ3h8tEEqd8lCKmdBiXiiX5Q43MyPDrHJS4%3D\"}]}",
+          "CF-RAY": "a473af499ec6dbd2-FRA",
+          "alt-svc": "h3=\":443\"; ma=86400"
+        },
+        "request_bytes": 0,
+        "response_bytes": 7738,
+        "stored_bytes": 7738,
+        "truncated": false,
+        "timed_out": false,
+        "outcome_uncertain": false,
+        "redirected": false,
+        "url": "https://tmpfiles.org/tos",
+        "raw_sha256": "77d2dd1cbb9167b9a5a34aa51777cf0c9e5ecdc631fbef6103ca643baa130b71",
+        "stored_sha256": "77d2dd1cbb9167b9a5a34aa51777cf0c9e5ecdc631fbef6103ca643baa130b71",
+        "sanitized": false,
+        "headers_bytes": 1635,
+        "path": "http/HTTP-7116984d26d14b64.bin"
+      },
+      "error": null
+    }
+  ],
+  "uploads": 0,
+  "paid_api_calls": 0
+}

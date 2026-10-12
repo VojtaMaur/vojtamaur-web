@@ -81,7 +81,7 @@ def _events(run_dir: Path) -> tuple[list[dict], list[str]]:
 
 def _artifacts(run_dir: Path) -> list[dict]:
     results = []
-    for folder in ("patches", "artifacts", "agents"):
+    for folder in ("patches", "artifacts", "agents", "audit"):
         root = run_dir / folder
         if not root.exists() or _is_link(root):
             continue
@@ -245,10 +245,17 @@ def generate_reports(run_dir: Path, state: dict) -> None:
              "Přidělení modelů:", "", _code([{k: a.get(k) for k in ("id", "role", "model_tier", "model")} for a in agents]), "",
              "Verze runtime/SDK:", "", _code(state.get("runtime_versions", {})), "",
              "## Závěr", ""]
+    if config.get('http_smoke_test'):
+        scope = 'veřejné HTTPS služby' if config.get('http_smoke_service') else 'lokální služby'
+        lines.extend([f"**HTTP integrační test {scope}.** Nejde o nový preservation mechanism ani archivní deposit.",
+                      "", "Výsledek hostem ověřené HTTP sekvence:", "", _code(state.get('http_smoke', {})), ""])
     if is_demo:
         lines.extend(["**DEMO / OFFLINE FIXTURE.** Tento běh ověřuje infrastrukturu a používá předem připravené",
                       "ukázkové výstupy. Nepředstavuje skutečný webový výzkum, objev ani ověření archivní služby.", ""])
+    target_counts = Counter(str(r.get('status') or 'UNASSESSED') for r in state.get('deposit_qualifications', []))
+    target_summary = ', '.join(f'{key}: {value}' for key, value in sorted(target_counts.items())) or 'žádné'
     lines.extend([f"Roj eviduje {len(agents)} agentů, {len(ideas)} kandidátů a {len(events)} auditních událostí.", "",
+                  f"Posouzení cílových plánů: {len(state.get('deposit_qualifications', []))} ({target_summary}). Nejde o počet různých mechanismů.", "",
                   f"Návrhy čekající na posouzení identity: {len(state.get('pending_candidate_reviews', []))} (nejsou REJECTED; uchovány níže a v manifestu).", "",
                   f"Důvod zastavení: {_text(state.get('stop_reason'))}.", "",
                   "Počty kandidátů podle stavu: " + (", ".join(f"{key}: {value}" for key, value in sorted(by_status.items())) or "žádné"), "",
@@ -258,15 +265,27 @@ def generate_reports(run_dir: Path, state: dict) -> None:
                   "zásah/podklad, REJECTED je zamítnutý návrh a LIMIT_REACHED znamená vyčerpaný limit.", ""])
     lines.extend(["## Režim a skutečná realizace", "", _code({k: config.get(k) for k in ("run_mode", "external_scope", "approval_required", "experiments")}), "",
                   "NOT_SELECTED/DEFERRED znamená nerealizovaný návrh, nikoli zamítnutý výzkum. V supervised lze výzkum ukončit bez realizace.", "",
-                  f"Ověřená uložení: {sum(a.get('status') == 'VERIFIED' and a.get('receipt', {}).get('host_verified') is True for a in state.get('external_actions', []))} · Docker experimenty: {len(state.get('experiments', []))} · Zaznamenané funkční testy: {len(state.get('tests', []))}", "",
+                  f"Ověřená uložení: {sum(a.get('status') == 'VERIFIED' and a.get('receipt', {}).get('host_verified') is True and a.get('receipt', {}).get('preservation_deposit') is not False for a in state.get('external_actions', []))} · Docker experimenty: {len(state.get('experiments', []))} · Zaznamenané funkční testy: {len(state.get('tests', []))}", "",
                   "Receipts ověřují shodu přečtených bajtů při uložení; neprokazují trvalost úložiště. Popis assertions je úsudek testujícího agenta.", "",
                   "Vybrané realizace:", "", _code(state.get("implementation_choices", {})), "",
                   "Externí akce a výsledky:", "", _code(state.get("external_actions", [])), "",
+                  "Obecné HTTP požadavky (HTTP úspěch není automaticky ověřené uložení):", "", _code(state.get('http_requests', [])), "",
                   "Docker pokusy (výpis omezený; celý průběh v auditu):", "",
                   _code([{k: (str(v)[:800] if k in {"output", "stdout", "stderr"} else v) for k, v in e.items()} for e in state.get("experiments", [])]), "",
                   "Testovací receipts (bajty a assertions; nikoli certifikace standardu):", "", _code(state.get("tests", [])), ""])
     lines.extend(['Instalace balíčků (úplné download/build/install receipts v manifestu a auditu):', '',
         _code([{k: r.get(k) for k in ('id', 'agent_id', 'idea_id', 'requirements', 'status', 'reason', 'distributions', 'wheel_bytes', 'installed_bytes')} for r in state.get('package_installations', [])]), ''])
+    search_notes = [r['search_accounting_overage'] for r in state.get('budget_settlements', {}).values() if r.get('search_accounting_overage')]
+    if search_notes:
+        lines.extend(['Účetní počet vyhledávání zahrnuje nedokončené položky započtené konzervativně. Není dokladem provedení ani provider billing; jejich odhad i tokeny se vešly do již rezervovaných mezí:', '', _code(search_notes), ''])
+    if state.get('carrier_screens'):
+        lines.extend(['Rychlá kontrola služeb před dokumentací (registr není ověření živé služby; zmínky/absence nedokazují implementaci/novost):', '',
+                      '| Provider | Status | Další krok |', '| --- | --- | --- |'])
+        for screen in state['carrier_screens']:
+            lines.append('| ' + ' | '.join(_cell(screen.get(k)) for k in ('provider', 'status', 'next_action')) + ' |')
+        lines.extend(['', 'Úplné podklady kontroly služeb:', '', _code(state['carrier_screens']), ''])
+    lines.extend(['Posouzení proveditelnosti cílových služeb (bez HTTP zápisů):', '', _code(state.get('deposit_qualifications', [])), ''])
+    lines.extend(['Vícekrokové HTTP realizace (stav kroků, schválení a skutečné byte receipts):', '', _code(state.get('deposit_executions', [])), ''])
     lines.extend(['Dříve probádané kandidáty odložené při novém discovery (nejsou REJECTED ani implementovaná baseline):', '',
                   _code(state.get('prior_work_deferrals', [])), ''])
     for agent in agents:
@@ -383,9 +402,9 @@ def generate_reports(run_dir: Path, state: dict) -> None:
     manifest = {"pending_candidate_reviews": state.get('pending_candidate_reviews', []), "schema_version": 1, "run_id": state.get("run_id"), "created_at": state.get("created_at"),
                 "updated_at": state.get("updated_at"), "status": status, "stop_reason": state.get("stop_reason"),
                 "backend": backend, "demo_fixture": is_demo, "usage": usage, "config": config,
-                "objective": state.get("objective"), "software_version": state.get("software_version"),
+                "http_smoke": state.get("http_smoke"), "objective": state.get("objective"), "software_version": state.get("software_version"),
                 "runtime_versions": state.get("runtime_versions", {}), "prompt_hashes": state.get("prompt_hashes", {}),
-                "agents": [{**{key: agent.get(key) for key in ("id", "role", "mission", "phase", "parent_id", "depth", "creation_reason", "work_kind", "status", "rounds", "reason_for_stopping", "summary", "usage", "unexplored_leads", "handoff_leads", "blind_spots")},
+                "agents": [{**{key: agent.get(key) for key in ("id", "role", "mission", "phase", "parent_id", "depth", "creation_reason", "work_kind", "status", "rounds", "reason_for_stopping", "summary", "usage", "unexplored_leads", "handoff_leads", "blind_spots", "active_carrier_screen", "carrier_switch_required")},
                             "model_tier": agent.get("model_tier"),
                             "model": "demo-fixture" if is_demo else agent.get("model", config.get("model"))} for agent in agents],
                 "usage_estimated_usd": state.get("usage_estimated_usd"), "steps": state.get("steps", 0),
@@ -395,9 +414,13 @@ def generate_reports(run_dir: Path, state: dict) -> None:
                 "approval_count": len(approvals), "event_count": len(events), "event_kinds": dict(sorted(by_kind.items())),
                 "event_read_errors": event_errors, "snapshot": state.get("snapshot", {}), "context": context,
                 "exports": state.get("exports", {}), "implementation_choices": state.get("implementation_choices", {}),
-                "external_actions": state.get("external_actions", []), "experiments": state.get("experiments", []),
+                "deposit_qualifications": state.get('deposit_qualifications', []),
+                "deposit_executions": state.get('deposit_executions', []),
+                "carrier_screens": state.get("carrier_screens", []),
+                "http_requests": state.get('http_requests', []), "external_actions": state.get("external_actions", []), "experiments": state.get("experiments", []),
                 "prior_work_deferrals": state.get('prior_work_deferrals', []),
                 "tests": state.get("tests", []), "critiques": state.get("critiques", []), "budget_reservations": state.get("budget_reservations", {}),
+                "budget_settlements": state.get("budget_settlements", {}),
                 "package_installations": state.get('package_installations', []),
                 "artifacts": artifacts, "reports": ["SWARM_REPORT.md", "TIMELINE.md", "ideas.jsonl"],
                 "audit_note": "Hashes detect byte changes only; hash presence is not independent verification of claims."}

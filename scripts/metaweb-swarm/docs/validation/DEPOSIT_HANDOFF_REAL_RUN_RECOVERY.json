@@ -1,0 +1,34 @@
+{
+  "run_id": "20261012-092352-fd4b9ba8",
+  "backup": "C:\\Users\\Vojta\\Documents\\Codex\\2026-10-06\\referenced-chatgpt-conversation-this-is-an\\outputs\\DEPOSIT_HANDOFF_BACKUP_20261012-115257\\run-before-recovery",
+  "api_calls": 0,
+  "external_actions": 0,
+  "budget_and_credentials_unchanged": true,
+  "new_qualification": "QUAL-35450b9ffdc7d782f8d7",
+  "qualification_status": "UPLOAD_FLOW_REQUIRED",
+  "candidate_ids": [
+    "IDEA-0001"
+  ],
+  "agents": [
+    {
+      "id": "AGENT-001",
+      "status": "LIMIT_REACHED",
+      "rounds": 6
+    },
+    {
+      "id": "AGENT-002",
+      "status": "PENDING",
+      "rounds": 0
+    },
+    {
+      "id": "AGENT-003",
+      "status": "BLOCKED",
+      "rounds": 0
+    },
+    {
+      "id": "AGENT-004",
+      "status": "PENDING",
+      "rounds": 1
+    }
+  ]
+}

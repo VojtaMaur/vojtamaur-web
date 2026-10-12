@@ -1,0 +1,53 @@
+{
+  "run": "C:\\Users\\Vojta\\Documents\\Codex\\2026-10-06\\referenced-chatgpt-conversation-this-is-an\\outputs\\HTTP_PUBLIC_PREFLIGHT_RUNS\\20261008-073637-fa1c3a77",
+  "status": "COMPLETED",
+  "stop_reason": "All scheduled roles finished with no remaining unblocked leads",
+  "http_smoke": {
+    "scope": "public network integration test; temporary bytes, not a preservation deposit",
+    "public_network": true,
+    "input_path": "context/HTTP_SMOKE_INPUT.txt",
+    "passed": true,
+    "documentation_url": "https://tmpfiles.org/api",
+    "terms_url": "https://tmpfiles.org/tos",
+    "allowed_origins": [
+      "https://tmpfiles.org"
+    ],
+    "input_sha256": "da90837b9904995f4a0536f24769185f852085f4932403e2d6c4f914dc85ddee",
+    "running": false,
+    "receipt": {
+      "host_verified": true,
+      "scope": "public network integration test; temporary bytes, not a preservation deposit",
+      "agent_id": "AGENT-001",
+      "documentation_request_id": "HTTP-419e680867744ddc",
+      "terms_request_id": "HTTP-5304cae3d41f4d3d",
+      "action_id": "HTTP-8de28c74865d4937",
+      "download_request_id": "HTTP-b4cf57934eb24630",
+      "location": "https://tmpfiles.org/dl/1791445298.1f076b206241588c/wMAZgwf0oZ6X/metaweb-http-smoke.txt",
+      "sha256": "da90837b9904995f4a0536f24769185f852085f4932403e2d6c4f914dc85ddee",
+      "bytes": 115,
+      "time": "2026-10-08T07:36:39+00:00",
+      "preservation_deposit": false,
+      "meaning": "Actual public HTTPS byte read-back; no durability or novelty claim"
+    }
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "requests": 0,
+    "total_tokens": 0,
+    "unknown_steps": 0,
+    "web_search_calls": 0,
+    "by_model": {
+      "gpt-5.4-mini": {
+        "requests": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "web_search_calls": 0,
+        "unknown_steps": 0
+      }
+    }
+  },
+  "paid_api_calls": 0,
+  "meaning": "Actual public HTTPS multipart/read-back, host scripted requests. Live agent inference is a separate next validation."
+}

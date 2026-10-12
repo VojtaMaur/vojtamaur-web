@@ -22,6 +22,9 @@ def parser():
         init.add_argument("--project", required=True, type=Path)
         init.add_argument("--runs-root", required=True, type=Path)
         init.add_argument("--config", type=Path)
+        task = init.add_mutually_exclusive_group()
+        task.add_argument("--task", help="Operator research objective for this NEW run (up to 12000 characters)")
+        task.add_argument("--task-file", type=Path, help="Read an operator objective from a UTF-8 text file, retained in checkpoint")
         init.add_argument("--model", help="Override ALL tiers for this new run without editing the profile")
         init.add_argument("--experiments", choices=("disabled", "docker"))
         init.add_argument("--mode", choices=("supervised", "autonomous"))
@@ -43,6 +46,11 @@ def parser():
     for name in ("pause", "status", "approvals", "report", "verify"):
         command = commands.add_parser(name)
         command.add_argument("run_dir", type=Path)
+    for name in ('deposit-plan','deposit-execute'):
+        command=commands.add_parser(name,help='Record or execute a qualified generic HTTP sequence without model calls')
+        command.add_argument('run_dir',type=Path)
+        command.add_argument('idea_id')
+        if name=='deposit-plan': command.add_argument('--plan-file',type=Path,required=True)
     command = commands.add_parser("decide")
     command.add_argument("run_dir", type=Path)
     command.add_argument("approval_id")
@@ -89,6 +97,10 @@ def doctor(backend, docker_check=False, config_path=None, output_format="json"):
     config = load_config(config_path)
     checks["models"] = [{k: a.get(k) for k in ("role", "model_tier", "model")} for a in seed_agents(config)]
     checks["execution_policy"] = {k: config[k] for k in ("run_mode", "external_scope", "approval_required", "experiments")}
+    checks['http'] = {'access':config.get('http_access','disabled'), 'max_requests':config.get('max_http_requests',100),
+                      'max_total_body_bytes':config.get('max_http_total_bytes',134217728),
+                      'dedicated_credential_grants':len(config.get('http_credentials', [])),
+                      'host_credentials_available':False, 'browser_fallback':False}
     checks['package_installation'] = {'mode': config.get('package_installation', 'disabled'),
         'timeout_seconds': config.get('package_install_timeout_seconds', 120),
         'max_installs_per_agent': config.get('max_package_installs_per_agent', 8),
@@ -135,6 +147,12 @@ def main(argv=None):
             return doctor(args.backend, args.docker_check, args.config, args.format)
         if args.command in ("init", "start"):
             config = load_config(args.config)
+            if args.task is not None:
+                config["operator_objective"] = args.task
+            elif args.task_file is not None:
+                if args.task_file.stat().st_size > 48000:
+                    raise ValueError("Task file exceeds 48000 bytes; objective must fit 12000 characters")
+                config["operator_objective"] = args.task_file.read_text(encoding="utf-8-sig")
             if args.model is not None:
                 if args.model != config.get("model"):
                     for key in ("input_price_per_million", "output_price_per_million", "web_search_price_per_call"):
@@ -193,6 +211,15 @@ def main(argv=None):
                 store.close()
             return 0
         with run_lock(run_dir):
+            if args.command in {'deposit-plan','deposit-execute'}:
+                from .deposit_execution import operator_command
+                steps=None
+                if args.command=='deposit-plan':
+                    if args.plan_file.stat().st_size>100000: raise ValueError('Plan file exceeds 100KB')
+                    steps=json.loads(args.plan_file.read_text(encoding='utf-8-sig'))
+                result=operator_command(run_dir,args.idea_id,steps)
+                print(json.dumps(result,ensure_ascii=False,indent=2))
+                return 3 if result['status']=='LIMIT_REACHED' else 0
             if args.command in ("run", "resume"):
                 if args.backend == "demo":
                     from .demo import DemoBackend

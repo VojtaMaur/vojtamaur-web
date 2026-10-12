@@ -55,7 +55,7 @@ def compact_history(history, archive, target=24000):
 def concise_state(state):
     result = {
         "interpretation": "These are working hypotheses and role claims, not a list of implemented preservation layers. Baseline exists only in captured owner context and original evidence receipts.",
-        "ideas": [{k: i.get(k) for k in ("id", "title", "mechanism", "provider", "status", "payment", "blocker", "next_action", "novelty_class", "novelty_assessment", "baseline_evidence_ids", "canonical_mechanism_key", "mechanism_scope", "implementation_status", "prototype_tested")}
+        "ideas": [{k: i.get(k) for k in ("id", "title", "mechanism", "provider", "status", "payment", "blocker", "next_action", "novelty_class", "novelty_assessment", "baseline_evidence_ids", "canonical_mechanism_key", "mechanism_scope", "implementation_status", "prototype_tested", "qualification_id", "deposit_feasibility", "deposit_plan")}
                   for i in state["ideas"]],
         "roles": [{k: a.get(k) for k in ("id", "role", "status", "summary", "unexplored_leads", "handoff_leads")}
                   for a in state["agents"]],
@@ -63,9 +63,11 @@ def concise_state(state):
         "execution_receipts": {
             "tests": [{k:t.get(k) for k in ('id','idea_id','agent_id','experiment_id','host_execution_verified')} for t in state.get('tests', [])],
             "experiments": [{k:e.get(k) for k in ('experiment_id','idea_id','agent_id','status','returncode')} for e in state.get('experiments', [])],
+            "http": [{k:r.get(k) for k in ('id','idea_id','agent_id','status','response','receipt')} for r in state.get('http_requests', [])][-20:],
             "meaning": "Only tests with host_execution_verified are recorded functional tests. A successful experiment or role summary alone is not a test receipt. Candidate status is the host registry status above.",
         },
     }
+    result['deposit_qualifications'] = [{k: r.get(k) for k in ('id', 'agent_id', 'status', 'reasons', 'plan', 'next_action')} for r in state.get('deposit_qualifications', [])][-12:]
     for idea in result["ideas"]:
         for key, value in list(idea.items()):
             if isinstance(value, str):

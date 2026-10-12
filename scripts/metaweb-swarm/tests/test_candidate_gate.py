@@ -30,6 +30,20 @@ class CandidateGateTests(unittest.IsolatedAsyncioTestCase):
     def tearDown(self):
         self.engine.close(); self.temp.cleanup()
 
+    def test_openai_evidence_accepts_http_records_and_search_urls(self):
+        self.engine.state['backend'] = 'openai'
+        self.agent['external_sources'] = [
+            {'url': 'https://example.org/docs/', 'source': 'http_request'},
+            'https://example.org/terms#section', {'missing_url': True}, None]
+        data = DemoBackend.idea('Mixed source evidence', 'Recover full export bytes', 'FREE', 'VERIFIED')
+        data['evidence'] = [{'url': 'https://example.org/docs', 'claim': 'API documented', 'verified': True},
+                            {'url': 'https://example.org/terms', 'claim': 'Terms documented', 'verified': True},
+                            {'url': 'https://example.org/unread', 'claim': 'Unobserved', 'verified': True}]
+        idea = self.api.submit_idea(data)
+        self.assertEqual(idea['status'], 'VERIFIED')
+        self.assertEqual([e['verified'] for e in idea['evidence']], [True, True, False])
+        self.assertEqual(set(idea['verification_basis']['observed_urls']), {'https://example.org/docs', 'https://example.org/terms'})
+
     def dns(self, scope='multi-string recovery pointer'):
         value = DemoBackend.idea('DNS TXT recovery pointer', 'DNS TXT embeds a manifest hash and recovery URL; concatenate TXT character strings to decode.', 'FREE', 'INVESTIGATING')
         value.update(provider='DNS TXT', mechanism_key='dns-txt-bootstrap', mechanism_scope=scope)

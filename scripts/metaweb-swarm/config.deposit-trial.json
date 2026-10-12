@@ -1,0 +1,80 @@
+{
+  "run_mode": "autonomous",
+  "external_scope": "external",
+  "approval_required": true,
+  "max_web_search_calls_per_request": 1,
+  "model": "gpt-5.4-mini",
+  "seed_roles": [
+    "Loophole Archivist",
+    "Evidence Auditor",
+    "Prototyper",
+    "Synthesizer / Reporter"
+  ],
+  "max_concurrent_agents": 1,
+  "max_agents": 4,
+  "max_agent_rounds": 4,
+  "max_steps": 20,
+  "max_turns": 16,
+  "step_timeout_seconds": 420,
+  "max_total_tokens": 1500000,
+  "max_active_seconds": 2400,
+  "prompt_chars": 30000,
+  "history_chars": 120000,
+  "experiments": "disabled",
+  "role_round_limits": {
+    "Loophole Archivist": 4,
+    "Evidence Auditor": 3,
+    "Prototyper": 6,
+    "Synthesizer / Reporter": 2
+  },
+  "model_tiers": {
+    "cheap": "gpt-5.4-mini",
+    "strong": "gpt-5.4-mini",
+    "flag": "gpt-5.4-mini"
+  },
+  "role_model_tiers": {},
+  "emergent_model_tier": "strong",
+  "model_prices": {
+    "gpt-5.4-mini": {
+      "input_price_per_million": 0.75,
+      "output_price_per_million": 4.5,
+      "web_search_price_per_call": 0.01
+    }
+  },
+  "package_installation": "disabled",
+  "package_install_timeout_seconds": 120,
+  "max_package_installs_per_agent": 8,
+  "max_package_bytes": 536870912,
+  "prior_work_policy": "continue",
+  "semantic_dedupe": true,
+  "http_access": "enabled",
+  "http_credentials": [],
+  "http_test_origins": [],
+  "max_http_requests": 60,
+  "max_http_request_bytes": 3145728,
+  "max_http_response_bytes": 3145728,
+  "max_http_total_bytes": 134217728,
+  "http_timeout_seconds": 30,
+  "operator_objective": "FOCUSED REAL-EXPORT DEPOSIT TRIAL: discover one materially NEW independent FREE carrier for the exact retained Metaweb EPUB; prepare a documented deposit and public exact-byte read-back. This run excludes ALL registered ARCHIVE.txt carriers, including Zenodo and Figshare, even if described as improvement. Free does NOT mean anonymous upload: dedicated SWARM ACCOUNTS AND API CREDENTIALS ARE ALLOWED; missing grants are BLOCKED setup leads. Prefer durable custody over pointers/temporary transports. No production/repository writes. Respect immutable resource limits, independent audit and human approval.",
+  "estimated_budget_usd": 5.0,
+  "include_exports": true,
+  "max_export_file_bytes": 2097152,
+  "max_export_total_bytes": 16777216,
+  "max_external_actions": 1,
+  "max_external_bytes": 3145728,
+  "export_filenames": [
+    "vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub"
+  ],
+  "require_independent_http_review": true,
+  "require_deposit_qualification": true,
+  "task_style": "focused",
+  "role_assignments": {
+    "Loophole Archivist": "Start external web search NOW for a genuinely NEW carrier of the retained EPUB. Find a lawful crack in the internet large enough for this web, beyond conventional archives. Registered ARCHIVE.txt services are outside this task: no Zenodo/Figshare rediscovery and no improvement exception. For EACH actual provider and EACH different docs/API origin call screen_carrier(provider, exact_document_or_api_url) BEFORE reading. One screen does not cover another service/origin; same-provider docs on another origin require another screen under its real name. EXISTING_LAYER/POLICY_FORBIDDEN/OWNER_REJECTED means switch to a DIFFERENT service now. Source mentions alone do not prove deployment; literal absence is not novelty proof. Do not research forbidden production/GitHub/GitLab/Codeberg upload targets. Read actual API plus pricing/terms/retention and relevant sections via read_document; explicitly follow validated redirects after screening a different origin. Assess up to three promising NEW providers. FREE is about payment, not authentication: authenticated uploads can be free, and only the final public recovery must not require our account. Dedicated swarm accounts/keys are allowed, host accounts unavailable. ACCOUNT_REQUIRED with missing grants is a setup lead, never proof of cost or invalidity. Before switching, call check_deposit_target with named fields, real endpoint/auth (use upload_url empty and authentication UNKNOWN when unresolved), exact export from list_exports and whole documented operation_steps. Screen the upload endpoint origin and all docs origins under the same real provider first. An admitted ACCOUNT_SETUP_REQUIRED/RESOURCE_LIMIT/EXECUTABLE_FLOW_REQUIRED candidate must be saved BLOCKED with qualification_id; do not omit it or call it REJECTED. For an existing candidate, record_deposit_execution_plan can prepare concrete response bindings; record_deposit_flow closes missing protocol metadata or records explicit unknown_reason. Missing grant/flow is not permission to invent one. No upload or self-PASS. Finish actual discovery work and hand off exact saved candidate/requirements.",
+    "Evidence Auditor": "Independently read the saved NEW candidate API/terms, exact upload protocol, FREE payment evidence, export capacity, lawful automation, retention and public anonymous retrieval. An upload requiring a dedicated account/token may still be FREE. Missing credentials are SETUP_GAP/REVISE, not REJECT or evidence of fees. Never reopen registered ARCHIVE.txt carriers as generic improvements in this task. Host drafts have UNKNOWN pricing until independently supported; update the existing candidate when justified. PASS requires the current exact qualification and supplied resources/grants, not a prior completed upload. REJECT requires documented MECHANISM_FAILURE and concrete own negative evidence. Missing execution/bindings/capacity is a precise setup/capability/evidence REVISE. Finish the assigned audit as COMPLETED after current critique, even if implementation remains blocked. No new candidates or uploads; later account/upload/test work belongs in handoff_leads.",
+    "Prototyper": "Use the existing admitted candidate. If host grants planning-only tools, prepare record_deposit_execution_plan from real docs WITHOUT external writes and hand off its new qualification for independent audit. After current independent PASS, materialize the exact retained EPUB. For multi-step JSON APIs use execute_deposit_plan; it binds reserve/upload/finalize/public GET, uses dedicated grants only, applies one whole-plan approval, checkpoints and hash-checks final bytes. A legacy single upload may use the exact qualified http_request then public GET + verify_http_copy. Current max_external_actions is ONE: never pretend three writes cost one or raise it. If a plan needs more actions or a dedicated key, retain the candidate/plan as BLOCKED with the precise setup requirement. No guessed protocols, disguised repo writes, invented tests or PROTOTYPED status for an unchanged export. UNKNOWN writes are not retryable. On approval wait, keep the same plan and finish with an honest handoff.",
+    "Synthesizer / Reporter": "Summarize current recorded source activity, screened providers/origins, admitted candidates/qualification reasons, actual critiques, FLOW steps and actual receipts. If ideas/plans/approvals are empty, say none were created/requested: do not invent unresolved approval. A saved HTTP document or shared artifact is evidence of reading, never an upload/read-back receipt of the EPUB. Use read_audit_artifact for other roles private responses; do not reread sources or redo discovery. Model summaries are claims; ledger facts have priority. Do not describe your current RUNNING status as the final role outcome. Finish report with precise gaps and handoff."
+  },
+  "carrier_screening": true,
+  "require_explicit_upload_flow": true,
+  "allow_known_carrier_improvements": false
+}

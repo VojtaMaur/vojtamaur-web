@@ -13,8 +13,8 @@
 - Agent nesmí zapisovat do produkčního projektu. Podle aktualizace vlastníka
   2026-10-07 jsou autonomie, externí capability a approval nezávislé volby:
   supervised vyžaduje výběr realizace, autonomous jej nevyžaduje;
-  sandbox-only nepovoluje externí zápisy. External může ukládat data pouze přes
-  výslovně přidělené konektory/resources. approval_required=true je výchozí;
+  sandbox-only nepovoluje externí zápisy. External může ukládat data přes povolený obecný HTTP nástroj
+  nebo výslovně přidělené konektory/resources; HTTP nepotřebuje provider-specific integraci. approval_required=true je výchozí;
   false skutečně vypíná schvalovací bránu. Technické podmínky a tvrdé limity
   zůstávají. Účty, zprávy, právní závazky a platby zatím nemají executor.
 - Zamítni mechanismy, které vyžadují měsíční/roční předplatné. Jednorázový

@@ -2,7 +2,7 @@
 import hashlib
 import re
 from .workspace import _read_bytes, _relative, _confined, _atomic_write
-from .documents import readable
+from .pdf_documents import source_document, excerpt_metadata
 
 
 def public_get(record):
@@ -53,13 +53,11 @@ def read(api, request_id, offset=0, limit=8000):
         return {'status': 'BLOCKED', 'reason': 'AUDIT_ARTIFACT_PATH_MISMATCH'}
     path = artifact['path'] if artifact else 'agents/' + owner['id'] + '/workspace/' + _relative(response['path']).as_posix()
     try:
-        body = _read_bytes(api.engine.store.run_dir, _relative(path), 2_000_000)
+        body = _read_bytes(api.engine.store.run_dir, _relative(path), 8_000_000)
         expected = response['stored_sha256']
         if hashlib.sha256(body).hexdigest() != expected or (artifact and artifact['sha256'] != expected):
             return {'status': 'BLOCKED', 'reason': 'AUDIT_ARTIFACT_CHANGED', 'request_id': request_id}
-        source = body.decode('utf-8')
-        kind = next((v for k, v in response.get('headers', {}).items() if k.lower() == 'content-type'), '')
-        text, links, representation = readable(source, kind, record['action']['payload']['url'])
+        text, links, representation, metadata = source_document(api, record, body)
     except (ValueError, OSError, UnicodeError) as error:
         return {'status': 'BLOCKED', 'reason': 'AUDIT_ARTIFACT_UNAVAILABLE', 'request_id': request_id,
                 'detail': str(error)[:400]}
@@ -70,5 +68,6 @@ def read(api, request_id, offset=0, limit=8000):
               'offset': offset, 'end': end, 'total_chars': len(text), 'next_offset': end if end < len(text) else None,
               'text': excerpt, 'links': links,
               'meaning': 'Shared recorded evidence only; not this reader\'s independent HTTP/document observation or a semantic certification.'}
+    result.update(excerpt_metadata(metadata, offset, end))
     api.event('audit_artifact_read', {k: result[k] for k in ('request_id','owner_agent_id','url','sha256','offset','end','legacy_workspace_source')})
     return result

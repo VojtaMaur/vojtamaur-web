@@ -255,17 +255,18 @@ def generate_reports(run_dir: Path, state: dict) -> None:
     target_counts = Counter(str(r.get('status') or 'UNASSESSED') for r in state.get('deposit_qualifications', []))
     target_summary = ', '.join(f'{key}: {value}' for key, value in sorted(target_counts.items())) or 'žádné'
     lines.extend([f"Roj eviduje {len(agents)} agentů, {len(ideas)} kandidátů a {len(events)} auditních událostí.", "",
+                  f"Rozpracované směry před kvalifikací: {len(state.get('discovery_leads', []))} (samostatné LEAD, nejsou přijaté IDEA).", "",
                   f"Posouzení cílových plánů: {len(state.get('deposit_qualifications', []))} ({target_summary}). Nejde o počet různých mechanismů.", "",
                   f"Návrhy čekající na posouzení identity: {len(state.get('pending_candidate_reviews', []))} (nejsou REJECTED; uchovány níže a v manifestu).", "",
                   f"Důvod zastavení: {_text(state.get('stop_reason'))}.", "",
                   "Počty kandidátů podle stavu: " + (", ".join(f"{key}: {value}" for key, value in sorted(by_status.items())) or "žádné"), "",
                   "Stav agentů: " + (", ".join(f"{key}: {value}" for key, value in sorted(agent_statuses.items())) or "žádní"), "",
-                  "COMPLETED u agenta/runu znamená dokončenou přidělenou práci; u kandidáta vyžaduje hostem ověřenou deposit receipt. PROTOTYPED v runtime 0.3.3+ vyžaduje lokální artefakt a hostem zaznamenaný úspěšný Docker test;",
+                  "COMPLETED u agenta/runu znamená dokončenou přidělenou práci; u kandidáta vyžaduje hostem ověřenou deposit receipt. PROTOTYPED vyžaduje lokální artefakt a zaznamenaný úspěšný Docker test; obecný výzkum od 0.6.10 navíc vyžaduje nezávislé FULL_MECHANISM posouzení testu;",
                   "neprokazuje externí publikaci ani dlouhodobé uchování. BLOCKED je překážka vyžadující",
                   "zásah/podklad, REJECTED je zamítnutý návrh a LIMIT_REACHED znamená vyčerpaný limit.", ""])
     lines.extend(["## Režim a skutečná realizace", "", _code({k: config.get(k) for k in ("run_mode", "external_scope", "approval_required", "experiments")}), "",
                   "NOT_SELECTED/DEFERRED znamená nerealizovaný návrh, nikoli zamítnutý výzkum. V supervised lze výzkum ukončit bez realizace.", "",
-                  f"Ověřená uložení: {sum(a.get('status') == 'VERIFIED' and a.get('receipt', {}).get('host_verified') is True and a.get('receipt', {}).get('preservation_deposit') is not False for a in state.get('external_actions', []))} · Docker experimenty: {len(state.get('experiments', []))} · Zaznamenané funkční testy: {len(state.get('tests', []))}", "",
+                  f"Ověřená uložení: {sum(a.get('status') == 'VERIFIED' and a.get('receipt', {}).get('host_verified') is True and a.get('receipt', {}).get('preservation_deposit') is not False for a in state.get('external_actions', []))} · Docker experimenty: {len(state.get('experiments', []))} · Zaznamenané testovací běhy: {len(state.get('tests', []))}", "",
                   "Receipts ověřují shodu přečtených bajtů při uložení; neprokazují trvalost úložiště. Popis assertions je úsudek testujícího agenta.", "",
                   "Vybrané realizace:", "", _code(state.get("implementation_choices", {})), "",
                   "Externí akce a výsledky:", "", _code(state.get("external_actions", [])), "",
@@ -292,6 +293,9 @@ def generate_reports(run_dir: Path, state: dict) -> None:
         if "report" in str(agent.get("role", "")).lower() and agent.get("summary"):
             lines.extend(["Syntéza reportovacího agenta (připsaná jeho výstupu):", "", _text(agent["summary"]), ""])
     priority = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
+    reviews=state.get('prototype_reviews',[])
+    lines.append('Zaznamenaný test čekající na nezávislý verdict není potvrzené funkční pokrytí mechanismu; samotný exit=0 tento rozdíl neruší.')
+    lines.append(f"Posouzení testů: celý mechanismus {sum(r['verdict']=='FULL_MECHANISM' for r in reviews)}, dílčí součást {sum(r['verdict']=='SUBCOMPONENT' for r in reviews)}, vyžaduje opravu {sum(r['verdict']=='REVISE' for r in reviews)}; čeká na review {sum(t.get('prototype_review_required',False) and not t.get('prototype_review') for t in state.get('tests',[]))}.")
     prototypes = [i for i in ideas if i.get("status") == "PROTOTYPED"]
     lines.extend([f"Lokální prototypy: {len(prototypes)}; otestování zaznamenané hostem: {sum(i.get('prototype_tested') is True for i in prototypes)}.",
                   "Existence souboru ani úspěšný příkaz samy neprokazují funkční rekonstrukci. Neotestované artefakty vyžadují test a revizi.", ""])
@@ -318,10 +322,32 @@ def generate_reports(run_dir: Path, state: dict) -> None:
                       "Slepé skvrny:", "", _code(agent.get("blind_spots", [])), ""])
         if agent.get("usage"):
             lines.extend(["Spotřeba agenta:", "", _code(agent["usage"]), ""])
+        if agent.get('planning_repair'):
+            lines.extend(['Oprava nevalidního plánu (draft není povolení k uploadu):','',
+                          _code({k:v for k,v in agent['planning_repair'].items() if k!='issue_counts'}),''])
+        if agent.get('research_repairs') or agent.get('research_task_blocks'):
+            lines.extend(['Opravy výzkumu a odložené úlohy (bez automatického verdiktu či testu):','',
+                          _code({'repairs':agent.get('research_repairs',{}),'retained_tasks':agent.get('research_task_blocks',[])}),''])
+        if agent.get('research_report_receipt'):
+            lines.extend(['Zaznamenaný závěr reportera (agentní úsudek, ne dokončení kandidátů):','',
+                          _code(agent['research_report_receipt']),''])
         if agent.get("external_sources"):
             lines.extend(["Externí URL zaznamenané webovým nástrojem (nalezení zdroje není ověření jeho tvrzení):", "", _code(agent["external_sources"]), ""])
         if agent.get("handoff_leads"):
             lines.extend(["Předaná budoucí práce (nenutí dokončenou roli opakovat kola):", "", _code(agent["handoff_leads"]), ""])
+    leads = state.get('discovery_leads', [])
+    if leads:
+        lines.extend(['## Rozpracované směry před kvalifikací', '',
+            'LEAD není přijatý IDEA ani povolení uploadu. Zachycené podklady a úsudky zůstávají oddělené; chybějící účet/podklad neznamená REJECTED.', '',
+            '| Lead | Služba | Stav | Co zjistili | Další krok |', '|---|---|---|---|---|'])
+        for lead in leads:
+            from .discovery_leads import revision
+            review = lead.get('review', {})
+            if review.get('revision') != revision(lead):
+                review = {}
+            lines.append('| ' + ' | '.join(_cell(v) for v in (lead['id'], lead['provider'], lead['status'],
+                review.get('reason') or lead['summary'], review.get('next_action') or lead['next_action'])) + ' |')
+        lines.extend(['', 'Úplné rozpracované podklady, provenance, nejasnosti a review:', '', _code(leads), ''])
     lines.extend(["## Kandidáti a jejich podklady", ""])
     if not ideas:
         lines.extend(["Dosud nebyl zaznamenán žádný kandidát.", ""])
@@ -399,12 +425,18 @@ def generate_reports(run_dir: Path, state: dict) -> None:
     for error in event_errors:
         timeline.extend([f"Čtení logu: {_text(error)}", ""])
     lines.extend(['## Návrhy čekající na posouzení identity', '', _code(state.get('pending_candidate_reviews', [])), ''])
-    manifest = {"pending_candidate_reviews": state.get('pending_candidate_reviews', []), "schema_version": 1, "run_id": state.get("run_id"), "created_at": state.get("created_at"),
+    manifest = {"discovery_leads":state.get('discovery_leads', []), "pending_candidate_reviews": state.get('pending_candidate_reviews', []), "schema_version": 1, "run_id": state.get("run_id"), "created_at": state.get("created_at"),
                 "updated_at": state.get("updated_at"), "status": status, "stop_reason": state.get("stop_reason"),
                 "backend": backend, "demo_fixture": is_demo, "usage": usage, "config": config,
                 "http_smoke": state.get("http_smoke"), "objective": state.get("objective"), "software_version": state.get("software_version"),
                 "runtime_versions": state.get("runtime_versions", {}), "prompt_hashes": state.get("prompt_hashes", {}),
-                "agents": [{**{key: agent.get(key) for key in ("id", "role", "mission", "phase", "parent_id", "depth", "creation_reason", "work_kind", "status", "rounds", "reason_for_stopping", "summary", "usage", "unexplored_leads", "handoff_leads", "blind_spots", "active_carrier_screen", "carrier_switch_required")},
+                "agents": [{**{key: agent.get(key) for key in ("id", "role", "mission", "phase", "parent_id", "depth", "creation_reason", "work_kind", "status", "rounds", "reason_for_stopping", "summary", "usage", "unexplored_leads", "handoff_leads", "blind_spots", "active_carrier_screen", "carrier_switch_required", "review_assignment")},
+                            "research_repairs": agent.get('research_repairs',{}),
+                            "research_task_blocks": agent.get('research_task_blocks',[]),
+                            "prototype_review_repairs": agent.get('prototype_review_repairs',{}),
+                            "discovery_pivot": agent.get('discovery_pivot'),
+                            "known_discovery_directions": agent.get('known_discovery_directions',[]),
+                            "research_report_receipt": agent.get('research_report_receipt'),
                             "model_tier": agent.get("model_tier"),
                             "model": "demo-fixture" if is_demo else agent.get("model", config.get("model"))} for agent in agents],
                 "usage_estimated_usd": state.get("usage_estimated_usd"), "steps": state.get("steps", 0),
@@ -427,5 +459,6 @@ def generate_reports(run_dir: Path, state: dict) -> None:
     _write(run_dir, "SWARM_REPORT.md", "\n".join(lines))
     _write(run_dir, "TIMELINE.md", "\n".join(timeline))
     # Redact values before serialization; redacting JSON text can invalidate quoting.
+    _write(run_dir, 'discovery_leads.jsonl', ''.join(json.dumps(_sanitize(r), ensure_ascii=False) + '\n' for r in state.get('discovery_leads', [])))
     _write(run_dir, "manifest.json", _json(_sanitize(manifest)) + "\n")
     _write(run_dir, "ideas.jsonl", "".join(json.dumps(_sanitize(idea), ensure_ascii=False, sort_keys=True) + "\n" for idea in ideas))

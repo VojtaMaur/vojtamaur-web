@@ -1,0 +1,67 @@
+{
+  "version": "0.6.14",
+  "regressions": {
+    "tests": 538,
+    "skipped": 1,
+    "passed": true
+  },
+  "new_regression_cases": 10,
+  "docker": {
+    "version": "0.6.14",
+    "bytes": 28865,
+    "generated_svg_decoded": true,
+    "original_bytes_restored": true,
+    "truncated_svg_rejected": true,
+    "sdk_requested_tool_choices": [
+      "read_test_artifact",
+      "read_test_artifact",
+      "read_test_artifact",
+      "read_test_artifact",
+      "read_test_artifact",
+      "read_test_artifact",
+      "read_test_artifact",
+      "review_prototype_test",
+      null
+    ],
+    "review_receipt_recorded": true,
+    "review_role_completed": true,
+    "independent_review": "Fixed host QA judgment via a local fake model, not paid independent model inference",
+    "docker_executions": 1,
+    "paid_api_calls": 0,
+    "public_deposits": 0,
+    "production_experiment_writes": false
+  },
+  "read_only_replay": {
+    "run_id": "20261014-084150-6f846e98",
+    "actual_missing_read_actions": [
+      {
+        "test_id": "TEST-c830654ef4954efa",
+        "path": "work/out/broken-recovery.json",
+        "offset": 12000,
+        "limit": 16000
+      },
+      {
+        "test_id": "TEST-c830654ef4954efa",
+        "path": "work/out/broken-recovery.json",
+        "offset": 28000,
+        "limit": 746
+      }
+    ],
+    "next_required_tool": "review_prototype_test",
+    "host_verdict_selected": false,
+    "pending_test_reviews": 3,
+    "historical_verdicts_unchanged": true,
+    "checked_file_count": 22,
+    "checked_files_unchanged": true,
+    "paid_api_calls": 0,
+    "external_actions": 0
+  },
+  "sdk": {
+    "openai_agents": "0.23.1",
+    "openai": "3.24.0",
+    "pydantic": "2.13.5",
+    "compatible": true
+  },
+  "paid_api_calls": 0,
+  "public_deposits": 0
+}

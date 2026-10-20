@@ -1,0 +1,104 @@
+from ebooklib import epub, ITEM_DOCUMENT
+from bs4 import BeautifulSoup
+import base64
+import hashlib
+import json
+import re
+import sys
+from pathlib import Path
+
+INPUT = Path('inputs/b0e4617d9d3b-vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub')
+OUT_VTT = Path('out/recovery.vtt')
+OUT_REPORT = Path('out/report.json')
+OUT_RECOVERED = Path('out/recovered_payload.txt')
+OUT_REJECTED = Path('out/rejected_input.txt')
+
+
+def sha256_bytes(b: bytes) -> str:
+    return hashlib.sha256(b).hexdigest()
+
+
+def extract_text_from_epub(epub_path: Path) -> str:
+    book = epub.read_epub(str(epub_path))
+    parts = []
+    for item in book.get_items():
+        if item.get_type() == ITEM_DOCUMENT:
+            soup = BeautifulSoup(item.get_content(), 'html.parser')
+            text = ' '.join(soup.get_text(' ', strip=True).split())
+            if text:
+                parts.append(text)
+    return '\n'.join(parts)
+
+
+def make_vtt(payload_hash: str, source_hash: str, fragment: bytes) -> str:
+    return (
+        'WEBVTT\n\n'
+        '00:00:00.000 --> 00:00:04.000\n'
+        f'METAWEB-RECOVERY v1\n'
+        f'SOURCE_SHA256={source_hash}\n'
+        f'PAYLOAD_SHA256={payload_hash}\n'
+        'MIRROR=archive;mirror=repo;mirror=pdf\n'
+        'DECODE=extract-transcript;rebuild-from-cues\n'
+        f'PAYLOAD_B64={base64.b64encode(fragment).decode("ascii")}\n\n'
+        '00:00:05.000 --> 00:00:08.000\n'
+        'NEGATIVE_CHECK: corrupt header must fail parse or differ from expected hash\n'
+    )
+
+
+def parse_vtt_text(vtt_text: str):
+    if not vtt_text.startswith('WEBVTT\n\n') or '\x00' in vtt_text:
+        raise ValueError('Invalid WebVTT header or NUL in cue text')
+    cue_blocks = [blk.strip() for blk in vtt_text.strip().split('\n\n') if blk.strip() and blk.strip() != 'WEBVTT']
+    assert cue_blocks, 'no cue blocks'
+    first = cue_blocks[0].splitlines()
+    assert '-->' in first[0]
+    cue_text = '\n'.join(first[1:])
+    return cue_text
+
+
+def main():
+    inp = INPUT.read_bytes()
+    inp_hash = sha256_bytes(inp)
+    source_text = extract_text_from_epub(INPUT)
+    source_hash = sha256_bytes(source_text.encode('utf-8'))
+
+    fragment = source_text[:4000].encode('utf-8')
+    vtt = make_vtt(payload_hash=source_hash, source_hash=inp_hash, fragment=fragment)
+    OUT_VTT.parent.mkdir(parents=True, exist_ok=True)
+    OUT_VTT.write_text(vtt, encoding='utf-8')
+
+    parsed_text = parse_vtt_text(OUT_VTT.read_text(encoding='utf-8'))
+    assert 'METAWEB-RECOVERY v1' in parsed_text
+    assert f'SOURCE_SHA256={inp_hash}' in parsed_text
+    assert f'PAYLOAD_SHA256={source_hash}' in parsed_text
+    assert 'MIRROR=archive;mirror=repo;mirror=pdf' in parsed_text
+
+    rejected = 'WEBVTT\n\n00:00:00.000 --> 00:00:01.000\nBROKEN\x00HEADER\n'
+    OUT_REJECTED.write_text(rejected, encoding='utf-8', errors='ignore')
+    bad = OUT_REJECTED.read_text(encoding='utf-8')
+    rejected_invalid = False
+    try:
+        parse_vtt_text(bad)
+    except ValueError:
+        rejected_invalid = True
+    assert rejected_invalid, 'invalid cue was accepted'
+    encoded = next(line.split('=', 1)[1] for line in parsed_text.splitlines() if line.startswith('PAYLOAD_B64='))
+    recovered = base64.b64decode(encoded, validate=True)
+    OUT_RECOVERED.write_bytes(recovered)
+    assert OUT_RECOVERED.read_bytes() == fragment, 'saved cue did not recover the actual fragment'
+
+    report = {
+        'input_path': str(INPUT),
+        'input_sha256': inp_hash,
+        'source_text_sha256': source_hash,
+        'vtt_sha256': sha256_bytes(OUT_VTT.read_bytes()),
+        'parsed_cue_text': parsed_text,
+        'recovered_preview_sha256': sha256_bytes(OUT_RECOVERED.read_bytes()),
+        'negative_check': 'invalid cue rejected with ValueError',
+    }
+    OUT_REPORT.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding='utf-8')
+    print(json.dumps(report, indent=2, ensure_ascii=False))
+
+
+if __name__ == '__main__':
+    main()

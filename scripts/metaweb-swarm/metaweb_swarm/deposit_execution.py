@@ -33,6 +33,21 @@ def lease_totals(state, excluding=''):
     return totals
 
 def record_plan(api, idea_id, steps):
+    try:
+        return _record_plan(api, idea_id, steps)
+    except ValueError as error:
+        if (api.agent.get('work_kind') not in {'DISCOVERY','REVIEW','LOCAL'}
+                or any(f['idea_id']==idea_id for f in api.engine.state.get('deposit_executions',[]))):
+            raise
+        from .planning_recovery import remember
+        try: problem=remember(api,idea_id,steps,error)
+        except (ValueError,TypeError): raise error
+        wrapped=deposit_plan.PlanValidationError(problem['issue']['code'],problem['issue']['step_id'],problem['issue']['next_action'])
+        wrapped.problem=problem
+        raise wrapped from error
+
+
+def _record_plan(api, idea_id, steps):
     state=api.engine.state; idea=api.idea(idea_id)
     if api.agent.get('work_kind') not in {'DISCOVERY','REVIEW','LOCAL'} or idea['status']=='REJECTED':
         raise ValueError('Execution planning requires an active candidate and a planning/review/implementation role')
@@ -41,10 +56,15 @@ def record_plan(api, idea_id, steps):
     old=next((q for q in state.get('deposit_qualifications',[]) if q['id']==idea.get('qualification_id')),None)
     if not old or not old['admissible']: raise ValueError('Use an existing admitted qualification')
     export={'filename':old['plan']['export_path'],'bytes':old['export_bytes'],'sha256':old['export_sha256']}
-    compiled=deposit_plan.validate(steps,state['config'],export)
-    if compiled['steps'][0]['url']!=old['plan']['upload_url'] or compiled['steps'][0]['method']!=old['plan']['method'] or compiled['steps'][0]['credential_id']!=old['plan']['credential_id']:
-        raise ValueError('First request must match the qualified endpoint/method/credential')
+    compiled=deposit_plan.validate(steps,state['config'],export,planning=True)
+    first=compiled['steps'][0]
+    bind_missing=(not old['plan']['credential_id'] and old['plan']['authentication'] in {'ACCOUNT_REQUIRED','DEDICATED_CREDENTIAL'})
+    if first['url']!=old['plan']['upload_url'] or first['method']!=old['plan']['method'] or (first['credential_id']!=old['plan']['credential_id'] and not bind_missing):
+        raise deposit_plan.PlanValidationError('QUALIFIED_FIRST_REQUEST_MISMATCH',first['id'],'First request must match the qualified endpoint/method/credential. Do not invent another provider endpoint or silently change authentication.')
+    if old['plan']['authentication'] in {'ACCOUNT_REQUIRED','DEDICATED_CREDENTIAL'} and not first['credential_id']:
+        raise deposit_plan.PlanValidationError('AUTHENTICATION_REQUIREMENT_REQUIRED',first['id'],'Name the dedicated credential_id requirement (for example REQUIRED_CARRIER_KEY). It is a missing grant request, not a secret or permission; do not encode required authentication as anonymous.')
     plan=copy.deepcopy(old['plan']);plan['execution_steps']=compiled['steps']
+    plan['credential_id']=first['credential_id']
     plan['operation_steps']=[{'method':s['method'],'purpose':s['purpose'],'sends_export':s['sends_export'],'uses_credential':bool(s['credential_id'])} for s in steps]
     # Assess with the discovery owner's source receipts, retaining ownership.
     from .engine import ToolAPI
@@ -58,11 +78,13 @@ def record_plan(api, idea_id, steps):
     if api.agent.get('work_kind')=='LOCAL': idea['execution_planning_agent_id']=api.agent['id']
     old['retention']={'status':'RETAINED','candidate_id':idea_id}
     q['retention']={'status':'RETAINED','candidate_id':idea_id}
+    api.agent.pop('planning_repair',None)
+    api.agent.pop('deposit_plan_draft',None)
     api.event('deposit_execution_plan_recorded',{'idea_id':idea_id,'previous_qualification':previous,
               'qualification_id':q['id'],'plan_sha256':compiled['sha256'],'steps':len(steps),
-              'external_actions':compiled['actions'],'status':q['status'],'author_agent_id':api.agent['id'],
+              'external_actions':compiled['actions'],'missing_credentials':compiled['missing_credentials'],'status':q['status'],'author_agent_id':api.agent['id'],
               'meaning':'Data-only protocol recorded; prior audit/approval does not authorize changed sequence.'})
-    return {'status':q['status'],'qualification_id':q['id'],'plan_sha256':compiled['sha256'],'external_actions':compiled['actions']}
+    return {'status':q['status'],'qualification_id':q['id'],'plan_sha256':compiled['sha256'],'external_actions':compiled['actions'],'missing_credentials':compiled['missing_credentials'],'next_action':'Data planning finished. Hand off current qualification for independent review and operator setup; do not request or execute HTTP before gates pass.'}
 
 def gate(api, flow):
     state=api.engine.state;config=state['config'];idea=api.idea(flow['idea_id'])
@@ -140,6 +162,8 @@ async def execute(api,idea_id):
         if not flow:
             q=next((q for q in state.get('deposit_qualifications',[]) if q['id']==idea.get('qualification_id')),None)
             if not q or not q['plan'].get('execution_steps'): return {'status':'BLOCKED','reason':'EXECUTABLE_FLOW_REQUIRED'}
+            if q['status']!='READY_FOR_AUDIT':
+                return {'status':'BLOCKED','reason':q['status'],'reasons':q['reasons'],'next_action':'Resolve current qualification setup/resource blockers before execution; a recorded plan is not permission.'}
             compiled=deposit_plan.validate(q['plan']['execution_steps'],cfg,{'bytes':q['export_bytes'],'sha256':q['export_sha256'],'filename':q['plan']['export_path']})
             flow={'id':'FLOW-'+uuid.uuid4().hex[:16],'idea_id':idea_id,'agent_id':api.agent['id'],
                   'qualification_id':q['id'],'plan_sha256':compiled['sha256'],'steps':compiled['steps'],

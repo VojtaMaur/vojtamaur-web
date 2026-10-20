@@ -4,3 +4,6 @@ openai-agents==0.23.1
 openai==3.24.0
 pydantic==2.13.5
 
+
+# Host-only bounded PDF documentation extraction.
+pypdf==6.20.1

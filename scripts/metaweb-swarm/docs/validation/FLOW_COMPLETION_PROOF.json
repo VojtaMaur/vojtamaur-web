@@ -1,0 +1,39 @@
+{
+  "version": "0.6.12",
+  "regressions": {
+    "tests": 517,
+    "skipped": 1,
+    "passed": true
+  },
+  "targeted_tests": 41,
+  "docker": {
+    "docker_output": {
+      "json_parsed": true,
+      "round_trip": true,
+      "corruption_rejected": true,
+      "bytes": 13800,
+      "sha256": "72c59d8f5c71b193f528af23c02b712a1c2b4728edce258ea29d26490b9e6292"
+    },
+    "missing_output_repaired": true,
+    "successful_specimen_executions": 1,
+    "manual_registrations": 0,
+    "reporter_completed": true,
+    "independent_review": "Host QA fixture identity; no paid independent LLM inference",
+    "production_written": false,
+    "paid_api_calls": 0,
+    "external_actions": 0,
+    "meaning": "Local repair/transport/assertion QA; not a new preservation mechanism"
+  },
+  "read_only_replay": {
+    "run_id": "20261014-051545-9660ea73",
+    "actual_negated_delegation_allowed": true,
+    "original_negative_assertion_flagged": "NEGATIVE_TEST_REQUIRED",
+    "unknown_pricing_deferred": true,
+    "unresolved_report_can_finish": true,
+    "stopped_run_files_unchanged": true,
+    "paid_api_calls": 0,
+    "external_actions": 0
+  },
+  "paid_api_calls": 0,
+  "public_deposits": 0
+}

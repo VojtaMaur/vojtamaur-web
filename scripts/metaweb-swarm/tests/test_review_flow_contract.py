@@ -109,7 +109,9 @@ class ContractTests(unittest.IsolatedAsyncioTestCase):
     async def test_other_role_or_wrong_qualification_cannot_change_flow(self):
         q,idea,review=await self.setup_candidate(True)
         with self.assertRaises(ValueError):review.record_deposit_flow(q['id'],handoff.multi())
-        with self.assertRaises(ValueError):self.api.record_deposit_flow('QUAL-invalid',handoff.multi())
+        deferred=self.api.record_deposit_flow('QUAL-invalid',handoff.multi())
+        self.assertEqual(deferred['status'],'DEFERRED')
+        self.assertEqual(deferred['reason'],'EXISTING_QUALIFICATION_REQUIRED')
 
     @unittest.skipUnless(SDK_AVAILABLE,'SDK optional')
     async def test_sdk_forces_flow_tool_once_and_engine_completes_handoff(self):

@@ -6,7 +6,7 @@ Hlavním cílem tohoto archivu je další přežití informací obsažených na 
 
 Dokud je původní autor schopen projekt spravovat, třetí strany mohou vytvářet a šířit věrné archivní kopie, neměly by však měnit jejich obsah ani vydávat pozměněné verze za pokračování původního webu. Pokud původní autor zemře nebo se stane trvale neschopným projekt spravovat, může kdokoliv archiv nezávisle uchovávat, zrcadlit, migrovat a konzervativně udržovat. Není vyžadován žádný výhradní nástupce ani centrální autorita.
 
-Jako nezávazné vodítko pro případný další vývoj projektu mohou sloužit části dokumentace „Future extensions“ a „Failed attempts and abandoned approaches“, které zachycují autorovy záměry i dříve zavržené postupy.
+Jako nezávazné vodítko pro případný další vývoj projektu mohou sloužit oddíly dokumentace 14.1 „Future extensions“, 14.2 „Failed attempts and abandoned approaches“ a 14.3 „Temporarily unavailable or externally blocked approaches“. Zachycují zamýšlená rozšíření, dříve zavržené postupy a možnosti, o které nadále existuje zájem, ale jejichž realizaci prozatím brání vnější okolnosti. Tyto možnosti lze znovu posoudit, pokud příslušné překážky pominou. Oddíl 15 „Archival operations“ obsahuje praktické pokyny pro uchovávání a správu archivu, včetně priorit při omezených prostředcích, aktualizace zrcadel, práce s externími archivy a pravidelných kontrol a archivních úkonů. Uvedené intervaly údržby jsou orientační.
 
 Taková údržba by měla zachovat význam a informační obsah existujících materiálů. Je třeba se vyvarovat zásadního přepisování, reinterpretace nebo odstraňování. Technické opravy jsou přípustné, pokud obnovují přístup ke stejné informaci — například nahrazení nefunkčního odkazu na YouTube odkazem na archivní kopii stejného videa v Internet Archive. Opravy, migrace a pozdější doplnění by měly být zdokumentovány a vše, co nepochází od původního autora, musí být jasně odlišeno od původního obsahu.
 
@@ -16,8 +16,8 @@ Pokud se úplné zachování stane nemožným, je lepší uchovat důležité fr
 
 Vojta Maur
 Vydáno: 3. září 2026
-Aktualizováno: 9. října 2026
-Verze: 2
+Aktualizováno: 14. října 2026
+Verze: 3
 
 PRESERVATION INSTRUCTIONS
 
@@ -27,7 +27,7 @@ The primary objective of this archive is the continued survival of the informati
 
 While the original author remains capable of maintaining the project, third parties may create and distribute faithful archival copies, but should not modify their content or present altered versions as continuations of the original website. If the original author dies or becomes permanently unable to maintain the project, anyone may independently preserve, mirror, migrate, and conservatively maintain the archive. No exclusive successor or central authority is required.
 
-The documentation sections “Future extensions” and “Failed attempts and abandoned approaches” may serve as non-binding guidance for the project's future development, documenting the author's intentions and previously abandoned approaches.
+The documentation sections 14.1 “Future extensions”, 14.2 “Failed attempts and abandoned approaches”, and 14.3 “Temporarily unavailable or externally blocked approaches” may serve as non-binding guidance for the project's future development. They document possible extensions, previously abandoned approaches, and options that remain of interest but are currently prevented by external circumstances. Such options may be reconsidered if the relevant obstacles are removed. Section 15 “Archival operations” provides practical guidance for preserving and maintaining the archive, including priorities under resource constraints, mirror updates, use of external archives, and recurring checks and archival tasks. The stated maintenance intervals are approximate.
 
 Such maintenance should preserve the meaning and informational content of the existing material. Substantial rewriting, reinterpretation, or removal should be avoided. Technical repairs are permitted when they restore access to the same information—for example, replacing a dead YouTube link with a link to an archived copy of the same video on the Internet Archive. Repairs, migrations, and later additions should be documented, and anything not originating from the original author must be clearly distinguished from the original content.
 
@@ -37,5 +37,5 @@ If complete preservation becomes impossible, preserving important fragments is p
 
 Vojta Maur
 Issued: 3 September 2026
-Updated: 9 October 2026
-Version: 2
+Updated: 14 October 2026
+Version: 3

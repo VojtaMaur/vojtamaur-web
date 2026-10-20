@@ -65,5 +65,7 @@
   "role_assignments": {},
   "carrier_screening": false,
   "require_explicit_upload_flow": false,
-  "allow_known_carrier_improvements": true
+  "allow_known_carrier_improvements": true,
+  "research_handoffs": false,
+  "require_prototype_focus": false
 }

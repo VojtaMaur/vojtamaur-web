@@ -110,7 +110,7 @@ def assess(api, plan):
     if plan.get('execution_steps'):
         from .deposit_plan import validate
         if not export: raise ValueError('Executable plan needs a retained export')
-        compiled=validate(plan['execution_steps'],config,export)
+        compiled=validate(plan['execution_steps'],config,export,planning=True)
         first=compiled['steps'][0]
         if (first['url'],first['method'],first['credential_id'])!=(plan['upload_url'],plan['method'],plan['credential_id']):
             raise ValueError('Executable first step differs from qualified target')
@@ -185,10 +185,13 @@ def assess(api, plan):
                              'Resolve the recorded reasons or research another carrier; rejected plans remain in the audit.'}
     existing = next((r for r in api.engine.state.get('deposit_qualifications', []) if r['id'] == result['id']), None)
     from .carrier_screening import qualification_steering
+    from .discovery_leads import retain_qualification
     if existing:
+        retain_qualification(api, existing)
         qualification_steering(api, existing)
         return existing
     api.engine.state.setdefault('deposit_qualifications', []).append(result)
+    retain_qualification(api, result)
     api.event('deposit_target_assessed', result)
     qualification_steering(api, result)
     from .console import short

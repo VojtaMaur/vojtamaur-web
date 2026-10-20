@@ -1,0 +1,68 @@
+{
+  "version": "0.6.11",
+  "regressions": {
+    "tests": 508,
+    "passed": true,
+    "skipped": 1
+  },
+  "new_recovery_tests": 11,
+  "final_tool_routing_targeted_tests": 32,
+  "docker": {
+    "docker_output": {
+      "json_parsed": true,
+      "round_trip": true,
+      "corruption_rejected": true,
+      "bytes": 13800,
+      "sha256": "72c59d8f5c71b193f528af23c02b712a1c2b4728edce258ea29d26490b9e6292"
+    },
+    "wrong_path_repair_observed": true,
+    "independent_review": "Host QA fixture identity; no paid independent LLM inference",
+    "meaning": "Local repair/transport/assertion QA; not a new preservation mechanism"
+  },
+  "stopped_run_replay": {
+    "run_id": "20261013-130738-d39be211",
+    "missing_documents": [
+      {
+        "url": "https://datatracker.ietf.org/doc/rfc6763/",
+        "original_url": "https://datatracker.ietf.org/doc/rfc6763/",
+        "offset": 0,
+        "limit": 12000
+      },
+      {
+        "url": "https://developers.cloudflare.com/dns/manage-dns-records/",
+        "original_url": "https://developers.cloudflare.com/dns/manage-dns-records/",
+        "offset": 0,
+        "limit": 12000
+      },
+      {
+        "url": "https://rfc-annotations.research.icann.org/rfc2308.html",
+        "original_url": "https://rfc-annotations.research.icann.org/rfc2308.html",
+        "offset": 0,
+        "limit": 12000
+      },
+      {
+        "url": "https://www.rfc-editor.org/info/rfc6763/",
+        "original_url": "https://www.rfc-editor.org/info/rfc6763/",
+        "offset": 0,
+        "limit": 12000
+      },
+      {
+        "url": "https://www.rfc-editor.org/rfc/rfc1035.html",
+        "original_url": "https://www.rfc-editor.org/rfc/rfc1035.html",
+        "offset": 0,
+        "limit": 12000
+      },
+      {
+        "url": "https://www.rfc-editor.org/rfc/rfc8484.html",
+        "original_url": "https://www.rfc-editor.org/rfc/rfc8484.html",
+        "offset": 0,
+        "limit": 12000
+      }
+    ],
+    "materialized_path": "metaweb_manifest.json",
+    "run_files_unchanged": true
+  },
+  "paid_api_calls": 0,
+  "public_deposits": 0,
+  "production_experiments": 0
+}

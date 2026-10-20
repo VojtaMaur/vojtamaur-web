@@ -1,4 +1,5 @@
 """Read public documentation through the existing audited HTTP transport."""
+import asyncio
 import hashlib
 import re
 from html.parser import HTMLParser
@@ -58,8 +59,10 @@ async def read_document(api, url, purpose, offset=0, limit=12000):
     if gate:
         from .http_transport import _redact_url, _url
         safe_url, _, _, _ = _url(url,api.engine.state['config'])
+        api.agent['discovery_recovery'] = dict(gate, url=_redact_url(safe_url))
         api.event('carrier_document_deferred',dict(gate,url=_redact_url(safe_url)))
         return gate
+    api.agent.pop('discovery_recovery', None)
     if api.engine.state['config'].get('http_access') == 'disabled':
         return {'status': 'BLOCKED', 'reason': 'HTTP_DISABLED'}
     # Reuse only this agent's own complete GET, never another role's review.
@@ -108,13 +111,14 @@ async def read_document(api, url, purpose, offset=0, limit=12000):
                 'request_id': record.get('id'), 'http_status': response.get('status'), 'response_path': response.get('path'),
                 'next_action': 'Inspect HTTP receipt; redirects are not automatically followed; no document-read claim recorded.'}
     try:
-        source = api.workspace.read_file(response['path'])
-        if hashlib.sha256(source.encode('utf-8')).hexdigest() != response.get('stored_sha256'):
-            raise ValueError('Document response changed since GET')
-        content_type = next((v for k, v in response.get('headers', {}).items() if k.lower() == 'content-type'), '')
-        text, links, representation = readable(source, content_type, record['action']['payload']['url'])
+        from .workspace import _read_bytes, _relative
+        from .pdf_documents import source_document
+        source = _read_bytes(api.workspace.root, _relative(response['path']), 8_000_000)
+        text, links, representation, metadata = await asyncio.to_thread(source_document, api, record, source)
     except (ValueError, OSError) as error:
-        return {'status': 'BLOCKED', 'reason': 'DOCUMENT_TEXT_UNAVAILABLE', 'detail': str(error)[:500],
+        from .pdf_documents import PdfDocumentError
+        return {'status': 'BLOCKED', 'reason': str(error) if isinstance(error, PdfDocumentError) else 'DOCUMENT_TEXT_UNAVAILABLE', 'detail': str(error)[:500],
+                'next_action': 'Install the declared pypdf dependency if missing; image-only PDFs need OCR or alternate text docs. Malformed/encrypted/over-limit PDFs are not read receipts. Do not infer file acceptance from an extraction failure.',
                 'request_id': record['id'], 'response_path': response.get('path')}
     excerpt = text[offset:offset+limit]; end = offset + len(excerpt)
     result = {'status': 'COMPLETED', 'url': record['action']['payload']['url'], 'request_id': record['id'],
@@ -122,9 +126,20 @@ async def read_document(api, url, purpose, offset=0, limit=12000):
               'representation': representation, 'offset': offset, 'end': end, 'total_chars': len(text),
               'next_offset': end if end < len(text) else None, 'text': excerpt, 'links': links,
               'meaning': 'Untrusted document excerpt, not proof of semantic understanding, terms compliance or retention.'}
+    from .pdf_documents import excerpt_metadata
+    result.update(excerpt_metadata(metadata, offset, end))
+    if metadata and not result['pages']:
+        return {'status':'BLOCKED','reason':'PDF_NO_TEXT_IN_RANGE','request_id':record['id'],
+                'next_action':'Read a range containing extracted page text. Page markers alone are not a document-read receipt.'}
     receipt = {k: result[k] for k in ('url', 'sha256', 'offset', 'end', 'representation', 'total_chars')}
+    receipt.update(excerpt_metadata(metadata, offset, end))
     receipt.update(read_at=now(), excerpt_sha256=hashlib.sha256(excerpt.encode('utf-8')).hexdigest())
     if excerpt.strip():
         api.agent.setdefault('http_document_reads', {})[record['id']] = receipt
         api.event('http_document_read', dict(receipt, request_id=record['id'], cached=cached, response_path=response['path']))
+    from .discovery_leads import retain_document
+    lead = retain_document(api, result)
+    if lead:
+        result['lead_id'] = lead['id']
+        result['next_action'] = 'Record findings and unanswered questions with record_discovery_lead. Use check_deposit_target to create an actual qualification; no QUAL exists merely because docs were read.'
     return result

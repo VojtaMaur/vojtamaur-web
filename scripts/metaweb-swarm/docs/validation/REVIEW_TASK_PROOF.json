@@ -1,0 +1,94 @@
+{
+  "source_run": "20261013-084733-7be96a07",
+  "replay_only": true,
+  "runtime": "0.6.8",
+  "packet": {
+    "kind": "LEAD",
+    "target_id": "LEAD-f97ef214757e8c45",
+    "revision": "a07b9bbacfa3d7ac07c7c4ab97c8ddac3fa8b2c67050c01bdb59b3b231122020",
+    "provider": "Open Library",
+    "documents": [
+      {
+        "url": "https://openlibrary.org/developers/api",
+        "source_receipts": [
+          {
+            "request_id": "HTTP-7a18b64e8b8045a4",
+            "agent_id": "AGENT-001",
+            "sha256": "8573c24458f5eff624b062b98094982155bca33585ccc1ac3f08fea0fb3e6735"
+          }
+        ],
+        "required_ranges": [
+          [
+            0,
+            11232
+          ]
+        ]
+      },
+      {
+        "url": "https://openlibrary.org/help",
+        "source_receipts": [
+          {
+            "request_id": "HTTP-3108b548c3424d4b",
+            "agent_id": "AGENT-001",
+            "sha256": "ccda5291162eb912a7d3b35af93f8ce0e149620a4f04b7c67edbe57f0ed1d6ae"
+          }
+        ],
+        "required_ranges": [
+          [
+            0,
+            2698
+          ]
+        ]
+      }
+    ],
+    "id": "fc2e15c643e225c67b9e0035e378c14984d214947f024db31fd698b8eab7df81",
+    "stage": "READ_DOCUMENTS",
+    "missing_documents": [
+      {
+        "url": "https://openlibrary.org/developers/api",
+        "original_url": "https://openlibrary.org/developers/api",
+        "offset": 0,
+        "limit": 11232
+      },
+      {
+        "url": "https://openlibrary.org/help",
+        "original_url": "https://openlibrary.org/help",
+        "offset": 0,
+        "limit": 2698
+      }
+    ],
+    "document_failures": [],
+    "allowed_document_urls": [
+      "https://openlibrary.org/developers/api",
+      "https://openlibrary.org/help"
+    ],
+    "next_action": "Read these exact primary document ranges yourself with read_document, then record_lead_review for this LEAD. Do not search another service or use record_critique. Missing deposit evidence is an evidence gap, not an automatic rejection."
+  },
+  "available_tools": [
+    "get_review_task",
+    "record_lead_review",
+    "note",
+    "read_document"
+  ],
+  "document_url_enum": [
+    "https://openlibrary.org/developers/api",
+    "https://openlibrary.org/help"
+  ],
+  "unrelated_url_result": "ASSIGNED_REVIEW_DOCUMENT_REQUIRED",
+  "prompt_chars": 20662,
+  "prompt_cap": 30000,
+  "original_run_unchanged": true,
+  "paid_api_calls": 0,
+  "http_calls": 0,
+  "budgets_and_permissions_unchanged": true,
+  "audit": {
+    "events": 296,
+    "head_hash": "38e2b6af96f0cc20a00cfabd7833d0c142f1aff60c3fcbc52ff04ec6b020c1ed"
+  },
+  "validation": {
+    "full_tests": 476,
+    "skipped": 1,
+    "result": "OK",
+    "paid_api_calls": 0
+  }
+}

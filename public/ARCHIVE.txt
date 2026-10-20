@@ -246,12 +246,33 @@ ARCHIVAL COPIES AND DISTRIBUTIONS:
 	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/vojtamaur-web-export-all-cs.epub
 	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/vojtamaur-web-export-all-en.epub
 	https://file.garden/ap_DDnzi9V7bLTDQ/vojtamaur-web/vojtamaur-web-export-metaweb.epub
+	NudgeHost
+	https://www.nudgehost.com/sy66rweq
+	https://www.nudgehost.com/sk3j5xnv
+	https://www.nudgehost.com/7z5gsa6d
+	https://www.nudgehost.com/4dujq8kz
+	https://www.nudgehost.com/rhd6za3a
+	https://www.nudgehost.com/xk8adc6f
+	https://www.nudgehost.com/2jfhxzm3
+	https://www.nudgehost.com/pw4k9f7f
+	https://www.nudgehost.com/j77q58az
 	Lulu
 	https://www.lulu.com/shop/vojta-maur/metawebov%C3%BD-%C4%8Dl%C3%A1nek-metaweb-article/ebook/product-je8nwn7.html
 	https://www.lulu.com/shop/vojta-maur/vojtamaurcz-kompletn%C3%AD-export-webu/ebook/product-45emd7y.html
 	https://www.lulu.com/shop/vojta-maur/vojtamaurcz-complete-website-export/ebook/product-2mg5n2p.html
 	Kobo
 	https://www.kobo.com/cz/cs/ebook/vojta-maur-tvorba
+	Z-Library
+	https://z-library.sk/book/QRMGLbwAvV/vojta-maur-website-export-english.html
+	https://z-library.sk/book/yRaEnM63RQ/vojta-maur-export-webu-%C4%8De%C5%A1tina.html
+	https://z-library.sk/book/wRNDG0eYv9/metawebov%C3%BD-%C4%8Dl%C3%A1nek-metaweb-article.html
+	Bookracy
+	https://api.bookracy.com/download/c2665152ca1a3e66885334fc860a1275/vojtamaur-web-export-all-cs-2026-10-05_13-46-46-779622.epub
+	https://api.bookracy.com/download/b2cb8b8a1ce0725329acb9224c692737/vojtamaur-web-export-all-en-2026-10-05_13-46-46-779622.epub
+	https://api.bookracy.com/download/621b750f425c60bfd1344095e5f388ea/Metawebov%C3%BD%20%C4%8Dl%C3%A1nek%20-%20Metaweb%20Article.pdf?inline=1
+	Library Genesis
+	https://libgen.bz/edition.php?id=208995648
+	https://libgen.bz/edition.php?id=208995647
 	Spotify
 	https://open.spotify.com/show/6eybq6M9VcyEd76Re925U2
 	

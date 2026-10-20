@@ -16,7 +16,11 @@ class HttpTools:
 
     async def read_document(self, url, purpose, offset=0, limit=12000):
         from .documents import read_document
-        return await read_document(self, url, purpose, offset, limit)
+        from .review_tasks import read_gate, read_result
+        gate=read_gate(self,url)
+        if gate: return gate
+        result=await read_document(self, url, purpose, offset, limit)
+        return read_result(self,url,result)
 
     def list_http_credentials(self):
         # Names and host grants only. Never enumerate environment or host stores.

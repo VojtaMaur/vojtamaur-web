@@ -28,9 +28,9 @@
   "experiments": "docker",
   "role_round_limits": {
     "Meta-Archivist / Orchestrator": 2,
-    "Evidence Auditor": 2,
+    "Evidence Auditor": 10,
     "Role Architect": 1,
-    "Prototyper": 6,
+    "Prototyper": 8,
     "Synthesizer / Reporter": 2
   },
   "model_tiers": {
@@ -54,5 +54,7 @@
   "max_http_request_bytes": 16777216,
   "max_http_response_bytes": 16777216,
   "max_http_total_bytes": 134217728,
-  "http_timeout_seconds": 30
+  "http_timeout_seconds": 30,
+  "research_handoffs": true,
+  "require_prototype_focus": true
 }

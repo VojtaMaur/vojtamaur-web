@@ -23,6 +23,8 @@ def startup(state):
     if config.get('semantic_dedupe'):
         model = config.get('model_tiers', {}).get('cheap') or config.get('model')
         print(f"Dedupe: current run only | ambiguous proposals: {short(model)}", flush=True)
+    if config.get('research_handoffs'):
+        print('Research handoffs: current IDEA -> independent audit -> linked prototype/test -> current-run report', flush=True)
     if config.get('carrier_screening'):
         print('Carrier routing: screen before docs | known direction -> switch', flush=True)
     if config.get('task_style') == 'focused':
@@ -66,12 +68,46 @@ def progress(kind, agent_id, data, seen):
         line = 'Flow: ' + data['status'] + (' | external actions=' + str(data['external_actions_required']) if 'external_actions_required' in data else ' | unresolved protocol')
     elif kind == 'deposit_execution_plan_recorded':
         line = f"Plan: {data['idea_id']} | {data['steps']} steps, {data['external_actions']} external actions | {data['status']}"
+    elif kind == 'deposit_plan_revision_required':
+        issue=data['issue']
+        line=f"Plan repair: {data['idea_id']} | {short(issue.get('step_id') or 'sequence',40)} {issue['code']} | attempt {data['same_attempts']}/3"
+    elif kind == 'deposit_plan_repair_stalled':
+        line=f"Plan repair: {data['idea_id']} BLOCKED | repeated issue or no edit; inspect saved draft"
+    elif kind == 'deposit_plan_repair_no_progress':
+        line=f"Plan repair: {data['idea_id']} | no edit this round ({data['idle_rounds']}/2)"
     elif kind == 'deposit_step_completed':
         line = f"Deposit: {data['idea_id']} | {data['step']} completed"
     elif kind == 'deposit_execution_checkpoint':
         line = f"Deposit: {data['idea_id']} {data['status']}" + (' | '+data['reason'] if data.get('reason') else '')
     elif kind == 'critique_recorded':
         line = 'Review: ' + data['idea_id'] + ' ' + data['verdict'] + (' (adjusted from REJECT)' if data.get('verdict_adjustment') else '')
+    elif kind == 'prototype_review_recorded':
+        line='Prototype review: '+data['idea_id']+' '+data['verdict']
+    elif kind == 'failure_diagnosis_recorded':
+        line='Code diagnosis: '+data['idea_id']+' '+data['problem_kind']+' -> '+data['disposition']
+    elif kind == 'prototype_review_revision_required':
+        if data['attempts']==2: return
+        line='Review evidence: '+data['test_id']+' '+data['reason']+f" | attempt {data['attempts']}/3"
+    elif kind == 'prototype_plan_recorded':
+        line='Test plan: '+data['idea_id']+' '+data['scope']+' | '+short(data['property_tested'],100)
+    elif kind == 'research_report_recorded':
+        line='Report: conclusion recorded for '+str(len(data['idea_ids']))+' current ideas'
+    elif kind in {'research_repair_required','research_repair_stalled'}:
+        key=(agent_id,'research-repair',data['fingerprint'])
+        if kind=='research_repair_required' and seen.get(key): return
+        seen[key]=True
+        line=f"Repair: {data['idea_id']} {data['code']}" + (' | task retained, moving on' if kind=='research_repair_stalled' else ' | correct data or record evidence gap')
+    elif kind == 'sandbox_capabilities_observed':
+        line='Sandbox runtimes: '+', '.join(k for k,v in data.get('runtimes',{}).items() if v)+' | '+data['status']
+    elif kind == 'known_candidate_deferred':
+        line='Carrier: '+short(data.get('provider'))+' EXISTING_ARCHIVE_LAYER -> compare improvement or switch'
+    elif kind == 'review_task_assigned':
+        if data['kind']=='NONE': return
+        line='Audit task: '+str(data['target_id'])+' '+short(data.get('provider',''),70)+' | '+str(len(data.get('document_urls',[])))+' primary documents'
+    elif kind == 'discovery_lead_updated':
+        line = 'Lead: ' + data['lead_id'] + ' findings saved'
+    elif kind == 'discovery_lead_reviewed':
+        line = 'Lead review: ' + data['lead_id'] + ' ' + data['disposition']
     elif kind == 'deposit_candidate_retained':
         line = f"Candidate: {data['candidate_id']} {data['status']} retained from qualification (unverified draft)"
     elif kind == 'role_prerequisite_recovered':
@@ -97,8 +133,10 @@ def progress(kind, agent_id, data, seen):
         line='Docs: '+short(data['url'],95)+' deferred ('+data['reason']+')'
     elif kind == 'document_redirect_hint':
         line = 'Docs redirect: ' + short(data.get('redirect_url') or data['reason'], 130)
+    elif kind == 'pdf_document_extracted':
+        line = f"PDF: {data['request_id']} | {data['page_count']} pages extracted"
     elif kind == 'http_document_read':
-        line = 'Docs: ' + short(data['url'], 130) + f" | chars {data['offset']}..{data['end']}" + (' (cached)' if data.get('cached') else '')
+        line = 'Docs: ' + short(data['url'], 130) + f" | chars {data['offset']}..{data['end']}" + (' | PDF pages '+','.join(map(str,data['pages'])) if data.get('pages') else '') + (' (cached)' if data.get('cached') else '')
     elif kind == 'http_request_failed':
         line = f"HTTP: {data['action']['payload']['method']} FAILED before send; " + short(data.get('reason', ''), 200)
     elif kind == 'http_request_uncertain':
@@ -107,6 +145,17 @@ def progress(kind, agent_id, data, seen):
         line = 'HTTP public smoke: PASS, docs/terms read + upload + download + matching SHA256'
     elif kind == 'http_smoke_verified':
         line = 'HTTP smoke: PASS, docs read + upload + download + matching SHA256'
+    elif kind == 'export_materialized' and data.get('workspace_path','').startswith('inputs/'):
+        key=(agent_id,'payload-input',data['sha256'])
+        if seen.get(key): return
+        seen[key]=True
+        line='Input: '+short(data['export'],105)+f" | {data['bytes']:,} bytes"
+    elif kind == 'prototype_revision_stalled':
+        line='Revision: '+data['idea_id']+' deferred after two rounds without implementation progress -> next candidate'
+    elif kind == 'prototype_preflight_reviewed':
+        line='Code relevance: '+data['idea_id']+' '+data['verdict']+' | '+short(data['reason'],135)
+    elif kind == 'prototype_workflow_stalled':
+        line='Prototype: '+data['idea_id']+' deferred after two rounds without changed code or execution'
     elif kind == 'http_copy_verified':
         line = f"HTTP: {data['action_id']} exact file read-back verified"
     elif kind == 'candidate_comparison':

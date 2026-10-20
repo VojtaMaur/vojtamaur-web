@@ -18,7 +18,10 @@ def record(api, qualification_id, steps, unknown_reason=''):
         raise ValueError('Only discovery records a flow for its own existing qualification')
     q=next((q for q in api.engine.state.get('deposit_qualifications',[]) if q['id']==qualification_id),None)
     if not q or q['agent_id']!=api.agent['id'] or not q.get('admissible'):
-        raise ValueError('Use your own existing admissible qualification')
+        from .discovery_leads import state_view
+        return {'status': 'DEFERRED', 'reason': 'EXISTING_QUALIFICATION_REQUIRED',
+                'state': state_view(api),
+                'next_action': 'Do not invent QUAL IDs. Use check_deposit_target first, resolving its concrete reasons. Record partial findings in the existing LEAD with record_discovery_lead; then use the returned admissible qualification_id.'}
     if not isinstance(steps,list) or not isinstance(unknown_reason,str) or len(unknown_reason)>2000:
         raise ValueError('Invalid operation_steps/unknown_reason')
     if steps and unknown_reason.strip():

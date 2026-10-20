@@ -121,8 +121,14 @@ def assess(api, provider, service_url, baseline_behavior='', proposed_change='',
     else:
         api.agent['carrier_switch_required'] = {'provider':provider, 'source_id':receipt['id'], 'reason':status,
                                                'next_action':receipt['next_action']}
+    from .discovery_leads import retain_screen
+    lead = retain_screen(api, receipt)
+    result = dict(receipt)
+    if lead:
+        result['lead_id'] = lead['id']
+        result['next_action'] += ' LEAD retained: update it using record_discovery_lead; do not invent a QUAL ID.'
     api.event('carrier_screened', receipt)
-    return receipt
+    return result
 
 def qualification_steering(api, receipt):
     if not enabled(api) or not {'ALREADY_KNOWN_BASELINE','POLICY_FORBIDDEN'}.intersection(receipt.get('reasons', [receipt['status']])):

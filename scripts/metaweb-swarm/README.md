@@ -1,3 +1,33 @@
+Aktuálně **0.6.18**: [opravy bez párování ID, kontrola relevance kódu a automatický execution receipt](docs/PROTOTYPE_WORKFLOW.md). Nový běh: `run-http.cmd`.
+
+Aktuálně 0.6.15: [diagnóza a oprava selhaného kódu, funkční RS artefakt](docs/PROTOTYPE_DEBUG.md). Nový běh: `run-http.cmd`; prototyper má 8 kol, globální modely/budgety/oprávnění zůstávají stejné.
+
+Aktualizace **0.6.17**: [skutečné exporty, přesné opravné odkazy a audit lokálního testu](docs/PAYLOAD_AND_REVIEW_FACTS.md). Nový běh: `run-http.cmd`.
+
+Aktualizace **0.6.16**: [opravy po REVISE, posun na další kandidáty a stručné podklady reportera](docs/REVISION_AND_REPORT.md). Spuštění nového běhu: `run-http.cmd`.
+
+Aktualizace 0.6.14: [povinné dokončení auditu a test vlastní mechanismu](docs/REVIEW_FINISH.md). Nový běh: `run-http.cmd`; auditor 10 kol, globální budgety, modely a oprávnění jsou stejné.
+
+Aktualizace 0.6.13: [čtení skutečných výstupů, executable test cases, původní bajty a změna známého směru](docs/EVIDENCE_REVIEW.md).
+
+Aktualizace 0.6.10: [nové zadání bez staré modelové historie, testovací kontrakt a nezávislé posouzení skutečného prototypu](docs/PROTOTYPE_REVIEW.md). Auditor má 6 kol pro pre/post review.
+
+Aktuálně 0.6.9: [obecný výzkum předává skutečné IDEA auditorovi, prototyperovi a reportérovi](docs/RESEARCH_HANDOFFS.md). Nový skutečný běh: `run-http.cmd`; modely a oprávnění zůstávají stejné.
+
+Aktuálně 0.6.8: [konkrétní review packets, vlastní čtení dokumentů a dokončení LEAD triage](docs/REVIEW_TASKS.md). Auditor nedostane IDEA critique, dokud neexistuje odpovídající kandidát.
+
+Aktuálně 0.6.7: [strukturované response bindings a vyčištění pracovní historie](docs/STRUCTURED_BINDINGS.md). Host skládá syntaxi z oddělených údajů; staré odmítnuté plánovací pokusy zůstávají v auditu.
+
+Aktuálně 0.6.6: [opravy jednotlivých kroků, konkrétní diagnostika a zastavení opakovaných chyb](docs/PLAN_EDITS.md). Soukromý draft není execution plan ani approval; každá editace znovu validuje celou sekvenci.
+
+Aktuálně 0.6.5: [bounded přehledy a prompt preflight bez spotřeby kol](docs/PROMPT_PREFLIGHT.md). Aktuální plány/oprávnění zůstávají úplné; historické narrative se zkracují a stejné host selhání se netočí.
+
+Aktuálně 0.6.4: [oprava plánovacích zadání, plán bez credential hodnot a review před realizací](docs/PLAN_RECOVERY.md). Opravitelný tool diagnostic vrací konkrétní krok; účet/limity dál brání execution, nikoli uchování plánu.
+
+Aktuálně 0.6.3: [čtení PDF dokumentace, source hash, stránky a cache](docs/PDF_DOCUMENTS.md). Parser pypdf je součást deklarovaných dependencies; už stažené PDF lze využít při resume.
+
+Aktuálně 0.6.2: [rozpracované směry před kvalifikací, nezávislé triage a opravné kroky](docs/DISCOVERY_LEADS.md). Přečtená zjištění zůstávají v reportu i bez hotového upload plánu; LEAD sám nikdy nepovolí realizaci.
+
 Aktuálně 0.6.1: [výběr skutečně nových služeb a dokumentace vázaná na provider/origin](docs/CARRIER_SCOPE.md). Zenodo/Figshare z ARCHIVE.txt v cíleném deposit běhu neprojdou přes generic improvement. FREE upload může vyžadovat vlastní swarm účet.
 
 Aktuálně 0.6.0: [obecný vícekrokový HTTP realizátor](docs/DEPOSIT_EXECUTOR.md), stav po každém kroku, jeden approval na konkrétní postup a veřejný SHA256 read-back. Placené smokes není třeba opakovat.
@@ -306,6 +336,10 @@ Staré běhy zachovávají snapshots, role missions, IDEA IDs, config a audit. C
 
 ## Obecné HTTP/API nástroje (0.4.0)
 Agent může číst dokumentaci nových služeb, sestavit HTTP/API požadavky, uploadovat vlastní soubory a stáhnout odpověď bez provider connectoru. Nový `run-http.cmd` vytváří external run s approval required; `run-http.cmd --approval disabled` ho skutečně vypne. Hostitelské účty se nepřebírají, forge/site zápisy jsou blokované. [Úplný návod, konfigurace a bezpečnostní model](docs/HTTP_ACCESS.md).
+
+Opravy opakovaných auditních a lokálních validačních chyb: auditor dostává přesné chybějící dokumenty, prototyper skutečné workspace cesty a oddělené nástroje; zaseknutá úloha neblokuje ostatní kandidáty. [RESEARCH_RECOVERY](docs/RESEARCH_RECOVERY.md).
+
+Aktuální plánovaný test potřebuje jednu execution a record_test: host zachytí přesné generované výstupy a provede registraci. Reporter má vlastní krok pro dokončení reportu i bez výsledné archivace. UNKNOWN pricing čeká na výzkum. [FLOW_COMPLETION](docs/FLOW_COMPLETION.md).
 
 
 Cílený běh s jedním skutečným exportem: `run-deposit-trial.cmd`; postup schválení a pokračování viz [DEPOSIT_TRIAL.md](docs/DEPOSIT_TRIAL.md).

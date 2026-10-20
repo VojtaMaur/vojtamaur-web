@@ -1,0 +1,54 @@
+{
+  "version": "0.6.15",
+  "regressions": {
+    "tests": 546,
+    "skipped": 1,
+    "passed": true
+  },
+  "new_regression_cases": 9,
+  "actual_docker_repair": {
+    "version": "0.6.15",
+    "source_export": "payload.epub",
+    "actual_rs_report": {
+      "original_bytes": 1294314,
+      "encoded_bytes": 1477826,
+      "original_sha256": "b0e4617d9d3b77355c4b849d42e82497c0cd17080a015b70dd74288afdf712b1",
+      "round_trip": true,
+      "eight_unknown_errors_per_codeword_recovered": true,
+      "twenty_four_indexed_erasures_per_codeword_recovered": true,
+      "beyond_capacity_rejected": true,
+      "malformed_header_rejected": true,
+      "limitations": "No print/scan test; header is not error-corrected; no arbitrary unindexed deletion recovery, adversarial authentication or external custody."
+    },
+    "failure_yield_prevented_second_model_request": true,
+    "independent_root_cause_review": true,
+    "local_role_held_and_reopened": true,
+    "prototype_component_review_recorded": true,
+    "failure_count": 1,
+    "successful_executions": 1,
+    "sdk_review_choices": [
+      "read_test_artifact",
+      "read_test_artifact",
+      "read_test_artifact",
+      "read_test_artifact",
+      "read_test_artifact",
+      "read_test_artifact",
+      "read_test_artifact",
+      "review_prototype_test",
+      null
+    ],
+    "package_installation": "COMPLETED",
+    "paid_api_calls": 0,
+    "public_deposits": 0,
+    "production_experiment_writes": false,
+    "meaning": "Actual Docker/package/repair pipeline and usable export prototype; model diagnoses/judgments supplied by a local fake provider."
+  },
+  "artifact_directory": "G:\\metaweb-swarm-runs\\manual-artifacts\\rs-recovery-20261014-v0615",
+  "sdk": {
+    "openai_agents": "0.23.1",
+    "openai": "3.24.0",
+    "pydantic": "2.13.5"
+  },
+  "paid_api_calls": 0,
+  "public_deposits": 0
+}

@@ -1,0 +1,85 @@
+{
+  "version": "0.6.13",
+  "regressions": {
+    "tests": 528,
+    "skipped": 1,
+    "passed": true
+  },
+  "new_regression_cases": 11,
+  "final_targeted_tests": 32,
+  "docker": {
+    "version": "0.6.13",
+    "docker_output": {
+      "round_trip": true,
+      "corruption_rejected": true,
+      "bytes": 28865,
+      "sha256": "bbb800a98d1cfd18b841af2e4501ff96485773dbac425cf01251d0a5ecb0a1a1"
+    },
+    "original_crlf": true,
+    "recovered_matches_raw_original": true,
+    "script_only_approval_refused": "OWN_TEST_OUTPUT_READ_REQUIRED",
+    "artifact_reads_recorded": true,
+    "evidence_contract": 2,
+    "actual_sdk_function_tool_invoked": true,
+    "successful_executions": 1,
+    "manual_registrations": 0,
+    "independent_review": "Host QA with simulated reviewer identity; no paid LLM judgment",
+    "production_experiment_writes": false,
+    "paid_api_calls": 0,
+    "external_actions": 0
+  },
+  "read_only_replay": {
+    "run_id": "20261014-070113-32f0e632",
+    "actual_negated_delegations_allowed": 2,
+    "prototype_results": [
+      {
+        "idea_id": "IDEA-0001",
+        "observed_failure": "OBSERVED_PROTOTYPE_FAILURE",
+        "failed_probe": [
+          "recovery_probe=False"
+        ],
+        "successful_prefix_is_not_negative_case": true
+      },
+      {
+        "idea_id": "IDEA-0002",
+        "no_actual_test_assertions": "ACTUAL_TEST_CASE_EVIDENCE_REQUIRED",
+        "retained_input": {
+          "export": "vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub.manifest.json",
+          "path": "work/metaweb.manifest.json",
+          "sha256": "bbb800a98d1cfd18b841af2e4501ff96485773dbac425cf01251d0a5ecb0a1a1",
+          "bytes": 28865
+        },
+        "copied_manifest": {
+          "path": "work/booklet_out/manifest_copy.json",
+          "sha256": "32b76eee96919fb30960202e636536ec5f1d989d067ead8452e9a3724e2c066e",
+          "bytes": 28242,
+          "binary": false,
+          "matches_retained_input": false,
+          "required_read_chars": 28124,
+          "failed_positive_probes": [],
+          "reported_input_hashes": []
+        },
+        "wrong_reported_input_hashes": [
+          {
+            "field": "input_sha256",
+            "value": "32b76eee96919fb30960202e636536ec5f1d989d067ead8452e9a3724e2c066e",
+            "matches_retained_input": false
+          }
+        ]
+      }
+    ],
+    "inspected_file_count": 20,
+    "inspected_stopped_run_files_unchanged": true,
+    "historical_verdicts_not_rewritten": true,
+    "paid_api_calls": 0,
+    "external_actions": 0
+  },
+  "sdk": {
+    "openai_agents": "0.23.1",
+    "openai": "3.24.0",
+    "pydantic": "2.13.5",
+    "compatible": true
+  },
+  "paid_api_calls": 0,
+  "public_deposits": 0
+}

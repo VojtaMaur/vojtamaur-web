@@ -37,6 +37,7 @@ def prices_for(config, model):
 
 
 def search_allowance(config, agent):
+    if agent.get('review_assignment'): return 0
     # These roles synthesize supplied observations; they do not discover sources.
     if agent.get("work_kind") in {"COORDINATION", "SYNTHESIS", "LOCAL"}:
         return 0

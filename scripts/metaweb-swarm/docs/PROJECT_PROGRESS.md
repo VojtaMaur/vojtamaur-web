@@ -1,4 +1,45 @@
+## 0.6.18 — opravný cyklus vlastní framework
+
+- Model-facing plán nemá opravná ID; host je odvodí z aktuálního vlastního úkolu.
+- Auditor před Dockerem čte zmrazený skript a kontroluje skutečný mechanismus.
+- execute_prototype spojuje spuštění se zachycením testovacího záznamu.
+- Čekání neplatí další LOCAL polling, dvě kola bez kódu/execution končí technickým odložením.
+- Skutečný Docker replay původního WebVTT selhání a opravy, s reálným Metaweb EPUBem; skriptovaná rozhodnutí, bez placené inference.
+- [Podrobný postup a meze](PROTOTYPE_WORKFLOW.md).
+
 # Metaweb swarm — průběžný stav
+
+## 0.6.4: opravitelné plánování a stage review
+
+- Strukturované opravy header/binding/raw-body chyb a bounded retry stejného IDEA.
+- Chybějící dedicated grant lze pojmenovat a uložit v plánu; execution zůstává zakázaný.
+- Hotová planning-only role končí i při account/resource blokátorech kandidáta.
+- PRE_DEPLOYMENT review nevyžaduje budoucí upload receipt; nevhodné kritérium se opravuje bez auto-PASS.
+- Starý konkrétní header tool error aktuálního runu je rozpoznatelný při resume, žádné nové kolo discovery není nutné.
+- Modely, grants, rozpočty a konfigurace zůstávají. [Detaily a CMD](PLAN_RECOVERY.md).
+
+
+## 0.6.3: PDF jako skutečně přečtený podklad
+
+- read_document / shared audit / negativní quote umí hashově ověřené textové PDF.
+- Bounded proces bez děděných credentials; cache a receipts se source hash a čísly stran.
+- Stejný cache GET může po doplnění parseru změnit SCREENED lead na doložený směr k auditu.
+- Offline kopie skutečného OpenDrive PDF: 109 stran; handoff se obnovil, původní run nezměněn.
+- Původní modely, configy, approval a rozpočty zůstávají. OCR není součástí.
+- [Instalace, meze a CMD resume](PDF_DOCUMENTS.md).
+
+
+## 0.6.2: rozpracované leads a předávání
+
+- Povolený screen uloží LEAD; skutečné document reads připojí zdrojové receipts.
+- Discovery zaznamená zjištění, otevřené otázky a další krok i před kvalifikací.
+- Auditor posoudí doložený neúplný směr; setup není zamítnutí a QUALIFY není PASS.
+- Skutečná ID vrací list_discovery_state; smyšlené QUAL ID vede k opravitelnému DEFERRED.
+- Nové podklady zneplatní staré posouzení; follow-up jen jednou a v původním rozpočtu.
+- Report + discovery_leads.jsonl + manifest + checkpoint + audit zachovají provenance.
+- Stejné modely, USD/token/runtime limity, approval a externí oprávnění.
+- [Podrobnosti a CMD](DISCOVERY_LEADS.md). Živý levný model zatím tímto novým průchodem neověřen.
+
 
 ## 0.3.4: Windows bind mounts a Reporter
 
@@ -196,3 +237,131 @@ Přidán datový HTTP realizátor: zarezervovat, navázat JSON ID/signed URL, po
 ## 2026-10-12 — 0.6.1: provider-bound routing a nové služby
 
 Run 20261012-120434-827d6ccf: žádná IDEA/QUAL/FLOW nebo upload, odhad $0,19555425. Zenodo registrované v ARCHIVE prošlo přes tři vyplněná improvement pole; jeho screen pokryl i neregistrované čtení známého Figshare. Cílený deposit profil nyní vylučuje všechny registrované služby i jako generic improvements. Read/qualification gate vyžaduje vlastní správný provider/origin screen, včetně dalších docs/API domén; auditor zůstává nezávislý. Jednoznačné DNS aliasy zachovají původní registry evidence. FREE versus autentizace odděleno v rolích; chybějící dedicated grant je BLOCKED setup kandidát. Prototyper instrukce odpovídají vícekrokovému executorovi a stávajícímu action cap 1. Modely, rozpočty, grants a approvals zachovány; skutečný run nezměněn. [Návod](CARRIER_SCOPE.md).
+
+
+## 2026-10-13 — 0.6.6: opravy jednotlivých kroků a konec stejné chyby
+
+Poslední čtyři paid rounds opravily prompt cap, ale opakovaly odkaz na neexistující reserve; celý-plan fingerprint po kosmetické změně resetoval guard. Nyní soukromý revision-bound draft, redigované čtení jednoho kroku a field edit s validací celé sekvence. Diagnostika ukazuje missing/available source IDs a vadný JSON. Tři stejné unresolved issues nebo dvě kola bez editace (i SDK yield) končí BLOCKED, automatická recovery je neotevře. Report uvádí konkrétní repair stav. Starý draft lze při resume obnovit jen z přesného fingerprintu již zaznamenaných argumentů. Na kopii skutečného běhu oprava source ID odkryla malformed confirm body; nejde o schválený upload plán. Žádná provider integrace, veřejný upload, přidělení credentials nebo změna rozpočtu. [Nástroje a pokračování](PLAN_EDITS.md).
+
+
+## 2026-10-13 — 0.6.7: strukturované reference místo chybné syntaxe
+
+Přidán obecný bind_deposit_step_response: source ID, response pointer a cílové pole jsou oddělené; host sestaví URL/JSON binding a znovu validuje celou sekvenci. Existující draft poskytuje strict SDK source enum. Literal path/query části se escapují stejným executorem. Staré prověřeně odmítnuté datové calls a draft reads se při SDK round archivují bez opakování v pracovním kontextu; externí/unknown operace nejsou tímto filtrem vybírány. Aktuální kvalifikace/permissions a úplný audit zůstávají. Popisy toolů už nenabízejí vymyšlené source IDs. Modely, profily a rozpočty nezměněny; starý run zůstává zastavený, další pokus lze založit běžným CMD launcherem. [Contract a spuštění](STRUCTURED_BINDINGS.md).
+
+
+## 2026-10-13 — 0.6.8: konkrétní nezávislý review packet
+
+Běh 084733 měl jen LEADy; auditor nepřečetl jejich primární sources a zkusil critique prázdného IDEA ID. Host nyní přiděluje jedno ID/revizi, exact doc URLs a relevantní rozsahy; SDK nástroje a URL enum odpovídají aktuálnímu zadání. Independent reads/coverage vedou k triage, zaznamenané triage uzavírá roli i s otevřenou kvalifikací. 404/TLS/parser failure končí technickým BLOCKED, nikoli mechanism rejection. Vlastní coverage/assignment přežijí resume. Web discovery a IDEA critique nejsou v LEAD packetu dostupné. Nejde o automatický verdict, nový connector ani upload. Modely/perms/globální budget nezměněny. [Contract a pokračování](REVIEW_TASKS.md).
+
+
+## 2026-10-13 — 0.6.9: obecný výzkum a aktuální IDEA handoffs
+
+Běh 094554 měl dvě IDEA, ale focused-only review tool vrátil NONE; CBOR pokus nebyl propojený a reporter vybral historický Google Drive lead. Obecné profily nyní zapínají research_handoffs: auditor dostane skutečné ID/revizi, prototyper registruje vlastní artefakty na přidělené IDEA a dokončí až s test receipt nebo konkrétním blockerem. Coordinator má roster/coverage, reporter aktuální ledger. Nové zadání může role znovu otevřít v původních limitech. Pořadí audit → prototype → report; bez external qualification pro lokální hypotézu. Scope, credentials, approvals, modely a globální rozpočty beze změn; žádný veřejný upload ani placené inference při ověření opravy. [Návod a contract](RESEARCH_HANDOFFS.md).
+
+
+## 2026-10-13 — 0.6.10: aktuální task context a skutečný scope prototypu
+
+Běh 112205 ukázal stale modelové zadání, JS testy v Python kontejneru, nefunkční JSON/fountain placeholder a nesouvisející QR test vedený pod Arweave. Nové task identity archivují předchozí historii a předávají čistý aktuální kontext. Prototype plan váže reálný export, script, specimen a pozitivní/negativní assertions; successful execution je oddělené od FULL_MECHANISM/SUBCOMPONENT/REVISE peer review. Vlastní celé script reads a neměnné SHA256 audit snapshots brání potvrzení pouze z agentního summary. Známá ARCHIVE vrstva musí být improvement, ne nový discovery. Evidence Auditor 2→6 kol; globální budgets, models a external approval/grants beze změn. [Contract a spuštění](PROTOTYPE_REVIEW.md).
+
+## 2026-10-14 — 0.6.11: opravitelné chyby a omezené opakování
+
+Běh 130738 sloučil DNS duplicitu, ale auditor opakoval PASS bez všech vlastních zdrojů a prototyper zaměnil export filename/workspace path a sáhl po deposit edit toolu. Audit packet a odmítnutý PASS nyní ukazují přesné chybějící URL; uznávají jen vlastní pozorované redirecty. Lokální plán vrací konkrétní opravitelné path chyby a materializované inputy, včetně format hint. LOCAL_IDEA nabídne deposit draft opravy až s vlastním draftem pro tuto IDEA; obecné HTTP/approval/upload nástroje zůstávají. Tři stejné unresolved validation issues odloží pouze aktuální úlohu bez vymyšleného verdiktu/testu a uvolní ostatní kandidáty. Data-only rejection history se archivuje; externí/unknown výsledky zůstávají. Checkpoint/report zachovává nezpracované úlohy. Modely, globální rozpočty a approvals nezměněny. [Návod](RESEARCH_RECOVERY.md).
+## 2026-10-14 — 0.6.12: chybějící specimen není host porucha, neúspěšný výzkum není nehotový report
+
+Běh 051545 měl dva REVISE audity, tři exit-zero execution a nula testů/depositů. Úzký delegation filtr rozlišuje explicitní zákaz od kladného zadání bez oslabení IDEA owner guardu. Planned capture sleduje přesné script/output soubory, jejich vznik/změnu při execution a následnou byte integrity; record_test provede registraci, bez bookkeeping rerun. Negative assertion nemůže být pouhá věta o netestovaných omezeních. UNKNOWN pricing je retained discovery/audit úloha, nikoli local implementation. record_research_report završuje report i s otevřenými kandidáty a nulovým výsledkem; nové evidence jej mohou znovu otevřít. Žádné nové provider connectors, modely, budgety, permissions či externí akce. [Návod](FLOW_COMPLETION.md).
+
+
+
+## 2026-10-14 — 0.6.13: výstupy a skutečné cases před kladným scope review
+
+Běh 070113 měl dva executed tests, ale první report říkal recovery_probe=False a
+druhý neměl assertions a změnil původní CRLF bytes. Positive scope review nyní
+vyžaduje vlastní čtení výstupů, skutečné Python executable cases a pro FULL
+také captured recovered artifact se shodným original SHA256/size. Tři opakované
+unsupported endorsements vedou k test REVISE, ne mechanism REJECTED; identický
+REVISE script se znovu nespouští. Host syntax/read/hash guards nedokazují význam
+nebo vykonání citované větve; independent judgment zůstává nutný. Přirozené
+negace v delegování neblokují legitimní role a known-layer deferral předává
+DISCOVERY_PIVOT se zachováním raw historie/permissions/budgetu. Modely,
+globální limity a externí approval nezměněny. [Contract](EVIDENCE_REVIEW.md).
+
+
+## 2026-10-14 — 0.6.14: povinné auditní volání a relevance lokálních testů
+
+Běh 084150 měl čtyři execution a tři receipts bez jediného prototype verdictu;
+auditor dočetl jen část prvního výsledku a skončil slovním endorsement. Host nyní
+před každým SDK požadavkem určuje exact missing artifact range, pak požaduje
+review_prototype_test i přes SDK tool-choice reset. Verdict vybírá auditor;
+request accounting, čas/token/USD limity a externí oprávnění se nemění. Scheduler
+upřednostní zaznamenané testy, chrání known review queue a poslední reporter kolo.
+Auditor v nových research/http profilech 6→10 kol v původním globálním budgetu.
+Ve stejném pre-audit critique určí mechanism-specific local_test_scope/goal nebo
+DEFER. Tím se neověřený repository nenahrazuje manifest-copy testem, zachovává
+se výzkumná hypotéza a external approval je oddělený. Explicitní report counts
+pending/FULL/SUBCOMPONENT/REVISE odlišují execution od funkčního pokrytí.
+Žádné provider-specific connectors, credentials, placená inference ani upload.
+[Contract a spuštění](REVIEW_FINISH.md).
+
+
+## 2026-10-14 — 0.6.15: selhaný kód dostává skutečnou diagnózu a opravu
+
+Běh 105648 neměl RS decoder; tři pokusy opravovaly parser, nikoli chybějící
+algoritmus. Nonzero planned LOCAL execution nyní ukládá immutable source +
+traceback a předá řízení před dalším modelovým requestem. Stávající auditor
+povinně čte zdroj a uloží diagnózu/kroky/decisive check; čekající lokální role
+nespotřebovává další paid dispatch. REPAIR ji znovu otevře v původním budgetu,
+DEFER uchová hypotézu bez rejection. Nový repair plán musí mít skutečně změněný
+script (nebo novou instalaci chybějící knihovny) a explicitní vazbu/notes/check
+k předchozímu failure. Context reset
+archivuje staré parser guesses. V sandboxu je obecný implement/debug playbook
+s reálnou RS recipe. Prototyper 6→8 v research/http profilech; modely, globální
+40 kol / 3M tokens / hodina a external approval nezměněny.
+
+Konkrétní použitelný artefakt zachoval celý skutečný EPUB (1 294 314 bytes),
+obnovil jej z osmi errors i 24 indexed erasures na každý RS codeword a odmítl
+beyond-capacity corruption. Nejde o otestovaný tisk/skenování nebo veřejnou
+custody. Kód a modelové judgments v QA dodal Codex přes local fake SDK model.
+Artefakt je mimo produkci v runs-root/manual-artifacts. [Návod](PROTOTYPE_DEBUG.md).
+
+
+## 2026-10-15 — 0.6.16: REVISE je opravný úkol, reporter dostává stručný přehled
+
+Dnešní běh měl exit-zero Commons fixture, ale auditor dal REVISE. Sedm dalších
+kol prototypera nepřineslo opravu; reporter načetl 170 046 znaků v jediném
+výstupu nástroje. Nový LOCAL_REVISION archivuje staré deklarace hotového testu,
+vyžaduje vlastní čtení zmrazeného kódu/posudku a změněný script s explicitní
+vazbou na původní test. Dvě kola bez změny implementace nebo nového výsledku
+odloží lokální úkol a umožní další IDEA; hypotéza není REJECTED. Úspěšný opravný
+běh se směruje na record_test, nikoli další run pro bookkeeping.
+
+Reporter dostává omezené aktuální claims a přesné počty; plné jednotlivé
+záznamy jsou dostupné stránkováním. Historické submissions/revisions a HTTP
+headers nenafukují modelový kontext. Lokální packet také neopakuje historii
+kandidáta. Modely, global/role budgets, oprávnění a dependencies beze změny.
+
+Read-only replay skutečného běhu dokončil report a přešel z Commons na PWA.
+Skutečný Docker/SDK průchod ověřil i implementovanou opravu a nový receipt,
+s bezpečně omezeným SUBCOMPONENT úsudkem. Žádná placená inference ani veřejný
+upload; kód/judgments v QA dodal Codex. [Návod](REVISION_AND_REPORT.md).
+
+
+## 2026-10-20 — 0.6.17: skutečný payload a faktické posouzení lokální práce
+
+Běh 061731 už správně přepínal úkoly a dokončil report; peer také úspěšně
+opravil reálný Docker code bug. Další zásek způsobilo používání descriptoru
+místo dostupného EPUB, přijaté phantom repair ID a nekonzistentní posudek
+byte recovery/relevance. Nový prepare_prototype_input kopíruje skutečný
+vhodný zachycený payload; FULL plán s descriptor-only vstupem je vrácen
+k opravě scope nebo vstupu. Repair reference se kontrolují proti skutečným
+vlastním aktuálním receipts před uložením a při další execution.
+
+Reviewer po vlastních čteních dostává host identity/byte facts. Vyžaduje se
+explicitní acknowledgment shody a konkrétní basis REVISE; external gap sám
+nepopírá lokální komponentu. Rozpor se vrací k opravě; opakovaný rozpor je
+technický INDEPENDENT_REVIEW_UNRESOLVED, nikoli code bug nebo scientific
+rejection. Původní evidence gate, scoped judgment a external approval beze změn.
+
+Read-only replay reálného běhu ověřil typed fact conflict/correction a actual
+1.29MB EPUB copy. Starý descriptor-only test zůstává omezenou komponentou,
+nikoli novou ověřenou archivní vrstvou. Žádná placená inference, public upload
+ani změna configů, modelů, budgetů a původních výsledků. [Návod](PAYLOAD_AND_REVIEW_FACTS.md).

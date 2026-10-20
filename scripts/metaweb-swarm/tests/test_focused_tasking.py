@@ -124,8 +124,8 @@ class FocusedTests(unittest.IsolatedAsyncioTestCase):
         for agent in self.engine.state['agents']:
             tools,_=_make_sdk_tools(sdk,self.for_agent(agent)); sets.append({t.name for t in tools})
         self.assertIn('read_document',sets[0]); self.assertNotIn('check_prior_work',sets[0]); self.assertNotIn('read_file',sets[0]); self.assertNotIn('http_request',sets[0])
-        self.assertIn('record_critique',sets[1]); self.assertNotIn('http_request',sets[1])
-        self.assertIn('http_request',sets[2]); self.assertEqual(sets[3],{'read_file','read_audit_artifact','note'})
+        self.assertNotIn('record_critique',sets[1]); self.assertNotIn('http_request',sets[1])
+        self.assertIn('http_request',sets[2]); self.assertEqual(sets[3],{'list_discovery_state','read_file','read_audit_artifact','note'})
         provider=FakeProvider([tool_response('read_document',{'url':self.origin+'/docs','purpose':'Read actual provider write API','offset':0,'limit':12000}),final_response()])
         result=await OpenAIBackend(provider).step(self.agent,self.engine.prompt(self.agent),[],self.api,self.config)
         self.assertEqual(result['output']['status'],'COMPLETED')

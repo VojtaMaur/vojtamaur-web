@@ -1,0 +1,83 @@
+{
+  "version": "0.6.18",
+  "source_run": "20261020-080422-5528d06b",
+  "actual_input": {
+    "export": "vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub",
+    "path": "inputs/b0e4617d9d3b-vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub",
+    "sha256": "b0e4617d9d3b77355c4b849d42e82497c0cd17080a015b70dd74288afdf712b1",
+    "bytes": 1294314
+  },
+  "original_files_unchanged": {
+    "checkpoint.json": "fd4bc0bca7df30943e38406f9759bc775bc0ccb571f77d08963bf50a6a7a621e",
+    "manifest.json": "f6450ba4efc85eb528cd1c27e737f5446ee4f242a9e974ff9489d7ca02e89bfa",
+    "SWARM_REPORT.md": "527948f4081dfd3d6ee5548fe9058733854d07488b8cb026b88856c8904d396e",
+    "TIMELINE.md": "53a16dfba327a44cab3ad8cc482330db0c42a4d17b9bcb46238ddde6b84127ca",
+    "agents/AGENT-008/workspace/prototype_webvtt.py": "2f3bfc7714debfed05ec6ca5cc2d2694ba5a34fa4c0f0447f7605cc24f71ec6f"
+  },
+  "real_docker_executions": 2,
+  "original_error_reproduced": "epub.ITEM_DOCUMENT",
+  "failed_experiment": {
+    "experiment_id": "EXPERIMENT-fdee19949a4e46ce",
+    "returncode": 1,
+    "output": "Traceback (most recent call last):\n  File \"/workspace/prototype_webvtt.py\", line 95, in <module>\n    main()\n  File \"/workspace/prototype_webvtt.py\", line 58, in main\n    source_text = extract_text_from_epub(INPUT)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/prototype_webvtt.py\", line 24, in extract_text_from_epub\n    if item.get_type() == epub.ITEM_DOCUMENT:\n                          ^^^^^^^^^^^^^^^^^^\nAttributeError: module 'ebooklib.epub' has no attribute 'ITEM_DOCUMENT'\n",
+    "cleanup_ok": true
+  },
+  "repaired_experiment": {
+    "experiment_id": "EXPERIMENT-e9f6ef5e5fdc44f3",
+    "returncode": 0,
+    "cleanup_ok": true
+  },
+  "automatic_repair_link": {
+    "experiment_id": "EXPERIMENT-fdee19949a4e46ce",
+    "notes": "Correct EbookLib constant; decode embedded Base64 from saved cue instead of copying source; explicitly catch rejection of the invalid NUL specimen",
+    "success_check": "Verify emitted recovered fragment equals the selected source bytes, actual cue parse succeeds, and invalid NUL cue raises ValueError"
+  },
+  "automatic_test_id": "TEST-85d8ca46341f4733",
+  "repeat_reuses_receipt": true,
+  "test_artifacts": [
+    {
+      "path": "prototype_webvtt.py",
+      "sha256": "5c8a9197aecea4bad30f574fc9c507154fc928cfb7e8254e1b6105712c59e286",
+      "bytes": 3926,
+      "binary": false
+    },
+    {
+      "path": "out/recovery.vtt",
+      "sha256": "fa78d918e4aacf13b651e1882534fe8bbb0025c5b32fd1dd51be248472dd2a0d",
+      "bytes": 5987,
+      "binary": false
+    },
+    {
+      "path": "out/report.json",
+      "sha256": "1cd512ca588cd3bd1c916a98a207f51f3925f14c186639bce4297fcd0ab7e36a",
+      "bytes": 6393,
+      "binary": false
+    },
+    {
+      "path": "out/recovered_payload.txt",
+      "sha256": "e51370bf1bded4976776158d8510021dcbab093736c6a2c06c6f327bcdb41685",
+      "bytes": 4175,
+      "binary": false
+    },
+    {
+      "path": "out/rejected_input.txt",
+      "sha256": "f8605a1ad888f9cbdf7bd09a12d8f8569056e9e4f91af5449188d85b86575685",
+      "bytes": 52,
+      "binary": true
+    }
+  ],
+  "specimen_report": {
+    "input_path": "inputs/b0e4617d9d3b-vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub",
+    "input_sha256": "b0e4617d9d3b77355c4b849d42e82497c0cd17080a015b70dd74288afdf712b1",
+    "source_text_sha256": "243faaa9230876463ac460f060471d9fcd0097ede0befeb7492e6c0133217ea6",
+    "vtt_sha256": "fa78d918e4aacf13b651e1882534fe8bbb0025c5b32fd1dd51be248472dd2a0d",
+    "parsed_cue_text": "METAWEB-RECOVERY v1\nSOURCE_SHA256=b0e4617d9d3b77355c4b849d42e82497c0cd17080a015b70dd74288afdf712b1\nPAYLOAD_SHA256=243faaa9230876463ac460f060471d9fcd0097ede0befeb7492e6c0133217ea6\nMIRROR=archive;mirror=repo;mirror=pdf\nDECODE=extract-transcript;rebuild-from-cues\nPAYLOAD_B64=T2JzYWggLyBDb250ZW50cyDDmnZvZCAvIEZyb250IG1hdHRlciBUaXR1bG7DrSBzdHJhbmEgLyBUaXRsZSBwYWdlIE9ic2FoIC8gQ29udGVudHMgTWV0YXdlYm92w70gxI1sw6FuZWsgLyBNZXRhd2ViIEFydGljbGUgTWV0YXdlYm92w70gxI1sw6FuZWsgTWV0YXdlYiBBcnRpY2xlIE9icmF6b3bDoSBwxZnDrWxvaGEgLyBJbWFnZSBhcHBlbmRpeCBPYnJhem92w6EgcMWZw61sb2hhIC8gSW1hZ2UgYXBwZW5kaXggQXJjaGl2bsOtIGEgdGVjaG5pY2vDqSBwxZnDrWxvaHkgLyBBcmNoaXZhbCBhbmQgdGVjaG5pY2FsIGFwcGVuZGljZXMgQVJDSElWRS50eHQgVGVjaG5pY2FsIGRvY3VtZW50YXRpb24gSWRlbnRpdGEgYSBpbnRlZ3JpdGEgLyBJZGVudGl0eSBhbmQgaW50ZWdyaXR5IFNIQTI1NlNVTVMudHh0IFNIQTI1NlNVTVMudHh0LmFzYyBCVUlMRF9TSEEyNTYudHh0IEJVSUxEX0hBU0hfSElTVE9SWS50eHQgaW50ZWdyaXR5Lmpzb24gU0lHTklOR19TVEFUVVMudHh0IHZvanRhLW1hdXItb3BlbnBncC5hc2MKTWV0YXdlYm92w70gxI1sw6FuZWsgTWV0YXdlYiBBcnRpY2xlIFZvanRhIE1hdXIgd3d3LnZvanRhbWF1ci5jegpPYnNhaCAvIENvbnRlbnRzIFZ5Z2VuZXJvdsOhbm8gR2VuZXJhdGVkIDIwMjYtMTAtMDVUMTQ6MDM6MjUrMDI6MDAgVmXFmWVqbsO9IHdlYiBQdWJsaWMgd2Vic2l0ZSBodHRwczovL3ZvanRhbWF1ci5jei8gWmRyb2pvdsO9IGJ1aWxkIFNvdXJjZSBidWlsZCBHOlx2b2p0YW1hdXItd2ViXGRpc3QgT2JyYXpvdsOhIHDFmcOtbG9oYSBJbWFnZSBhcHBlbmRpeCAxOSBvZGthem92YW7DvWNoIG9icsOhemvFryAxOSBsaW5rZWQgaW1hZ2VzIElkZW50aXRhIGEgaW50ZWdyaXRhIElkZW50aXR5IGFuZCBpbnRlZ3JpdHkgNyBvZGthem92YW7DvWNoIHNvdWJvcsWvIDcgbGlua2VkIGZpbGVzIE9kZMOtbHkgRVBVQiAvIEVQVUIgc2VjdGlvbnMgTWV0YXdlYm92w70gxI1sw6FuZWsg4oCUIMSNZXNrw6EgdmVyemUgTWV0YXdlYiBBcnRpY2xlIOKAlCBFbmdsaXNoIHZlcnNpb24gT2JyYXpvdsOhIHDFmcOtbG9oYSAvIEltYWdlIGFwcGVuZGl4IEFSQ0hJVkUudHh0IFRlY2huaWNrw6EgZG9rdW1lbnRhY2UgcHJvamVrdHUgLyBQcm9qZWN0IHRlY2huaWNhbCBkb2N1bWVudGF0aW9uIFNvdWJvcnkgaWRlbnRpdHkgYSBpbnRlZ3JpdHkgYnVpbGR1IC8gQnVpbGQgaWRlbnRpdHkgYW5kIGludGVncml0eSBmaWxlcyAvU0hBMjU2U1VNUy50eHQgL1NIQTI1NlNVTVMudHh0LmFzYyAvQlVJTERfU0hBMjU2LnR4dCAvQlVJTERfSEFTSF9ISVNUT1JZLnR4dCAvaW50ZWdyaXR5Lmpzb24gL1NJR05JTkdfU1RBVFVTLnR4dCAva2V5cy92b2p0YS1tYXVyLW9wZW5wZ3AuYXNjIFrDoW3Em3JuxJsgbmV2bG/FvmVubyAvIERlbGliZXJhdGVseSBub3QgZW1iZWRkZWQgUGF5bG9hZHkgQUxMX1BPU1RTLnR4dCBhIHNvdXJjZS92b2p0YW1hdXItd2ViLXNvdXJjZS56aXAgLCBzdGVqbsSbIGpha28gdiBQREYuIEplamljaCB6bcOtbmt5IGEgdmXFmWVqbsOpIG9ka2F6eSB6xa9zdMOhdmFqw60gdiDEjWzDoW5rdS4gVGhlIHBheWxvYWRzIG9mIEFMTF9QT1NUUy50eHQgYW5kIHNvdXJjZS92b2p0YW1hdXItd2ViLXNvdXJjZS56aXAgLCBhcyBpbiB0aGUgUERGLiBUaGVpciBtZW50aW9ucyBhbmQgcHVibGljIGxpbmtzIHJlbWFpbiBpbiB0aGUgYXJ0aWNsZS4KTWV0YXdlYm92w70gxI1sw6FuZWsgZHViZW4gMjAyNiBNQU5JRkVTVCBUZW50byB3ZWIgamUgc3RhdGlja8O9IHByb2pla3QgemFtxJvFmWVuw70gbmEgZGxvdWhvZG9iw6kgdWNob3bDoW7DrSBvYnNhaHUuIFZlxaFrZXLDvSBvYnNhaCBqZSB1bG/FvmVuw70gdiBzb3Vib3JlY2gsIGJleiB6w6F2aXNsb3N0aSBuYSBkYXRhYsOhesOtY2ggbmVibyBleHRlcm7DrWNoIHN5c3TDqW1lY2guIFbDvXNsZWRuw70gd2ViIHNlIGdlbmVydWplIGpha28gc3RhdGlja8O9IHbDvXN0dXAsIGt0ZXLDvSBsemUgc25hZG5vIGtvcMOtcm92YXQsIGFyY2hpdm92YXQgYSB6bm92dSBzZXN0YXZpdC4gUHJvamVrdCBqZSByb3psb8W+ZW7DvSBuYXDFmcOtxI0gdsOtY2UgbmV6w6F2aXNsw71taSBzeXN0w6lteTogcmVwb3ppdMOhxZlpLCBhcmNoaXZuw61taSBzbHXFvmJhbWkgYSBzdGF0aWNrw71taSBzbmFwc2hvdHkuIFTDrW0gc2Ugc25pxb51amUgcml6aWtvIHp0csOhdHkgZGF0LiBDw61sZW0gamUgemFqaXN0aXQsIGFieSBieWxvIG1vxb5uw6kgb2JzYWggcmVrb25zdHJ1b3ZhdCBpIHYgcMWZw61wYWTEmywgxb5lIG7Em2t0ZXLDqSDEjcOhc3RpIHDFr3ZvZG7DrSBpbmZyYXN0cnVrdHVyeSBwxZllc3Rhbm91IGV4aXN0b3ZhdC4gT05MSU5FIEFSQ0hJVk7DjSBWUlNUVkEgVHl0byBvZGthenkgcMWZZWRzdGF2dWrDrSBzdGVqbsO9IHByb2pla3QgdWxvxb5lbsO9IHYgcsWvem7DvWNoIHN5c3TDqW1lY2ggYSB2IHLFr3puw71jaCBwb2RvYsOhY2guIFphaHJudWrDrSBrYW5vbmlja8O9IHpkcm9qb3bDvSByZXBveml0w6HFmSwgamVobyBrb3BpZSBhIGtvbXBsZXRuw60gc3RhdGlja8OpIHNuYXBzaG90eS4gRG9ocm9tYWR5IHZ5dHbDocWZZWrDrSByZWR1bmRhbnRuw60gc3RydWt0dXJ1IG5hdnLFvmVub3UgdGFrLCBhYnkgcHJvamVrdCB1Y2hvdmFsYSBhIHVtb8W+bmlsYSBqZWhvIHJla29uc3RydWtjaSBpIHYgcMWZw61wYWTEmywgxb5lIG7Em2t0ZXLDqSDEjcOhc3RpIHDFmWVzdGFub3UgYsO9dCBkb3N0dXBuw6kuIFByb2pla3QgZXhpc3R1amUgdGFrw6kgamFrbyBQeXRob24gQ0xJIGJhbMOtxI1layBkaXN0cmlidW92YW7DvSBwxZllcyBHaXRIdWIgYSBQeVBJLCB2xI1ldG7EmyB2bG/FvmVuw71jaCBmYWxsYmFjayBzbmFwc2hvdMWvIHZ5YnJhbsO9Y2ggdGV4dG92w71jaCBhcnRlZmFrdMWvLiBEaWdpdMOhbG7DrSBhcmNoaXZhY2UgdG9ob3RvIHdlYnUgdGFrIHZ5dcW+w612w6Ega3JvbcSbIHZsYXN0bsOtIGRvbcOpbnkgdGFrw6kgc2x1xb5ieSBHaXRIdWIsIEdpdExhYiwgQ29kZWJlcmcsIFNvdXJjZUZvcmdlLCBOZW9jaXRpZXMsIENsb3VkZmxhcmUsIE5ldGxpZnksIFZlcmNlbCwgRmlyZWJhc2UsIENoYXRHUFQgU2l0ZXMsIEFyd2VhdmUsIFBvbGx1eC5jYXNhIChHZW1pbmkpLCBlbnZzLm5ldCAoR2VtaW5pICsgR29waGVyKSwgU29mdHdhcmUgSGVyaXRhZ2UsIEludGVybmV0IEFyY2hpdmUsIFdlYmFyY2hpdiwgWmVub2RvLCBGaWdzaGFyZSwgUGVybWFuZW50Lm9yZywgUHJvdG9uLm1lLCBIdWdnaW5nIEZhY2UsIGthZ2dsZSwgWW91VHViZSwgU3BvdGlmeSwgRmlsZSBHYXJkZW4sIENhdGJveCwgQ1lYIFNoYXJlLCBPY2VuIFNoYXJlLCBOb2RlIDYxNiwgcE9uZS5Scywga2FwcGEubG9sLCBMdWx1LCBLb2JvLCBQeVBJLCBQZXJtYS5jYywgYXJjaGl2ZS50b2RheSwgR2hvc3QgQXJjaGl2ZSwgQXJxdWl2by5wdCwgTWVnYWxvZG9uIGEgcGFzdGUucnMuIE1BSU4gU0lURSAocHJpbWFyeSBsaXZlIHZlcnNpb24pOiBodHRwczovL3ZvanRhbWF1ci5jei8gQUxURVJOQVRJVkUgREVQTE9ZTUVOVFM6IEdpdEh1YiBQYWdlcyBodHRwczovL3ZvanRhbWF1ci5naXRodWIuaW8vdm9qdGFtYXVyLXdlYi8gQ2xvdWRmbGFyZSBQYWdlcyBodHRwczovL3ZvanRhbWF1ci13ZWIucGFnZXMuZGV2LyBOZXRsaWZ5IGh0dHBzOi8vdm9qdGFtYXVyLm5ldGxpZnkuYXBwLyBWZXJjZWwgaHR0cHM6Ly92b2p0YW1hdXItd2ViLnZlcmNlbC5hcHAvIGh0dHBzOi8vdm9qdGFtYXVyLXdlYi1naXQtbWFpbi12b2p0YS1tYXVyLnZlcmNlbC5hcHAvIGh0dHBzOi8vdm9qdGFtYXVyLTdvMHFibTlyNS12b2p0YS1tYXVyLnZlcmNlbC5hcHAvIEZpcmViYXNlIEhvc3RpbmcgaHR0cHM6Ly92b2p0YW1hdXItOTc3YzEud2ViLmFwcC8gaHR0cHM6Ly92b2p0YW1hdXItOTc3YzEuZmlyZWJhc2VhcHAuY29tLyBHaXRMYWIgUGFnZXMgaHR0cHM6Ly92b2p0YW1hdXItd2ViLWEyMmI1OS5naXRsYWIuaW8vIENvZGViZXJnIFBhZ2VzIGh0dHBzOi8vdm9qdGFfbWF1ci5jb2RlYmVyZy5wYWdlLyBTb3VyY2VGb3JnZSBQcm9qZWN0IFdlYiBodHRwczovL3ZvanRhbWF1ci5zb3VyY2Vmb3JnZS5pby8gTmVvY2l0aWVzIGh0dHBzOi8vdm9qdGFtYXVyLm5lb2NpdGllcy5vcmcvIENoYXRHUFQgU2l0ZXMgaHR0cHM6Ly92b2p0YW1hdXIudm9qdGFtLmNoYXRncHQuc2l0ZS8gQXJEcml2ZSAvIEFyd2VhdmUgaHR0cHM6Ly9kYjZiZXljc254aGxpMnZ4c2FoZ24zYWo=",
+    "recovered_preview_sha256": "e51370bf1bded4976776158d8510021dcbab093736c6a2c06c6f327bcdb41685",
+    "negative_check": "invalid cue rejected with ValueError"
+  },
+  "paid_api_calls": 0,
+  "network": "none",
+  "external_actions": 0,
+  "verdict": "Actual local fragment encode/decode execution and invalid-cue rejection; no FULL_MECHANISM certification",
+  "limitations": "Test judgments/diagnosis are scripted, not a live model. Corrected source was authored during this repair. No proof that cheap models will autonomously implement every mechanism. Only a bounded normalized text fragment, not full EPUB; no WebVTT standards certification or public custody."
+}

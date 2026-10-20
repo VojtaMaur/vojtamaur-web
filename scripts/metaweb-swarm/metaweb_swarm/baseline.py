@@ -36,6 +36,40 @@ def owner_rejection(data, rules):
     return None
 
 
+def delegation_rejection(request, rules):
+    """Ignore only explicit exclusion clauses; positive tasks stay prohibited."""
+    aliases = '|'.join(re.escape(a) for rule in rules for a in rule['aliases'])
+    if not aliases:
+        return None
+    pattern = re.compile(r'(?:^|(?<=[.!?;\n]))\s*(?:do not|don\'t|never)\s+'
+                         r'(?:propose|prototype|delegate|research|implement|use|pursue|investigate)\s+'
+                         r'([^.!?;\n]{1,300})(?=[.!?;\n]|$)', re.I)
+    def exclusion(match):
+        items = re.sub(r'(?<!\w)(?:'+aliases+r')(?!\w)', '', match.group(1), flags=re.I)
+        # An exception, positive instruction or arbitrary trailing text is not ignored.
+        rest = re.sub(r'\b(?:and|or|any|these|directions|options|recurring|payment|dependent)\b', '', items, flags=re.I)
+        return '' if not rest.strip(' \t,/&-') else match.group(0)
+    def exclusions(text):
+        text = pattern.sub(exclusion, text)
+        # Narrow inline noun exclusions. Repeated positive mentions remain visible.
+        def inline(match):
+            tail=text[match.end():].split('.',1)[0].split(';',1)[0]
+            if re.search(r'\b(?:unless|except|but\s+(?:allow|include|use|propose|implement|prototype))\b',tail,re.I): return match.group(0)
+            return ''
+        text = re.sub(r'(?<!\w)(?:not|excluding|except|without)\s+(?:'+aliases+r')(?!\w)', inline, text, flags=re.I)
+        text = re.sub(r'(?<!\w)non-(?:'+aliases+r')(?!\w)', inline, text, flags=re.I)
+        extended = re.compile(r'(?:^|(?<=[.!?;\n]))\s*(?:exclude|avoid)\s+([^.!?;\n]{1,300})(?=[.!?;\n]|$)', re.I)
+        def exclude_list(match):
+            items = re.sub(r'(?<!\w)(?:'+aliases+r')(?!\w)', '', match.group(1), flags=re.I)
+            rest = re.sub(r'\b(?:and|or|any|these|directions|options|recurring|payment|dependent|subscription|dependency)\b', '', items, flags=re.I)
+            return '' if not rest.strip(' \t,/&-') else match.group(0)
+        return extended.sub(exclude_list, text)
+    data = {'title': exclusions(str(request.get('role', ''))),
+            'mechanism': ' '.join(exclusions(str(request.get(k, '')))
+                                  for k in ('mission','question','unique_expertise','expected_output'))}
+    return owner_rejection(data, rules)
+
+
 def mechanism_identity(data):
     provider = str(data.get("provider", "")).casefold()
     canonical = provider.strip()

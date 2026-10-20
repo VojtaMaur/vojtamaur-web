@@ -1,0 +1,40 @@
+{
+  "source_run": "20261013-043825-09e42a24",
+  "replay_only": true,
+  "runtime": "0.6.6",
+  "source_issue": {
+    "code": "BINDING_SOURCE_REQUIRED",
+    "step_id": "upload_file",
+    "next_action": "Bindings may only reference earlier steps. Missing source IDs: reserve. Available earlier IDs: token_request. Correct the named source using actual docs; the host does not infer which response or JSON pointer is intended.",
+    "step_index": 1,
+    "missing_source_ids": [
+      "reserve"
+    ],
+    "available_source_ids": [
+      "token_request"
+    ]
+  },
+  "after_one_field_edit": {
+    "code": "JSON_TEXT_INVALID",
+    "step_id": "confirm_upload",
+    "next_action": "headers_json/body_json must be valid JSON text. A response object is {\"$response\":\"earlier_step_id\",\"pointer\":\"/documented/path\"}; quote all keys. Empty raw body is \"\".",
+    "step_index": 2
+  },
+  "prompt_chars": 28286,
+  "prompt_cap": 30000,
+  "original_run_unchanged": true,
+  "paid_api_calls": 0,
+  "http_calls": 0,
+  "qualified_plan_created": false,
+  "budgets_and_permissions_unchanged": true,
+  "audit": {
+    "events": 588,
+    "head_hash": "6100f711a28c74272dfa95365c8675fe003c6ebfe1dd8ecb7bd43c9a3d9e8f9c"
+  },
+  "validation": {
+    "full_tests": 460,
+    "skipped": 1,
+    "result": "OK",
+    "paid_api_calls": 0
+  }
+}

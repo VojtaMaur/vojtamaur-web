@@ -29,7 +29,7 @@ def validate_config(config):
         raise ValueError("run_mode must be supervised or autonomous")
     if config.get("external_scope", "sandbox-only") not in ("sandbox-only", "external"):
         raise ValueError("external_scope must be sandbox-only or external")
-    for field in ("approval_required", "include_exports", "semantic_dedupe", "sandbox_smoke_test", "http_smoke_test", "require_independent_http_review", "require_deposit_qualification", "carrier_screening", "require_explicit_upload_flow", "allow_known_carrier_improvements"):
+    for field in ("approval_required", "include_exports", "semantic_dedupe", "sandbox_smoke_test", "http_smoke_test", "require_independent_http_review", "require_deposit_qualification", "carrier_screening", "require_explicit_upload_flow", "allow_known_carrier_improvements", "research_handoffs", "require_prototype_focus"):
         if field in config and type(config[field]) is not bool:
             raise ValueError(f"{field} must be boolean")
     for field in ("max_external_actions", "max_external_bytes"):

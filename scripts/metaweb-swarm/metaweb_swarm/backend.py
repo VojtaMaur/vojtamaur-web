@@ -197,6 +197,8 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
     def recover_validation_error(context, error):
         if not isinstance(error, (ValueError, OSError)):
             raise error
+        if getattr(error,'problem',None):
+            return json.dumps(_jsonable(error.problem),ensure_ascii=False)
         reason = str(error)
         api_key = os.environ.get("OPENAI_API_KEY")
         if api_key:
@@ -205,6 +207,21 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
         if callable(getattr(tools_api, "record_sdk_event", None)):
             tools_api.record_sdk_event("tool_validation_error", payload)
         return json.dumps(payload, ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def list_discovery_state() -> str:
+        """List real LEAD and own admissible QUAL IDs plus exact next steps; no network or permission change."""
+        return json.dumps(_jsonable(tools_api.list_discovery_state()), ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def record_discovery_lead(lead_id: str, summary: str, open_questions: list[str], next_action: str) -> str:
+        """Save partial findings on your existing LEAD before switching/finishing. Leads are unqualified observations; claims stay unverified. Never invent QUAL IDs."""
+        return json.dumps(_jsonable(tools_api.record_discovery_lead(lead_id, summary, open_questions, next_action)), ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def record_lead_review(lead_id: str, disposition: Literal['NEEDS_EVIDENCE', 'SETUP_REQUIRED', 'NOT_SUITABLE', 'QUALIFY'], reason: str, next_action: str, failure_fact: str = '', source_urls: list[str] | None = None) -> str:
+        """Independently triage a documented unqualified LEAD after your own read_document. NOT_SUITABLE needs verbatim negative evidence; missing accounts/formats need setup/evidence. QUALIFY is only a handoff recommendation, never PASS/upload permission."""
+        return json.dumps(_jsonable(tools_api.record_lead_review(lead_id, disposition, reason, next_action, failure_fact, source_urls)), ensure_ascii=False)
 
     # Avoid postponed annotations: these nested model classes must be available to the
     # SDK's signature parser as actual types, rather than unresolved forward references.
@@ -265,12 +282,12 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
 
     @sdk.function_tool(failure_error_function=recover_validation_error)
     async def run_experiment(argv: list[str], idea_id: str = "") -> str:
-        """Run argv in the configured isolated sandbox and return an experiment ID. Link idea_id when testing a candidate; host controls network/resources, never executes on the production host."""
+        """Run argv in the isolated sandbox; never on production. For a research prototype the frozen script must WRITE every declared output and implement real positive/negative assertions. Host captures exact files and returns prototype_readiness: READY_FOR_TEST_RECEIPT means call record_test with THIS ID, without registration/rerun. Missing/unchanged output means fix script and update plan, then execute again. Exit=0/print alone proves no preservation mechanism."""
         return json.dumps(_jsonable(await tools_api.run_experiment(argv, idea_id)), ensure_ascii=False)
 
     @sdk.function_tool(failure_error_function=recover_validation_error)
     def record_test(idea_id: str, experiment_id: str, description: str) -> str:
-        """Link a recorded successful sandbox execution to its candidate. Host validates the experiment, idea and exit status; execution success alone does not certify preservation claims."""
+        """Record execution for this IDEA. Planned research: use the same READY_FOR_TEST_RECEIPT experiment ID; host registers exact captured script/specimens automatically. No bookkeeping rerun. Bytes changed afterwards need a new execution. Scope/semantic assertions still require independent review; this does not promote a prototype or deposit."""
         try:
             return json.dumps(_jsonable(tools_api.record_test(idea_id, experiment_id, description)), ensure_ascii=False)
         except ValueError as error:
@@ -286,13 +303,16 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
     def record_critique(idea_id: str, verdict: Literal["PASS", "REVISE", "REJECT"], reason: str,
                         decision_basis: Literal["UNSPECIFIED","SETUP_GAP","CAPABILITY_GAP","EVIDENCE_GAP","MECHANISM_FAILURE"] = "UNSPECIFIED",
                         failure_kind: Literal["NONE","FORMAT_PROHIBITED","AUTOMATION_PROHIBITED","RECURRING_COST","RETENTION_INCOMPATIBLE","INTEGRITY_FAILURE","BASELINE_DUPLICATE","OTHER"] = "NONE",
-                        failure_fact: str = "", negative_evidence_urls: list[str] | None = None) -> str:
-        """Review candidate viability BEFORE implementation, not whether the future upload is already completed. Missing key/executor/flow is REVISE with SETUP_GAP/CAPABILITY_GAP; undocumented format/no test is EVIDENCE_GAP. REJECT needs MECHANISM_FAILURE, a concrete failure kind and failure_fact copied verbatim from the document, and URLs you independently read via read_document. An absent format mention is not an explicit prohibition. Structured claims still need assessment. After storing current critique, finish your audit as COMPLETED; upload/setup work belongs in handoff_leads. PASS cannot bypass execution/price/approval gates."""
-        if decision_basis=="UNSPECIFIED" and failure_kind=="NONE" and not failure_fact and not negative_evidence_urls:
+                        failure_fact: str = "", negative_evidence_urls: list[str] | None = None,
+                        local_test_scope: Literal['UNASSESSED','FULL_MECHANISM','SUBCOMPONENT','DEFER']='UNASSESSED',
+                        local_test_goal: str='') -> str:
+        """Review candidate viability BEFORE implementation, not whether the future upload is already completed. Missing key/executor/flow is REVISE with SETUP_GAP/CAPABILITY_GAP; undocumented file acceptance is EVIDENCE_GAP. This review is PRE_DEPLOYMENT: no completed upload/deposit/public read-back is required. Do not list those future receipts as missing prerequisites. Execution receipts are created by the host only after implementation. REJECT needs MECHANISM_FAILURE, a concrete failure kind and failure_fact copied verbatim from the document, and URLs you independently read via read_document. An absent format mention is not an explicit prohibition. Structured claims still need assessment. After storing the assigned critique, fetch the host task in the next bounded round for any remaining candidates. Upload/setup work belongs in handoff_leads. PASS cannot bypass execution/price/approval gates. In general research, when the packet requires prototype focus, also set local_test_scope FULL_MECHANISM/SUBCOMPONENT/DEFER and local_test_goal. Select an actual mechanism operation and negative test, not generic JSON copying. DEFER retains the idea for documentation or setup research."""
+        if decision_basis=="UNSPECIFIED" and failure_kind=="NONE" and not failure_fact and not negative_evidence_urls and local_test_scope=='UNASSESSED':
             return json.dumps(_jsonable(tools_api.record_critique(idea_id, verdict, reason)), ensure_ascii=False)
         return json.dumps(_jsonable(tools_api.record_critique(idea_id, verdict, reason,
             decision_basis=decision_basis,failure_kind=failure_kind,failure_fact=failure_fact,
-            negative_evidence_urls=negative_evidence_urls)), ensure_ascii=False)
+            negative_evidence_urls=negative_evidence_urls,
+            **({'local_test_scope':local_test_scope,'local_test_goal':local_test_goal} if local_test_scope!='UNASSESSED' else {}))), ensure_ascii=False)
 
     @sdk.function_tool(failure_error_function=recover_validation_error)
     async def deposit_file(idea_id: str, resource_id: str, path: str, source: str = "artifact", object_name: str = "") -> str:
@@ -344,10 +364,18 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
             raise ValueError('HTTP request description exceeds 250KB')
         return json.dumps(_jsonable(await tools_api.http_request(json.loads(request_json), idea_id, purpose)), ensure_ascii=False)
 
+    review_urls=tools_api.review_document_urls() if callable(getattr(tools_api,'review_document_urls',None)) else []
+    DocumentURL=Literal.__getitem__(tuple(review_urls)) if review_urls else str
+
     @sdk.function_tool(failure_error_function=recover_validation_error)
-    async def read_document(url: str, purpose: str, offset: int = 0, limit: int = 12000) -> str:
-        """Read primary docs/terms from a public URL NOW. Returns readable untrusted HTML/text/JSON, useful links, pagination and an audited GET/hash read receipt in one call. Own complete unchanged GET is cached for paging; another agent must read independently. No scripts/browser/PDF conversion or redirects. Use next_offset for relevant unread sections; do not treat a link or HTTP 200 as verified claims."""
+    async def read_document(url: DocumentURL, purpose: str, offset: int = 0, limit: int = 12000) -> str:
+        """Read primary docs/terms from a public URL NOW. Returns readable untrusted HTML/text/JSON/PDF, useful links, pagination and an audited GET/hash read receipt in one call. Own complete unchanged GET is cached for paging; another agent must read independently. Text-bearing PDFs return source hash and page numbers; cached offsets reuse extracted text. No scripts/browser/OCR or redirects. Use next_offset for relevant unread sections; do not treat a link or HTTP 200 as verified claims."""
         return json.dumps(_jsonable(await tools_api.read_document(url, purpose, offset, limit)), ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def get_review_task() -> str:
+        """Get YOUR assigned LEAD/IDEA ID, primary URLs, missing document ranges and next action. LEAD needs own reads and record_lead_review, never invented IDEA IDs or another carrier search. A recorded judgment completes review even when setup remains. No verdict or upload is performed by this tool."""
+        return json.dumps(_jsonable(tools_api.get_review_task()),ensure_ascii=False)
 
     class DepositOperation(StrictModel):
         method: Literal["GET","HEAD","OPTIONS","POST","PUT","PATCH","DELETE"]
@@ -371,8 +399,28 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
 
     @sdk.function_tool(failure_error_function=recover_validation_error)
     def record_deposit_execution_plan(idea_id: str, steps: list[DepositExecutionStep]) -> str:
-        """Record existing IDEA's data-only HTTP sequence, no network. Every step names exact allowed_origins (scheme://host[:port], no wildcards), method, URL, body ceiling and success_codes. Whole URL '{{reserve:/upload/signedUrl}}' uses a previous JSON response; literal path '{{reserve:/id}}' is percent-escaped. headers_json/body_json are JSON text: bindings {'$response':'reserve','pointer':'/id'} or {'$export':'filename|bytes|sha256'}. Headers may use a whole-object response binding. Exactly one sends_export=true with max_body_bytes equal export size; final step is anonymous GET for verification. Dedicated credential_id never transfers automatically. max_age_seconds caps age of referenced responses (e.g. 240 for a 300-second signed URL). No code, loops or redirects. New qualification invalidates prior audit; independent auditor must review the exact sequence. One approval covers sequence/export/origins, with hard limits intact."""
+        """Record existing IDEA's data-only HTTP sequence, no network. Every step names exact allowed_origins, method, URL, body ceiling and success_codes. Prefer bind_deposit_step_response to encode response references using separate source_step_id and response_pointer, rather than hand-writing templates or copying example IDs. headers_json/body_json are valid JSON text; export metadata bindings use $export with filename, bytes or sha256. Exactly one sends_export=true with empty body_json and max_body_bytes equal export size; final step is anonymous GET for verification. Never put Authorization, credential values, Host or framing headers in headers_json. Named missing grants are allowed in planning but cannot execute before exact operator grants. Every response binding must name an actual earlier step. max_age_seconds caps age of referenced responses. No code, loops or redirects. A changed qualification needs new independent audit and exact approval if configured; hard limits remain."""
         return json.dumps(_jsonable(tools_api.record_deposit_execution_plan(idea_id,[s.model_dump(mode='json') for s in steps])),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def read_deposit_plan_draft(idea_id: str, step_id: str = "") -> str:
+        """Read your own current UNVALIDATED draft, no network. Empty step_id returns real step IDs, draft_sha256 and exact failing issue. Named step returns its redacted fields. Use the actual earlier IDs and primary docs; do not copy example names or infer JSON pointers. A draft grants no execution, qualification or approval."""
+        return json.dumps(_jsonable(tools_api.read_deposit_plan_draft(idea_id,step_id)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def edit_deposit_plan_step(idea_id: str, draft_sha256: str, step_id: str, changes_json: str) -> str:
+        """Repair literal fields of ONE existing draft step, retaining the rest. Use bind_deposit_step_response for response bindings instead of manual templates/escaped JSON. changes_json is a JSON object of actual changed fields; do not rename id. Use the current draft_sha256. The host revalidates the ENTIRE sequence; another error returns updated issue/hash. No inferred endpoints/pointers/auth, network, approval or upload. A valid plan needs independent audit/setup. Topology changes require a full plan."""
+        return json.dumps(_jsonable(tools_api.edit_deposit_plan_step(idea_id,draft_sha256,step_id,changes_json)),ensure_ascii=False)
+
+    source_ids=tools_api.deposit_binding_source_ids() if callable(getattr(tools_api,'deposit_binding_source_ids',None)) else []
+    SourceStepID=Literal.__getitem__(tuple(source_ids)) if source_ids else str
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def bind_deposit_step_response(idea_id: str, draft_sha256: str, step_id: str,
+            field: Literal['url','headers_json','body_json'], source_step_id: SourceStepID,
+            response_pointer: str, target_pointer: str = '', url_prefix: str = '', url_suffix: str = '') -> str:
+        """Encode ONE response reference without manual template/JSON syntax, no network. Choose actual earlier source_step_id from read_deposit_plan_draft.binding_sources; source enum reflects draft at SDK round start. response_pointer is ONLY the documented RFC6901 path, empty for whole response. For field=url target_pointer MUST be empty: empty url_prefix/url_suffix selects a whole returned URL; otherwise literal prefix/suffix surround the bound path/query value, which the executor escapes. Never put bindings or credentials in prefix/suffix. For headers_json/body_json prefix/suffix must be empty; target_pointer names an object member or existing array element, empty explicitly replaces the entire field. Literal JSON is preserved; invalid JSON or absent parent needs a literal edit first. No inferred API paths, credentials, grants or upload. Host revalidates ALL steps and returns current issue/hash. A valid changed plan needs independent audit/setup."""
+        return json.dumps(_jsonable(tools_api.bind_deposit_step_response(idea_id,draft_sha256,step_id,field,source_step_id,response_pointer,target_pointer,url_prefix,url_suffix)),ensure_ascii=False)
 
     @sdk.function_tool(failure_error_function=recover_validation_error)
     async def execute_deposit_plan(idea_id: str) -> str:
@@ -419,9 +467,112 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
         """Verify exact uploaded workspace file bytes through separate successful HTTP GET. Creates a read-back receipt; does not prove indefinite retention."""
         return json.dumps(_jsonable(tools_api.verify_http_copy(upload_request_id, download_request_id, source_path)), ensure_ascii=False)
 
-    available = [record_deposit_execution_plan, execute_deposit_plan, record_deposit_flow, screen_carrier, check_baseline, check_prior_work, list_files, read_file, search_file, write_file, write_binary,
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def list_current_ideas() -> str:
+        """List only actual current-run IDEA IDs/titles/status; never guess an ID."""
+        return json.dumps(_jsonable(tools_api.list_current_ideas()), ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def get_research_task() -> str:
+        """Get current-run role assignment, real candidate claims, critiques and host test/execution receipts. Prior runs are historical, not your task."""
+        return json.dumps(_jsonable(tools_api.get_research_task()), ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def record_research_report(idea_ids: list[str], conclusion: str, limitations: list[str]) -> str:
+        """Finish the REPORTER's current-run report: include ALL actual IDEA IDs (or []), grounded conclusion and limitations. Unresolved/rejected candidates and zero tests/deposits are valid report findings, not reasons to continue research. Read get_research_task first. Does not complete ideas, perform actions, or change permissions. After this receipt, finish the role; future research belongs in handoff_leads."""
+        return json.dumps(_jsonable(tools_api.record_research_report(idea_ids,conclusion,limitations)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def register_idea_artifacts(idea_id: str, paths: list[str]) -> str:
+        """Attach existing own workspace script/specimen paths to an existing IDEA, preserving other contributors. Host validates and hashes bytes. Then execute linked to that same ID and record_test; hashes alone are not a test."""
+        return json.dumps(_jsonable(tools_api.register_idea_artifacts(idea_id, paths)), ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def record_research_blocker(idea_id: str, reason: str) -> str:
+        """Record a concrete local implementation obstacle for the assigned IDEA. Retains the hypothesis without scientific rejection. No test success is implied."""
+        return json.dumps(_jsonable(tools_api.record_research_blocker(idea_id, reason)), ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    async def get_sandbox_capabilities() -> str:
+        """Observe Python/Node/npm availability using a fixed probe in the networkless sandbox. No host execution or package install. Default image supplies Python; pip does not supply Node."""
+        return json.dumps(_jsonable(await tools_api.get_sandbox_capabilities()),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def record_prototype_plan(idea_id: str, property_tested: str, input_path: str, script_path: str,
+                              output_paths: list[str], positive_assertion: str, negative_assertion: str,
+                              scope: Literal["FULL_MECHANISM","SUBCOMPONENT"], limitations: str,
+                              repair_notes: str='',repair_check: str='') -> str:
+        """Freeze a LOCAL test goal. Materialize input FIRST, use actual path, write script BEFORE this call. Implement actual encode/decode plus deliberately damaged/invalid input and rejection/recovery assertions, not prefix tautologies or printed labels. Emit decoded/recovered raw bytes as an output for FULL scope; use read_bytes/write_bytes for exact copies and hashes. JSON uses json.loads, CBOR uses dumps before loads. Declare actual specimens/reports; failed probes require correction. Repair with THIS tool after edits; no deposit draft is involved. Scope/limitations must match executed tests. The host selects repair links automatically from your current owned task. Never supply any repair/test IDs. On repair supply concrete repair_notes and repair_check, after changing code. For LOCAL research the independent reviewer checks this exact frozen code before Docker; do not poll or rerun while waiting. Use prepare_prototype_input for actual export content; a .manifest.json descriptor cannot be the FULL_MECHANISM payload."""
+        method=getattr(tools_api,'record_current_prototype_plan',tools_api.record_prototype_plan)
+        return json.dumps(_jsonable(method(idea_id,property_tested,input_path,script_path,
+            output_paths,positive_assertion,negative_assertion,scope,limitations,
+            repair_notes=repair_notes,repair_check=repair_check)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def read_test_artifact(test_id: str, path: str, offset: int = 0, limit: int = 12000) -> str:
+        """Read an exact artifact from YOUR assigned executed test, independently of its author. Host checks path/hash. Read the whole actual script before endorsing scope; binary hashes do not decode specimens."""
+        return json.dumps(_jsonable(tools_api.read_test_artifact(test_id,path,offset,limit)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def review_prototype_test(test_id: str, verdict: Literal["FULL_MECHANISM","SUBCOMPONENT","REVISE"], reason: str,
+                              positive_code: str = '', negative_code: str = '', recovered_path: str = '',
+                              observed_recovery: Literal['MATCHES_INPUT','DIFFERS_FROM_INPUT','NO_RECOVERED_OUTPUT','NOT_EVALUATED']='NOT_EVALUATED',
+                              review_basis: Literal['LOCAL_DEFECT','IRRELEVANT_TEST','EXTERNAL_GAP_ONLY','UNSPECIFIED']='UNSPECIFIED') -> str:
+        """Read the whole actual script AND generated reports/specimens first. For FULL/SUBCOMPONENT quote complete positive_code and negative_code executable cases exactly from that script; negative code must create altered/invalid input and assert its rejection/recovery. Printing 'negative', prefix tautologies, parsing JSON without tests or recovery_probe=False are REVISE. FULL additionally needs recovered_path from captured outputs with original raw-byte SHA/length; read_text/write_text can change CRLF and hashes. REVISE may leave evidence fields empty and retains the hypothesis. A relevant working local format/carrier component can be SUBCOMPONENT without public upload. State observed_recovery from get_prototype_review_facts and review_basis from the actual local defect. EXTERNAL_GAP_ONLY alone cannot justify REVISE. Scope judgment remains yours; no automatic scientific approval."""
+        return json.dumps(_jsonable(tools_api.review_prototype_test(test_id,verdict,reason,positive_code,negative_code,recovered_path,
+            **(dict(observed_recovery=observed_recovery,review_basis=review_basis) if observed_recovery!='NOT_EVALUATED' or review_basis!='UNSPECIFIED' else {}))),ensure_ascii=False)
+
+    available = [record_research_report, get_sandbox_capabilities, record_prototype_plan, read_test_artifact, review_prototype_test, list_current_ideas, get_research_task, register_idea_artifacts, record_research_blocker, get_review_task, list_discovery_state, record_discovery_lead, record_lead_review, record_deposit_execution_plan, read_deposit_plan_draft, edit_deposit_plan_step, bind_deposit_step_response, execute_deposit_plan, record_deposit_flow, screen_carrier, check_baseline, check_prior_work, list_files, read_file, search_file, write_file, write_binary,
             list_exports, materialize_export, install_packages, run_experiment, record_test, record_critique, deposit_file, submit_idea,
             request_approval, spawn_agent, note, http_request, list_http_credentials, verify_http_copy, check_deposit_target, read_document, read_audit_artifact]
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def read_failed_experiment(experiment_id: str,offset: int=0,limit: int=12000) -> str:
+        """Read frozen failed source and actual traceback for your assigned diagnosis/repair. Whole source reads precede an independent diagnosis. A nonzero exit is a code/dependency/environment problem, not a successful test."""
+        return json.dumps(_jsonable(tools_api.read_failed_experiment(experiment_id,offset,limit)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def record_failure_diagnosis(experiment_id: str,problem_kind: Literal['ALGORITHM_MISSING','DEPENDENCY','CODE_BUG','CONTRACT_MISMATCH','ENVIRONMENT','UNKNOWN'],
+                                 diagnosis: str,repair_steps: list[str],success_check: str,disposition: Literal['REPAIR','DEFER']) -> str:
+        """Independently diagnose the executed failed code after reading it. Compare the intended mechanism, actual implementation and traceback; give concrete repair steps and decisive test, not superficial parser guesses. REPAIR continues local work, DEFER retains the hypothesis. No prototype award or mechanism rejection."""
+        return json.dumps(_jsonable(tools_api.record_failure_diagnosis(experiment_id,problem_kind,diagnosis,repair_steps,success_check,disposition)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def read_revised_test(test_id: str,offset: int=0,limit: int=12000) -> str:
+        """Read your own executed source plus independent REVISE verdict for the current LOCAL task. This is not a crashed experiment. Repair the actual code, then record_prototype_plan with repair_notes and repair_check; the host binds all repair IDs automatically; or record a concrete blocker to move on."""
+        return json.dumps(_jsonable(tools_api.read_revised_test(test_id,offset,limit)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def read_report_detail(section: str,record_id: str='',offset: int=0,limit: int=4000) -> str:
+        """REPORTER only: page one original evidence record by section/ID, or use empty record_id for that section's ID index. get_research_task returns bounded summaries and exact counts. Full revisions and headers are available here when relevant; never fetch the whole checkpoint into context. Max 8000 characters per page."""
+        return json.dumps(_jsonable(tools_api.read_report_detail(section,record_id,offset,limit)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def get_prototype_review_facts(test_id: str) -> str:
+        """Independent reviewer: read authoritative IDEA/TEST binding, input kind and matching output hashes/lengths before verdict. Semantic relevance remains your judgment. A useful local test can be SUBCOMPONENT without public upload; descriptor byte identity is not web content preservation."""
+        return json.dumps(_jsonable(tools_api.get_prototype_review_facts(test_id)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def prepare_prototype_input() -> str:
+        """LOCAL only: choose and copy one captured actual EPUB/PDF/TXT/ZIP content export, not its manifest. Returns exact sandbox path/size/hash. Uses isolated run copies, no production access. Repeated calls reuse verified bytes. Read binary content in Docker, not JSON."""
+        return json.dumps(_jsonable(tools_api.prepare_prototype_input()),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    async def execute_prototype(argv: list[str]) -> str:
+        """Execute the CURRENT independently checked prototype plan in Docker and automatically capture its test receipt. argv is e.g. ["python", "prototype/test.py"]. No IDEA/test/experiment IDs, no manual registration. Write code and record_prototype_plan first. Failed execution yields to diagnosis; repair code and resubmit the plan with notes/check, without IDs. An execution receipt still requires independent coverage review and proves no external custody."""
+        return json.dumps(_jsonable(await tools_api.execute_prototype(argv)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def read_prototype_plan(plan_id: str,offset: int=0,limit: int=12000) -> str:
+        """Independent reviewer: page the frozen actual script for your assigned PROTOTYPE_PLAN before relevance judgment. Inspect the complete implementation, not its labels."""
+        return json.dumps(_jsonable(tools_api.read_prototype_plan(plan_id,offset,limit)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def review_prototype_plan(plan_id: str,verdict: Literal['READY','REVISE'],reason: str,
+                              mechanism_operation: str,evidence_code: str='') -> str:
+        """Before Docker, independently check code relevance to THIS mechanism/focus and actual positive/negative tests. Generic EPUB integrity is unrelated to federation or WebVTT. READY needs exact evidence_code implementing the relevant operation; it grants only local execution, not success. REVISE must name the missing operation and concrete code correction. A useful local subcomponent can proceed without public deployment with honest scope."""
+        return json.dumps(_jsonable(tools_api.review_prototype_plan(plan_id,verdict,reason,mechanism_operation,evidence_code)),ensure_ascii=False)
+
+    available += [read_failed_experiment,record_failure_diagnosis,read_revised_test,read_report_detail,get_prototype_review_facts,prepare_prototype_input,execute_prototype,read_prototype_plan,review_prototype_plan]
     smoke = getattr(getattr(tools_api, 'engine', None), 'state', {}).get('config', {}).get('http_smoke_test')
     if smoke:
         available = [read_file, note] if getattr(tools_api, 'agent', {}).get('work_kind') == 'SYNTHESIS' else [read_file, note, http_request, verify_http_copy]
@@ -429,13 +580,25 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
         from .tasking import TOOL_SETS
         names = TOOL_SETS.get(getattr(tools_api, 'agent', {}).get('work_kind'), set())
         profile = tools_api.engine.state['config']
-        names = set(names)
+        from .review_tasks import tool_names
+        names = tool_names(tools_api.engine.state,tools_api.agent,set(names))
         if getattr(tools_api,'agent',{}).get('execution_plan_only'):
             names -= {'execute_deposit_plan','http_request','verify_http_copy'}
         if profile.get('experiments') != 'docker':
             names -= {'run_experiment', 'record_test', 'install_packages'}
         elif profile.get('package_installation') != 'pypi':
             names.discard('install_packages')
+        available = [tool for tool in available if tool.name in names]
+    elif getattr(getattr(tools_api, 'engine', None), 'state', {}).get('config', {}).get('research_handoffs') and not getattr(getattr(tools_api, 'engine', None), 'state', {}).get('config', {}).get('sandbox_smoke_test'):
+        from .research_tasks import tool_names
+        names = tool_names(tools_api.agent)
+        profile = tools_api.engine.state['config']
+        if profile.get('experiments') != 'docker': names -= {'run_experiment', 'record_test', 'install_packages'}
+        elif profile.get('package_installation') != 'pypi': names.discard('install_packages')
+        from .prototype_workflow import enabled as local_workflow
+        if local_workflow(tools_api):
+            names -= {'run_experiment','record_test'}
+            if profile.get('experiments') == 'docker': names.add('execute_prototype')
         available = [tool for tool in available if tool.name in names]
     elif getattr(tools_api, 'agent', {}).get('work_kind') == 'SYNTHESIS':
         available = [screen_carrier, check_baseline, check_prior_work, list_files, read_file, search_file, list_exports, note, read_audit_artifact]
@@ -476,6 +639,7 @@ class _Progress:
         self.tool_schemas = []
         self.output_schema = None
         self.max_search_calls = max_search_calls
+        self.yield_reason = None
 
     def record(self, kind, data):
         payload = _jsonable(data)
@@ -519,6 +683,8 @@ def _make_hooks(sdk, progress):
             progress.record("history_checkpoint", {
                 "history": _repair_interrupted_history(progress.history),
             })
+            if progress.yield_reason:
+                raise BackendYield(progress.yield_reason,history=progress.history)
             if len(json.dumps(progress.history, ensure_ascii=False)) > progress.history_chars:
                 raise BackendLimit("History character limit reached", history=progress.history)
             budget_check = getattr(progress.tools_api, "check_model_budget", None)
@@ -566,6 +732,17 @@ def _make_hooks(sdk, progress):
                 progress.record("history_checkpoint", {
                     "history": _repair_interrupted_history(progress.history),
                 })
+            if tool.name in {'run_experiment','execute_prototype'}:
+                try: outcome=json.loads(str(result))
+                except (ValueError,TypeError): outcome={}
+                if outcome.get('failure_evidence'):
+                    progress.yield_reason='Failed code checkpointed for independent diagnosis; no blind rerun'
+            from .prototype_workflow import enabled as local_workflow
+            if local_workflow(progress.tools_api):
+                from .prototype_preflight import local_issue
+                state=progress.tools_api.engine.state;owner=progress.tools_api.agent
+                issue=local_issue(state,owner,owner.get('research_assignment',{}).get('target_id'))
+                if issue: progress.yield_reason='Prototype code checkpointed for independent relevance review'
 
     return AuditHooks()
 
@@ -646,7 +823,10 @@ class OpenAIBackend:
                     extra_args={"max_tool_calls": config.get("max_web_search_calls_per_request", 1)} if config.get("max_web_search_calls_per_request", 1) else None,
                 ),
             )
-            run_config = sdk.RunConfig(model_provider=provider, tracing_disabled=True,
+            from .review_dispatch import instruction_suffix, wrap_provider
+            base_instructions=sdk_agent.instructions
+            sdk_agent.instructions=lambda context,current: base_instructions+instruction_suffix(tools_api)
+            run_config = sdk.RunConfig(model_provider=wrap_provider(sdk,provider,tools_api), tracing_disabled=True,
                                        trace_include_sensitive_data=False)
             async def compare_candidate(payload):
                 if not config.get('semantic_dedupe', False):
@@ -742,7 +922,7 @@ class OpenAIBackend:
             if isinstance(error, (asyncio.TimeoutError, sdk.MaxTurnsExceeded, BackendLimit)):
                 reason = ("SDK step timeout reached; in-flight usage may be unavailable"
                           if isinstance(error, asyncio.TimeoutError) else reason)
-                exception_type = BackendYield if isinstance(error, sdk.MaxTurnsExceeded) else BackendLimit
+                exception_type = BackendYield if isinstance(error, (sdk.MaxTurnsExceeded,BackendYield)) else BackendLimit
                 raise exception_type(reason, history=replay, usage=progress.usage(), raw=raw) from error
             raise BackendBlocked(f"{type(error).__name__}: {reason}", history=replay,
                                  usage=progress.usage(), raw=raw) from error

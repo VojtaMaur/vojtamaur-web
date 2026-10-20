@@ -1,0 +1,48 @@
+{
+  "version": "0.6.3",
+  "mode": "offline copied-source fixture; original run unchanged",
+  "source_run": "20261013-043825-09e42a24",
+  "source_request_id": "HTTP-b3706ce7f0e343ee",
+  "source_sha256": "89fec83a6c626d24bba717e63a982a4846a0c92129d5f32b4a342358fd537ff3",
+  "source_bytes": 1717690,
+  "pdf_pages": 109,
+  "extracted_total_chars": 169121,
+  "first_excerpt_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "extraction_cached_http": true,
+  "lead_id": "LEAD-b7789d04eb8351c9",
+  "auditor_dependency_recovered": "PENDING",
+  "shared_read_not_independent": true,
+  "paid_api_calls": 0,
+  "http_requests_sent": 0,
+  "public_uploads": 0,
+  "original_checkpoint_sha256": "3d836f99ef961c2d36755b0592d1d0c7316ccd5b78e6bfd77f7354eb19d0fd94",
+  "full_suite": {
+    "tests": 435,
+    "skipped": 1,
+    "status": "OK"
+  },
+  "limits": {
+    "source_bytes": 8000000,
+    "pages": 500,
+    "text_chars": 1000000,
+    "seconds": 20,
+    "memory_mib": 512
+  },
+  "dependency": "pypdf==6.20.1",
+  "config_sha256_unchanged": {
+    "config.json": "83befd9038af7fd9b836d5ec1df70635f51f71da8372e98dd0655ddd12dea65d",
+    "config.research.json": "e3eec57d8b961fcac2f979637e0d7c6e946ade393276a8a00f50dc4932500a8a",
+    "config.smoke.json": "0707e7e44804ae73f151caf6f1783816d61cf3363dc2abe015599e58e4bba664",
+    "config.http.json": "5d26a7ef0184e47504112f5a8d05ea481b2f2a46b8660608c4c6e16c3051b3c9",
+    "config.http-smoke.json": "b969ebb780f99ac5f29ed494640b94aae7570e436482ec811a1068ba509e443d",
+    "config.http-public-smoke.json": "2a6c0ce65960327577e2a1e5024878601f753b8c177d68998a34abb8b851928e",
+    "config.deposit-trial.json": "3053d495c9b6cbd58c7cd03bc19a4614feda4ac6512f74e8a3581fc300b68cce"
+  }
+}

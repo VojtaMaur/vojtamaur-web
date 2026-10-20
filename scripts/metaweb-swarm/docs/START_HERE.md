@@ -1,5 +1,13 @@
 # Spuštění a modely
 
+Aktuální **0.6.18**: [postup prototypování a oprav](PROTOTYPE_WORKFLOW.md). Nový výzkum: `run-http.cmd`. Modely, granty a globální limity se nemění.
+
+Aktuální 0.6.17: [vstupy a fakta před verdiktem](PAYLOAD_AND_REVIEW_FACTS.md). Spuštění zůstává `run-http.cmd`.
+
+Aktuální běžný výzkum: `run-http.cmd`. Opravy po REVISE a dokončení reportu: [návod 0.6.16](REVISION_AND_REPORT.md). Níže jsou i historické diagnostické a focused postupy.
+
+**Obecný skutečný výzkum (0.6.9): `run-http.cmd` v CMD ve složce projektu.** Vytvoří nový běh s Dockerem/PyPI a HTTP s approval. [Předávání práce a pokračování](RESEARCH_HANDOFFS.md). `run-deposit-trial.cmd` níže je pouze cílený trial jednoho EPUB depositu.
+
 Aktualizace 0.6.1 opravuje návraty k registrovanému Zenodu/Figshare a dokumenty cizích poskytovatelů: [nové služby a scope](CARRIER_SCOPE.md). Další run spustíš stejným run-deposit-trial.cmd; je to fresh placený výzkum. Limity/grants se nenavyšují.
 
 Pro vícekrokové API už je připravený [obecný realizátor a CMD bez dalšího modelového kola](DEPOSIT_EXECUTOR.md). Než pošleme skutečný export, ověříme přijetí formátu, podmínky a případně přidělíme vlastní swarm účet/klíč. Stávající run/granty/limity se instalací nemění.

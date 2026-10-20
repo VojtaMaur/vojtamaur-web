@@ -1,0 +1,81 @@
+{
+  "version": "0.6.17",
+  "validation": {
+    "full_suite": 569,
+    "full_suite_passed": true,
+    "skipped": 1,
+    "final_targeted": 24,
+    "final_targeted_passed": true,
+    "legacy_descriptor_full_scope_refused": true
+  },
+  "original_run_replay": {
+    "version": "0.6.17",
+    "source_run": "20261020-061731-7b04b59a",
+    "facts": {
+      "test_id": "TEST-2551d715ce664723",
+      "idea_id": "IDEA-0003",
+      "plan_idea_id": "IDEA-0003",
+      "candidate_title": "BagIt payload manifest plus self-describing CBOR sidecar for Metaweb recovery",
+      "candidate_revision_current": true,
+      "identity_bound": true,
+      "retained_input": {
+        "export": "vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub.manifest.json",
+        "path": "work/metaweb_export_manifest.json",
+        "sha256": "bbb800a98d1cfd18b841af2e4501ff96485773dbac425cf01251d0a5ecb0a1a1",
+        "bytes": 28865,
+        "input_kind": "DESCRIPTOR"
+      },
+      "matching_recovered_outputs": [
+        {
+          "path": "work/bagit_cbor_out/recovered_payload.bytes",
+          "sha256": "bbb800a98d1cfd18b841af2e4501ff96485773dbac425cf01251d0a5ecb0a1a1",
+          "bytes": 28865
+        }
+      ],
+      "external_custody": "NOT_ESTABLISHED_BY_LOCAL_EXECUTION",
+      "scope_rule": "Judge actual local operations and negative cases separately from public hosting, discoverability and custody. Relevant working local code can be SUBCOMPONENT without upload. Matching byte facts are real, but do not prove decoding or format conformance. Identity binding does not prove semantic relevance; explain any unrelated code using its actual operations. A descriptor roundtrip preserves only the descriptor, not website content. Use REVISE for a concrete local defect, not solely because external publication is absent."
+    },
+    "false_recovery_claim_rejected": true,
+    "local_component_verdict": "SUBCOMPONENT",
+    "whole_mechanism_promoted": false,
+    "actual_payload": {
+      "export": "vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub",
+      "path": "inputs/b0e4617d9d3b-vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub",
+      "format_hint": "EPUB/ZIP binary export; use actual bytes or inspect the archive in Docker.",
+      "meaning": "Hint from original filename, not validation of its contents. Use path in the script and prototype plan.",
+      "sha256": "b0e4617d9d3b77355c4b849d42e82497c0cd17080a015b70dd74288afdf712b1",
+      "bytes": 1294314,
+      "public_owner_export": true,
+      "input_kind": "PAYLOAD",
+      "next_action": "Read binary formats with read_bytes in Docker. Use this returned path as input_path and in the script; emit independently recovered content bytes for full recovery claims."
+    },
+    "phantom_revision_hash_rejected": true,
+    "sdk_choices": [
+      "get_prototype_review_facts",
+      "review_prototype_test",
+      "review_prototype_test",
+      null
+    ],
+    "original_files_unchanged": {
+      "checkpoint.json": "ab7a54b8501fef6d1af4f11837200661a32358626a2bdeac4cd3be35eea26bfe",
+      "manifest.json": "c923ef686210f37e54464a7af32c7fc2e3802ae96ca38072bd172edc1a31fac0",
+      "SWARM_REPORT.md": "fe3fc270c77d0437938186d3562c603d229707c7d03365655a044f3074746cba",
+      "TIMELINE.md": "17483fb963a8a3c0a147eff023978390a6a82fd83f1323493e99c947b7760d4b",
+      "agents/AGENT-008/workspace/work/prototype_bagit_cbor.py": "e08639054be4a462e61a947a9c0b9f73ee0323ad6bcbe3c7ebcc900cc2addfe8"
+    },
+    "paid_api_calls": 0,
+    "external_actions_sent": 0,
+    "sdk": {
+      "compatible": true,
+      "openai_agents": "0.23.1",
+      "openai": "3.24.0",
+      "pydantic": "2.13.5",
+      "network_tested": false,
+      "paid_api_calls": 0
+    },
+    "meaning": "Original-state/evidence replay through the installed SDK with local fixed model replies. Original descriptor evidence gains only a limited component judgment; no full conformance or preservation claim."
+  },
+  "configs_models_budgets_permissions_unchanged": true,
+  "paid_api_calls": 0,
+  "public_deposits": 0
+}

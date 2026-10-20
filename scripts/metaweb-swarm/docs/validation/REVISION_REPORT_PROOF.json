@@ -1,0 +1,70 @@
+{
+  "version": "0.6.16",
+  "regression_validation": {
+    "initial_discovery": 558,
+    "initial_passed": 518,
+    "skipped": 1,
+    "restricted_sandbox_dpapi_cases_retried": 39,
+    "final_targeted_cases": 52,
+    "final_targeted_passed": true,
+    "final_new_regression_cases": 13,
+    "meaning": "558 initial tests; 39 Windows DPAPI sandbox failures passed outside the sandbox. Final 52 checks cover those 39 and all 13 new regressions, including two added after initial discovery."
+  },
+  "real_run_replay": {
+    "version": "0.6.16",
+    "source_run": "20261015-085555-e0c9aaeb",
+    "old_report_tool_chars": 170046,
+    "new_report_tool_chars": 8479,
+    "old_history_chars": 198805,
+    "reporter_completed": true,
+    "reporter_sdk_requests": 3,
+    "stalled_revision_rounds": 2,
+    "next_local_candidate": "IDEA-0002",
+    "original_files_unchanged": {
+      "checkpoint.json": "b931926f87695026197ac01ee63dbee0ba666b9cfe81b9932b5d3bdeb816f31b",
+      "manifest.json": "6ce5def671d5f9dc2a0be2d5aa459431e2f206c18eb59215001cd51ae30285a4",
+      "SWARM_REPORT.md": "ab0184a75e4edc79b1dd9b9593192208508c79922c5392033adee301c8e378bd",
+      "TIMELINE.md": "559e464502af80a2c39edc1b9e6ebd4da1d6108eecdf0e60b3acb198c4228a54",
+      "agents/AGENT-008/workspace/work/commons_pointer_test.py": "3831f1aa2a8b75aa555c3d73fc1e900c836ec0be8c32a009d60319ac58138c93"
+    },
+    "external_actions_sent": 0,
+    "paid_api_calls": 0,
+    "sdk": {
+      "compatible": true,
+      "openai_agents": "0.23.1",
+      "openai": "3.24.0",
+      "pydantic": "2.13.5",
+      "network_tested": false,
+      "paid_api_calls": 0
+    },
+    "meaning": "Read-only original-state replay through real SDK with local fixed model replies. No actual model autonomy/quality claim."
+  },
+  "actual_docker_repair": {
+    "version": "0.6.16",
+    "actual_docker_execution": true,
+    "network": "none",
+    "sdk_choices": [
+      "read_revised_test",
+      "required",
+      "required",
+      "run_experiment",
+      "record_test",
+      null
+    ],
+    "new_execution_count": 1,
+    "new_test_receipt": true,
+    "independent_component_review": "SUBCOMPONENT",
+    "mechanism_promoted": false,
+    "execution_output": {
+      "roundtrip": true,
+      "corrupt_specimen_rejected": true,
+      "recovered_bytes": 26
+    },
+    "paid_api_calls": 0,
+    "external_actions_sent": 0,
+    "meaning": "Actual container code execution and SDK routing; code and judgments supplied by Codex/local fixed replies. No cheap-model autonomy claim."
+  },
+  "models_budgets_permissions_config_unchanged": true,
+  "paid_api_calls": 0,
+  "public_deposits": 0
+}

@@ -1,0 +1,45 @@
+{
+  "source_run": "20261013-043825-09e42a24",
+  "runtime": "0.6.7",
+  "replay_only": true,
+  "source_enum": [
+    "token_request",
+    "upload_file",
+    "confirm_upload"
+  ],
+  "obsolete_planning_pairs_removed": 7,
+  "history_chars_before": 46920,
+  "history_chars_after": 357,
+  "archive_sha256": "8a7ca114a081b45e6489ecd052541c2ea8ed19fd473a5e22e755451d6bffcab5",
+  "host_encoded_url": "{{token_request:/upload/signedUrl}}",
+  "next_issue": {
+    "code": "BINDING_SOURCE_REQUIRED",
+    "step_id": "confirm_upload",
+    "next_action": "Bindings may only reference earlier steps. Missing source IDs: reserve. Available earlier IDs: token_request, upload_file. Correct the named source using actual docs; the host does not infer which response or JSON pointer is intended.",
+    "step_index": 2,
+    "missing_source_ids": [
+      "reserve"
+    ],
+    "available_source_ids": [
+      "token_request",
+      "upload_file"
+    ]
+  },
+  "prompt_chars": 28279,
+  "prompt_cap": 30000,
+  "original_run_unchanged": true,
+  "paid_api_calls": 0,
+  "http_calls": 0,
+  "qualified_plan_created": false,
+  "budgets_and_permissions_unchanged": true,
+  "audit": {
+    "events": 703,
+    "head_hash": "4cb8568f726c5e7e1151cbda295ca34db96e2c77639bf11887d99df3802cdc29"
+  },
+  "validation": {
+    "full_tests": 469,
+    "skipped": 1,
+    "result": "OK",
+    "paid_api_calls": 0
+  }
+}

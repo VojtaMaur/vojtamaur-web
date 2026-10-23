@@ -56,5 +56,7 @@
   "max_http_total_bytes": 134217728,
   "http_timeout_seconds": 30,
   "research_handoffs": true,
-  "require_prototype_focus": true
+  "require_prototype_focus": true,
+  "coding_backend": "sdk_shell",
+  "independent_review_probes": true
 }

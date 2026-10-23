@@ -10,8 +10,14 @@ def report_revision(state):
             'critiques':state.get('critiques',[]),'http':state.get('http_requests',[]),
             'deposit_executions':state.get('deposit_executions',[]),
             'tests':state.get('tests',[]),'experiments':state.get('experiments',[]),
+            'coding_commands':state.get('coding_commands',[]),'coding_validations':state.get('coding_validations',[]),
+            'shared_components':state.get('shared_components',{}),'review_probes':state.get('prototype_review_probes',[]),
+            'packages':state.get('package_installations',[]),'prototype_reviews':state.get('prototype_reviews',[]),
+            'external_actions':state.get('external_actions',[]),'approvals':state.get('approvals',[]),
             'research_blockers':{a['id']:a['research_blockers'] for a in state['agents'] if a.get('research_blockers')},
-            'research_task_blocks':{a['id']:a['research_task_blocks'] for a in state['agents'] if a.get('research_task_blocks')}}
+            'research_task_blocks':{a['id']:a['research_task_blocks'] for a in state['agents'] if a.get('research_task_blocks')},
+            'prototype_queue_holds':{a['id']:a['prototype_queue_hold'] for a in state['agents'] if a.get('prototype_queue_hold')},
+            'coding_local_contracts':{a['id']:a['coding_local_contracts'] for a in state['agents'] if a.get('coding_local_contracts')}}
     return hashlib.sha256(canonical(body).encode()).hexdigest()
 
 def recover(engine):

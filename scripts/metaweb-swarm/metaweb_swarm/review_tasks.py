@@ -11,7 +11,7 @@ def enabled(state, agent):
 
 
 def pending(state, agent):
-    from .research_tasks import enabled as research_enabled, reviews, revision as research_revision
+    from .research_tasks import enabled as research_enabled, reviews, evidence_revision as research_revision
     if research_enabled(state):
         from .prototype_review import pending as pending_tests
         return pending_tests(state,agent)+[{'kind':'RESEARCH_IDEA','target_id':i['id'],'revision':research_revision(i),
@@ -42,6 +42,10 @@ def pending(state, agent):
 def assign(engine, agent):
     if not enabled(engine.state,agent): return
     choices=pending(engine.state,agent);old=agent.get('review_assignment',{})
+    from .prototype_queue import enabled as closure_enabled
+    if closure_enabled(engine.state):
+        urgent=[p for p in choices if p['kind'].startswith('PROTOTYPE_')]
+        if urgent:choices=urgent
     selected=next((p for p in choices if p['kind']==old.get('kind') and p['target_id']==old.get('target_id')
                   and p['revision']==old.get('revision')),choices[0] if choices else {'kind':'NONE'})
     ident=hashlib.sha256(canonical(selected).encode()).hexdigest()
@@ -95,7 +99,7 @@ def current(state, agent):
         from .prototype_review import packet as test_packet
         return test_packet(state,agent,packet)
     if packet['kind']=='RESEARCH_IDEA':
-        from .research_tasks import revision as research_revision
+        from .research_tasks import evidence_revision as research_revision
         idea=next((i for i in state['ideas'] if i['id']==packet['target_id']),None)
         if not idea or research_revision(idea)!=packet['revision']: return dict(packet,stage='STALE')
         done=any(c.get('agent_id')==agent['id'] and c.get('idea_id')==idea['id']
@@ -110,7 +114,7 @@ def current(state, agent):
                         'For PASS read each missing_documents URL yourself, following only observed redirect hints. Missing evidence cannot be PASS: record REVISE with EVIDENCE_GAP if it cannot be resolved. '
                         'Missing evidence/test is REVISE, not REJECT. No deposit qualification is required for local research. '
                         'When local_test_focus_required, include local_test_scope FULL_MECHANISM/SUBCOMPONENT/DEFER and local_test_goal in record_critique. Select a useful mechanism-specific inverse of the produced format or documented carrier operation; not generic JSON parsing/copying. '
-                        'For an unspecified institutional repository without verified terms/API, DEFER its local test and retain the research idea. A local disk path is not a public retrieval URL. '
+                        'A missing prototype is the implementation task, never a prerequisite for starting local work. Novelty uncertainty is separate from local testability. A local disk path is not a public retrieval URL. '
                         'After recording it, continue with the next host packet in the next bounded round.')
     from .discovery_leads import revision
     if packet['kind']=='IDEA':

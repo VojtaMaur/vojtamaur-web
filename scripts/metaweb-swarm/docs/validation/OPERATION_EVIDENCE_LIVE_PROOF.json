@@ -1,0 +1,56 @@
+{
+  "source_run": "20261022-080541-385bea51",
+  "old_json_helper_rejected": "NATIVE_RSS_OPERATION_REQUIRED",
+  "old_source_only_probe_is_behavioral": false,
+  "old_stale_component_flag_cleared": true,
+  "disjoint_actual_source_ranges": [
+    {
+      "path": "prototype/test.py",
+      "start_line": 83,
+      "end_line": 83,
+      "sha256": "58595cf89566ca5be703635379eb574046fb68294753ebcd6dd15c4a6fbabeba",
+      "quote": "tampered = canonical.replace('archive.rss', 'archives.rss', 1)"
+    },
+    {
+      "path": "prototype/test.py",
+      "start_line": 84,
+      "end_line": 84,
+      "sha256": "58595cf89566ca5be703635379eb574046fb68294753ebcd6dd15c4a6fbabeba",
+      "quote": "assert hashlib.sha256(tampered.encode('utf-8')).hexdigest() != (out3.read_text(encoding='utf-8').strip())"
+    }
+  ],
+  "rss_execution": {
+    "status": "COMPLETED",
+    "output": "RSS generated, decoded and missing-guid input rejected\n",
+    "returncode": 0,
+    "timed_out": false,
+    "output_truncated": false,
+    "container": "metaweb-swarm-21acc4171a8e4c93bf60fad3be1c5916",
+    "cleanup_ok": true
+  },
+  "host_native_format_check": {
+    "passed": true,
+    "kind": "RSS_2_POINTER",
+    "path": "feed.rss",
+    "expected": {
+      "title": "vojtamaur-web-export-metaweb-2026-10-22_09-03-12-113251.epub",
+      "guid": "urn:sha256:1f296bb3da9dc1f48dce3ddd2289cde36766226154f1e6f5eb4e1eded2832bac",
+      "link": "https://vojtamaur.cz/"
+    },
+    "meaning": "Native RSS bytes independently parsed; consumer rejection and broader scope still require review."
+  },
+  "independent_rss_consumer_probe": {
+    "status": "COMPLETED",
+    "output": "Independent expected-pointer, missing-field and malformed-XML checks passed\n",
+    "returncode": 0,
+    "timed_out": false,
+    "output_truncated": false,
+    "container": "metaweb-swarm-000fb0e6c6c9401da5e1a52e53dada2e",
+    "cleanup_ok": true
+  },
+  "implementation_unchanged": true,
+  "original_checkpoint_unchanged": true,
+  "paid_api_calls": 0,
+  "external_actions": 0,
+  "limitation": "A human-authored reference verifies real RSS framework acceptance, not autonomous future model performance, podcast playback, public custody or EPUB recovery."
+}

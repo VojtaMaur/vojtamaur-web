@@ -1,0 +1,32 @@
+{
+  "source_run": "20261020-124142-61ef3319",
+  "source_unchanged": true,
+  "paid_api_calls": 0,
+  "current_counts": {
+    "candidates": 1,
+    "statuses": {
+      "INVESTIGATING": 1
+    },
+    "experiments": 5,
+    "coding_commands": 44,
+    "coding_acceptance_passes": 1,
+    "plan_relevance_reviews": {},
+    "recorded_tests": 1,
+    "pending_test_reviews": 0,
+    "prototype_reviews": {
+      "SUBCOMPONENT": 1
+    },
+    "http_requests": 0,
+    "http_statuses": {},
+    "external_actions": 0,
+    "external_action_statuses": {},
+    "package_installations": 1,
+    "verified_deposits": 0,
+    "pending_approvals": 0
+  },
+  "stale_reporter_receipt_detected": true,
+  "old_conclusion_absent_from_new_prompt": true,
+  "prompt_chars": 3529,
+  "prompt_limit": 20000,
+  "meaning": "Read-only verification of current live-run packet and focused reporter prompt, not a live model inference or modification of the old report."
+}

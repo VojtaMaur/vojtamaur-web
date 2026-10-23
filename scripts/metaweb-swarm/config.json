@@ -67,5 +67,10 @@
   "require_explicit_upload_flow": false,
   "allow_known_carrier_improvements": true,
   "research_handoffs": false,
-  "require_prototype_focus": false
+  "require_prototype_focus": false,
+  "coding_backend": "legacy",
+  "coding_max_turns": 24,
+  "max_coding_commands_per_agent": 64,
+  "coding_acceptance": null,
+  "independent_review_probes": false
 }

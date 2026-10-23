@@ -1,0 +1,16 @@
+{
+  "run_id": "20261022-105239-d403be02",
+  "test_id": "TEST-f2ae0893b5c94d8f",
+  "original_checkpoint_unchanged": true,
+  "repeated_requested_path": "prototype/test.py",
+  "actually_served_missing_path": "prototype/rss_pointer.py",
+  "missing_read_calls_to_facts": 1,
+  "next_allowed_tools": [
+    "run_review_probe",
+    "install_packages"
+  ],
+  "new_verdict": false,
+  "paid_api_calls": 0,
+  "docker_executions": 0,
+  "external_actions": 0
+}

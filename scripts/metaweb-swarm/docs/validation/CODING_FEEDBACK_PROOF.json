@@ -1,0 +1,70 @@
+{
+  "paid_api_calls": 0,
+  "model_responses": "Scripted, not a live model performance test",
+  "source_run": "20261020-124142-61ef3319",
+  "replay_run": "C:\\Users\\Vojta\\Documents\\Codex\\2026-10-06\\referenced-chatgpt-conversation-this-is-an\\outputs\\live-coding-feedback-replay\\runs\\20261021-054449-f16aa893",
+  "original_run_unchanged": true,
+  "initial_code": "Exact live agent implementation and test script",
+  "repair": "Scripted filename normalization in codec and corresponding test assertion; host validation unchanged",
+  "single_backend_step": true,
+  "scheduler_rounds_added": 0,
+  "model_requests": 3,
+  "validation_results": [
+    {
+      "id": "CODING-VALIDATION-e97c3f0783694e05",
+      "idea_id": "IDEA-0001",
+      "agent_id": "AGENT-002",
+      "experiment_id": "EXPERIMENT-6fbcb35f3e414774",
+      "passed": false,
+      "time": "2026-10-21T05:44:55+00:00",
+      "expected": {
+        "export": "vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub",
+        "sha256": "b0e4617d9d3b77355c4b849d42e82497c0cd17080a015b70dd74288afdf712b1",
+        "bytes": 1294314,
+        "decoder": "metaweb-cbor-seed-v1"
+      },
+      "actual": {
+        "export": "'b0e4617d9d3b-vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub'",
+        "sha256": "'b0e4617d9d3b77355c4b849d42e82497c0cd17080a015b70dd74288afdf712b1'",
+        "bytes": "1294314",
+        "decoder": "'metaweb-cbor-seed-v1'"
+      },
+      "mismatched_fields": [
+        "export"
+      ],
+      "reason": "ValueError: CBOR metadata mismatch in export; compare expected/actual in this diagnostic"
+    },
+    {
+      "id": "CODING-VALIDATION-938fd00b463349ad",
+      "idea_id": "IDEA-0001",
+      "agent_id": "AGENT-002",
+      "experiment_id": "EXPERIMENT-49fccbe84dce42ea",
+      "passed": true,
+      "time": "2026-10-21T05:44:59+00:00",
+      "validation_execution": {
+        "status": "COMPLETED",
+        "output": "{\"passed\": true, \"checks\": [\"saved CBOR metadata\", \"saved text transcription\", \"binary decoder\", \"text decoder\", \"valid CBOR with wrong digest rejected\", \"invalid envelope rejected\"]}\n",
+        "returncode": 0,
+        "timed_out": false,
+        "output_truncated": false,
+        "container": "metaweb-swarm-ccfc4355fe98477a8b41bd468dc64114",
+        "cleanup_ok": true
+      },
+      "reason": "Host-decoded artifacts and independent decoder checks passed",
+      "expected": {
+        "export": "vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub",
+        "sha256": "b0e4617d9d3b77355c4b849d42e82497c0cd17080a015b70dd74288afdf712b1",
+        "bytes": 1294314,
+        "decoder": "metaweb-cbor-seed-v1"
+      },
+      "artifact_hashes": {
+        "prototype/seed.cbor": "d702943eb6b0024691779dab3598d8ee883d930d285166030d1c9cffd18be875",
+        "prototype/mirror.txt": "97714a6a6f57a7c60bf756ed38699719df6421182a64234f2df9af9debea2819",
+        "prototype/decoded.json": "4cbbcc6f5eb21055fab3fb59992c1ed62db6a04c9da48be31974cd8018387f4c"
+      },
+      "meaning": "Known local coding contract passed. No novel mechanism, full export preservation or external deposit certified."
+    }
+  ],
+  "test_receipts": 1,
+  "meaning": "Actual SDK/Docker control flow returns failed host validation immediately, accepts only the repaired artifacts, and stays within one existing coding quantum."
+}

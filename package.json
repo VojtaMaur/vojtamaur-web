@@ -48,6 +48,8 @@
     "export:pdf:build": "python scripts/export-site-pdf.py --build-command \"npm run build:web:strict\"",
     "export:pdf:metaweb": "python scripts/export-metaweb-pdf.py",
     "export:sstv": "python scripts/export-site-sstv.py",
+    "export:markdown": "python scripts/export-site-markdown.py",
+    "test:markdown": "python -B scripts/test_markdown_export.py",
     "export:morse": "python scripts/export-site-morse.py",
     "export:mom-like": "python scripts/export-site-mom-like.py"
   },

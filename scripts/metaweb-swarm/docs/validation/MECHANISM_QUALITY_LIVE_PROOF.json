@@ -1,0 +1,26 @@
+{
+  "source_run": "20261022-051417-8cb93cc5",
+  "open_library_variants_resolve_to_one_candidate": true,
+  "identical_cross_idea_implementation_detected": true,
+  "actual_independent_docker_probe": {
+    "id": "REVIEW-PROBE-32444f218dc5467c",
+    "test_id": "TEST-764e81fd098e4b45",
+    "idea_id": "IDEA-0001",
+    "agent_id": "AGENT-006",
+    "code": "import runpy\nns=runpy.run_path('prototype/test.py')\n# Tampered input must not be accepted by the actual decoding/validation operation.\ntry:\n    ns['decode_seed']('prototype/tampered.epub')\nexcept (ValueError, SystemExit):\n    print('Independent rejection observed')\nelse:\n    raise AssertionError('Actual decoder accepted the altered checksum; the original test proved readback, not rejection')\n",
+    "code_sha256": "5ff93f10109b08c98dfe10c360d0829e0aab16de01d4163aa02b577fe4874372",
+    "staged_bytes": 3090828,
+    "workspace": "agents/AGENT-006/review-probes/REVIEW-PROBE-32444f218dc5467c",
+    "status": "BLOCKED",
+    "assertion_syntax": true,
+    "returncode": 1,
+    "output": "OK prototype/recovery-seed.json\nTraceback (most recent call last):\n  File \"/workspace/__review_probe_6ff1a6cc241945d6ae464e947055229b.py\", line 9, in <module>\n    raise AssertionError('Actual decoder accepted the altered checksum; the original test proved readback, not rejection')\nAssertionError: Actual decoder accepted the altered checksum; the original test proved readback, not rejection\n",
+    "implementation_unchanged": true,
+    "cleanup_ok": true,
+    "meaning": "Independent probe execution, not a scientific verdict. A zero exit alone does not prove relevance or a meaningful negative case."
+  },
+  "old_subcomponent_approval_refused": "INDEPENDENT_PROBE_FAILED",
+  "original_checkpoint_unchanged": true,
+  "paid_api_calls": 0,
+  "limitation": "Actual captured implementation challenged in a copy. No source-run verdict changed; no claim of a universal semantic test oracle."
+}

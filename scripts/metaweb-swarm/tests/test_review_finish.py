@@ -45,8 +45,7 @@ class ReviewFinishTests(unittest.IsolatedAsyncioTestCase):
         calls=[tool_response('read_test_artifact',{'test_id':t['id'],'path':a['path'],'offset':0,'limit':16000},ident=f'read-{n}') for n,a in enumerate(t['artifacts'])]
         calls+=[tool_response('get_prototype_review_facts',{'test_id':t['id']},ident='facts'),tool_response('review_prototype_test',{'test_id':t['id'],'verdict':'REVISE',
             'reason':'The actual script still needs a mechanism-specific test, retain the hypothesis',
-            'positive_code':'','negative_code':'','recovered_path':'prototype/recovered.bin',
-            'observed_recovery':'MATCHES_INPUT','review_basis':'LOCAL_DEFECT'},ident='stored-review'),final_response()]
+            'positive_refs':[],'negative_refs':[]},ident='stored-review'),final_response()]
         provider=FakeProvider(calls)
         self.engine.backend=OpenAIBackend(provider)
         await self.engine.step(self.auditor)

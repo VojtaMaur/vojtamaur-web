@@ -22,6 +22,10 @@ def record(api, idea_ids, conclusion, limitations):
     receipt = {'agent_id':api.agent['id'],'revision':revision,'idea_ids':expected,
                'conclusion':conclusion,'limitations':limitations,'time':now(),
                'facts':{'recorded_tests':len(state.get('tests',[])),
+                        'coding_commands':len(state.get('coding_commands',[])),
+                        'shared_helpers':len(state.get('shared_components',{})),
+                        'independent_review_probes':len(state.get('prototype_review_probes',[])),
+                        'coding_acceptance_passes':sum(v.get('passed') is True for v in state.get('coding_validations',[])),
                         'pending_test_reviews':sum(t.get('prototype_review_required',False) and not t.get('prototype_review') for t in state.get('tests',[])),
                         'full_mechanism_reviews':sum(r['verdict']=='FULL_MECHANISM' for r in state.get('prototype_reviews',[])),
                         'subcomponent_reviews':sum(r['verdict']=='SUBCOMPONENT' for r in state.get('prototype_reviews',[])),
@@ -32,3 +36,8 @@ def record(api, idea_ids, conclusion, limitations):
     api.agent['research_report_receipt'] = receipt
     api.event('research_report_recorded',receipt)
     return dict(receipt,status='COMPLETED',next_action='Finish YOUR reporter assignment now. Unresolved research belongs in handoff_leads; it does not require more reporter rounds.')
+
+
+def current(state,agent):
+    from .deposit_handoff import report_revision
+    return agent.get('research_report_receipt',{}).get('revision')==report_revision(state)

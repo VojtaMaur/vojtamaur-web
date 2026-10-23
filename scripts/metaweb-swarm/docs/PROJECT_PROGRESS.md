@@ -1,3 +1,165 @@
+## 0.8.4 — 2026-10-23
+
+Auditor v kole 11 runu `20261022-105239-d403be02` spotřeboval všech 12 požadavků
+opakovaným čtením souborů a přeskočil `prototype/rss_pointer.py`. SDK nyní váže
+povinné čtení na přesný další chybějící rozsah přidělené evidence. Odpověď uvádí
+skutečně vrácenou cestu a rozsah; přesměrování je auditováno. Po povinné frontě
+lze dál volně číst. Oprava nemění verdict, smlouvu, oprávnění ani limity.
+38 souvisejících testů prošlo, včetně skutečného Agents SDK s fake providerem
+opakujícím stejné čtení. Replay aktuálního checkpointu v kopii potřeboval jedno
+čtení k dokončení fronty a zpřístupnil facts -> probe/install. Bez placeného API,
+Dockeru, externí akce nebo změny původního checkpointu.
+[Podrobnosti](REVIEW_READ_QUEUE.md).
+
+## 0.8.3 — 2026-10-22
+
+Opraveno prostředí auditu z runu `20261022-105239-d403be02`: automatické importní
+cesty pro zachycené helpery, vlastní knihovny auditora v čistém režimu, setup
+diagnostika bez falešného repair coderovi a primární hodnocení lokální smlouvy.
+Původní RSS probe a nezávislý JPEG reader s vlastním Pillow skutečně prošly
+v kopii bez modelového/API runu. Staré checkpointy/verdikty a budgety se nemění.
+Další krok je explicitně pokračovat v auditu existujícího runu; není třeba
+začínat další celý discovery běh. [Dokumentace](AUDIT_ENVIRONMENT.md).
+
+## 0.8.2 — 2026-10-22
+
+Dokončen konkrétní JPEG nosič se skutečným celým EPUB (1 388 309 bajtů),
+samostatnou čtečkou, nezávislým obrazovým dekódováním a negativními případy.
+Přidán obecný output-only review sandbox a evidence požadavky na skutečná data,
+nativní artefakt a portable recovery. Opravena falešná jazyková blokace ORCID.
+Žádný další placený run; původní run ani produkční web se neexperimentovaly.
+Framework má stdlib encoder a nezávislý decoder jako použitelné příklady, hotový
+artefakt se ukládá mimo produkci. [Dokumentace](PORTABLE_RECOVERY.md).
+
+## 0.8.1 — 2026-10-22
+
+Opraven RSS run `20261022-080541-385bea51`: stabilní implementační revize při
+SAME merge, řádkové review místo přepisovaných citací, nativní RSS operace a
+kontrola aktuálního posledního auditu. Průchod skutečné RSS reference a odmítnutí
+původního JSON helperu ověřeny v kopii bez API. Modely, rozpočty a externí
+oprávnění beze změny. Další krok: nový běžný `run-http.cmd`, nikoli další navyšování
+starého RSS runu. [Podrobnosti a meze](OPERATION_EVIDENCE.md).
+
+## 0.8.0 — 2026-10-22
+
+Oddělen společný helper od mechanism coverage (HELPER_ONLY), totožný driver se
+necapturuje znovu pro další IDEA. Run-local Open Library pointer aliasy se slučují
+se zachováním provenance. Výzkumné HTTP/research profily vyžadují vlastní omezenou
+Docker sondu auditora před pozitivní coverage. Skutečný chybný readback test v kopii
+selhal a původní přehnané schválení bylo odmítnuto; původní run a API beze změn.
+[Chování, bezpečnostní model, ověření a další spuštění](MECHANISM_QUALITY.md).
+
+## 0.7.11 — 2026-10-22
+
+Odstraněno duplicitní defect_code z živého SDK review. Host váže repair evidence
+na již dodanou skutečnou negative_code/positive_code citaci a ukládá její cestu a
+SHA. Přesný poslední posudek přehrán přes SDK v kopii: REVISE dorazilo coderovi,
+původní checkpoint a rozpočty beze změny, bez placeného API nebo certifikace.
+[Diagnóza a pokračování](SOURCE_BOUND_REPAIR.md).
+
+## 0.7.10 — 2026-10-22
+
+Opraven také skutečný vstup auditora: souhrn nerecykluje staré modelové code quotes
+jako důkazy a nový task kontext musí znovu přečíst zachycený script/výstupy/facts.
+Původní vlastní čtení z archivované historie nestačí. Ověřen skutečný Engine.prompt
+a live checkpoint v kopii, bez placeného API či změny původního běhu.
+[Diagnóza a pokračování](FRESH_REVIEW_CONTEXT.md).
+
+## 0.7.9 — 2026-10-22
+
+Host doplňuje deterministická fakta o výstupech; auditor už neopisuje hashový
+verdikt a cesty. Neplatné SDK posudky nevytvářejí REVISE ani coding repair.
+Starý nevyřešený posudek jde znovu posoudit se zachováním auditní historie a
+rozpočtů. Technický blok není hlášen jako chybějící budget. Skutečné zachycené
+payloady přehrány v kopii bez placeného volání nebo změny původního checkpointu.
+[Diagnóza a pokračování](HOST_REVIEW_EVIDENCE.md).
+
+## 0.7.8 — 2026-10-22
+
+Odstraněn duplicitní local_contract_status ze SDK nástroje. Zůstává jediný
+verdikt, konkrétní lokální oprava, zdrojová citace a kontroly skutečných testů.
+Nový kontext se při pokračování archivuje/obnoví; zablokovaný audit se neoznačuje
+jako vyčerpaný globální rozpočet. Prošlo 11 kontraktových kontrol, 54 regresí
+a 11 queue testů. Přesný vadný live payload byl v kopii přijat jako REVISE a
+předán coderovi; žádné placené volání nebo změna původního checkpointu.
+[Oprava a příkazy pro pokračování](SINGLE_VERDICT.md).
+
+## 0.7.7 — 2026-10-22
+
+Coding a audit sdílejí uloženou lokální operaci se stejnými assertions/rozsahem.
+REVISE pro nový kontrakt potřebuje konkrétní lokální opravu a citaci skutečného
+kódu; chybějící publikování samo nebrání SUBCOMPONENT. Po třech opravách se
+nedokončená IDEA uchová místo pokračování nekonečné série. Přidání README/JSON
+už neobchází kontrolu nezměněné implementace. 75 cílených kontrol prošlo včetně
+10 nových a skutečného SDK toolu s testovacími odpověďmi. Read-only replay
+živého duplicitního testu byl odmítnut; žádná placená inference nebo přehodnocení
+původního runu. [Chování, omezení a spuštění](LOCAL_CONTRACT.md).
+
+## 0.7.6 — 2026-10-21
+
+Podporováno přímé spuštění uloženého shell driveru, konkrétní submission_contract
+a plný feedback s expected_argv. Třetí stejná chyba odevzdání zastaví worker;
+vyčerpaný command budget zabrání dalším provider požadavkům i placeným dispatchům.
+Osm nových testů a 64 regresí prošlo. Skutečný Docker replay původního run.sh
+v nové kopii: exit=0, tři výstupy, původní run nezměněn, žádné API náklady.
+Toto není potvrzení věcné funkčnosti podcast/audio mechanismu.
+[Podrobnosti a spuštění](CODING_SUBMISSION.md).
+
+## 0.7.5 — 2026-10-21
+
+Jedna fronta SDK prototypů: capture čeká na audit, REVISE jde na opravu a nový
+audit před dalším kandidátem. Poslední dvě auditní kola a minimální globální
+uzavírací rezerva se nevyužívají pro další discovery. Limity se nezvyšují.
+10 nových testů, 56 regresí a 14 scheduling/reporter kontrol prošlo; read-only
+replay posledního checkpointu zadržel pět neověřených výsledků. Žádná placená
+inference, změna live runu nebo nová certifikace artefaktů.
+[Chování, omezení a spuštění](PROTOTYPE_QUEUE.md).
+
+## 0.7.4 — 2026-10-21
+
+Opraveno odevzdání virtuálních /workspace/ cest ze SDK Shell. Neplatná data
+dostanou okamžitý feedback; confinement a acceptance zůstávají zachované.
+Pět nových offline testů prošlo a skutečné vadné odevzdání bylo normalizováno
+bez změny live runu či API volání. PDF návrh stále není funkční embedded recovery
+prototyp. [Kontrola běhu a omezení](RUN_REVIEW_20261021_074035.md).
+
+## 2026-10-21 — 0.7.3: aktuální reporter, návrat k běžnému výzkumu
+
+Reporter dostává přímo aktuální bounded packet, jeho konverzace se obnovuje podle
+revize evidence a stará syntéza se označuje jako neaktuální. Revize zahrnuje coding
+acceptance, development příkazy, balíčky, reviews a externí výsledky, nikoli vlastní
+reporter aktivitu. Prošlo 66 cílených kontrol a read-only replay live checkpointu;
+žádné placené volání nebo změna původního runu. Nový běžný běh: run-http.cmd,
+všechny modely gpt-5.4-mini a externí zápisy s approval. Konfigurace se nemění.
+[Podrobnosti](REPORTER_REFRESH.md).
+
+## 2026-10-21 — 0.7.2: propojení validace s programovacím cyklem
+
+Host odmítnutí READY se vrací modelu hned ve stejném SDK kole. Retry sdílí
+původní model-turn/time/token/USD meze. Staré READY deklarace neukotvují aktivní
+historii; při upgradu se předchozí LOCAL konverzace archivuje. Docker replay
+skutečného vadného kódu -> host FAIL -> scripted oprava -> PASS prošel v jednom
+backend kroku; 40 cílených testů OK. Bez placené inference či zásahu do live runu.
+
+## 2026-10-20 — 0.7.1: oprava názvové nejasnosti live běhu
+
+Dekodér z prvního live coding runu prošel nezávislým replayem beze změny kódu;
+upravená byla pouze cesta vstupu v testu. Poslední FAIL původního běhu měl správný
+hash/velikost, ale pracovní hashový prefix v poli export. Nové kopie zachovávají
+basename v hashovaném adresáři, kontrakt obsahuje přesné host expected_fields,
+chyby uvádějí konkrétní neshodná pole a SDK nedostává legacy preflight návod.
+Staré cesty/checkpointy nejsou přepisovány. 25 cílených testů prošlo; bez API nákladů.
+
+## 2026-10-20 — 0.7.0: výměna programovacího cyklu
+
+Místo dalšího formulářového gate používá nový LOCAL backend hotový SDK Shell a
+Runner s malým adaptérem do stávajícího Docker executoru. Souvislé psaní/spuštění/
+oprava, host budget/key, automatický finální capture včetně helper kódu a review
+až nad výsledkem. Výzkumné a HTTP profily mají zachovaná oprávnění a modely.
+Staré checkpointy zůstávají legacy. Přibyl projektový `run-prototype.cmd` s přesným
+známým CBOR kontraktem a nezávislou kontrolou skutečných artefaktů/dekodéru.
+Podrobnosti a omezení: [CODING_WORKER.md](CODING_WORKER.md).
+
 ## 0.6.18 — opravný cyklus vlastní framework
 
 - Model-facing plán nemá opravná ID; host je odvodí z aktuálního vlastního úkolu.

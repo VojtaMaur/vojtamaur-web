@@ -117,6 +117,8 @@ def doctor(backend, docker_check=False, config_path=None, output_format="json"):
         try:
             from .backend import check_sdk
             checks["sdk_interface"] = check_sdk()
+            from .coding_worker import check_dependencies
+            checks['coding_worker']=check_dependencies(config)
         except (ImportError, ValueError) as error:
             checks["sdk_interface"] = str(error)
     if docker_check:
@@ -175,6 +177,8 @@ def main(argv=None):
                         raise ValueError("OPENAI_API_KEY is not set; no run or paid API calls started")
                     if not check_sdk().get("compatible") or any(not a.get("model") for a in seed_agents(config)):
                         raise ValueError("Compatible SDK and explicit models for every seed role are required")
+                    from .coding_worker import check_dependencies
+                    check_dependencies(config)
                 if config["experiments"] == "docker":
                     from .workspace import DockerExecutor
                     ready = DockerExecutor(config["docker_image"]).check_ready()

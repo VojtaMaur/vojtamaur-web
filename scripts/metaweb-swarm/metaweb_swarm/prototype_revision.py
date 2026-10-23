@@ -50,6 +50,8 @@ def packet(test):
     review = test['prototype_review']
     return {'test_id': test['id'], 'review_id': review['id'], 'verdict': 'REVISE',
             'reason': review['reason'], 'script': test['prototype_plan']['script'],
+            'local_contract':test['prototype_plan'].get('local_contract'),
+            'required_local_change':review.get('required_local_change'),'defect_code':review.get('defect_code'),
             'prototype_plan': test['prototype_plan'],
             'next_action': 'The exit-zero receipt is NOT completion of this task. Read read_revised_test, '
                 'implement the missing operation/assertions identified by the independent reviewer, then '
@@ -149,6 +151,7 @@ def action(api):
 
 def begin(api):
     """One progress baseline per actual LOCAL round, including interrupted SDK turns."""
+    if api.engine.state['config'].get('coding_backend')=='sdk_shell':return
     test = latest(api.engine.state, api.agent, api.agent.get('research_assignment', {}).get('target_id'))
     if not test:
         return
@@ -162,6 +165,7 @@ def begin(api):
 
 def finish(api):
     """Two rounds without new script bytes/receipt defer this assignment, never reject it."""
+    if api.engine.state['config'].get('coding_backend')=='sdk_shell':return
     progress = api.agent.get('prototype_revision_progress', {})
     if not progress or progress.get('checked_round') == api.agent['rounds']:
         return

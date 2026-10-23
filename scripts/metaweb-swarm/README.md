@@ -1,46 +1,28 @@
-Aktuálně **0.6.18**: [opravy bez párování ID, kontrola relevance kódu a automatický execution receipt](docs/PROTOTYPE_WORKFLOW.md). Nový běh: `run-http.cmd`.
-
-Aktuálně 0.6.15: [diagnóza a oprava selhaného kódu, funkční RS artefakt](docs/PROTOTYPE_DEBUG.md). Nový běh: `run-http.cmd`; prototyper má 8 kol, globální modely/budgety/oprávnění zůstávají stejné.
-
-Aktualizace **0.6.17**: [skutečné exporty, přesné opravné odkazy a audit lokálního testu](docs/PAYLOAD_AND_REVIEW_FACTS.md). Nový běh: `run-http.cmd`.
-
-Aktualizace **0.6.16**: [opravy po REVISE, posun na další kandidáty a stručné podklady reportera](docs/REVISION_AND_REPORT.md). Spuštění nového běhu: `run-http.cmd`.
-
-Aktualizace 0.6.14: [povinné dokončení auditu a test vlastní mechanismu](docs/REVIEW_FINISH.md). Nový běh: `run-http.cmd`; auditor 10 kol, globální budgety, modely a oprávnění jsou stejné.
-
-Aktualizace 0.6.13: [čtení skutečných výstupů, executable test cases, původní bajty a změna známého směru](docs/EVIDENCE_REVIEW.md).
-
-Aktualizace 0.6.10: [nové zadání bez staré modelové historie, testovací kontrakt a nezávislé posouzení skutečného prototypu](docs/PROTOTYPE_REVIEW.md). Auditor má 6 kol pro pre/post review.
-
-Aktuálně 0.6.9: [obecný výzkum předává skutečné IDEA auditorovi, prototyperovi a reportérovi](docs/RESEARCH_HANDOFFS.md). Nový skutečný běh: `run-http.cmd`; modely a oprávnění zůstávají stejné.
-
-Aktuálně 0.6.8: [konkrétní review packets, vlastní čtení dokumentů a dokončení LEAD triage](docs/REVIEW_TASKS.md). Auditor nedostane IDEA critique, dokud neexistuje odpovídající kandidát.
-
-Aktuálně 0.6.7: [strukturované response bindings a vyčištění pracovní historie](docs/STRUCTURED_BINDINGS.md). Host skládá syntaxi z oddělených údajů; staré odmítnuté plánovací pokusy zůstávají v auditu.
-
-Aktuálně 0.6.6: [opravy jednotlivých kroků, konkrétní diagnostika a zastavení opakovaných chyb](docs/PLAN_EDITS.md). Soukromý draft není execution plan ani approval; každá editace znovu validuje celou sekvenci.
-
-Aktuálně 0.6.5: [bounded přehledy a prompt preflight bez spotřeby kol](docs/PROMPT_PREFLIGHT.md). Aktuální plány/oprávnění zůstávají úplné; historické narrative se zkracují a stejné host selhání se netočí.
-
-Aktuálně 0.6.4: [oprava plánovacích zadání, plán bez credential hodnot a review před realizací](docs/PLAN_RECOVERY.md). Opravitelný tool diagnostic vrací konkrétní krok; účet/limity dál brání execution, nikoli uchování plánu.
-
-Aktuálně 0.6.3: [čtení PDF dokumentace, source hash, stránky a cache](docs/PDF_DOCUMENTS.md). Parser pypdf je součást deklarovaných dependencies; už stažené PDF lze využít při resume.
-
-Aktuálně 0.6.2: [rozpracované směry před kvalifikací, nezávislé triage a opravné kroky](docs/DISCOVERY_LEADS.md). Přečtená zjištění zůstávají v reportu i bez hotového upload plánu; LEAD sám nikdy nepovolí realizaci.
-
-Aktuálně 0.6.1: [výběr skutečně nových služeb a dokumentace vázaná na provider/origin](docs/CARRIER_SCOPE.md). Zenodo/Figshare z ARCHIVE.txt v cíleném deposit běhu neprojdou přes generic improvement. FREE upload může vyžadovat vlastní swarm účet.
-
-Aktuálně 0.6.0: [obecný vícekrokový HTTP realizátor](docs/DEPOSIT_EXECUTOR.md), stav po každém kroku, jeden approval na konkrétní postup a veřejný SHA256 read-back. Placené smokes není třeba opakovat.
-
 # Metaweb agent swarm
 
-Aktualizace 0.5.5: [věcné zamítnutí versus setup, dokončení auditora a uložení protokolu](docs/REVIEW_AND_FLOW.md).
+**0.8.4 — povinné čtení auditu bez smyčky.** SDK obslouží další chybějící rozsah
+z fronty frameworku, i když model opakuje stejný požadavek. Skutečně vrácená cesta
+a rozsah jsou v odpovědi i audit logu; verdikt stále vybírá auditor.
+[Oprava fronty](docs/REVIEW_READ_QUEUE.md).
 
-Aktualizace 0.5.4: [uložení kandidátů čekajících na účet, resume a celý upload protokol](docs/DEPOSIT_HANDOFF.md).
+**0.8.3 — spolehlivější prostředí auditu.** Správné importy zachycených helperů,
+vlastní knihovny auditora i v čistém režimu a oddělení chyby přípravy sondy od
+chyby prototypu. Auditor hodnotí zmrazenou lokální operaci a její skutečné meze.
+[Změny a ověření](docs/AUDIT_ENVIRONMENT.md) · [Hotový samostatný JPEG příklad](docs/JPEG_ARCHIVE.md).
 
-Aktualizace 0.5.3: [účetní kontrola nedokončeného web search, audit a další běh](docs/SEARCH_ACCOUNTING.md).
+Pro nový běžný výzkumný běh celého roje v CMD s nastaveným API klíčem a Dockerem:
 
-Aktuální další krok: `run-deposit-trial.cmd` — nový skutečný výzkum konkrétního nezávislého nosiče zachyceného EPUB, s nezávislým auditem a human approval před uploadem. [Spuštění a kontrola služeb](docs/CARRIER_ROUTING.md). Úspěšné Docker a lokální/veřejné HTTP smoke testy jsou už doložené; opakuj je při změně infrastruktury.
+```cmd
+cd /d G:\vojtamaur-web\scripts\metaweb-swarm
+run-http.cmd
+```
+
+Všechny tiery zatím používají gpt-5.4-mini. Vlastní discovery, Docker prototypy
+a HTTP jsou zapnuté; externí zápisy vyžadují schválení a osobní host účty nejsou
+poskytnuté. Tento příkaz vytvoří nový placený běh. Závislosti a profilové limity
+se touto opravou nemění. Známý CBOR coding test už prošel; run-prototype.cmd je
+nadále dostupný pro cílenou diagnostiku, nemusí se před výzkumem opakovat.
+[Programovací backend a izolace](docs/CODING_WORKER.md).
 
 Výzkumný a realizační framework pro Metaweb Vojty Maura. Agenti hledají, ověřují a kritizují preservation mechanisms, navrhují specialisty a mohou vytvářet a testovat prototypy. Každý má soukromou kopii projektu. Produkční `G:\vojtamaur-web` se při běhu pouze čte; změny zdroje se vracejí jako reviewable patche a artefakty.
 

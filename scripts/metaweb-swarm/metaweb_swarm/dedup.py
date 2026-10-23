@@ -94,6 +94,14 @@ def identity(data):
             if len(modes) == 1:
                 variant += "-" + modes[0]
 
+    # Bibliographic record types are alternate slots of the same public pointer,
+    # not independent custodians. Preserve payload deposit as a distinct mechanism.
+    if family is None and re.fullmatch(r'(?:https?://)?(?:www\.)?open[ -]?library(?:\.org)?(?:\s+(?:api|catalog|public|metadata|records?))*/?',provider):
+        pointer=_has(text,r'\bpointer(?:s)?\b|\brecovery seed\b')
+        payload=_has(text,r'\b(?:upload|deposit|store|preserve)\w*\s+(?:the\s+)?(?:full\s+|exact\s+)?(?:epub|pdf|file|payload|archive bytes)\b')
+        payload=payload or _has(text,r'\bbase64\b|\bembed\w*\s+(?:full|entire|complete|archive|payload)|\b(?:full|entire|complete)\s+(?:payload|archive bytes)\b')
+        if pointer and not payload:family,variant,scope='open-library','public-bibliographic-pointer','default'
+
     if family is None:
         aliases = (
             ("zenodo", r"\bzenodo\b", "REPOSITORY_SNAPSHOT"),

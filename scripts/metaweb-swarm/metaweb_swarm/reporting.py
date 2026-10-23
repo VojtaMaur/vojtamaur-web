@@ -252,6 +252,9 @@ def generate_reports(run_dir: Path, state: dict) -> None:
     if is_demo:
         lines.extend(["**DEMO / OFFLINE FIXTURE.** Tento běh ověřuje infrastrukturu a používá předem připravené",
                       "ukázkové výstupy. Nepředstavuje skutečný webový výzkum, objev ani ověření archivní služby.", ""])
+    if config.get('coding_acceptance'):
+        lines.extend(['**Předem zadaný programovací úkol.** Známá CBOR součást, nikoli nový objev ani externí archivace.',
+            '', 'Nezávislá kontrola skutečných artefaktů a dekodéru:', '', _code(state.get('coding_validations',[])), ''])
     target_counts = Counter(str(r.get('status') or 'UNASSESSED') for r in state.get('deposit_qualifications', []))
     target_summary = ', '.join(f'{key}: {value}' for key, value in sorted(target_counts.items())) or 'žádné'
     lines.extend([f"Roj eviduje {len(agents)} agentů, {len(ideas)} kandidátů a {len(events)} auditních událostí.", "",
@@ -274,6 +277,11 @@ def generate_reports(run_dir: Path, state: dict) -> None:
                   "Docker pokusy (výpis omezený; celý průběh v auditu):", "",
                   _code([{k: (str(v)[:800] if k in {"output", "stdout", "stderr"} else v) for k, v in e.items()} for e in state.get("experiments", [])]), "",
                   "Testovací receipts (bajty a assertions; nikoli certifikace standardu):", "", _code(state.get("tests", [])), ""])
+    if config.get('coding_backend')=='sdk_shell':
+        lines.extend([f"SDK coding worker: {len(state.get('coding_commands',[]))} vývojových příkazů v Dockeru. Tyto příkazy nejsou samy potvrzené testy; finální zachycené experimenty jsou uvedeny výše.", '',
+            _code([{k:(str(r.get(k,''))[-600:] if k in {'argv','output'} else r.get(k))
+                    for k in ('id','agent_id','idea_id','status','returncode','argv','output','cleanup_ok')}
+                   for r in state.get('coding_commands',[])]), ''])
     lines.extend(['Instalace balíčků (úplné download/build/install receipts v manifestu a auditu):', '',
         _code([{k: r.get(k) for k in ('id', 'agent_id', 'idea_id', 'requirements', 'status', 'reason', 'distributions', 'wheel_bytes', 'installed_bytes')} for r in state.get('package_installations', [])]), ''])
     search_notes = [r['search_accounting_overage'] for r in state.get('budget_settlements', {}).values() if r.get('search_accounting_overage')]
@@ -291,11 +299,17 @@ def generate_reports(run_dir: Path, state: dict) -> None:
                   _code(state.get('prior_work_deferrals', [])), ''])
     for agent in agents:
         if "report" in str(agent.get("role", "")).lower() and agent.get("summary"):
-            lines.extend(["Syntéza reportovacího agenta (připsaná jeho výstupu):", "", _text(agent["summary"]), ""])
+            from .research_report import current as current_report
+            if config.get('research_handoffs') and not current_report(state,agent):
+                lines.extend(['Syntéza reportovacího agenta je neaktuální: od jejího vzniku se změnily výsledky. '
+                              'Aktuální hostem evidované testy a verdikty jsou uvedeny výše; starý závěr zůstává v auditu.', ''])
+            else:
+                lines.extend(["Syntéza reportovacího agenta (připsaná jeho výstupu):", "", _text(agent["summary"]), ""])
     priority = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
     reviews=state.get('prototype_reviews',[])
     lines.append('Zaznamenaný test čekající na nezávislý verdict není potvrzené funkční pokrytí mechanismu; samotný exit=0 tento rozdíl neruší.')
     lines.append(f"Posouzení testů: celý mechanismus {sum(r['verdict']=='FULL_MECHANISM' for r in reviews)}, dílčí součást {sum(r['verdict']=='SUBCOMPONENT' for r in reviews)}, vyžaduje opravu {sum(r['verdict']=='REVISE' for r in reviews)}; čeká na review {sum(t.get('prototype_review_required',False) and not t.get('prototype_review') for t in state.get('tests',[]))}.")
+    lines.append(f"Sdílené pomocné implementace: {len(state.get('shared_components',{}))}; odkazy na opětovné použití: {len(state.get('prototype_component_reuses',[]))}; nezávislé Docker sondy auditora: {len(state.get('prototype_review_probes',[]))}. Pomocný kód není potvrzený mechanismus.")
     prototypes = [i for i in ideas if i.get("status") == "PROTOTYPED"]
     lines.extend([f"Lokální prototypy: {len(prototypes)}; otestování zaznamenané hostem: {sum(i.get('prototype_tested') is True for i in prototypes)}.",
                   "Existence souboru ani úspěšný příkaz samy neprokazují funkční rekonstrukci. Neotestované artefakty vyžadují test a revizi.", ""])
@@ -452,6 +466,7 @@ def generate_reports(run_dir: Path, state: dict) -> None:
                 "http_requests": state.get('http_requests', []), "external_actions": state.get("external_actions", []), "experiments": state.get("experiments", []),
                 "prior_work_deferrals": state.get('prior_work_deferrals', []),
                 "tests": state.get("tests", []), "critiques": state.get("critiques", []), "budget_reservations": state.get("budget_reservations", {}),
+                "coding_commands":state.get('coding_commands',[]), "coding_validations":state.get('coding_validations',[]),
                 "budget_settlements": state.get("budget_settlements", {}),
                 "package_installations": state.get('package_installations', []),
                 "artifacts": artifacts, "reports": ["SWARM_REPORT.md", "TIMELINE.md", "ideas.jsonl"],

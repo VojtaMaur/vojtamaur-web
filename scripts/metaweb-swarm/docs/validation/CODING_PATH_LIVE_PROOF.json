@@ -1,0 +1,26 @@
+{
+  "source_run": "20261021-074035-94074e37",
+  "source_unchanged": true,
+  "paid_api_calls": 0,
+  "normalized": {
+    "status": "READY",
+    "summary": "Built a local Metaweb recovery specimen that generates a PDF with visible reconstruction instructions plus a machine-readable JSON manifest and a deliberately corrupted sidecar for checksum comparison testing. The script runs successfully and produces five outputs each run.",
+    "script_path": "work/pdfa3_recovery_specimen.py",
+    "argv": [
+      "python",
+      "work/pdfa3_recovery_specimen.py"
+    ],
+    "output_paths": [
+      "work/out/metaweb_recovery_bundle.pdf",
+      "work/out/metaweb_recovery_manifest.json",
+      "work/out/metaweb_recovery_manifest.corrupted.json",
+      "work/out/embedded_manifest_extracted.json",
+      "work/out/verification_report.json"
+    ],
+    "source_paths": [],
+    "positive_assertion": "The script successfully reads the provided EPUB payload, derives a recovery manifest from its real bytes, emits a PDF with visible instructions, and produces both a valid and a corrupted manifest so checksum-difference handling can be verified locally.",
+    "negative_assertion": "This is not a true PDF/A-3 with embedded associated-file metadata, and it does not attempt to reconstruct the original site or extract the EPUB contents into a full recovery package.",
+    "limitations": "Visible PDF text and JSON sidecars are implemented; standards-complete PDF/A-3 attachment metadata, semantic PDF/A validation, and automatic extraction of an embedded file from the PDF itself are not implemented in this specimen."
+  },
+  "meaning": "Read-only check of the actual failed SDK submission. Path normalization succeeds; PDF mechanism correctness is NOT certified and no agent code was executed."
+}

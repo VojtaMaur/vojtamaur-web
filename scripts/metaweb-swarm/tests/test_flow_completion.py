@@ -98,11 +98,12 @@ class FlowCompletionTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.local.record_test(self.idea['id'],result['experiment_id'],'Changed outputs cannot use old execution')['reason'],'EXECUTED_ARTIFACT_CHANGED')
         self.assertFalse(self.engine.state['tests'])
 
-    def test_limitations_are_not_a_negative_test(self):
+    def test_prose_alone_neither_blocks_a_plan_nor_certifies_a_negative_test(self):
         self.prepare()
         result=self.setup_plan(negative='The script does not test any external publication, retention or pricing behavior')
-        self.assertEqual(result['reason'],'NEGATIVE_TEST_REQUIRED')
-        self.assertNotIn('prototype_plans',self.proto)
+        self.assertIn('id',result)
+        self.assertFalse(self.idea['prototype_tested'])
+        self.assertFalse(self.engine.state['tests'])
 
     async def test_unknown_pricing_retained_for_research_but_not_prototyped(self):
         self.prepare()

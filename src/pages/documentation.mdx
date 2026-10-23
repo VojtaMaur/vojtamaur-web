@@ -188,6 +188,7 @@ npm run export:epub:metaweb
 npm run export:pdf
 npm run export:pdf:metaweb
 npm run export:sstv
+npm run export:markdown
 ```
 
 Meaning of the main scripts:
@@ -229,6 +230,7 @@ Meaning of the main scripts:
 - `npm run export:pdf` – manually exports article pages from the finished `dist/` build to archival PDF files; this command is not part of the normal build pipeline
 - `npm run export:pdf:metaweb` – manually creates one archival PDF containing the bilingual metaweb article and its directly related preservation files; this command is not part of any build pipeline
 - `npm run export:sstv` – manually renders indexed articles from the finished `dist/` build to numbered PNG frames at native SSTV mode dimensions; defaults to Czech PD120 output under `exports/sstv/pd120/`, does not run a build or generate audio, and is not part of any build pipeline (section 9.6.8)
+- `npm run export:markdown` – manually creates one readable Markdown archive from the full rendered HTML in `dist/ALL_POSTS.json`; supports language, section and date filters, and runs only when explicitly requested (section 9.6.13).
 - `npm run export:morse` – manually converts the existing `dist/ALL_POSTS.json` through the compact text serializer into an ASCII Morse edition under `exports/`; supports `--lang cs|en|both`, defaults to one bilingual file, and is also included in `export-all.bat` (section 9.6.11)
 
 All signed build variants and both standalone signing commands use the same history mechanism: after successful signature verification and status/metadata writes, they record the current build in the project-root `BUILD_HASH_HISTORY.txt`. Unsigned build commands do not append records. The source-bundle step supplies the history snapshot required by the subsequent integrity pass; see section 9.6.1.
@@ -1658,17 +1660,20 @@ require the local tools described above.
 
 #### Run all manual exports on Windows
 
-The manual TXT, Morse, PDF, Ultra PDF, MoM-like PDF and EPUB exporters append the local export start time to automatically generated filenames, before the extension: `-YYYY-MM-DD_HH-MM-SS-ffffff`. For example, `vojtamaur-web-export-ultra-2026-10-05_14-30-00-123456.pdf` and `vojtamaur-web-export-ultra-2026-10-05_14-30-00-123456.manifest.json` belong to the same run. Microseconds distinguish repeated runs, including multiple exports on the same day. Separate article exports also receive the timestamp. An explicit `--output` is used exactly as supplied, including its adjacent TXT and manifest names. `--no-timestamp` restores legacy automatic names; `--timestamp YYYY-MM-DD_HH-MM-SS-ffffff` selects a specific edition timestamp. PDF/A and uncompressed derivative labels precede the timestamp. The generated build files in `dist/` retain their stable names.
+The manual TXT, Markdown, Morse, PDF, Ultra PDF, MoM-like PDF and EPUB exporters append the local export start time to automatically generated filenames, before the extension: `-YYYY-MM-DD_HH-MM-SS-ffffff`. For example, `vojtamaur-web-export-ultra-2026-10-05_14-30-00-123456.pdf` and `vojtamaur-web-export-ultra-2026-10-05_14-30-00-123456.manifest.json` belong to the same run. Microseconds distinguish repeated runs, including multiple exports on the same day. Separate article exports also receive the timestamp. An explicit `--output` is used exactly as supplied, including its adjacent TXT and manifest names. `--no-timestamp` restores legacy automatic names; `--timestamp YYYY-MM-DD_HH-MM-SS-ffffff` selects a specific edition timestamp. PDF/A and uncompressed derivative labels precede the timestamp. The generated build files in `dist/` retain their stable names.
 
-`export-all.bat` generates one shared timestamp in `VOJTAMAUR_EXPORT_TIMESTAMP` for all eleven steps, including the SSTV output directory. A new batch run creates a new timestamp and preserves older editions. Metaweb PDF includes the Ultra PDF with that same timestamp, creating it at that exact path if needed; a standalone Metaweb PDF run creates its own matching Ultra edition. MoM-like automatic English and bilingual names add `-en` and `-cs-en`, respectively, before the timestamp. Metaweb EPUB uses an `.epub.manifest.json` sidecar so it can coexist with the PDF's `.manifest.json` without replacing it.
+`export-all.bat` generates one shared timestamp in `VOJTAMAUR_EXPORT_TIMESTAMP` for all fourteen steps, including the SSTV output directory. A new batch run creates a new timestamp and preserves older editions. Metaweb PDF includes the Ultra PDF with that same timestamp, creating it at that exact path if needed; a standalone Metaweb PDF run creates its own matching Ultra edition. MoM-like automatic English and bilingual names add `-en` and `-cs-en`, respectively, before the timestamp. Metaweb EPUB uses an `.epub.manifest.json` sidecar so it can coexist with the PDF's `.manifest.json` without replacing it.
 
 The default output listings in the sections below and above show the base names; the timestamp is appended automatically unless an explicit `--output` or `--no-timestamp` is used.
 
-The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the eleven export steps sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow requires both `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json` from the existing build and begins with separate English and Czech compact text exports. It uses the built JSON without regenerating it, preserving the bytes covered by any existing build checksum manifest or signature. The PDF steps include separate Czech and English MoM-like editions of `volna-tvorba` at the default 4 pt font size. After the PDF steps it creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs, preserving animated GIFs. The SSTV PNG export is the final step:
+The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the fourteen export steps sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow requires both `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json` from the existing build and begins with separate English and Czech compact text exports, followed by Czech, English and combined Czech + English Markdown exports covering every section. It uses the built JSON without regenerating it, preserving the bytes covered by any existing build checksum manifest or signature. The PDF steps include separate Czech and English MoM-like editions of `volna-tvorba` at the default 4 pt font size. After the PDF steps it creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs, preserving animated GIFs. The SSTV PNG export is the final step:
 
 ```bat
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
 python scripts/filter-all-posts.py --language cs --section volna-tvorba --format compact
+python scripts/export-site-markdown.py --language cs --section all
+python scripts/export-site-markdown.py --language en --section all
+python scripts/export-site-markdown.py --language both --section all
 python scripts/export-site-morse.py --lang both
 python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "C:\Program Files\gs\gs10.07.1\bin\gswin64c.exe"
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
@@ -2434,7 +2439,7 @@ python scripts/export-site-morse.py --lang both --dry-run
 npm run test:morse
 ```
 
-`export-all.bat` runs the bilingual Morse export after its compact text exports. No normal web, USB, Arweave or Gemini build invokes it; the build continues to generate the source JSON, and the manual export leaves `dist/` and its integrity manifests unchanged. The generated `exports/` files remain excluded from version control.
+`export-all.bat` runs the bilingual Morse export after its compact text and Markdown exports. No normal web, USB, Arweave or Gemini build invokes it; the build continues to generate the source JSON, and the manual export leaves `dist/` and its integrity manifests unchanged. The generated `exports/` files remain excluded from version control.
 
 ### 9.6.12 MoM-like text-only PDF export
 
@@ -2509,6 +2514,50 @@ Run the content-preservation and pagination regression checks with:
 python -B -m unittest discover -s tests -p test_mom_like_export.py
 ```
 
+
+### 9.6.13 Manual Markdown article export
+
+`scripts/export-site-markdown.py` creates one readable `ALL_POSTS` Markdown archive from the existing `dist/ALL_POSTS.json`. It runs manually, is included in `export-all.bat`, and is never invoked by the web, USB, Arweave or Gemini builds or by `generate:all-posts`. It leaves the source JSON, `dist/` and existing build integrity files unchanged. No network access, translation or new build is needed.
+
+The source is the full rendered `vm:articleHtml` in the JSON snapshot, rather than raw MDX or the shortened `ALL_POSTS.txt`. Astro components are therefore already rendered, `NoTranslate` / `notranslate` wrappers disappear while their text remains, and English titles and bodies come from the finished English postprocess. The exporter does not mix current MDX changes into an older snapshot. Rebuild separately before exporting when updated content is required. It uses Beautiful Soup, already installed by the EPUB export requirements and by the batch setup; for standalone use install it with `python -m pip install beautifulsoup4`.
+
+Run from the repository root:
+
+```bash
+python scripts/export-site-markdown.py
+npm run export:markdown -- --language cs
+python scripts/export-site-markdown.py --language en --section volna-tvorba,vystavy
+python scripts/export-site-markdown.py --lang both --section all
+python scripts/export-site-markdown.py --from-date 2020-01-01 --to-date 2026-12-31
+python scripts/export-site-markdown.py --list-values
+python scripts/export-site-markdown.py --language cs --dry-run
+```
+
+The default is one combined file with every indexed language version and section. `--language` (alias `--lang`) and `--section` reuse the selection rules in `filter-all-posts.py`: repeat an option or comma-separate values; omitted options or `all` include every available value. `--language both` is shorthand for `cs,en`. Date limits are inclusive. Unknown filters, inverted date ranges, malformed snapshots and unintentionally empty selections fail with a nonzero exit status; `--allow-empty` explicitly permits an empty archive. `--list-values` shows available values and counts, and `--dry-run` constructs and validates the result without writing it. Article order follows `vm:position`.
+
+The document starts with a title, source snapshot date and SHA-256, selection details, article count and a linked table of contents. Each article has its rendered title, language, section, source date, visible metadata, original public URL and a stable anchor. Internal article headings sit below that article's heading. Paragraphs, emphasis, lists, quotes, hard line breaks, ordinary tables and complete fenced code blocks are retained. Fence lengths adapt to backticks inside the code, and code indentation and blank lines are preserved without the TXT preview limits. Complex merged tables are linearized as rows. A record marked as an incomplete English/Czech fallback receives a visible note; route language is not an independent translation-quality check.
+
+Images are ordinary links with their ALT text and filename, followed by any figure caption; they do not use Markdown image syntax and are not embedded. A distinct full-size image target is also retained. PDFs, videos, audio, interactive embeds and linked downloads become ordinary public links. Relative URLs are resolved against `vm:builtHtmlPath`, including flat USB routes, then mapped to canonical article URLs where possible. SVG/canvas graphics have an explicit link to the original article. Media payloads and linked file contents are not downloaded or bundled. Article links point to the website; the table of contents links inside the Markdown file. Standalone pages such as this documentation are outside the indexed article scope.
+
+Automatic filenames follow the filtered-export convention, including language, section, optional date range and the local edition timestamp:
+
+```text
+exports/ALL_POSTS__lang-all__section-all-<timestamp>.md
+exports/ALL_POSTS__lang-cs__section-all-<timestamp>.md
+exports/ALL_POSTS__lang-en__section-all-<timestamp>.md
+exports/ALL_POSTS__lang-cs+en__section-all-<timestamp>.md
+exports/ALL_POSTS__lang-cs__section-volna-tvorba__from-2020-01-01-<timestamp>.md
+```
+
+`<timestamp>` uses `YYYY-MM-DD_HH-MM-SS-ffffff` from the shared `export_naming.py` helper. The batch creates three Markdown files (CS, EN and CS + EN), all sections, with the same `VOJTAMAUR_EXPORT_TIMESTAMP` as its other exports. Standalone calls choose a fresh local timestamp. `--timestamp` selects a specific edition; `--no-timestamp` omits it. An explicit `--output` uses that exact filename and may replace an earlier export there. Output must be a `.md` file inside the project's `exports/` directory and cannot overwrite the input. Paths resolve from the script's repository root or `--project-root`. An archived JSON/JSON-LD snapshot can be supplied positionally or with `--input`:
+
+```bash
+python scripts/export-site-markdown.py --input exports/older-ALL_POSTS.json --language cs --output exports/ALL_POSTS.md
+python scripts/export-site-markdown.py --timestamp 2026-10-23_09-00-00-123456
+npm run test:markdown
+```
+
+The output is UTF-8 without BOM and uses LF line endings, so the first character is the Markdown title marker. Writes use a temporary file and atomic replacement after conversion succeeds. The command reports selected article count, byte size, output path and SHA-256. Generated files in `exports/` remain excluded from Git.
 
 ### 9.7 Arweave / Permaweb build
 
@@ -3550,7 +3599,7 @@ Possible future directions for the project:
 - development of an interactive-fiction edition for the [IF Archive](https://www.ifarchive.org/), embedding the complete ARCHIVE.txt and ALL_POSTS.txt in a self-contained `.gblorb` text adventure, playable locally or in a browser via Parchment
 - evaluation of producing a laser-engraved glass archival copy of ALL_POSTS.txt, either as a solid glass cube with dense microtext distributed across all six faces or as a set of smaller glass plates; surface or subsurface engraving would be selected according to technical feasibility
 - creation of an additional offline archival copy on M-DISC optical media, containing the most important exports, source files, and offline builds of `vojtamaur.cz`
-- creation of a ZIM edition of `vojtamaur.cz` for distribution and browsing through Kiwix, providing an additional standardized, self-contained offline representation of the website alongside the existing HTML-based USB build
+- creation of a ZIM edition of `vojtamaur.cz` for distribution and browsing through Kiwix, providing an additional standardized, self-contained offline representation of the website alongside the existing HTML-based USB build; potentially submitting the ZIM edition for inclusion in the official Kiwix catalog, subject to approval
 - donation of physical print editions to institutional collections: an artist’s-book edition of the Metaweb article to the [Franklin Furnace Archive](https://franklinfurnace.org/artist-books/), and printed editions of the Metaweb article and ALL_POSTS.txt to the [Internet Archive Physical Archive](https://openlibrary.org/bookdrive.en), providing additional long-term preservation within independent cultural and library institutions
 - experimental neural archival edition of `ALL_POSTS.txt`, training a small Transformer language model from scratch exclusively on the text corpus and deliberately overfitting it to memorize the original content within its neural weights, with the aim of reconstructing a substantial proportion of the original text (ideally 80–90% or more) from the trained model without access to the source file
 - development of an automated approach to indirectly disseminating the project's ideas through third-party language model training, building on initial manual experiments involving discussions about `vojtamaur.cz`, `ALL_POSTS.txt`, and the Metaweb article, accompanied by positive response feedback to potentially increase their relevance for training; possible approaches include sustained automated conversations between models from different providers, aiming to marginally influence future models' learned representations and token probability distributions. Training inclusion and actual influence remain unverified, automated interactions may be filtered, and any implementation must account for providers' terms of service and the potential classification of such activity as training-data poisoning
@@ -3565,6 +3614,7 @@ Possible future directions for the project:
   - inclusion of `documentation.mdx` as an embedded package snapshot alongside the existing `ALL_POSTS.txt` and `ARCHIVE.txt`, ensuring that the project documentation remains accessible offline even without a previously populated cache; the `vojtamaur docs` command should also be updated to use this bundled file as an offline fallback rather than relying solely on downloaded content or the existing HTML cache
   - correction of Arweave/ArDrive fallback URLs, particularly documentation paths that may require explicit `/documentation/index.html` rather than `/documentation/`, subject to verification against the deployed archive structure
   - expansion and verification of the configured fallback mirrors to include newly established website deployments, ensuring that each source provides the expected files and compatible URL paths
+- evaluation of fountain codes (e.g. LT or Raptor codes) for distributed archival storage, encoding digital data into a potentially unlimited number of redundant fragments distributed across independent platforms or physical media (e.g. QR codes); the original data could be reconstructed from any sufficiently large subset of surviving fragments, without requiring specific fragments to remain available
 
 ### 14.2 Failed attempts and abandoned approaches
 
@@ -3578,7 +3628,7 @@ The following approaches were tested or seriously evaluated but were ultimately 
 - hosting of a Spartan capsule on [tilde.team](https://tilde.team/) was explored as an additional alternative-protocol mirror of `vojtamaur.cz`; the service was contacted about Spartan hosting, but no response was received, so this option was abandoned
 - inclusion of the English `Metaweb Article` in ArchiveBox's [Web Archiving Community](https://github.com/ArchiveBox/ArchiveBox/wiki/Web-Archiving-Community) page was proposed to Nick Sweeting for the “Articles We Like About Internet Archiving” section; no response was received and the article was not added
 - registration of two physical air-gapped copies listed in the [Metaweb Article](https://vojtamaur.cz/metawebovy-clanek/) — ID 013 (`ALL_POSTS.txt Memory of Mankind Edition`) and ID 015 (`vojtamaur.cz offline 5`) — with the [International Time Capsule Society](https://www.itcsoc.org/) was attempted; the first registration was submitted on 2026-09-07 and the second on 2026-09-21; as of 2026-09-27, neither had appeared in the public registry, and a follow-up email sent on 2026-09-18 had received no response
-- publication of text-based archival exports of `vojtamaur.cz` on [Tumblr](https://www.tumblr.com/) was attempted using its official API; smaller exports were successfully published, but the account was subsequently terminated, possibly due to automated spam detection triggered by unusually large posts and repeated API requests; an appeal was submitted to Tumblr Trust & Safety on 2026-09-27, and the approach was suspended pending review
+- publication of text-based archival exports of `vojtamaur.cz` on [Tumblr](https://www.tumblr.com/) was attempted using its official API; smaller exports were successfully published, but the account was subsequently suspended for alleged spam-related violations of Tumblr's User Guidelines; an appeal was submitted on 2026-09-27, but Tumblr Trust & Safety rejected it on 2026-10-20, stating that the blog would not be restored and warning that creating new accounts with the same intent or content could result in immediate termination; the approach was therefore abandoned
 - a BitTorrent edition of `vojtamaur.cz` was evaluated as a way to reconstruct the complete web build directly from existing public hosting mirrors using HTTP web seeds, without storing an additional ZIP archive; the approach was abandoned because the BEP 19 multi-file web seeding specification requires compatible URL directory structures, while individual hosting providers may serve structurally or byte-wise different builds. Supporting these differences would require provider-specific configuration or changes to the existing deployment workflows. Furthermore, continuously updated mirrors cannot guarantee the availability of immutable historical torrent releases. The resulting implementation and maintenance overhead was considered disproportionate to the expected archival benefit. Conventional P2P torrent distribution remains technically possible but was not pursued as part of this approach.
 - inclusion of `vojtamaur.cz` in the [Lunar Codex](https://www.lunarcodex.com/) was considered as a potential form of lunar archival preservation; however, the project closed submissions in August 2025 and has stated that it does not plan to reopen them. The approach was therefore abandoned indefinitely without contacting the organization, although its submission status may be reassessed in the future
 - experimental preservation of `vojtamaur.cz` by transmitting its Morse code exports as HTTP requests (e.g. `/dot` and `/dash`), potentially reconstructable from publicly archived server access logs, was considered using the [CDSL dataset](https://github.com/cdsl-research/website-access-logs-public). Following the laboratory's closure, publication of new logs ceased. On 2026-10-13, former member Tomoyuki Koyama was contacted and kindly offered to continue collecting logs if needed, although future public releases remain unconfirmed. The experiment remains unimplemented.
@@ -3587,7 +3637,7 @@ The following approaches were tested or seriously evaluated but were ultimately 
 
 The following approaches were considered suitable for the project's long-term preservation and distribution objectives, and in some cases implementation was attempted, but their completion is currently prevented by external technical, administrative, or operational limitations. Unlike abandoned approaches, these options remain of interest and may be revisited if the relevant circumstances change.
 
-- publication of the Czech and English EPUB editions of `vojtamaur.cz`, along with a single bilingual (Czech–English) PDF edition of the Metaweb Article, through [Library Genesis](https://libgen.li/) was attempted as an additional digital library distribution channel, potentially enabling subsequent indexing and replication through [Anna's Archive](https://annas-archive.gl/). However, the available upload interfaces were inaccessible or returned server errors (including HTTP 502 and 503) across multiple domains as of 2026-10-14. Community reports indicate intermittent upload-related problems throughout 2026, suggesting an ongoing infrastructure issue rather than a confirmed permanent discontinuation of the service. The approach remains pending until a functional upload mechanism can be verified.
+- currently none
 
 ---
 

@@ -97,11 +97,28 @@ def approval_gate(api, receipt, positive_code, negative_code, recovered_path):
     if failures:
         return {'status':'DEFERRED','reason':'OBSERVED_PROTOTYPE_FAILURE','failures':failures,
                 'next_action':'Record REVISE for the failed required probe. Other working pieces do not erase this execution result; fix the test and re-execute before certifying it.'}
+    from .format_operation import validate as validate_format
+    artifacts={a['path']:a for a in receipt['artifacts']}
+    native=validate_format(api.idea(receipt['idea_id']),receipt['prototype_plan']['input'],
+        receipt['prototype_plan']['output_paths'],lambda path:artifact_bytes(api,receipt,artifacts[path]))
+    if native and not native['passed']:return native
     script=next(a for a in receipt['artifacts'] if a['path']==receipt['prototype_plan']['script']['path'])
     source=artifact_bytes(api,receipt,script).decode('utf-8')
-    if not code_case(source,positive_code) or not code_case(source,negative_code,True):
+    if api.engine.state['config'].get('coding_backend')=='sdk_shell':
+        # Literal provenance is checkable. A Python AST pattern is not a semantic
+        # test oracle and rejects valid subprocess/helper/non-Python tests.
+        execution=next((e for e in api.engine.state.get('experiments',[]) if e.get('experiment_id')==receipt['experiment_id']),{})
+        paths={receipt['prototype_plan']['script']['path'],*[a['path'] for a in execution.get('coding_sources',[])]}
+        sources=[artifact_bytes(api,receipt,a).decode('utf-8',errors='replace').replace('\r\n','\n') for a in receipt['artifacts']
+                 if a['path'] in paths and not a.get('binary')]
+        cases=all(isinstance(quote,str) and 5<=len(quote.strip())<=8000
+                  and any(quote.strip().replace('\r\n','\n') in code for code in sources) for quote in (positive_code,negative_code))
+    else:
+        cases=code_case(source,positive_code) and code_case(source,negative_code,True)
+    if not cases:
         return {'status':'DEFERRED','reason':'ACTUAL_TEST_CASE_EVIDENCE_REQUIRED',
-                'next_action':'Quote complete executable positive/negative cases from the captured script. Negative code must actually construct altered/invalid input and assert rejection/recovery. Labels, printing, type checks or body.startswith(first_chunk) are not a damaged-input test. If absent, record REVISE.'}
+                'script_path':receipt['prototype_plan']['script']['path'],
+                'next_action':'Select complete captured executable cases by numbered positive_refs/negative_refs. Negative code must construct altered/invalid input and assert rejection/recovery. Labels, printing, type checks or body.startswith(first_chunk) are not a damaged-input test. If absent, record REVISE.'}
     if recovered_path:
         recovered=next((f for f in facts['artifacts'] if f['path']==recovered_path),None)
         if not recovered or not recovered['matches_retained_input']:

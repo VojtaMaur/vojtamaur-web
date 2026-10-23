@@ -1,0 +1,33 @@
+{
+  "source_run": "20261021-092549-cd328641",
+  "argv": [
+    "sh",
+    "work/run.sh"
+  ],
+  "execution": {
+    "status": "COMPLETED",
+    "output": "{\"ok\": true, \"outdir\": \"generated\"}\nOK\n",
+    "returncode": 0,
+    "timed_out": false,
+    "output_truncated": false,
+    "container": "metaweb-swarm-5575a002f9a44d4d9110542648f25acb",
+    "cleanup_ok": true
+  },
+  "artifacts": [
+    {
+      "path": "work/generated/capsule.json",
+      "sha256": "112cbe85713a845c8b4263311176ccd0abc52785c6f5b59615a646a84bf37d26"
+    },
+    {
+      "path": "work/generated/recovered_excerpt.txt",
+      "sha256": "567ec9fda84a67a75a2962214096be095d1785ef402f87586e1457486bbfa770"
+    },
+    {
+      "path": "work/generated/verification.txt",
+      "sha256": "dc3b01720a8a44cfadcd75fedecd36f2fbfc003da2de00054c3978ffcbea7e4c"
+    }
+  ],
+  "source_unchanged": true,
+  "paid_api_calls": 0,
+  "limitation": "Direct driver execution only. This old script extracts source EPUB metadata/text; no RSS publication/recovery or audio encoding is proven."
+}

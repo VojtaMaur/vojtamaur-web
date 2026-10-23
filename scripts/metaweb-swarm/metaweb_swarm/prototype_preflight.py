@@ -55,7 +55,7 @@ def packet(state, agent, task):
         candidate=candidate,
         prototype_plan=saved,
         next_action='Read the complete frozen script with read_prototype_plan. Does its actual code exercise the selected mechanism operation and a real negative case? '
-            'A generic EPUB/ZIP integrity check does not test a federated profile, public retrieval or WebVTT. '
+            'Compare only THIS candidate and its selected scope. Never import another mechanism or require whole-system external behavior from a local component. '
             'READY permits only this exact local execution, never a prototype award. REVISE needs a concrete relevant change. '
             'A useful local subcomponent may be READY even without public deployment; require honest SUBCOMPONENT scope for external gaps.')
 

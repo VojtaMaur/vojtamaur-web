@@ -1,0 +1,86 @@
+{
+  "source_run": "20261022-090142-1d20ea49",
+  "idea_id": "IDEA-0004",
+  "implementation_origin": "Human completion of the swarm candidate; not an autonomous model success",
+  "original_checkpoint_unchanged": true,
+  "export": "vojtamaur-web-export-metaweb-2026-10-22_09-03-12-113251.epub",
+  "input_bytes": 1388309,
+  "input_sha256": "1f296bb3da9dc1f48dce3ddd2289cde36766226154f1e6f5eb4e1eded2832bac",
+  "cover_snapshot_path": "snapshot\\public\\images\\cestovani-cina-2017-nahled.jpg",
+  "cover_sha256": "5928ab1e8d442ea7c9dfb37108932c72d7524aba4960a57b7c9f7a23869c1330",
+  "carrier_bytes": 1419098,
+  "carrier_sha256": "4b513bd4b1dbf3f49282390a30341bbfc934ff70a55ca904fa0188530dbbed85",
+  "execution": {
+    "status": "COMPLETED",
+    "output": "{\"format\": \"metaweb-jpeg-archive-v1\", \"filename\": \"vojtamaur-web-export-metaweb-2026-10-22_09-03-12-113251.epub\", \"bytes\": 1388309, \"sha256\": \"1f296bb3da9dc1f48dce3ddd2289cde36766226154f1e6f5eb4e1eded2832bac\", \"chunks\": 24, \"chunk_bytes\": 60000, \"carrier_bytes\": 1419098}\n",
+    "returncode": 0,
+    "timed_out": false,
+    "output_truncated": false,
+    "container": "metaweb-swarm-3a0f0dc9383c4194951c8ec7bc3070d4",
+    "cleanup_ok": true
+  },
+  "clean_recovery_probe": {
+    "id": "REVIEW-PROBE-7588755cdd234a2a",
+    "test_id": "MANUAL-JPEG-RECOVERY-TEST",
+    "idea_id": "IDEA-0004",
+    "agent_id": "AGENT-006",
+    "code": "\"\"\"Independent stdlib reader for the documented MWJ1 JPEG prototype.\n\nNo encoder imports, original export, sidecar manifest or encoder globals.\nCLI: jpeg_extract_independent.py CARRIER.jpg OUTPUT_FILE\nChecks completeness and integrity, not authenticity of the self-contained hash.\n\"\"\"\nimport argparse\nimport hashlib\nimport io\nimport json\nimport os\nfrom pathlib import Path\nimport re\nimport tempfile\n\nLIMIT=64_000_000\n\n\ndef extract(carrier):\n    if not 4<=len(carrier)<=LIMIT or carrier[:2]!=b'\\xff\\xd8' or carrier[-2:]!=b'\\xff\\xd9':\n        raise ValueError('Not a bounded JPEG carrier')\n    stream=io.BytesIO(carrier);stream.seek(2)\n    pieces={};counts=set();has_frame=False;has_scan=False\n    while stream.tell()<len(carrier):\n        if stream.read(1)!=b'\\xff':raise ValueError('Invalid marker boundary')\n        code=stream.read(1)\n        while code==b'\\xff':code=stream.read(1)\n        if len(code)!=1 or code in (b'\\x00',b'\\xd8',b'\\xd9') or 0xD0<=code[0]<=0xD7:\n            raise ValueError('Unexpected JPEG marker')\n        if code==b'\\x01':continue\n        length_bytes=stream.read(2)\n        if len(length_bytes)!=2:raise ValueError('Missing segment length')\n        length=int.from_bytes(length_bytes,'big')\n        if length<2:raise ValueError('Invalid segment length')\n        block=stream.read(length-2)\n        if len(block)!=length-2:raise ValueError('Truncated segment')\n        if code[0] in (0xC0,0xC1,0xC2,0xC3,0xC5,0xC6,0xC7,0xC9,0xCA,0xCB,0xCD,0xCE,0xCF):has_frame=True\n        if code==b'\\xda':has_scan=True;break\n        if code!=b'\\xed' or not block.startswith(b'Photoshop 3.0\\x00'):continue\n        cursor=14\n        while cursor<len(block):\n            if block[cursor:cursor+4]!=b'8BIM' or cursor+7>len(block):raise ValueError('Malformed resource block')\n            ident=int.from_bytes(block[cursor+4:cursor+6],'big');cursor+=6\n            namelen=block[cursor];name=block[cursor+1:cursor+1+namelen]\n            if len(name)!=namelen:raise ValueError('Truncated resource name')\n            cursor+=(namelen+2)//2*2\n            if cursor+4>len(block):raise ValueError('Missing resource size')\n            size=int.from_bytes(block[cursor:cursor+4],'big');cursor+=4\n            body=block[cursor:cursor+size]\n            if len(body)!=size:raise ValueError('Truncated resource data')\n            cursor+=size+(size%2)\n            if cursor>len(block):raise ValueError('Missing resource padding')\n            if ident!=0xBEEF or name!=b'Metaweb archive v1':continue\n            if len(body)<12 or body[:4]!=b'MWJ1':raise ValueError('Invalid archive frame')\n            index=int.from_bytes(body[4:8],'big');count=int.from_bytes(body[8:12],'big')\n            if not 1<=count<=1100 or not 0<=index<=count or index in pieces:raise ValueError('Invalid or duplicate archive sequence')\n            counts.add(count);pieces[index]=body[12:]\n    if not has_frame or not has_scan:raise ValueError('Carrier has no image frame/scan')\n    if len(counts)!=1 or 0 not in pieces:raise ValueError('Archive manifest absent/inconsistent')\n    count=counts.pop()\n    if set(pieces)!=set(range(count+1)):raise ValueError('Archive chunk missing')\n    try:manifest=json.loads(pieces.pop(0).decode('utf-8'))\n    except (ValueError,UnicodeError) as error:raise ValueError('Invalid embedded manifest') from error\n    if not isinstance(manifest,dict):raise ValueError('Manifest must be an object')\n    if (manifest.get('format')!='metaweb-jpeg-archive-v1' or type(manifest.get('bytes')) is not int\n            or not 1<=manifest['bytes']<=LIMIT or type(manifest.get('chunks')) is not int\n            or manifest['chunks']!=count or type(manifest.get('chunk_bytes')) is not int\n            or manifest['chunk_bytes']!=60000 or (manifest['bytes']+59999)//60000!=count\n            or not isinstance(manifest.get('sha256'),str) or not re.fullmatch('[0-9a-f]{64}',manifest['sha256'])):\n        raise ValueError('Manifest fields inconsistent')\n    name=manifest.get('filename')\n    if not isinstance(name,str) or not 1<=len(name.encode('utf-8'))<=255 or '/' in name or '\\\\' in name or '\\x00' in name:\n        raise ValueError('Invalid original basename')\n    for index,body in pieces.items():\n        expected=60000 if index<count else manifest['bytes']-(count-1)*60000\n        if len(body)!=expected:raise ValueError('Chunk size mismatch')\n    result=b''.join(pieces[index] for index in range(1,count+1))\n    if len(result)!=manifest['bytes'] or hashlib.sha256(result).hexdigest()!=manifest['sha256']:\n        raise ValueError('Recovered payload hash/length mismatch')\n    return result,manifest\n\n\ndef main():\n    parser=argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('carrier');parser.add_argument('output');args=parser.parse_args()\n    temporary=None\n    try:\n        source=Path(args.carrier);target=Path(args.output)\n        if source.resolve()==target.resolve():raise ValueError('Do not overwrite the carrier')\n        if source.stat().st_size>LIMIT:raise ValueError('Carrier exceeds bounded prototype capacity')\n        payload,manifest=extract(source.read_bytes())\n        target.parent.mkdir(parents=True,exist_ok=True)\n        with tempfile.NamedTemporaryFile(dir=target.parent,delete=False) as stream:\n            temporary=stream.name;stream.write(payload)\n        os.replace(temporary,target);temporary=None\n        print(json.dumps(manifest,ensure_ascii=False))\n    except (ValueError,OSError) as error:parser.exit(2,str(error)+'\\n')\n    finally:\n        if temporary:Path(temporary).unlink(missing_ok=True)\n\n\n\nassert not Path('inputs').exists(), 'Original source must not be staged'\nassert not Path('jpeg_archive.py').exists(), 'Author encoder must not be staged'\nassert not Path('manifest.json').exists(), 'Sidecar manifest must not be staged'\nassert not Path('.packages').exists(), 'Author packages must not be staged'\nimage=Path('prototype/metaweb-export.jpg').read_bytes()\nrestored,manifest=extract(image)\nassert len(restored)==1388309\nassert hashlib.sha256(restored).hexdigest()=='1f296bb3da9dc1f48dce3ddd2289cde36766226154f1e6f5eb4e1eded2832bac'\nassert manifest['filename']=='vojtamaur-web-export-metaweb-2026-10-22_09-03-12-113251.epub'\nPath('recovered.epub').write_bytes(restored)\n# Mutate actual embedded export data while preserving JPEG metadata lengths.\nblocks=[];offset=2\nwhile image[offset:offset+2]!=b'\\xff\\xda':\n    length=int.from_bytes(image[offset+2:offset+4],'big');end=offset+2+length\n    if image[offset:offset+2]==b'\\xff\\xed' and b'MWJ1' in image[offset:end]: blocks.append((offset,end))\n    offset=end\nstart,end=blocks[-1]\nbad=bytearray(image);bad[end-4]^=1\nfor label,changed in [('payload-byte',bytes(bad)),('missing-chunk',image[:start]+image[end:]),\n        ('duplicate-chunk',image[:end]+image[start:end]+image[end:]),('truncated',image[:-1])]:\n    try:extract(changed)\n    except ValueError:pass\n    else:raise AssertionError('Independent consumer accepted '+label)\n# Byte-preserving copy works. Removing archive metadata predictably loses data.\nPath('copied.jpg').write_bytes(image)\nassert extract(Path('copied.jpg').read_bytes())[0]==restored\nstripped=image\nfor start,end in reversed(blocks):stripped=stripped[:start]+stripped[end:]\nPath('stripped.jpg').write_bytes(stripped)\ntry:extract(stripped)\nexcept ValueError:pass\nelse:raise AssertionError('Stripped carrier unexpectedly contained the export')\nprint(json.dumps({'passed':True,'recovered_bytes':len(restored),'sha256':hashlib.sha256(restored).hexdigest(),\n    'chunks':manifest['chunks'],'checks':['carrier-only clean copy','independent decoder','exact retained EPUB bytes',\n    'payload alteration rejected','missing/duplicate chunk rejected','truncated image rejected',\n    'byte-preserving copy','metadata stripping explicitly loses archive']}))\n",
+    "code_sha256": "b57d5431005368de8c10cb2457cbe9a2001656c9c8637ca7454d37062c836231",
+    "staged_bytes": 1426867,
+    "workspace": "agents/AGENT-006/review-probes/REVIEW-PROBE-7588755cdd234a2a",
+    "status": "COMPLETED",
+    "assertion_syntax": true,
+    "mode": "SPECIMENS_ONLY",
+    "specimen_paths": [
+      "prototype/metaweb-export.jpg"
+    ],
+    "staged_paths": [
+      "prototype/metaweb-export.jpg"
+    ],
+    "returncode": 0,
+    "output": "{\"passed\": true, \"recovered_bytes\": 1388309, \"sha256\": \"1f296bb3da9dc1f48dce3ddd2289cde36766226154f1e6f5eb4e1eded2832bac\", \"chunks\": 24, \"checks\": [\"carrier-only clean copy\", \"independent decoder\", \"exact retained EPUB bytes\", \"payload alteration rejected\", \"missing/duplicate chunk rejected\", \"truncated image rejected\", \"byte-preserving copy\", \"metadata stripping explicitly loses archive\"]}\n",
+    "implementation_unchanged": true,
+    "cleanup_ok": true,
+    "meaning": "Independent probe execution, not a scientific verdict. A zero exit alone does not prove relevance or a meaningful negative case."
+  },
+  "recovered_sha256": "1f296bb3da9dc1f48dce3ddd2289cde36766226154f1e6f5eb4e1eded2832bac",
+  "recovered_bytes": 1388309,
+  "paid_api_calls": 0,
+  "external_actions": 0,
+  "limitations": [
+    "Custom documented APP13 payload, no Adobe registration or Photoshop round-trip claim",
+    "Checksums detect corruption, not adversarial authenticity",
+    "Metadata stripping/re-encoding can destroy the archive",
+    "No public deposit, independent long-term custody or metadata survival through social media established"
+  ],
+  "native_image_validation": {
+    "reader": "Pillow",
+    "version": "12.3.0",
+    "cover": {
+      "format": "JPEG",
+      "size": [
+        691,
+        519
+      ],
+      "decoded_rgb_sha256": "c67ba88f4b6fa2a57aea98dd549956c974ca34c9eed26df37cffae4cc2b11f40"
+    },
+    "carrier": {
+      "format": "JPEG",
+      "size": [
+        691,
+        519
+      ],
+      "decoded_rgb_sha256": "c67ba88f4b6fa2a57aea98dd549956c974ca34c9eed26df37cffae4cc2b11f40"
+    },
+    "stripped": {
+      "format": "JPEG",
+      "size": [
+        691,
+        519
+      ],
+      "decoded_rgb_sha256": "c67ba88f4b6fa2a57aea98dd549956c974ca34c9eed26df37cffae4cc2b11f40"
+    },
+    "pixels_preserved": true,
+    "meaning": "Independent JPEG decoder fully loaded real pixels; APP13 data insertion did not alter the original image."
+  }
+}

@@ -1,20 +1,28 @@
 # Spuštění a modely
 
-Aktuální **0.6.18**: [postup prototypování a oprav](PROTOTYPE_WORKFLOW.md). Nový výzkum: `run-http.cmd`. Modely, granty a globální limity se nemění.
+Aktuální **0.8.4**: [povinné čtení bez smyčky](REVIEW_READ_QUEUE.md).
+Prostředí auditu od **0.8.3**:  [prostředí auditu, vlastní knihovny a scope](AUDIT_ENVIRONMENT.md).
+Hotový JPEG s celým EPUB lze [obnovit bez API a bez nového běhu](JPEG_ARCHIVE.md).
+Coding worker prošel live testem s nezávislým SUBCOMPONENT auditem. Pro nový
+výzkumný běh celého roje s levnými modely použij:
 
-Aktuální 0.6.17: [vstupy a fakta před verdiktem](PAYLOAD_AND_REVIEW_FACTS.md). Spuštění zůstává `run-http.cmd`.
+```cmd
+cd /d G:\vojtamaur-web\scripts\metaweb-swarm
+run-http.cmd
+```
 
-Aktuální běžný výzkum: `run-http.cmd`. Opravy po REVISE a dokončení reportu: [návod 0.6.16](REVISION_AND_REPORT.md). Níže jsou i historické diagnostické a focused postupy.
+API klíč musí být nastavený v témže CMD, Docker musí běžet. Použije se
+config.http.json: gpt-5.4-mini ve všech tierech, autonomous, Docker/PyPI, HTTP
+a schvalování externích zápisů. Příkaz vytvoří nový placený běh.
 
-**Obecný skutečný výzkum (0.6.9): `run-http.cmd` v CMD ve složce projektu.** Vytvoří nový běh s Dockerem/PyPI a HTTP s approval. [Předávání práce a pokračování](RESEARCH_HANDOFFS.md). `run-deposit-trial.cmd` níže je pouze cílený trial jednoho EPUB depositu.
+Pokračování použije skutečnou cestu vypsanou při startu:
 
-Aktualizace 0.6.1 opravuje návraty k registrovanému Zenodu/Figshare a dokumenty cizích poskytovatelů: [nové služby a scope](CARRIER_SCOPE.md). Další run spustíš stejným run-deposit-trial.cmd; je to fresh placený výzkum. Limity/grants se nenavyšují.
+```cmd
+G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "CESTA_BEHU" --backend openai
+```
 
-Pro vícekrokové API už je připravený [obecný realizátor a CMD bez dalšího modelového kola](DEPOSIT_EXECUTOR.md). Než pošleme skutečný export, ověříme přijetí formátu, podmínky a případně přidělíme vlastní swarm účet/klíč. Stávající run/granty/limity se instalací nemění.
-
-Pro nový **skutečný výzkum**: spusť `run-deposit-trial.cmd` v CMD ve složce projektu s nastaveným OPENAI_API_KEY. Vytvoří nový izolovaný běh pro připravený EPUB, konkrétní nezávislý audit a případné schválení uploadu. [Návod](DEPOSIT_TRIAL.md), [vlastní zadání a nový focused režim](FOCUSED_TASKS.md).
-
-Docker/PyPI i lokální a veřejný HTTP round-trip už byly ověřeny. Níže uvedené smoke spouštěče jsou diagnostika při změně prostředí, ne povinný krok před každým výzkumem.
+Níže zůstávají obecné a historické diagnostické postupy; jejich opakování před
+každým výzkumem není potřeba. [Programovací backend](CODING_WORKER.md).
 
 Všechny následující soubory patří projektu `scripts/metaweb-swarm/`. Žádný spouštěč
 nepotřebuje adresář chatu ani dočasné `outputs/` z Codexu.

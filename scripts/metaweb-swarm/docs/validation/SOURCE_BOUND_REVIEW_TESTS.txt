@@ -1,0 +1,2 @@
+0.7.11: 64 focused and related checks passed (72.252s). Includes live SDK schema, source-bound repair provenance, rejection of prose as source, immutable facts/read requirements, queue limits, legacy direct API and valid SDK REVISE -> worker handoff.
+Actual round-4 review payload replayed through the real SDK tool in a separate copy after fresh source/output/fact reads. Recorded negative_code was bound to captured source SHA; no duplicate defect field required. Original checkpoint, limits and round counters unchanged. No paid API requests or prototype certification.

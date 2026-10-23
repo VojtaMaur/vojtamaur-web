@@ -1,0 +1,12 @@
+{
+  "source_run": "20261022-051417-8cb93cc5",
+  "test_id": "TEST-989e594a7b8a4cb9",
+  "legacy_unresolved_review_reopened": true,
+  "fabricated_code_blocked_without_verdict": true,
+  "actual_grounded_round1_revise_reaches_worker": true,
+  "worker_status": "PENDING",
+  "limits_and_round_counters_unchanged": true,
+  "checkpoint_unchanged": true,
+  "paid_api_calls": 0,
+  "meaning": "Actual captured review payloads and hash-bound artifacts replayed in a disposable copy. No prototype repair or certification and no original run mutation."
+}

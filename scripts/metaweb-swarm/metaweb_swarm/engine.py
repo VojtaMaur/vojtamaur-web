@@ -64,6 +64,11 @@ def initialize(project, runs_root, config, fetch_live=False, previous_reports=()
              "agents": agents, "ideas": [], "approvals": [], "spawn_decisions": [], "backend": None,
              "usage": {key: 0 for key in USAGE_KEYS}, "usage_estimated_usd": None,
              "steps": 0, "active_seconds": 0.0, "software_version": "0.6.17"}
+    from . import __version__
+    state['software_version']=__version__
+    if config.get('coding_acceptance'):
+        from .coding_acceptance import seed
+        seed(state)
     store = Store(run_dir)
     try:
         store.commit(state, "run_initialized", {"project": str(project), "snapshot_hash": snapshot.get("sha256", snapshot.get("hash")), "fetch_live": fetch_live})
@@ -75,6 +80,8 @@ def initialize(project, runs_root, config, fetch_live=False, previous_reports=()
 
 def refresh_reports(store, state):
     from .reporting import generate_reports
+    from .prototype_review import enforce_scope
+    enforce_scope(state)
     state["audit_integrity"] = store.verify()
     store.export_events()
     generate_reports(store.run_dir, state)
@@ -164,10 +171,16 @@ class ToolAPI(HttpTools):
             return review(self, plan_id, verdict, reason, mechanism_operation, evidence_code)
 
     def review_prototype_test(self, test_id, verdict, reason, positive_code='', negative_code='', recovered_path='',
-                              observed_recovery='NOT_EVALUATED',review_basis='UNSPECIFIED'):
+                              observed_recovery='NOT_EVALUATED',review_basis='UNSPECIFIED',local_contract_status=None,
+                              required_local_change='',defect_code='',positive_refs=None,negative_refs=None):
         from .prototype_review import review
         with self.engine.mutex:
-            return review(self,test_id,verdict,reason,positive_code,negative_code,recovered_path,observed_recovery,review_basis)
+            return review(self,test_id,verdict,reason,positive_code,negative_code,recovered_path,observed_recovery,review_basis,
+                          local_contract_status,required_local_change,defect_code,positive_refs,negative_refs)
+
+    async def run_review_probe(self,test_id,code,specimen_paths=None):
+        from .review_probe import run
+        return await run(self,test_id,code,specimen_paths)
 
     def get_prototype_review_facts(self,test_id):
         from .review_facts import read
@@ -434,7 +447,13 @@ class ToolAPI(HttpTools):
         from .packages import PackageInstaller, requirements
         specs = requirements(packages)
         config = self.engine.state['config']
-        gate = self.implementation_allowed(idea_id)
+        review_dependency=self.agent.get('work_kind')=='REVIEW'
+        if review_dependency:
+            task=self.get_review_task()
+            if task.get('kind')!='PROTOTYPE_TEST' or task.get('stage')!='REVIEW_TEST' or idea_id not in ('',task.get('idea_id')):
+                return {'status':'DEFERRED','reason':'ASSIGNED_PROTOTYPE_REVIEW_REQUIRED'}
+            idea_id=task['idea_id']
+        gate = None if review_dependency else self.implementation_allowed(idea_id)
         if gate:
             return {'status': 'DEFERRED', 'reason': gate}
         if config['experiments'] != 'docker' or config.get('package_installation', 'disabled') != 'pypi':
@@ -447,7 +466,8 @@ class ToolAPI(HttpTools):
         if remaining < 1:
             return {'status': 'LIMIT_REACHED', 'reason': 'MAX_ACTIVE_SECONDS'}
         record = {'id': 'PACKAGES-' + uuid.uuid4().hex[:16], 'agent_id': self.agent['id'],
-                  'idea_id': idea_id, 'requirements': specs, 'status': 'RUNNING', 'started_at': now()}
+                  'idea_id': idea_id, 'requirements': specs, 'status': 'RUNNING', 'started_at': now(),
+                  'purpose':'INDEPENDENT_REVIEW' if review_dependency else 'IMPLEMENTATION'}
         self.agent['package_install_attempts'] = self.agent.get('package_install_attempts', 0) + 1
         self.engine.state.setdefault('package_installations', []).append(record)
         self.event('package_install_started', record)
@@ -545,7 +565,7 @@ class ToolAPI(HttpTools):
         if verdict not in {"PASS", "REVISE", "REJECT"} or not isinstance(reason, str) or not 5 <= len(reason) <= 8000:
             raise ValueError("Critique needs PASS/REVISE/REJECT and a concrete reason")
         review_fields={}
-        from .research_tasks import enabled as research_enabled, revision as research_revision
+        from .research_tasks import enabled as research_enabled, evidence_revision as research_revision
         if research_enabled(self.engine.state):
             task = self.get_review_task()
             if (self.agent.get('work_kind') != 'REVIEW' or task.get('target_id') != idea_id
@@ -671,11 +691,16 @@ class ToolAPI(HttpTools):
         if scoped:
             record.update(prototype_review_required=True,prototype_plan=active_plan(self,idea_id),
                           meaning='Successful artifact-bound execution; mechanism coverage awaits independent review.')
+            if experiment.get('native_format_check'):
+                record['native_format_check']=experiment['native_format_check']
         if scoped:
             from .prototype_review import snapshot
             snapshot(self,record)
         self.engine.state.setdefault('tests',[]).append(record)
         idea.setdefault('test_receipts',[]).append(record)
+        if scoped:
+            from .prototype_review import enforce_scope
+            enforce_scope(self.engine.state)
         idea["prototype_tested"] = False if scoped else True
         if not scoped and idea.get('status') not in {'REJECTED', 'BLOCKED', 'COMPLETED'} and not idea.get('status_conflicts'):
             idea.update(status='PROTOTYPED', best_evidenced_status='PROTOTYPED', blocker='')
@@ -1021,7 +1046,24 @@ class ToolAPI(HttpTools):
                     idea['mechanism_scope'] = existing.get('mechanism_scope', '')
                     idea['provider'] = existing.get('provider', idea['provider'])
             if existing:
+                submitted_claim=dict(idea)
                 idea = merge_submission(existing, idea, self.agent["id"], now(), claimed=data)
+                from .research_tasks import revision
+                intent_fields=('mechanism','provider','mechanism_key','mechanism_scope','payment',
+                               'requires_ongoing_payments','validation_plan','proposed_change')
+                if requested_id:
+                    for k in (*intent_fields,'title','summary'):
+                        if k in submitted_claim: idea[k]=submitted_claim[k]
+                policy_same=all(idea.get(k)==existing.get(k) for k in ('payment','requires_ongoing_payments'))
+                if (not requested_id and policy_same) or (requested_id and all(idea.get(k)==existing.get(k) for k in intent_fields)):
+                    idea['implementation_revision']=revision(existing)
+                    # SAME contributes provenance/evidence, not a replacement job.
+                    # Its alternative wording remains available in submissions.
+                    if not requested_id:
+                        for k in (*(f for f in intent_fields if f not in {'payment','requires_ongoing_payments'}),'title','summary'):
+                            if k in existing: idea[k]=existing[k]
+                else:
+                    idea.pop('implementation_revision',None)
                 for field in ("critique", "implementation_status", "host_retained_deposit_draft", "host_retained_export_sha256"):
                     if field in existing:
                         idea[field] = existing[field]
@@ -1032,6 +1074,9 @@ class ToolAPI(HttpTools):
                 if idea.get("status") != "REJECTED" and any(r.get("host_verified") is True for r in idea.get("completion_receipts", [])):
                     idea.update(status="COMPLETED", implementation_status="DEPOSIT_VERIFIED", blocker="")
                 candidates[candidates.index(existing)] = idea
+                if scoped_tests(self.engine.state):
+                    from .prototype_review import enforce_scope
+                    enforce_scope(self.engine.state)
             else:
                 idea.update(id=f"IDEA-{len(candidates)+1:04d}", agent_id=self.agent["id"], created_at=now(), updated_at=now(), revisions=[])
                 idea = merge_submission(None, idea, self.agent["id"], now(), claimed=data)
@@ -1115,6 +1160,13 @@ class Engine:
         from .prototype_review import enforce_scope
         corrected=enforce_scope(self.state)
         if corrected: self.store.commit(self.state,'prototype_scope_reconciled',{'corrections':corrected,'meaning':'Execution and historical receipts retained; missing/stale scope review cannot certify a mechanism.'})
+        for probe in self.state.get('prototype_review_probes',[]):
+            if probe['status']=='STAGING':
+                probe.update(status='BLOCKED',cleanup_ok=True,reason='Interrupted probe preparation; reserved bytes retained, no container started')
+                self.store.commit(self.state,'prototype_review_probe_preparation_recovered',probe,probe['agent_id'])
+            if probe['status']=='RUNNING':
+                probe.update(status='UNKNOWN',cleanup_ok=False,reason='Interrupted probe; reconcile Docker cleanup before another command')
+                self.store.commit(self.state,'prototype_review_probe_recovered_unknown',probe,probe['agent_id'])
         for request in self.state.get('http_requests', []):
             if request['status'] == 'RESERVED':
                 request.update(status='UNKNOWN', reason='Interrupted HTTP attempt; reconcile before another mutation')
@@ -1145,7 +1197,8 @@ class Engine:
         self.state["backend"] = backend_name
         import platform
         from importlib.metadata import PackageNotFoundError, version
-        versions = {"python": platform.python_version(), "platform": platform.platform(), "metaweb_swarm": "0.6.17"}
+        from . import __version__
+        versions = {"python": platform.python_version(), "platform": platform.platform(), "metaweb_swarm": __version__}
         for package in ("openai-agents", "openai", "pydantic"):
             try:
                 versions[package] = version(package)
@@ -1162,6 +1215,21 @@ class Engine:
         return self.active_base_seconds + time.monotonic() - self.active_start_time
 
     def prompt(self, agent):
+        from .research_tasks import enabled as research_enabled
+        if research_enabled(self.state) and agent.get('work_kind')=='SYNTHESIS':
+            from .report_packet import build
+            return ('Your sole assignment is the final CURRENT RUN report below. This freshly generated host packet '
+                    'supersedes historical agent summaries and earlier reports. Cover every current IDEA, actual tests, '
+                    'independent verdicts, acceptance results and remaining blockers. SUBCOMPONENT is useful local '
+                    'coverage, not a whole export recovery or external deposit. Use read_report_detail only for needed '
+                    'evidence or paged IDs. Call record_research_report(idea_ids, conclusion, limitations), then finish '
+                    'your role. Do not conduct discovery, code, repeat tests or wait for every idea to be completed. '
+                    'The host binds this packet revision at dispatch; get_research_task can refresh it if needed.\n'
+                    +canonical(build(self.state)))
+        from .coding_worker import enabled as coding_enabled
+        if coding_enabled(self.state,agent):
+            task=agent.get('research_assignment',{})
+            return 'SDK coding worker: current private workspace and fixed task '+canonical(task)+'. Full task/input are prepared by the coding backend. No legacy planning forms or pre-execution role approvals.'
         if self.state["config"].get("http_smoke_test"):
             from .http_smoke import prompt
             return prompt(self.state, agent)
@@ -1320,7 +1388,8 @@ class Engine:
                 if item.is_file() and not item.is_symlink():
                     workspace.write_file("context/" + item.name, item.read_text(encoding="utf-8"))
             if agent.get('work_kind')=='LOCAL':
-                for original,destination in [('docs/PROTOTYPING_GUIDE.md','context/PROTOTYPING_GUIDE.md'),('examples/rs_recovery.py','context/recipes/rs_recovery.py')]:
+                guide='docs/CODING_WORKER.md' if config.get('coding_backend')=='sdk_shell' else 'docs/PROTOTYPING_GUIDE.md'
+                for original,destination in [(guide,'context/PROTOTYPING_GUIDE.md'),('examples/rs_recovery.py','context/recipes/rs_recovery.py')]:
                     reference=PACKAGE_ROOT/original
                     if reference.is_file():workspace.write_file(destination,reference.read_text(encoding='utf-8'))
             workspace.write_file("context/SWARM_STATE.json", json.dumps({"discovery_leads": self.state.get("discovery_leads", []), "ideas": self.state["ideas"], "agents": [{k:v for k,v in a.items() if k != "history"} for a in self.state["agents"]]}, ensure_ascii=False, indent=2))
@@ -1487,6 +1556,8 @@ class Engine:
 
     async def _run_once(self):
         self.console_enabled = True
+        from .review_resolution import recover as recover_review_resolution
+        recover_review_resolution(self)
         startup(self.state)
         if self.state.get("active_batch_started_at"):
             started = datetime.fromisoformat(self.state["active_batch_started_at"])
@@ -1525,6 +1596,8 @@ class Engine:
                 hold(self)
                 from .prototype_preflight import hold as hold_preflight
                 hold_preflight(self)
+                from .prototype_queue import synchronize as synchronize_prototypes
+                synchronize_prototypes(self)
                 from .deposit_execution import resume as resume_deposit_sequences
                 await resume_deposit_sequences(self)
                 pending = [a for a in self.state["agents"] if a["status"] == "PENDING"]
@@ -1559,7 +1632,10 @@ class Engine:
                         candidate.update(status="LIMIT_REACHED", reason_for_stopping="MAX_AGENT_ROUNDS before scheduling")
                 pending = [a for a in pending if a["status"] == "PENDING"]
                 if not pending:
-                    if any(a["status"] == "LIMIT_REACHED" for a in self.state["agents"]):
+                    from .prototype_queue import assessment_blocked
+                    if assessment_blocked(self.state):
+                        self.state.update(status="BLOCKED",stop_reason="PROTOTYPE_REVIEW_BLOCKED: independent assessment unresolved; work retained")
+                    elif any(a["status"] == "LIMIT_REACHED" for a in self.state["agents"]):
                         self.state.update(status="LIMIT_REACHED", stop_reason="At least one agent exhausted its limits; remaining leads retained")
                     elif any(a["status"] == "BLOCKED" for a in self.state["agents"]) or (self.state["config"].get("run_mode", "supervised") != "supervised" and (any(a["status"] == "PENDING" for a in self.state["approvals"]) or any(i["status"] == "BLOCKED" for i in self.state["ideas"]))):
                         self.state.update(status="BLOCKED", stop_reason="Available research finished; unresolved human actions or technical blockers remain")
@@ -1569,6 +1645,16 @@ class Engine:
                 steps_left = self.state["config"]["max_steps"] - self.state["steps"]
                 from .review_dispatch import schedule
                 batch = schedule(self.state,pending, steps_left, self.state["config"]["max_concurrent_agents"])
+                if not batch:
+                    from .prototype_queue import assessment_blocked
+                    blocked=assessment_blocked(self.state)
+                    self.state.update(status='BLOCKED' if blocked else 'LIMIT_REACHED',
+                        stop_reason='PROTOTYPE_REVIEW_BLOCKED: independent assessment unresolved; work retained' if blocked else
+                                    ('PROTOTYPE_CLOSURE_BUDGET_REQUIRED: work retained; no unauditable new prototype dispatched' if
+                         any(a.get('prototype_queue_hold') for a in self.state['agents']) else
+                         'RESEARCH_CLOSURE_RESERVE: remaining capacity cannot close new research plus final report'))
+                    self.store.commit(self.state,'prototype_dispatch_budget_stop',{'steps_left':steps_left})
+                    break
                 self.store.commit(self.state, "scheduler_selection", {"agents": [a["id"] for a in batch], "steps_left": steps_left, "rule": "fair quanta; protect downstream roles"})
                 print("Round: " + "; ".join(f"{a['id']} {short(a['role'])} [{a.get('model_tier')}] {a['rounds']+1}/{round_allowance(self.state['config'], a)}" for a in batch), flush=True)
                 self.state["active_batch_started_at"] = now()

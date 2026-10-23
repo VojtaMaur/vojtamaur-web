@@ -1,3 +1,204 @@
+## 0.8.4 — 2026-10-23
+
+Auditor v kole 11 runu `20261022-105239-d403be02` spotřeboval všech 12 požadavků
+opakovaným čtením souborů a přeskočil `prototype/rss_pointer.py`. SDK nyní váže
+povinné čtení na přesný další chybějící rozsah přidělené evidence. Odpověď uvádí
+skutečně vrácenou cestu a rozsah; přesměrování je auditováno. Po povinné frontě
+lze dál volně číst. Oprava nemění verdict, smlouvu, oprávnění ani limity.
+38 souvisejících testů prošlo, včetně skutečného Agents SDK s fake providerem
+opakujícím stejné čtení. Replay aktuálního checkpointu v kopii potřeboval jedno
+čtení k dokončení fronty a zpřístupnil facts -> probe/install. Bez placeného API,
+Dockeru, externí akce nebo změny původního checkpointu.
+[Podrobnosti](docs/REVIEW_READ_QUEUE.md).
+
+## 0.8.3 — 2026-10-22
+
+Opraveny importy helperů z `prototype/`, přidány vlastní PyPI závislosti auditora
+do samostatných `.review-packages` a hostový runtime rozlišující setup/import,
+assertion a neočekávanou runtime chybu. Setup chyba neuděluje verdict ani repair
+coderovi; opakovaná stejná chyba zablokuje audit. Čistý režim odmítá statické
+autorovy importy před Dockerem a nečerpá execution slot. Scope instrukce se
+vztahují k uložené operaci/assertions, včetně legitimního metadata SUBCOMPONENT.
+
+Na kopii runu `20261022-105239-d403be02` prošel přesně původní RSS probe beze
+změny kódu, JPEG autor-import byl správně odmítnut a nepodložené REVISE neuloženo.
+Skutečná instalace Pillow auditorovi a nezávislá JPEG sonda v čistém Dockeru
+prošly; autorovy knihovny/kód/originál byly nepřístupné. JPEG zůstává metadata
+seed s privátním pointerem, nikoli záloha EPUB. Původní checkpoint beze změny;
+placená API a externí akce 0. [Podrobnosti a meze](docs/AUDIT_ENVIRONMENT.md).
+
+## 0.8.2 — 2026-10-22
+
+Odstraněn regex posuzující negativní test podle negace ve větě. Přidány obecné
+požadavky na skutečná zdrojová data/nativní formát a specimen-only Docker review
+bez originálu, autorova kódu a vedlejšího manifestu. Nové FULL_MECHANISM smlouvy
+s nezávislými sondami vyžadují čistou recovery sondu; žádný verdict se nedovozuje
+z pouhé izolace nebo exit code. Všechny rozpočty a externí approval zůstávají.
+
+Dokončen skutečný JPEG s 1 388 309 bajty zachyceného EPUB. Celý soubor byl
+obnoven nezávislou stdlib čtečkou v čistém Dockeru ze samotného JPEG a porovnán
+SHA256 i délkou. Pillow 12.3.0 plně dekódoval 691×519 pixelů a potvrdil beze změny
+RGB obsah původní fotografie. Negativní případy payload, chybějící/duplicitní
+chunk a truncation byly odmítnuty. Metadata stripping ztrácí archiv a je omezením.
+Jde o lidsky dokončený lokální prototyp, žádný externí deposit nebo autonomní
+úspěch starého runu. Původní checkpoint beze změny; placené API a externí akce 0.
+[Výsledek a meze](docs/PORTABLE_RECOVERY.md) · [Příkazy a formát](docs/JPEG_ARCHIVE.md).
+
+## 0.8.1 — 2026-10-22
+
+SAME evidence drží původní implementační revizi; explicitní změna operace ji
+invaliduje. Živé SDK review používá hashově vázané očíslované rozsahy místo
+ručních citací. RSS dostává nativní kontrakt před kódováním i kontrolu skutečného
+XML po provedení; obecný JSON/hash nestačí. Zastaralé úspěchy se přepočítávají
+podle posledního aktuálního testu/auditu. Source-only assertions nejsou behaviorální
+sonda a chybně napsanou sondu může auditor opravit v existujícím rozpočtu.
+
+Skutečný run `20261022-080541-385bea51` přehrán v kopii: jeho JSON odmítnut,
+source-only sonda odmítnuta, nesouvislé zdrojové rozsahy rozřešeny a starý component
+flag zrušen. Samostatná referenční implementace se skutečným vstupem prošla dvěma
+networkless Docker provedeními včetně nezávislého RSS parseru a negativních případů.
+Původní checkpoint beze změny, placené API a externí zápisy 0. Reference je lidsky
+napsaná: nejde o tvrzení, že další autonomní run uspěje.
+[Chování, omezení a spuštění](docs/OPERATION_EVIDENCE.md).
+
+## 0.8.0 — 2026-10-22
+
+Oddělen společný helper od mechanism coverage (HELPER_ONLY), totožný driver se
+necapturuje znovu pro další IDEA. Run-local Open Library pointer aliasy se slučují
+se zachováním provenance. Výzkumné HTTP/research profily vyžadují vlastní omezenou
+Docker sondu auditora před pozitivní coverage. Skutečný chybný readback test v kopii
+selhal a původní přehnané schválení bylo odmítnuto; původní run a API beze změn.
+[Chování, bezpečnostní model, ověření a další spuštění](docs/MECHANISM_QUALITY.md).
+
+## 0.7.11 — 2026-10-22
+
+Odstraněno duplicitní defect_code z živého SDK review. Host váže repair evidence
+na již dodanou skutečnou negative_code/positive_code citaci a ukládá její cestu a
+SHA. Přesný poslední posudek přehrán přes SDK v kopii: REVISE dorazilo coderovi,
+původní checkpoint a rozpočty beze změny, bez placeného API nebo certifikace.
+[Diagnóza a pokračování](docs/SOURCE_BOUND_REPAIR.md).
+
+## 0.7.10 — 2026-10-22
+
+Opraven také skutečný vstup auditora: souhrn nerecykluje staré modelové code quotes
+jako důkazy a nový task kontext musí znovu přečíst zachycený script/výstupy/facts.
+Původní vlastní čtení z archivované historie nestačí. Ověřen skutečný Engine.prompt
+a live checkpoint v kopii, bez placeného API či změny původního běhu.
+[Diagnóza a pokračování](docs/FRESH_REVIEW_CONTEXT.md).
+
+## 0.7.9 — 2026-10-22
+
+Host doplňuje deterministická fakta o výstupech; auditor už neopisuje hashový
+verdikt a cesty. Neplatné SDK posudky nevytvářejí REVISE ani coding repair.
+Starý nevyřešený posudek jde znovu posoudit se zachováním auditní historie a
+rozpočtů. Technický blok není hlášen jako chybějící budget. Skutečné zachycené
+payloady přehrány v kopii bez placeného volání nebo změny původního checkpointu.
+[Diagnóza a pokračování](docs/HOST_REVIEW_EVIDENCE.md).
+
+## 0.7.8 — 2026-10-22
+
+Odstraněn duplicitní local_contract_status ze SDK nástroje. Zůstává jediný
+verdikt, konkrétní lokální oprava, zdrojová citace a kontroly skutečných testů.
+Nový kontext se při pokračování archivuje/obnoví; zablokovaný audit se neoznačuje
+jako vyčerpaný globální rozpočet. Prošlo 11 kontraktových kontrol, 54 regresí
+a 11 queue testů. Přesný vadný live payload byl v kopii přijat jako REVISE a
+předán coderovi; žádné placené volání nebo změna původního checkpointu.
+[Oprava a příkazy pro pokračování](docs/SINGLE_VERDICT.md).
+
+## 0.7.7 — 2026-10-22
+
+Coding a audit sdílejí uloženou lokální operaci se stejnými assertions/rozsahem.
+REVISE pro nový kontrakt potřebuje konkrétní lokální opravu a citaci skutečného
+kódu; chybějící publikování samo nebrání SUBCOMPONENT. Po třech opravách se
+nedokončená IDEA uchová místo pokračování nekonečné série. Přidání README/JSON
+už neobchází kontrolu nezměněné implementace. 75 cílených kontrol prošlo včetně
+10 nových a skutečného SDK toolu s testovacími odpověďmi. Read-only replay
+živého duplicitního testu byl odmítnut; žádná placená inference nebo přehodnocení
+původního runu. [Chování, omezení a spuštění](docs/LOCAL_CONTRACT.md).
+
+## 0.7.6 — 2026-10-21
+
+Podporováno přímé spuštění uloženého shell driveru, konkrétní submission_contract
+a plný feedback s expected_argv. Třetí stejná chyba odevzdání zastaví worker;
+vyčerpaný command budget zabrání dalším provider požadavkům i placeným dispatchům.
+Osm nových testů a 64 regresí prošlo. Skutečný Docker replay původního run.sh
+v nové kopii: exit=0, tři výstupy, původní run nezměněn, žádné API náklady.
+Toto není potvrzení věcné funkčnosti podcast/audio mechanismu.
+[Podrobnosti a spuštění](docs/CODING_SUBMISSION.md).
+
+## 0.7.5 — 2026-10-21
+
+Jedna fronta SDK prototypů: capture čeká na audit, REVISE jde na opravu a nový
+audit před dalším kandidátem. Poslední dvě auditní kola a minimální globální
+uzavírací rezerva se nevyužívají pro další discovery. Limity se nezvyšují.
+10 nových testů, 56 regresí a 14 scheduling/reporter kontrol prošlo; read-only
+replay posledního checkpointu zadržel pět neověřených výsledků. Žádná placená
+inference, změna live runu nebo nová certifikace artefaktů.
+[Chování, omezení a spuštění](docs/PROTOTYPE_QUEUE.md).
+
+## 0.7.4 — 2026-10-21
+
+Opraveno odevzdání virtuálních /workspace/ cest ze SDK Shell. Neplatná data
+dostanou okamžitý feedback; confinement a acceptance zůstávají zachované.
+Pět nových offline testů prošlo a skutečné vadné odevzdání bylo normalizováno
+bez změny live runu či API volání. PDF návrh stále není funkční embedded recovery
+prototyp. [Kontrola běhu a omezení](docs/RUN_REVIEW_20261021_074035.md).
+
+## 0.7.3 — 2026-10-21
+
+Reporter dostává přímo aktuální bounded packet, jeho konverzace se obnovuje podle
+revize evidence a stará syntéza se označuje jako neaktuální. Revize zahrnuje coding
+acceptance, development příkazy, balíčky, reviews a externí výsledky, nikoli vlastní
+reporter aktivitu. Prošlo 66 cílených kontrol a read-only replay live checkpointu;
+žádné placené volání nebo změna původního runu. Nový běžný běh: run-http.cmd,
+všechny modely gpt-5.4-mini a externí zápisy s approval. Konfigurace se nemění.
+[Podrobnosti](docs/REPORTER_REFRESH.md).
+
+## 0.7.2 — 2026-10-21
+
+40 cílených testů: okamžitý host feedback ve stejném SDK kole, sdílený turn limit,
+uchování feedbacku při yield, odstranění starých READY výroků, dosavadní coding,
+legacy workflow a výzkumná předání. Vše prošlo.
+
+Skutečný Docker/SDK replay původního vadného live kódu byl nejprve odmítnut na
+stejném poli export. Skriptovaný model obdržel tuto chybu, opravil filename
+normalizaci a test; host acceptance pak prošla v jediném backend kroku. Původní
+run beze změn, žádné API náklady. Skriptované odpovědi nejsou live model úspěch.
+[Důkaz](docs/validation/CODING_FEEDBACK_PROOF.json),
+[testy](docs/validation/CODING_FEEDBACK_TESTS.txt).
+
+## 0.7.1 — 2026-10-20
+
+Live run 20261020-124142-61ef3319: poslední FAIL byl pouze rozdíl původního názvu
+exportu a hash-prefixed basename pracovní kopie. Dekodér z tohoto runu zůstal při
+odděleném Docker replayi beze změny; testu byla přizpůsobena pouze cesta vstupu.
+Host CBOR/text kontrola a nezávislá zkouška správných i podvržených vstupů prošly.
+Původní run beze změn; replay není zpětně přepsaný modelový úspěch.
+
+25 cílených regresí prošlo: názvová identita, přesný kontrakt, staré materializované
+cesty při resume, konkrétní mismatch diagnostic a dosavadní coding/payload fakta.
+[Důkaz](docs/validation/CODING_NAME_BINDING_PROOF.json),
+[kontroly](docs/validation/CODING_NAME_BINDING_TESTS.txt).
+
+## 0.7.0 — 2026-10-20
+
+SDK Runner/Shell používá networkless Docker. Ověřen skutečný PyPI download,
+instalace cbor2, chyba dekodéru a oprava v témže SDK cyklu, finální capture včetně
+helper kódu, nezávislé dekódování skutečných CBOR/text artefaktů a odmítnutí
+syntakticky platného CBOR s chybným hashem. Report dokončen; původní EPUB nezměněn.
+Modelové odpovědi, kód a post-review verdict v tomto důkazu jsou skriptované,
+žádné placené API volání. Není to důkaz schopnosti živého modelu, novosti ani
+externí archivace. Live pracovníka spouští `run-prototype.cmd`.
+
+594 regresních testů prošlo (1 skip); po finální úpravě helper-only oprav prošlo
+24 cílených testů. Testují se i budget/pause před dalším voláním, zachovaná
+SDK historie, supervised a command limity, úklid kontejneru, immutable helper
+zdroje, legacy kompatibilita a rozlišení scope. Při zkoušce nebyla použita osobní
+přihlášení ani proveden externí deposit.
+
+[Popis](docs/CODING_WORKER.md), [důkaz](docs/validation/CODING_WORKER_PROOF.json),
+[výsledky testů](docs/validation/CODING_WORKER_TESTS.txt).
+
 ## 0.6.18 — 2026-10-20
 
 Nové regresní případy: host-owned repair IDs, nezávislá kontrola relevance před

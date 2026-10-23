@@ -1,0 +1,19 @@
+{
+  "source_run": "20261022-051417-8cb93cc5",
+  "actual_round4_payload_replayed_through_sdk_tool": true,
+  "duplicate_defect_field_removed_from_live_schema": true,
+  "repair_quote_bound_from_actual_negative_code": true,
+  "actual_new_engine_prompt_excludes_old_fabricated_code": true,
+  "first_forced_action": "read_test_artifact",
+  "first_read": "prototype/test.py",
+  "artifacts_freshly_read": [
+    "prototype/test.py",
+    "prototype/recovery-seed.json"
+  ],
+  "fresh_host_facts_required": true,
+  "grounded_revise_reaches_worker": true,
+  "original_checkpoint_unchanged": true,
+  "limits_and_rounds_unchanged": true,
+  "paid_api_calls": 0,
+  "limitation": "Replay validates actual prompt/context and tool routing, not future model judgment or prototype functionality."
+}

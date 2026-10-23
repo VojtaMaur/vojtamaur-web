@@ -5,7 +5,7 @@ from .storage import canonical
 
 def matches(record, agent, idea, phase):
     from .research_tasks import revision
-    return (record.get('idea_id') == idea['id'] and record.get('phase') == phase
+    return (not record.get('resolved') and record.get('idea_id') == idea['id'] and record.get('phase') == phase
             and record.get('revision') == revision(idea)
             and record.get('operator_notes_count') == len(agent.get('operator_notes', [])))
 

@@ -29,7 +29,7 @@ def validate_config(config):
         raise ValueError("run_mode must be supervised or autonomous")
     if config.get("external_scope", "sandbox-only") not in ("sandbox-only", "external"):
         raise ValueError("external_scope must be sandbox-only or external")
-    for field in ("approval_required", "include_exports", "semantic_dedupe", "sandbox_smoke_test", "http_smoke_test", "require_independent_http_review", "require_deposit_qualification", "carrier_screening", "require_explicit_upload_flow", "allow_known_carrier_improvements", "research_handoffs", "require_prototype_focus"):
+    for field in ("approval_required", "include_exports", "semantic_dedupe", "sandbox_smoke_test", "http_smoke_test", "require_independent_http_review", "require_deposit_qualification", "carrier_screening", "require_explicit_upload_flow", "allow_known_carrier_improvements", "research_handoffs", "require_prototype_focus", "independent_review_probes"):
         if field in config and type(config[field]) is not bool:
             raise ValueError(f"{field} must be boolean")
     for field in ("max_external_actions", "max_external_bytes"):
@@ -51,6 +51,17 @@ def validate_config(config):
         raise ValueError("operator_objective must be nonempty text up to 12000 characters or null")
     if config.get("require_deposit_qualification") and not config.get("require_independent_http_review"):
         raise ValueError("Deposit qualification requires independent HTTP review")
+    if config.get('coding_backend','legacy') not in {'legacy','sdk_shell'}:
+        raise ValueError('coding_backend must be legacy or sdk_shell')
+    for field in ('coding_max_turns','max_coding_commands_per_agent'):
+        if type(config.get(field,24)) is not int or config.get(field,24)<1:
+            raise ValueError(field+' must be a positive integer')
+    if config.get('coding_acceptance') not in (None,'cbor_seed'):
+        raise ValueError('coding_acceptance must be null or cbor_seed')
+    if config.get('coding_acceptance') and (config.get('coding_backend')!='sdk_shell'
+            or not config.get('research_handoffs') or config.get('task_style')!='research'
+            or config.get('experiments')!='docker' or config.get('external_scope')!='sandbox-only'):
+        raise ValueError('Coding acceptance requires SDK coding research in sandbox-only Docker')
     from .actions import validate_resources
     validate_resources(config.get("external_resources", []))
     from .http_transport import validate_http_config

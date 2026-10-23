@@ -1,0 +1,21 @@
+
+import base64,json,pathlib,subprocess,sys
+import cbor2
+from codec import metadata
+source=sys.argv[1]
+expected=metadata(source)
+root=pathlib.Path('prototype')
+binary=cbor2.dumps(cbor2.CBORTag(55799,expected),canonical=True)
+(root/'seed.cbor').write_bytes(binary)
+(root/'mirror.txt').write_text('METAWEB-CBOR-1\n'+base64.b64encode(binary).decode()+'\n',encoding='utf-8')
+for specimen in ('seed.cbor','mirror.txt'):
+    out=root/'decoded.json'
+    subprocess.run([sys.executable,'prototype/codec.py','decode',source,str(root/specimen),str(out)],check=True)
+    assert json.loads(out.read_text()) == expected
+wrong=dict(expected,sha256='0'*64)
+(root/'wrong.cbor').write_bytes(cbor2.dumps(cbor2.CBORTag(55799,wrong),canonical=True))
+(root/'invalid.txt').write_text('METAWEB-CBOR-1\n!invalid!\n')
+for invalid in ('wrong.cbor','invalid.txt'):
+    rejected=subprocess.run([sys.executable,'prototype/codec.py','decode',source,str(root/invalid),str(root/'must-not-emit.json')],capture_output=True)
+    assert rejected.returncode != 0
+print('Saved binary + text decoded; valid CBOR with wrong digest and invalid envelope rejected')

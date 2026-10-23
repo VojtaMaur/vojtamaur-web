@@ -1,0 +1,14 @@
+{
+  "source_run": "20261021-110550-9af1ce61",
+  "old_test": "TEST-d4a2971f295f40b1",
+  "repeated_test": "TEST-f3d7c5909ddb4efd",
+  "same_driver_sha256": "724e8ab20d92a452db3c7c5550e785eb72a1a33fcbf24b0b8bc8d64bba31f2a0",
+  "newly_declared_references": [
+    "source/vojtamaur-web/README.md",
+    "source/vojtamaur-web/rosetta.json"
+  ],
+  "new_guard_rejects_as_unchanged": true,
+  "checkpoint_unchanged": true,
+  "paid_api_calls": 0,
+  "method": "Read-only replay of hash-verified frozen driver snapshots and captured reference metadata; no agent code executed or old review reclassified."
+}

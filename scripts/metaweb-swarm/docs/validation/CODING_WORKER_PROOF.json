@@ -1,0 +1,54 @@
+{
+  "paid_api_calls": 0,
+  "model_responses": "scripted, not live inference",
+  "code": "scripted fixture",
+  "review_verdict": "scripted SUBCOMPONENT, not a live LLM assessment",
+  "run": "C:\\Users\\Vojta\\Documents\\Codex\\2026-10-06\\referenced-chatgpt-conversation-this-is-an\\outputs\\coding-worker-real-proof-final\\runs\\20261020-123402-eed3899f",
+  "source_export": "vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub",
+  "source_sha256": "b0e4617d9d3b77355c4b849d42e82497c0cd17080a015b70dd74288afdf712b1",
+  "source_unchanged": true,
+  "development_exit_codes": [
+    1,
+    0
+  ],
+  "package_installation": "COMPLETED",
+  "coding_validation": {
+    "id": "CODING-VALIDATION-54b78affad89421d",
+    "idea_id": "IDEA-0001",
+    "agent_id": "AGENT-002",
+    "experiment_id": "EXPERIMENT-ab8c114249334d5c",
+    "passed": true,
+    "time": "2026-10-20T12:34:13+00:00",
+    "validation_execution": {
+      "status": "COMPLETED",
+      "output": "{\"passed\": true, \"checks\": [\"saved CBOR metadata\", \"saved text transcription\", \"binary decoder\", \"text decoder\", \"valid CBOR with wrong digest rejected\", \"invalid envelope rejected\"]}\n",
+      "returncode": 0,
+      "timed_out": false,
+      "output_truncated": false,
+      "container": "metaweb-swarm-63681f66e4384b448fe6f3694be5266b",
+      "cleanup_ok": true
+    },
+    "reason": "Host-decoded artifacts and independent decoder checks passed",
+    "expected": {
+      "export": "vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub",
+      "sha256": "b0e4617d9d3b77355c4b849d42e82497c0cd17080a015b70dd74288afdf712b1",
+      "bytes": 1294314,
+      "decoder": "metaweb-cbor-seed-v1"
+    },
+    "artifact_hashes": {
+      "prototype/seed.cbor": "f05d6e9a265f0ff76e17c65deb352e29dedbeb63c0adfae995f4de64838e80fe",
+      "prototype/mirror.txt": "47a959678730e2d4b580aca26411690eb4a2b225bee2ccb68c0d5bf748ccfce0",
+      "prototype/decoded.json": "646114ca1c8515523235fe4ee12e4d3224a543b8e874c1120dbab99b1b558373"
+    },
+    "meaning": "Known local coding contract passed. No novel mechanism, full export preservation or external deposit certified."
+  },
+  "test_count": 1,
+  "helper_code_captured": true,
+  "report_exists": true,
+  "external_actions": 0,
+  "status": "COMPLETED",
+  "captured_source_hashes": {
+    "prototype/test.py": "e1b356aee1acdc268c4902680533a4a21dea7a54e39386b5a3755277340b2e3f",
+    "prototype/codec.py": "749fa193a7321e77dd50400e4c4104af72f14144056c18187a9d2b30b364affb"
+  }
+}

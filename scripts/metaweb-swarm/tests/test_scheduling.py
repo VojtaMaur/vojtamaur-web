@@ -45,7 +45,7 @@ class SchedulingTests(unittest.TestCase):
             path.write_text('{"model":"fixture-model"}', encoding='utf-8-sig')
             self.assertEqual(load_config(path)['model'], 'fixture-model')
 
-    def test_research_profile_reaches_prototyper_and_reporter_with_emergence(self):
+    def test_research_profile_reserves_closure_and_skips_empty_prototyper_with_emergence(self):
         calls = []
         class Continuing:
             async def step(self, agent, prompt, history, api, config):
@@ -58,15 +58,16 @@ class SchedulingTests(unittest.TestCase):
             project.mkdir()
             config = load_config(PACKAGE_ROOT / 'config.research.json')
             config['run_mode'] = 'autonomous'  # Scheduler coverage includes realization; supervised deliberately defers it.
-            config['max_steps'] = 10  # Nine seeds plus one emergent role: exact first-pass budget.
+            config['max_steps'] = 10  # Tight budget; empty coding dispatches are deliberately skipped.
             run = initialize(project, Path(temp) / 'runs', config)
             engine = Engine(run, Continuing(), 'demo')
             try:
                 with redirect_stdout(io.StringIO()):
                     state = asyncio.run(engine.run())
-                self.assertEqual(state['steps'], 10)
-                self.assertTrue(all(a['rounds'] >= 1 for a in state['agents']))
-                self.assertIn('Prototyper', calls)
+                self.assertLessEqual(state['steps'], 10)
+                # This backend proposes no IDEA. Paying an empty Prototyper is
+                # no longer required just to give every role a console line.
+                self.assertNotIn('Prototyper', calls)
                 self.assertEqual(calls[-1], 'Synthesizer / Reporter')
                 researchers = [role for role in calls if role in ('Loophole Archivist', 'Anomaly Engineer', 'Format Mutant', 'Infrastructure Scout')]
                 self.assertEqual(len(set(researchers[:4])), 4)

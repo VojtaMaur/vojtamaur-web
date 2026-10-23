@@ -115,6 +115,8 @@ ARCHIVAL COPIES AND DISTRIBUTIONS:
 	https://doi.org/10.5281/zenodo.19691321
 	Figshare
 	https://doi.org/10.6084/m9.figshare.33077810
+	Open Science Framework
+	https://doi.org/10.17605/OSF.IO/W4NUG
 	Arweave / ArDrive
 	https://app.ardrive.io/#/file/6777b483-0ece-40d1-93c5-80e06bcfb757/view
 	https://arweave.net/wMdvaavAZL1QKGvdkIfh6NCB7u_NCX368IsR48sJP7c
@@ -256,6 +258,15 @@ ARCHIVAL COPIES AND DISTRIBUTIONS:
 	https://www.nudgehost.com/2jfhxzm3
 	https://www.nudgehost.com/pw4k9f7f
 	https://www.nudgehost.com/j77q58az
+	Pinata
+	https://purple-solid-emu-76.mypinata.cloud/ipfs/bafybeihkshyqjojer5v4gnrgwdhsmyq3jx4ajolz6vy2gzszjx7kf6ulea
+	https://purple-solid-emu-76.mypinata.cloud/ipfs/bafybeicz6lz2bsxdaswkicsbat3ww27yxaetvmdwwln3aymmbza47ed6me
+	https://purple-solid-emu-76.mypinata.cloud/ipfs/bafybeiagpkmwx2saah3gihwzlhos6ujhxro5pxdgwokq5m4wmnfm3yfoa4
+	https://purple-solid-emu-76.mypinata.cloud/ipfs/bafybeicbiidzq4hyhkxkcygpsi3t6xnsod7gxzeuzksfhhpiqq3xsyh57i
+	https://purple-solid-emu-76.mypinata.cloud/ipfs/bafybeiarkudll7jzzmcoz5kiiwq5vxgjj7enshzs2oxxxanjdtev3be5ca
+	https://purple-solid-emu-76.mypinata.cloud/ipfs/bafkreihnpjgfthvorr6qfnkpkbfo7wh3rsmnbnuvcu4oq5sugjjdysgdje
+	https://purple-solid-emu-76.mypinata.cloud/ipfs/bafybeigdkppa55g5r4jsmh6k6or4ulsfsbren3pl6zyx46pe4mezwb5x4y
+	https://purple-solid-emu-76.mypinata.cloud/ipfs/bafybeibvc2qinquk32jhe6limazlqsvzba7y5kvgkojvnrk7rqafbs4msm
 	Lulu
 	https://www.lulu.com/shop/vojta-maur/metawebov%C3%BD-%C4%8Dl%C3%A1nek-metaweb-article/ebook/product-je8nwn7.html
 	https://www.lulu.com/shop/vojta-maur/vojtamaurcz-kompletn%C3%AD-export-webu/ebook/product-45emd7y.html

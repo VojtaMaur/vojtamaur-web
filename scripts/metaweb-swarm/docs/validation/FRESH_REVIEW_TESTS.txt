@@ -1,0 +1,3 @@
+0.7.10: 61 related checks passed in the initial 62-test suite; one SDK fixture still expected historical read metadata to survive a task reset. Updated that fixture to actually read all captured artifacts in the new SDK context, then its focused rerun passed. Total 62 distinct checks passed.
+Includes actual Engine.prompt exclusion of old invented code, new-context forced source/output/facts reads, same-context read stability, retained audit history and unchanged approval/budget gates.
+Real checkpoint and generated prompt replayed in an isolated copy; no paid calls, source-run mutation or prototype certification. See FRESH_REVIEW_LIVE_PROOF.json.

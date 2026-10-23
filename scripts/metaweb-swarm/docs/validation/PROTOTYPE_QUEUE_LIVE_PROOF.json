@@ -1,0 +1,12 @@
+{
+  "source_run": "20261021-074035-94074e37",
+  "pending_receipts": 5,
+  "worker_hold": "AWAITING_INDEPENDENT_PROTOTYPE_REVIEW",
+  "no_budget_changes": true,
+  "after_explicit_extension_selected": "AGENT-006",
+  "first_task": "PROTOTYPE_TEST",
+  "first_test": "TEST-13a0519645564650",
+  "source_unchanged": true,
+  "paid_api_calls": 0,
+  "method": "Read-only checkpoint replay; extensions hypothetical and in-memory only. No agent code executed."
+}

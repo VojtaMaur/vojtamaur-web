@@ -103,7 +103,11 @@ def concise_state(state):
     }
     from .research_tasks import enabled as scoped_tests
     if scoped_tests(state):
-        result['execution_receipts'].update(prototype_reviews=state.get('prototype_reviews',[]),
+        # Overview is routing data, never a replay of another model's code quotes.
+        reviews=[{k:r.get(k) for k in ('id','test_id','idea_id','agent_id','review_unresolved')} |
+                 {'verdict':None if r.get('review_unresolved') else r.get('verdict')}
+                 for r in state.get('prototype_reviews',[])]
+        result['execution_receipts'].update(prototype_reviews=reviews,
             meaning='host_execution_verified verifies execution/artifact binding, not mechanism coverage. Independent FULL_MECHANISM prototype review certifies scoped research PROTOTYPED; SUBCOMPONENT is partial.')
     result['discovery_leads'] = [{k:r.get(k) for k in ('id','provider','status','summary','open_questions','next_action','documents','target_assessments','review','idea_id')} for r in state.get('discovery_leads', [])[-12:]]
     result['deposit_qualifications'] = [{k: r.get(k) for k in ('id', 'agent_id', 'status', 'reasons', 'plan', 'next_action')} for r in state.get('deposit_qualifications', [])][-12:]

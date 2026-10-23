@@ -43,12 +43,12 @@ def prepare(api):
         return {'status': 'BLOCKED', 'reason': 'NO_CAPTURED_PAYLOAD_EXPORT', **view(api.engine.state, api.agent)}
     chosen = candidates[0]
     # The existing importer validates source confinement, byte limits and hashes.
-    destination = 'inputs/' + chosen['sha256'][:12] + '-' + PurePosixPath(chosen['path']).name
-    old = next((m for m in api.agent.get('materialized_exports', []) if m['path'] == destination
+    destination = 'inputs/' + chosen['sha256'][:12] + '/' + PurePosixPath(chosen['path']).name
+    old = next((m for m in api.agent.get('materialized_exports', []) if m['export'] == chosen['path']
                 and m['sha256'] == chosen['sha256'] and m['bytes'] == chosen['bytes']), None)
     if old:
         api.export_source(chosen['path'])
-        info = api.workspace.file_info(destination)
+        info = api.workspace.file_info(old['path'])
         if info['sha256'] == chosen['sha256'] and info['bytes'] == chosen['bytes']:
             return dict(old, input_kind='PAYLOAD', replayed=True)
     result = api.materialize_export(chosen['path'], destination)

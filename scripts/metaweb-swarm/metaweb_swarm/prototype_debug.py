@@ -5,7 +5,7 @@ from .storage import now
 
 def capture(api,plan,experiment):
     from .research_tasks import enabled,revision
-    if not enabled(api.engine.state) or api.agent.get('work_kind')!='LOCAL' or type(experiment.get('returncode')) is not int or experiment['returncode']==0: return
+    if api.engine.state['config'].get('coding_backend','legacy')!='legacy' or not enabled(api.engine.state) or api.agent.get('work_kind')!='LOCAL' or type(experiment.get('returncode')) is not int or experiment['returncode']==0: return
     script=next((a for a in experiment['artifact_inventory'] if a['path']==plan['script']['path']),None)
     if not script: return
     receipt={'artifacts':[script]}

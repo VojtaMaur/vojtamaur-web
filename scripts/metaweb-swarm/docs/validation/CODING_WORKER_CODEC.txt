@@ -1,0 +1,17 @@
+
+import base64,hashlib,json,pathlib,sys
+import cbor2
+def metadata(source):
+    source=pathlib.Path(source);data=source.read_bytes()
+    return dict(export=source.name.split('-',1)[-1],sha256=hashlib.sha256(data).hexdigest(),bytes=len(data),decoder='metaweb-cbor-seed-v1')
+def decode(source,specimen,out):
+    body=pathlib.Path(specimen).read_bytes()
+    if body.startswith(b'METAWEB-CBOR-1\n'):
+        body=base64.b64decode(b''.join(body.split(b'\n',1)[1].split()),validate=True)
+    if not body.startswith(bytes.fromhex('d9d9f7')):raise ValueError('Missing CBOR tag')
+    actual=cbor2.loads(body)
+    if actual!=metadata(source):raise ValueError('Wrong source metadata/digest')
+    pathlib.Path(out).write_text(json.dumps(dict(actual)),encoding='utf-8')
+if __name__=='__main__':
+    if len(sys.argv)!=5 or sys.argv[1]!='decode':raise SystemExit('decode SOURCE SPECIMEN OUTPUT')
+    decode(*sys.argv[2:])

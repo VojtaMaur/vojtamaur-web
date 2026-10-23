@@ -1,0 +1,3 @@
+0.7.5: 10 new queue tests OK; 56 related regressions OK; 14 scheduling/reporter tests OK.
+Includes real Engine.run scheduler with simulated coding/review results; no scientific acceptance or paid inference claimed.
+Read-only live replay: 5 pending captures held; original checkpoint unchanged.

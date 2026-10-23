@@ -11,6 +11,12 @@ def enabled(state):
 
 
 def revision(idea):
+    # An evidence/provenance merge keeps the implementation job it contributed to.
+    # This anchor is set by the host, never taken from a model proposal.
+    return idea.get('implementation_revision') or evidence_revision(idea)
+
+
+def evidence_revision(idea):
     # Status, critiques and local artifacts must not create an audit feedback loop.
     fields = ('id', 'title', 'mechanism', 'provider', 'summary', 'payment', 'evidence',
               'novelty_delta', 'baseline_evidence_ids', 'validation_plan', 'proposed_change')
@@ -25,11 +31,12 @@ def inventory(state):
 
 def reviews(state, agent):
     from .research_recovery import blocked
+    if state['config'].get('coding_acceptance'):return []
     return [i for i in state['ideas'] if i.get('status') not in {'REJECTED', 'COMPLETED'}
             and agent['id'] != i.get('agent_id')
             and not blocked(agent, i, 'REVIEW')
             and not any(c.get('idea_id') == i['id'] and c.get('agent_id') == agent['id']
-                        and c.get('research_revision') == revision(i) for c in state.get('critiques', []))]
+                        and c.get('research_revision') == evidence_revision(i) for c in state.get('critiques', []))]
 
 
 def local_candidates(state, agent):
@@ -37,21 +44,23 @@ def local_candidates(state, agent):
     from .prototype_focus import eligible
     from .prototype_debug import local_issue
     from .prototype_preflight import local_issue as plan_issue
-    return [i for i in state['ideas'] if i.get('status') not in {'REJECTED', 'COMPLETED'}
+    from . import prototype_queue as queue
+    choices = [i for i in state['ideas'] if i.get('status') not in {'REJECTED', 'COMPLETED'}
             and eligible(state,i)
             and not local_issue(state,agent,i['id'])
             and not plan_issue(state,agent,i['id'])
             and i.get('payment') in {'FREE','ONE_TIME'} and i.get('requires_ongoing_payments') is not True
             and not blocked(agent, i, 'LOCAL')
             and not i.get('prototype_tested') and not i.get('completion_receipts')
-            and not any(t.get('idea_id')==i['id']
+            and not (queue.receipt_excludes(state,i) if queue.enabled(state) else any(t.get('idea_id')==i['id']
                         and t.get('host_execution_verified') and t.get('prototype_plan',{}).get('research_revision')==revision(i)
-                        and t.get('prototype_review',{}).get('verdict')!='REVISE' for t in state.get('tests',[]))
+                        and t.get('prototype_review',{}).get('verdict')!='REVISE' for t in state.get('tests',[])))
             and (state['config'].get('run_mode') == 'autonomous'
                  or state.get('implementation_choices', {}).get(i['id'], {}).get('decision') == 'implement')
             and not any(b['idea_id'] == i['id'] and b['revision'] == revision(i)
                         and b['operator_notes_count'] == len(agent.get('operator_notes', []))
                         for b in agent.get('research_blockers', []))]
+    return queue.select_candidates(state,agent,choices) if queue.enabled(state) else choices
 
 
 def assign(engine, agent):
@@ -74,6 +83,11 @@ def prepare_task_context(engine, agent, workspace):
           {'kind':'DISCOVERY_PIVOT','target_id':agent['discovery_pivot']['provider'],
            'revision':canonical(agent.get('known_discovery_directions',[]))} if agent.get('discovery_pivot') else
           {'kind':'DISCOVERY'} if agent.get('work_kind')=='DISCOVERY' else agent.get('research_assignment'))
+    if agent.get('work_kind')=='SYNTHESIS':
+        from .deposit_handoff import report_revision
+        task={'kind':'CURRENT_RUN_REPORT','target_id':engine.state['run_id'],'revision':report_revision(engine.state)}
+        # The same current packet is delivered directly in Engine.prompt.
+        agent['research_report_revision']=task['revision']
     if not task: return
     if agent.get('work_kind')=='LOCAL':
         from .prototype_debug import last
@@ -85,9 +99,21 @@ def prepare_task_context(engine, agent, workspace):
         if failed and failed.get('failure_review'):
             task={'kind':'LOCAL_REPAIR','target_id':failed['experiment_id'],'revision':failed['failure_review']['id']}
     key=canonical({k:task.get(k) for k in ('kind','target_id','revision')})
-    if agent.get('work_kind')=='LOCAL' and engine.state['config'].get('require_prototype_focus'):
+    if agent.get('work_kind') in {'LOCAL','REVIEW'} and engine.state['config'].get('coding_backend')=='sdk_shell':
+        key=canonical({'task':key,'prototype_workflow':'review-environment-0.8.3'})
+    elif agent.get('work_kind')=='LOCAL' and engine.state['config'].get('require_prototype_focus'):
         key=canonical({'task':key,'prototype_workflow':'0.6.18'})
     if agent.get('active_task_key')==key: return
+    if agent.get('work_kind')=='REVIEW' and task.get('kind')=='PROTOTYPE_TEST':
+        # A read in discarded model history is not a read available to the new
+        # context. Force the actual immutable source/output reads again.
+        ident=task['target_id']
+        fields=('prototype_artifact_reads','prototype_artifact_checks','prototype_fact_reads','prototype_review_repairs')
+        invalidated=[name for name in fields if ident in agent.get(name,{})]
+        for name in fields:agent.get(name,{}).pop(ident,None)
+        if invalidated:
+            engine.store.commit(engine.state,'prototype_review_context_reads_invalidated',
+                {'test_id':ident,'fields':invalidated,'reason':'Source observations must be present in the current model context'},agent['id'])
     if agent.get('history'):
         from .storage import atomic_write
         archive=f"context/task-history-before-round-{agent['rounds']}.json"
@@ -251,6 +277,12 @@ def complete(state, agent, output):
                           unexplored_leads=['Call record_research_report for all current IDs; lack of a prototype/deposit is a report finding, not unfinished reporter research.'])
         return output
     if agent.get('work_kind') != 'LOCAL': return output
+    from . import prototype_queue as queue
+    if queue.enabled(state) and queue.awaiting(state,agent):
+        agent['prototype_queue_hold']='AWAITING_INDEPENDENT_PROTOTYPE_REVIEW'
+        output.update(status='BLOCKED',reason_for_stopping=agent['prototype_queue_hold'],
+                      unexplored_leads=['Recorded execution awaits independent review; do not start another candidate.'])
+        return output
     task = packet(state, agent)
     done = (bool(task.get('recorded_tests')) and not task.get('test_revision')) or task['kind'] == 'NONE'
     from .research_recovery import blocked as repair_blocked, current, active_blocks
@@ -303,7 +335,7 @@ def tool_names(agent):
     if kind=='REVIEW' and agent.get('review_assignment',{}).get('kind')=='PROTOTYPE_PLAN':
         return common | {'get_review_task','read_prototype_plan','review_prototype_plan'}
     if kind=='REVIEW' and agent.get('review_assignment',{}).get('kind')=='PROTOTYPE_TEST':
-        return common | {'get_review_task','read_test_artifact','review_prototype_test','get_prototype_review_facts'}
+        return common | {'get_review_task','read_test_artifact','review_prototype_test','get_prototype_review_facts','run_review_probe','install_packages'}
     if kind=='REVIEW' and agent.get('review_assignment',{}).get('kind')=='PROTOTYPE_FAILURE':
         return common | {'get_review_task','read_failed_experiment','record_failure_diagnosis'}
     if kind == 'REVIEW': return common | {'get_review_task', 'read_document', 'check_baseline', 'record_critique', 'read_test_artifact', 'review_prototype_test'}

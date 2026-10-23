@@ -5,7 +5,8 @@ from collections import Counter
 
 SECTIONS = {'ideas': 'id', 'critiques': 'id', 'tests': 'id', 'prototype_reviews': 'id',
             'experiments': 'experiment_id', 'http_requests': 'id', 'external_actions': 'id',
-            'approvals': 'id', 'agents': 'id', 'package_installations': 'id', 'prototype_plan_submissions': 'id'}
+            'approvals': 'id', 'agents': 'id', 'package_installations': 'id', 'prototype_plan_submissions': 'id',
+            'coding_commands':'id','coding_validations':'id','prototype_review_probes':'id'}
 
 
 def short(value, limit=240):
@@ -14,16 +15,23 @@ def short(value, limit=240):
 
 
 def build(state):
+    from .deposit_handoff import report_revision
     config = state['config']
     budget = min(14000, config.get('history_chars', 120000) // 4,
                  max(2000, config.get('prompt_chars', 20000) // 2))
     ids = [i['id'] for i in state['ideas']]
-    result = {'kind': 'CURRENT_RUN_REPORT', 'run_id': state['run_id'], 'idea_ids': ids,
+    result = {'kind': 'CURRENT_RUN_REPORT', 'run_id': state['run_id'], 'revision':report_revision(state),'idea_ids': ids,
+              'prototype_queue_holds':{a['id']:a['prototype_queue_hold'] for a in state['agents'] if a.get('prototype_queue_hold')},
               'counts': {'candidates': len(ids), 'statuses': dict(Counter(i['status'] for i in state['ideas'])),
                          'experiments': len(state.get('experiments', [])),
+                         'coding_commands':len(state.get('coding_commands',[])),
+                         'coding_acceptance_passes':sum(r.get('passed') is True for r in state.get('coding_validations',[])),
                          'plan_relevance_reviews': dict(Counter(p.get('preflight_review', {}).get('verdict', 'PENDING')
                              for p in state.get('prototype_plan_submissions', []))),
                          'recorded_tests': len(state.get('tests', [])),
+                         'shared_helpers':len(state.get('shared_components',{})),
+                         'reused_implementations':len(state.get('prototype_component_reuses',[])),
+                         'independent_review_probes':len(state.get('prototype_review_probes',[])),
                          'pending_test_reviews': sum(bool(t.get('prototype_review_required')) and not t.get('prototype_review')
                                                      for t in state.get('tests', [])),
                          'prototype_reviews': dict(Counter(r['verdict'] for r in state.get('prototype_reviews', []))),
@@ -39,6 +47,7 @@ def build(state):
                          'usage': 'Pass section and record_id for one original record, or empty record_id for a paged ID index. '
                              'Read pages only as needed. Raw histories, old submissions and HTTP headers are not part of this overview.'},
               'next_action': 'Call record_research_report with ALL idea_ids, a grounded conclusion and limitations, then finish. '
+                  'coding_commands are real Docker development executions; experiments count final controlled captures. Zero recorded tests does not mean no code ran. '
                   'Unresolved/rejected ideas and zero deposits are valid findings. Exit zero is execution only; '
                   'only independent FULL_MECHANISM review certifies a local prototype. SUBCOMPONENT and REVISE stay distinct. '
                   'Use read_report_detail for original evidence; do not fetch the whole checkpoint or every old revision.'}
@@ -51,6 +60,7 @@ def build(state):
         observations=test.get('prototype_review', {}).get('host_facts')
         result['ideas'].append({'id': idea['id'], 'title': short(idea.get('title'), 160),
             'status': idea['status'], 'provider': short(idea.get('provider'), 100),
+            'prototype_component_tested':idea.get('prototype_component_tested',False),
             'payment': short(idea.get('payment'), 20), 'local_task_deferrals': blocks[-3:],
             'summary': short(idea.get('summary')), 'blocker': short(idea.get('blocker') or idea.get('rejection_reason')),
             'critique': {k: short(idea.get('critique', {}).get(k)) for k in ('verdict', 'reason')},
@@ -59,6 +69,8 @@ def build(state):
                 for p in reversed(state.get('prototype_plan_submissions', []))
                 if p['idea_id'] == idea['id'] and p.get('preflight_review')), None),
             'latest_test': {'id': test.get('id'), 'experiment_id': test.get('experiment_id'),
+                            'local_operation':short(test.get('prototype_plan',{}).get('local_contract',{}).get('operation')),
+                            'required_local_change':short(test.get('prototype_review',{}).get('required_local_change')),
                             'verdict': test.get('prototype_review', {}).get('verdict'),
                             'matching_input_outputs': len(observations['matching_recovered_outputs']) if observations else None,
                             'input_kind': observations['retained_input']['input_kind'] if observations else None,

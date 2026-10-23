@@ -12,6 +12,24 @@ from tests import test_research_handoffs as fixture
 from tests.test_backend import SDK_AVAILABLE, FINAL
 
 
+def range_args(api,test,args):
+    """Translate old fixture quotes to the live range-only tool protocol."""
+    from metaweb_swarm.prototype_review import artifact_bytes
+    result={k:v for k,v in args.items() if k in {'test_id','verdict','reason','required_local_change'}}
+    for field in ('positive','negative'):
+        quote=args.get(field+'_code','');refs=[]
+        if quote:
+            for a in test['artifacts']:
+                try:source=artifact_bytes(api,test,a).decode('utf-8')
+                except UnicodeError:continue
+                if quote in source:
+                    start=source.index(quote)
+                    refs=[{'path':a['path'],'start_line':source[:start].count('\n')+1,
+                           'end_line':source[:start+len(quote)].count('\n')+1}];break
+        result[field+'_refs']=refs
+    return result
+
+
 class PrototypeScopeTests(unittest.IsolatedAsyncioTestCase):
     setUp=fixture.ResearchHandoffTests.setUp
     tearDown=fixture.ResearchHandoffTests.tearDown
@@ -146,6 +164,7 @@ class PrototypeScopeTests(unittest.IsolatedAsyncioTestCase):
         from metaweb_swarm.prototype_review import enforce_scope
         self.assertEqual(enforce_scope(self.engine.state),[])
         self.engine.state['tests'][0].pop('prototype_review')
+        self.engine.state['prototype_reviews']=[]
         self.assertTrue(enforce_scope(self.engine.state))
         self.assertNotEqual(self.idea['status'],'PROTOTYPED')
         self.assertEqual(len(self.engine.state['tests']),1)

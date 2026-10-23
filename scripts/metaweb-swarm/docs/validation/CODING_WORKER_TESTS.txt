@@ -1,0 +1,11 @@
+Full regression run (before final helper-only repair extension):
+----------------------------------------------------------------------
+Ran 594 tests in 361.273s
+
+OK (skipped=1)
+
+Final focused regression run:
+----------------------------------------------------------------------
+Ran 24 tests in 19.511s
+
+OK

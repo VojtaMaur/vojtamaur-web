@@ -17,6 +17,8 @@ def facts(state, test):
             'retained_input': dict(source, input_kind='DESCRIPTOR' if descriptor(source.get('export', '')) else 'PAYLOAD'),
             'matching_recovered_outputs': matches,
             'external_custody': 'NOT_ESTABLISHED_BY_LOCAL_EXECUTION',
+            'local_contract':plan.get('local_contract'),
+            'review_rule':'Generic metadata extraction is HELPER_ONLY, not Open Library/Gist/Commons primitive coverage. Reading a zero checksum back proves parsing, not tamper rejection. Inspect which operation rejects/recovers invalid input against independent expected data; if absent choose REVISE or honestly HELPER_ONLY.',
             'scope_rule': 'Judge actual local operations and negative cases separately from public hosting, '
                 'discoverability and custody. Relevant working local code can be SUBCOMPONENT without upload. '
                 'Matching byte facts are real, but do not prove decoding or format conformance. '

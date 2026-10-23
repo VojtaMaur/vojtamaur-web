@@ -1,0 +1,12 @@
+{
+  "source_run": "20261022-051417-8cb93cc5",
+  "test_id": "TEST-989e594a7b8a4cb9",
+  "replayed_verdict": "REVISE",
+  "old_secondary_field_ignored": true,
+  "required_local_change": "Change the negative test so it actually alters a recovered input/specimen and confirms the decoder rejects or repairs that tampered data before acceptance.",
+  "repair_reached_worker": true,
+  "worker_after_hypothetical_auditor_unblock": "PENDING",
+  "checkpoint_unchanged": true,
+  "paid_api_calls": 0,
+  "meaning": "Actual rejected payload and hash-bound artifacts replayed only in a disposable copy. No agent code run, original review recorded, or scientific approval granted."
+}

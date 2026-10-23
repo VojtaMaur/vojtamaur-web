@@ -1,0 +1,42 @@
+{
+  "source_run": "20261020-124142-61ef3319",
+  "replay_run": "C:\\Users\\Vojta\\Documents\\Codex\\2026-10-06\\referenced-chatgpt-conversation-this-is-an\\outputs\\live-coding-name-replay\\runs\\20261020-130153-3be811a8",
+  "paid_api_calls": 0,
+  "codec_unchanged": true,
+  "adaptation": "Only test script input path changed to the filename-preserving materialized copy",
+  "original_run_unchanged": true,
+  "host_acceptance": {
+    "id": "CODING-VALIDATION-271f690f928041aa",
+    "idea_id": "IDEA-0001",
+    "agent_id": "AGENT-002",
+    "experiment_id": "EXPERIMENT-bc0da13c64f04c7c",
+    "passed": true,
+    "time": "2026-10-20T13:02:01+00:00",
+    "validation_execution": {
+      "status": "COMPLETED",
+      "output": "{\"passed\": true, \"checks\": [\"saved CBOR metadata\", \"saved text transcription\", \"binary decoder\", \"text decoder\", \"valid CBOR with wrong digest rejected\", \"invalid envelope rejected\"]}\n",
+      "returncode": 0,
+      "timed_out": false,
+      "output_truncated": false,
+      "container": "metaweb-swarm-6c6d45b372b443cc80cd9a3b6347cc78",
+      "cleanup_ok": true
+    },
+    "reason": "Host-decoded artifacts and independent decoder checks passed",
+    "expected": {
+      "export": "vojtamaur-web-export-metaweb-2026-10-05_13-46-46-779622.epub",
+      "sha256": "b0e4617d9d3b77355c4b849d42e82497c0cd17080a015b70dd74288afdf712b1",
+      "bytes": 1294314,
+      "decoder": "metaweb-cbor-seed-v1"
+    },
+    "artifact_hashes": {
+      "prototype/seed.cbor": "d702943eb6b0024691779dab3598d8ee883d930d285166030d1c9cffd18be875",
+      "prototype/mirror.txt": "97714a6a6f57a7c60bf756ed38699719df6421182a64234f2df9af9debea2819",
+      "prototype/decoded.json": "4cbbcc6f5eb21055fab3fb59992c1ed62db6a04c9da48be31974cd8018387f4c"
+    },
+    "meaning": "Known local coding contract passed. No novel mechanism, full export preservation or external deposit certified."
+  },
+  "test_receipts": 1,
+  "meaning": "The live agent implementation passes the independently checked local contract under unambiguous input mapping. Original live run remains LIMIT_REACHED/FAIL; this is a separate operator replay, not a rewritten live success.",
+  "codec_sha256": "c96014e69db90190001eae92c7b4ee6df3904129cef5a552de5ba14029f6758c",
+  "diagnosis": "The sole final metadata mismatch was export: workspace hash-prefixed basename versus original export basename. SHA256, size and decoder matched."
+}

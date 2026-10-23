@@ -132,16 +132,18 @@ class PayloadReviewFactsTests(unittest.IsolatedAsyncioTestCase):
 
     @unittest.skipUnless(SDK_AVAILABLE,'SDK optional')
     async def test_actual_sdk_observes_facts_then_records_component_without_public_deposit(self):
+        from tests.test_prototype_review import range_args
         from tests.test_backend import FakeProvider,tool_response,final_response
         t=await self.executed()
         evidence=self.evidence(t)
-        calls=[tool_response('get_prototype_review_facts',{'test_id':t['id']}),
-            tool_response('review_prototype_test',dict(test_id=t['id'],verdict='SUBCOMPONENT',
+        calls=[tool_response('read_test_artifact',{'test_id':t['id'],'path':a['path']},ident='fresh-read-'+str(n))
+               for n,a in enumerate(t['artifacts'])]+[tool_response('get_prototype_review_facts',{'test_id':t['id']}),
+            tool_response('review_prototype_test',range_args(self.review,t,dict(test_id=t['id'],verdict='SUBCOMPONENT',
                 reason='Local byte inverse and corruption rejection are useful; external deposit remains untested',
-                **evidence,observed_recovery='MATCHES_INPUT',review_basis='EXTERNAL_GAP_ONLY'),ident='review'),final_response()]
+                **evidence,observed_recovery='MATCHES_INPUT',review_basis='EXTERNAL_GAP_ONLY')),ident='review'),final_response()]
         provider=FakeProvider(calls);self.engine.backend=OpenAIBackend(provider)
         await self.engine.step(self.auditor)
         choices=[kw.get('model_settings',args[2] if len(args)>2 else None).tool_choice for args,kw in provider.model.calls]
-        self.assertEqual(choices,['get_prototype_review_facts','review_prototype_test',None])
+        self.assertEqual(choices,['read_test_artifact']*len(t['artifacts'])+['get_prototype_review_facts','review_prototype_test',None])
         self.assertEqual(t['prototype_review']['verdict'],'SUBCOMPONENT')
         self.assertFalse(self.engine.state['external_actions'])

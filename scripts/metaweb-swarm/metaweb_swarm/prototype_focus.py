@@ -15,10 +15,12 @@ def assessment(api,idea,scope,goal):
 def eligible(state,idea):
     if not required(state): return True
     focus=idea.get('prototype_focus',{})
+    if state['config'].get('coding_backend')=='sdk_shell': return True  # Advice is not a pre-execution permission gate.
     return focus.get('scope') in {'FULL_MECHANISM','SUBCOMPONENT'} and focus.get('research_revision')==revision(idea)
 
 def plan_issue(api,idea,scope):
     if not required(api.engine.state): return None
+    if api.engine.state['config'].get('coding_backend')=='sdk_shell': return None
     focus=idea.get('prototype_focus',{})
     if not eligible(api.engine.state,idea):
         return {'status':'DEFERRED','reason':'CURRENT_MECHANISM_TEST_FOCUS_REQUIRED','prototype_focus':focus,

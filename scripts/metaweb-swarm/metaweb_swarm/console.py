@@ -18,6 +18,10 @@ def startup(state):
             print(f"  {tier} = {short(models)} | " + short(", ".join(a["role"] for a in agents), 260), flush=True)
     print(f"Limits: {config['max_steps']} rounds, {config['max_total_tokens']:,} tokens, {config['max_active_seconds']}s; USD ceiling={config.get('estimated_budget_usd')}", flush=True)
     print(f"Packages: {config.get('package_installation', 'disabled')} | Docker experiments: network none", flush=True)
+    if config.get('coding_backend')=='sdk_shell':
+        print('Coding: SDK Shell -> isolated Docker | continuous write/run/repair | host API budget | independent review after execution',flush=True)
+        if config.get('independent_review_probes'):print('Audit: shared helpers separate | independent Docker assertion probes before mechanism coverage',flush=True)
+        if config.get('coding_acceptance'):print('Task: known CBOR transcription contract | independent decoder/tamper validation | no new discovery or deposit',flush=True)
     print(f"HTTP: {config.get('http_access', 'read-only')} | approvals={'required' if config.get('approval_required', True) else 'disabled'} | max requests={config.get('max_http_requests',100)} | external actions={config.get('max_external_actions',5)} | dedicated credentials={len(config.get('http_credentials', []))} | host accounts unavailable", flush=True)
     print(f"Prior work: {config.get('prior_work_policy', 'continue')}", flush=True)
     if config.get('semantic_dedupe'):
@@ -43,6 +47,13 @@ def progress(kind, agent_id, data, seen):
             return
         seen[data["id"]] = key
         line = f"{data['id']} {data['status']}: {short(data['title'])}"
+    elif kind == 'prototype_component_reused':
+        line = 'Reuse: '+data['idea_id']+' -> existing implementation; no duplicate execution'
+    elif kind == 'prototype_review_probe_finished':
+        line = 'Audit probe: '+data['test_id']+' '+data['status']+', exit='+str(data.get('returncode'))
+        if data.get('outcome'):line+=' | '+data['outcome']
+    elif kind == 'prototype_review_probe_setup_required':
+        line='Audit setup: '+data['test_id']+' '+data['reason']+' | repair reviewer probe'
     elif kind == 'package_install_started':
         line = 'pip: ' + short(', '.join(data['requirements'])) + ' started'
     elif kind == 'prior_work_deferred':
@@ -156,6 +167,12 @@ def progress(kind, agent_id, data, seen):
         line='Code relevance: '+data['idea_id']+' '+data['verdict']+' | '+short(data['reason'],135)
     elif kind == 'prototype_workflow_stalled':
         line='Prototype: '+data['idea_id']+' deferred after two rounds without changed code or execution'
+    elif kind == 'coding_command_finished':
+        line='Code: '+data['idea_id']+' | exit='+str(data.get('returncode'))+' | '+short(' '.join(data['argv']),105)
+    elif kind == 'coding_acceptance_validation':
+        line='Worker acceptance: '+('PASS' if data['passed'] else 'FAIL')+' | '+short(data['reason'],150)
+    elif kind == 'coding_worker_finished':
+        line='Prototype captured: '+data['idea_id']+' | '+short(data['summary'],150)
     elif kind == 'http_copy_verified':
         line = f"HTTP: {data['action_id']} exact file read-back verified"
     elif kind == 'candidate_comparison':

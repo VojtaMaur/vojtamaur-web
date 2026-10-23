@@ -4,7 +4,8 @@
 def enabled(api):
     from .research_tasks import enabled as research_enabled
     state = getattr(getattr(api, 'engine', None), 'state', {})
-    return (research_enabled(state) and getattr(api, 'agent', {}).get('work_kind') == 'LOCAL'
+    return (state.get('config',{}).get('coding_backend','legacy')=='legacy'
+            and research_enabled(state) and getattr(api, 'agent', {}).get('work_kind') == 'LOCAL'
             and state['config'].get('require_prototype_focus', False))
 
 

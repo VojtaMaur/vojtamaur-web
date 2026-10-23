@@ -1,3 +1,5 @@
+Aktuální 0.7.0 používá [souvislý SDK coding worker](CODING_WORKER.md). Následující ruční formuláře se týkají backendu `legacy` a historických checkpointů.
+
 # Jak dotáhnout prototyp
 
 Tento playbook nemění žádná oprávnění nebo limity. Použij jen postup relevantní

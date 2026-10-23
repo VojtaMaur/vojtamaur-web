@@ -70,5 +70,12 @@ def receipt_inventory(api, idea_id, experiment):
             return None, {'status':'DEFERRED','reason':'EXECUTED_ARTIFACT_CHANGED','path':path,
                           'next_action':'Do not certify changed artifact bytes; update the plan and run the changed script again.'}
         inventory.append(saved)
+    for source in experiment.get('coding_sources',[]):
+        info=api.workspace.file_info(source['path'])
+        if any(info[k]!=source[k] for k in ('sha256','bytes')):
+            return None, {'status':'DEFERRED','reason':'EXECUTED_SOURCE_CHANGED','path':source['path']}
+        if source['path'] not in expected:
+            inventory.append(source)
+            expected.append(source['path'])
     api.register_idea_artifacts(idea_id, expected)
     return inventory, None

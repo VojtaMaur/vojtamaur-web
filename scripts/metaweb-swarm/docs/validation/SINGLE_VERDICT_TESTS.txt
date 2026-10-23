@@ -1,0 +1,3 @@
+0.7.8: 11 local-contract tests, 54 related regressions, 11 queue tests OK.
+Includes actual SDK schema inspection and fake-provider resume -> REVISE -> coder handoff.
+Actual rejected live review replayed only in a disposable copy; original checkpoint unchanged, no paid API calls or prototype certification.

@@ -1,0 +1,4 @@
+0.7.9: 60 focused and related tests passed (66.360s), including 5 new review-resolution tests and blocked/no-pending scheduler regression.
+No paid API calls. Actual failed code quotes and original grounded REVISE replayed in a separate copy; original checkpoint unchanged.
+Tests cover live SDK schema, immutable facts, no verdict from invented code, legacy unresolved review reopen, actual test pointer update, grounded coder handoff, unchanged budgets/counters and preserved unrelated blockers.
+These are framework checks, not a functional acceptance of the Open Library prototype.

@@ -2,54 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="Graf odkazů | Vojta Maur" description="Vztahy mezi stránkami webu a odkazy z webu do internetu. SVG, GraphML a JSON ke stažení." canonicalPath="/link-graph/">
-  <main class="post-page graph-page">
-    <h1>Graf odkazů</h1>
-    <p>Stránky tohoto webu a jejich odkazy dovnitř i ven do internetu, včetně vložených místních HTML dem a místních přesměrování v HTML. Šipky míří od zdrojové stránky k cíli vztahu.</p>
-    <section id="graph-workspace" aria-label="Interaktivní graf odkazů">
-    <div id="graph-controls" hidden>
-      <label for="graph-search">Najít stránku nebo URL</label>
-      <input id="graph-search" type="search" placeholder="Název, doména nebo část URL" autocomplete="off" />
-      <div class="graph-toolbar">
-        <label><input id="graph-externals" type="checkbox" checked /> Externí URL</label>
-        <label><input id="graph-internals" type="checkbox" checked /> Ostatní interní cíle</label>
-        <label><input id="graph-labels" type="checkbox" /> Všechny názvy</label>
-        <button id="graph-zoom-in" type="button" aria-label="Přiblížit graf">+</button>
-        <button id="graph-zoom-out" type="button" aria-label="Oddálit graf">−</button>
-        <button id="graph-reset" type="button">Celý graf</button>
-        <button id="graph-fullscreen" type="button" aria-pressed="false">Celá obrazovka</button>
-      </div>
-      <p class="graph-help">Kliknutím na uzel zobrazíte jeho přímé sousedy. Pro výběr klávesnicí použijte seznam níže. Graf posunete tažením a přiblížíte tlačítky nebo Ctrl + kolečkem.</p>
-      <p class="graph-help">V celkovém přehledu mají názvy nejpropojenější uzly. Další názvy se ukážou při najetí, hledání, výběru nebo větším přiblížení. Přepínač „Všechny názvy“ je zobrazí najednou. Celou obrazovku zavřete tlačítkem nebo klávesou Esc.</p>
-      <p id="graph-status" role="status" aria-live="polite"></p>
-    </div>
-    <template id="link-graph-start"></template>
-    <p role="status">Graf pro tento build není k dispozici. Vzniká automaticky při buildu webu; v režimu vývoje se negeneruje. Případné selhání je uvedeno v logu buildu.</p>
-    <template id="link-graph-end"></template>
-    <section id="graph-inspector" class="graph-inspector" hidden aria-label="Výběr a vztahy uzlu">
-      <div>
-        <label for="graph-results">Uzly odpovídající hledání (nejvýše 80)</label>
-        <select id="graph-results" size="7" aria-label="Vybrat uzel grafu"></select>
-      </div>
-      <div id="graph-node-details" aria-live="polite">Vyberte uzel v grafu nebo v seznamu.</div>
-    </section>
-    </section>
-    <noscript><p>Bez JavaScriptu je k dispozici celý statický graf a jeho exporty. Interaktivní výběr a přibližování vyžadují JavaScript.</p></noscript>
-    <p class="graph-legend">Modrá: HTML stránky · hnědá: ostatní interní cíle (například soubory nebo nerozpoznané cesty) · fialová: externí URL. Čárkovaná hrana: vložení místní HTML stránky přes iframe. Tečkovaná hrana: místní přesměrování v HTML. Rozmístění je geometrické; vzdálenost nevyjadřuje významovou podobnost.</p>
-    <details class="graph-limits">
-      <summary>Co graf zachycuje a jaké má limity</summary>
-      <p>Graf vzniká z odkazů <code>a[href]</code> a <code>area[href]</code> v lokálně sestavených HTML stránkách včetně navigace a samostatných HTML ukázek. Zachycuje také <code>iframe[src]</code> mířící na existující místní HTML stránku, například interaktivní demo. Samostatně zachycuje i přesměrování v HTML přes <code>meta refresh</code> mířící na existující místní HTML stránku. Běžné odkazy, vložení a přesměrování rozlišuje; opakované vztahy mezi stejnými uzly se sloučí a zachovají počty jednotlivých typů. Zahrnuje české i anglické stránky; 404 se neprochází jako zdroj.</p>
-      <p>Nestahuje žádné stránky z internetu, neověřuje dostupnost cílů a nezjišťuje příchozí odkazy z cizích webů. Nezachytí odkazy vytvořené až JavaScriptem, vzdálené iframe, přesměrování přes JavaScript nebo HTTP, iframe s <code>srcdoc</code>, vložené PDF, zdroje obrázků a skriptů, textové URL bez odkazu ani obsah PDF. Interní fragmenty a parametry se slučují; externí parametry se zachovávají a fragmenty slučují. Odkazy na stejnou stránku se vynechávají. E-mailové, telefonní a jiné protokoly mimo HTTP(S) se vynechávají.</p>
-      <p>Interní jsou adresy se stejným originem jako <code>https://vojtamaur.cz</code>; zrcadla, subdomény a jiný protokol jsou externí. Jedna externí URL tvoří jeden uzel, bez odhadování přesměrování. SVG obsahuje celý graf i popisky všech uzlů. V přehledu je většina názvů skrytá kvůli čitelnosti; lze je zobrazit přepínačem „Všechny názvy“. Dlouhé názvy jsou zkráceny výpustkou, celý název a URL jsou v bublině po najetí, detailu uzlu, JSON a GraphML.</p>
-    </details>
-    <p><a href="/documentation/">Technická dokumentace</a> · <a href="/">Zpět na úvodní stránku</a></p>
-  </main>
-</BaseLayout>
-
 <style is:inline>
   .graph-page a { text-decoration: underline; text-underline-offset: .15em; }
   .graph-page [hidden] { display: none !important; }
   .graph-page input[type="search"], .graph-page select { width: 100%; font: inherit; padding: .45rem; }
   .graph-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: .7rem; margin-top: .7rem; }
+  .graph-toolbar label { display: inline-flex; align-items: center; flex-wrap: wrap; gap: .3rem; }
+  .graph-toolbar select { width: auto; max-width: 100%; }
   .graph-toolbar button { font: inherit; padding: .3rem .8rem; background: white; color: #171717; border: 1px solid #888; cursor: pointer; }
   #graph-workspace:fullscreen, #graph-workspace.is-fullscreen-fallback { background: white; color: #171717; width: 100%; height: 100%; padding: 1rem; overflow: auto; }
   #graph-workspace.is-fullscreen-fallback { position: fixed; inset: 0; z-index: 10000; }
@@ -57,6 +16,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   #graph-workspace.is-expanded .graph-help { margin: .4rem 0; }
   .graph-page :focus-visible { outline: 3px solid #175f9c; outline-offset: 3px; }
   .graph-help, .graph-legend { font-size: .9rem; color: #555; }
+  .graph-legend p { margin: .4rem 0; }
+  .graph-legend-keys { display: flex; flex-wrap: wrap; gap: .6rem 1.2rem; }
+  .graph-key { font-weight: 600; }
+  .graph-key::before { content: "●"; margin-right: .35rem; }
+  .graph-line::before { content: ""; display: inline-block; width: 1.7rem; margin-right: .4rem; vertical-align: middle; border-top: 2px solid #64748b; }
+  .graph-line-embed::before { border-top-style: dashed; }
+  .graph-line-redirect::before { border-top-style: dotted; }
+  .graph-line-image::before { border-top-color: #28735c; }
   .graph-canvas { border: 1px solid #aaa; background: white; overflow: hidden; }
   .graph-canvas svg { display: block; width: 100%; height: min(72vh, 750px); min-height: 320px; touch-action: pan-y; }
   .graph-canvas.is-interactive svg { touch-action: none; cursor: grab; }
@@ -65,13 +32,95 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .graph-canvas [data-node].is-selected circle { stroke: #000; stroke-width: 4; }
   .graph-downloads { display: flex; flex-wrap: wrap; gap: .4rem; }
   .graph-xml pre { max-height: 24rem; overflow: auto; background: #f4f4f4; padding: 1rem; font-size: .8rem; }
-  .graph-inspector { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin: 1.5rem 0; }
+  .graph-inspector { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; margin: 1.5rem 0; }
   .graph-inspector > div { min-width: 0; overflow-wrap: anywhere; }
+  .graph-inspector label { display: block; margin: .5rem 0 .2rem; }
   .graph-inspector ul { padding-left: 1.2rem; max-height: 22rem; overflow: auto; }
   .graph-inspector button { font: inherit; text-align: left; cursor: pointer; border: 0; padding: .2rem 0; background: none; color: #175f9c; text-decoration: underline; }
+  #graph-sort { width: min(100%, 30rem); }
+  .graph-node-table { max-height: 28rem; overflow: auto; border: 1px solid #aaa; }
+  .graph-node-table table { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0; }
+  .graph-node-table .graph-count-column { width: 6rem; }
+  .graph-node-table th { position: sticky; top: 0; z-index: 1; background: #f3f3f3; padding: .6rem; text-align: left; border-bottom: 1px solid #aaa; }
+  .graph-node-table td { vertical-align: top; border-bottom: 1px solid #ddd; }
+  .graph-node-table tr:last-child td { border-bottom: 0; }
+  .graph-node-table .graph-count { text-align: right; font-variant-numeric: tabular-nums; padding: .65rem .6rem; }
+  .graph-node-table tr.is-selected { background: #eaf3fb; }
+  .graph-inspector .graph-node-choice { display: block; width: 100%; padding: .6rem; white-space: normal; overflow-wrap: anywhere; text-decoration: none; }
+  .graph-node-choice:hover .graph-node-name { text-decoration: underline; }
+  .graph-node-name { display: block; font-weight: 600; overflow-wrap: anywhere; }
+  .graph-node-path { display: block; color: #555; font-size: .85rem; margin-top: .2rem; overflow-wrap: anywhere; }
+  .graph-node-table .graph-empty { padding: 1rem; }
   .graph-limits { margin-top: 1.5rem; }
-  @media (max-width: 650px) { .graph-inspector { grid-template-columns: 1fr; } }
+  @media (max-width: 500px) { .graph-node-table .graph-count-column { width: 4.6rem; } .graph-node-table th, .graph-node-table .graph-count { padding-left: .35rem; padding-right: .35rem; } }
 </style>
+
+  <main class="post-page graph-page">
+    <h1>Graf odkazů</h1>
+    <p>Stránky tohoto webu a jejich odkazy dovnitř i ven do internetu, včetně vložených místních HTML dem, PDF a místních přesměrování v HTML. Zahrnuté jsou i soubory ze složek files, images a keys, včetně nepropojených, a použití jejich obrázků ve stránkách. Ze složky demos jsou zahrnuté pouze HTML stránky. Šipky míří od zdrojové stránky k cíli vztahu.</p>
+    <section id="graph-workspace" aria-label="Interaktivní graf odkazů">
+    <div id="graph-controls" hidden>
+      <label for="graph-search">Najít stránku nebo URL</label>
+      <input id="graph-search" type="search" placeholder="Název, doména nebo část URL" autocomplete="off" />
+      <div class="graph-toolbar">
+        <label><input id="graph-externals" type="checkbox" checked /> Externí URL</label>
+        <label><input id="graph-internals" type="checkbox" checked /> Ostatní interní cíle</label>
+        <label for="graph-labels">Názvy
+          <select id="graph-labels">
+            <option value="auto">Automaticky</option>
+            <option value="all">Všechny</option>
+            <option value="hover">Jen při najetí</option>
+          </select>
+        </label>
+        <button id="graph-zoom-in" type="button" aria-label="Přiblížit graf">+</button>
+        <button id="graph-zoom-out" type="button" aria-label="Oddálit graf">−</button>
+        <button id="graph-reset" type="button">Celý graf</button>
+        <button id="graph-fullscreen" type="button" aria-pressed="false">Celá obrazovka</button>
+      </div>
+      <p class="graph-help">Kliknutím na uzel zobrazíte jeho přímé sousedy. Pro výběr klávesnicí použijte seznam níže. Graf posunete tažením a přiblížíte tlačítky nebo Ctrl + kolečkem.</p>
+      <p class="graph-help">Názvy: „Automaticky“ je odhaluje podle přiblížení a výběru, „Všechny“ je zobrazí najednou a „Jen při najetí“ nechá viditelný pouze název uzlu pod kurzorem, i při přiblížení. Celou obrazovku zavřete tlačítkem nebo klávesou Esc.</p>
+      <p id="graph-status" role="status" aria-live="polite"></p>
+    </div>
+    <template id="link-graph-start"></template>
+    <p role="status">Graf pro tento build není k dispozici. Vzniká automaticky při buildu webu; v režimu vývoje se negeneruje. Případné selhání je uvedeno v logu buildu.</p>
+    <template id="link-graph-end"></template>
+    <section id="graph-inspector" class="graph-inspector" hidden aria-label="Výběr a vztahy uzlu">
+      <div>
+        <label for="graph-sort">Řazení uzlů</label>
+        <select id="graph-sort">
+          <option value="name-asc">Název A–Z</option>
+          <option value="name-desc">Název Z–A</option>
+          <option value="outgoing-desc">Nejvíce odchozích propojení</option>
+          <option value="outgoing-asc">Nejméně odchozích propojení</option>
+          <option value="incoming-desc">Nejvíce příchozích propojení</option>
+          <option value="incoming-asc">Nejméně příchozích propojení</option>
+        </select>
+        <p id="graph-results-label">Všechny uzly</p>
+        <div id="graph-results-viewport" class="graph-node-table" role="region" aria-label="Seznam uzlů">
+          <table aria-labelledby="graph-results-label">
+            <colgroup><col /><col class="graph-count-column" /><col class="graph-count-column" /></colgroup>
+            <thead><tr><th scope="col">Uzel</th><th scope="col" class="graph-count">Odchozí</th><th scope="col" class="graph-count">Příchozí</th></tr></thead>
+            <tbody id="graph-results"></tbody>
+          </table>
+        </div>
+        <p class="graph-help">Bez hledání seznam obsahuje všechny uzly povolené filtry výše. Šipkami nahoru a dolů se mezi uzly pohybujete, Enterem je vyberete. Počty uvádějí různé cíle odchozích a různé zdroje příchozích vztahů v celém buildu; opakované výskyty stejného vztahu se počítají jednou.</p>
+      </div>
+      <div id="graph-node-details" aria-live="polite">Vyberte uzel v grafu nebo v seznamu.</div>
+    </section>
+    </section>
+    <noscript><p>Bez JavaScriptu je k dispozici celý statický graf a jeho exporty. Interaktivní výběr a přibližování vyžadují JavaScript.</p></noscript>
+    <details class="graph-limits">
+      <summary>Co graf zachycuje a jaké má limity</summary>
+      <p>Graf vzniká z odkazů <code>a[href]</code> a <code>area[href]</code> v lokálně sestavených HTML stránkách včetně navigace a samostatných HTML ukázek. Zachycuje také <code>iframe[src]</code>, <code>object[data]</code> a <code>embed[src]</code> mířící na existující místní HTML stránku nebo soubor z vybraného inventáře, například interaktivní demo či PDF. Samostatně zachycuje i přesměrování v HTML přes <code>meta refresh</code> mířící na existující místní HTML stránku. U existujících souborů z inventáře zachycuje také použití obrázku přes <code>img[src]</code>, <code>img[srcset]</code> a <code>picture source[srcset]</code>, včetně všech deklarovaných variant. Běžné odkazy, vložení, přesměrování a použití obrázků rozlišuje; opakované vztahy mezi stejnými uzly se sloučí a zachovají počty jednotlivých typů. Zahrnuje české i anglické stránky i vlastní záchrannou stránku <code>/404.html</code> s jejími archivními odkazy. Automatické zobrazení 404 při chybné adrese samo o sobě není odkaz a nevytváří v grafu příchozí vztah.</p>
+      <p>Inventář obsahuje soubory z dokončeného buildu ve složkách <code>files/</code>, <code>images/</code> a <code>keys/</code>. Ze složky <code>demos/</code> obsahuje pouze HTML stránky; jejich podpůrné obrázky a data vynechává. Nepropojené soubory mají vlastní uzel s nulovými počty vztahů. Podpůrné CSS, JavaScript/TypeScript, zdrojové mapy, fonty a systémové soubory se vynechávají. Samotná přítomnost v inventáři nevytváří odkazy; nulové počty proto neprokazují, že soubor není nikde použit.</p>
+      <p>Nestahuje žádné stránky z internetu, neověřuje dostupnost cílů a nezjišťuje příchozí odkazy z cizích webů. Nezachytí odkazy vytvořené až JavaScriptem, vzdálené iframe, přesměrování přes JavaScript nebo HTTP, iframe s <code>srcdoc</code>, vložené soubory mimo vybraný inventář, vzdálené obrázky, obrázky mimo vybrané složky, obrázky načítané přes CSS či JavaScript, zdroje skriptů, textové URL bez odkazu ani obsah PDF. Interní fragmenty a parametry se slučují; externí parametry se zachovávají a fragmenty slučují. Odkazy na stejnou stránku se vynechávají. E-mailové, telefonní a jiné protokoly mimo HTTP(S) se vynechávají.</p>
+      <p>Interní jsou adresy se stejným originem jako <code>https://vojtamaur.cz</code>; zrcadla, subdomény a jiný protokol jsou externí. Jedna externí URL tvoří jeden uzel, bez odhadování přesměrování. SVG obsahuje celý graf i popisky všech uzlů. Jedna nabídka „Názvy“ umožňuje automatické zobrazení, všechny popisky nebo pouze popisek uzlu pod kurzorem. Dlouhé názvy jsou zkráceny výpustkou, celý název a URL jsou v bublině po najetí, detailu uzlu, JSON a GraphML.</p>
+    </details>
+    <p><a href="/documentation/">Technická dokumentace</a> · <a href="/">Zpět na úvodní stránku</a></p>
+  </main>
+</BaseLayout>
+
+
 
 <script is:inline>
 (() => {
@@ -88,21 +137,31 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const workspace = document.getElementById('graph-workspace');
     const fullscreenButton = document.getElementById('graph-fullscreen');
     const results = document.getElementById('graph-results');
+    const resultsLabel = document.getElementById('graph-results-label');
+    const listViewport = document.getElementById('graph-results-viewport');
+    const sort = document.getElementById('graph-sort');
     const status = document.getElementById('graph-status');
     const details = document.getElementById('graph-node-details');
     const byId = new Map(graph.nodes.map(n => [n.id, n]));
     const nodeElements = [...svg.querySelectorAll('[data-node]')];
     const edgeElements = [...svg.querySelectorAll('[data-source]')];
     const adjacency = new Map(graph.nodes.map(n => [n.id, new Set([n.id])]));
+    const degrees = new Map(graph.nodes.map(n => [n.id, { incoming: 0, outgoing: 0 }]));
     for (const edge of graph.edges) {
       adjacency.get(edge.source).add(edge.target);
       adjacency.get(edge.target).add(edge.source);
+      degrees.get(edge.source).outgoing++;
+      degrees.get(edge.target).incoming++;
     }
     let selected = null;
     let view = [0, 0, 3000, 3000];
     const allowed = n => (externals.checked || n.kind !== 'external') && (internals.checked || n.kind !== 'internal');
     const hrefFor = node => node.kind === 'external' ? node.url : generated.dataset.rootPrefix + node.file;
-    const updateLabels = () => svg.classList.toggle('show-all-labels', labels.checked || !!selected || !!search.value.trim() || view[2] <= 1200);
+    const updateLabels = () => {
+      const automatic = labels.value === 'auto' && (!!selected || !!search.value.trim() || view[2] <= 1200);
+      svg.classList.toggle('show-all-labels', labels.value === 'all' || automatic);
+      svg.classList.toggle('hover-labels-only', labels.value === 'hover');
+    };
     const setView = () => { svg.setAttribute('viewBox', view.join(' ')); updateLabels(); };
     let fallbackFullscreen = false;
     let previousBodyOverflow = '';
@@ -178,8 +237,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           button.type = 'button';
           const types = [];
           if (edge.linkCount) types.push(`odkaz ${edge.linkCount}×`);
-          if (edge.embedCount) types.push(`vložení HTML stránky ${edge.embedCount}×`);
+          if (edge.embedCount) types.push(`vložení stránky nebo souboru ${edge.embedCount}×`);
           if (edge.redirectCount) types.push(`přesměrování v HTML ${edge.redirectCount}×`);
+          if (edge.imageCount) types.push(`použití obrázku ${edge.imageCount}×`);
           button.textContent = `${other.label} (${types.join('; ')})`;
           button.title = other.url;
           button.addEventListener('click', () => selectNode(other.id));
@@ -191,9 +251,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
     function render() {
       const query = search.value.trim().toLocaleLowerCase('cs');
-      const order = { page: 0, internal: 1, external: 2 };
+      const byName = (a, b) => a.label.localeCompare(b.label, 'cs') || a.url.localeCompare(b.url);
+      const compareNodes = (a, b) => {
+        if (sort.value === 'name-desc') return byName(b, a);
+        if (sort.value === 'name-asc') return byName(a, b);
+        const [direction, order] = sort.value.split('-');
+        const difference = degrees.get(a.id)[direction] - degrees.get(b.id)[direction];
+        return (order === 'desc' ? -difference : difference) || byName(a, b);
+      };
       const matches = graph.nodes.filter(n => allowed(n) && `${n.label} ${n.url}`.toLocaleLowerCase('cs').includes(query))
-        .sort((a, b) => order[a.kind] - order[b.kind] || a.label.localeCompare(b.label, 'cs'));
+        .sort(compareNodes);
       let visible = new Set(graph.nodes.filter(allowed).map(n => n.id));
       if (selected) visible = new Set([...adjacency.get(selected)].filter(id => allowed(byId.get(id))));
       else if (query) {
@@ -212,37 +279,99 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }
       updateLabels();
       results.replaceChildren();
-      // Always retain the selected option even when its alphabetical position
-      // is beyond the bounded search list.
-      const options = matches.slice(0, 80);
-      if (selected && !options.some(n => n.id === selected)) options.unshift(byId.get(selected));
-      for (const node of options.slice(0, 80)) {
-        const option = document.createElement('option');
-        option.value = node.id;
-        option.textContent = node.label;
-        option.title = node.url;
-        results.append(option);
+      const rows = document.createDocumentFragment();
+      const selectedInList = matches.some(node => node.id === selected);
+      let index = 0;
+      for (const node of matches) {
+        const row = document.createElement('tr');
+        row.classList.toggle('is-selected', node.id === selected);
+        const nameCell = document.createElement('td');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'graph-node-choice';
+        button.dataset.nodeChoice = node.id;
+        button.setAttribute('aria-pressed', String(node.id === selected));
+        button.tabIndex = (selectedInList ? node.id === selected : index === 0) ? 0 : -1;
+        const degree = degrees.get(node.id);
+        button.setAttribute('aria-label', `${node.label}; odchozí ${degree.outgoing}, příchozí ${degree.incoming}`);
+        button.title = node.url;
+        const name = document.createElement('span');
+        name.className = 'graph-node-name';
+        name.textContent = node.label;
+        const location = document.createElement('span');
+        location.className = 'graph-node-path';
+        const kind = { page: 'HTML stránka', internal: 'Interní soubor nebo cíl', external: 'Externí URL' }[node.kind];
+        location.textContent = `${kind} · ${node.kind === 'external' ? node.url : '/' + node.file}`;
+        button.append(name, location);
+        nameCell.append(button);
+        const outgoing = document.createElement('td');
+        outgoing.className = 'graph-count';
+        outgoing.textContent = degree.outgoing;
+        const incoming = document.createElement('td');
+        incoming.className = 'graph-count';
+        incoming.textContent = degree.incoming;
+        row.append(nameCell, outgoing, incoming);
+        rows.append(row);
+        index++;
       }
-      results.value = selected || '';
+      if (!matches.length) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 3;
+        cell.className = 'graph-empty';
+        cell.textContent = 'Žádné uzly neodpovídají hledání a filtrům.';
+        row.append(cell);
+        rows.append(row);
+      }
+      results.append(rows);
+      resultsLabel.textContent = `${query ? 'Nalezené uzly' : 'Všechny uzly podle filtrů'} (${matches.length})`;
       status.textContent = `${visible.size} z ${graph.nodes.length} uzlů zobrazeno. Hledání: ${matches.length} shod.${selected ? ' Zobrazeni přímí sousedé vybraného uzlu.' : ''}`;
     }
     for (const element of nodeElements) {
       const node = byId.get(element.dataset.node);
-      // The bounded native select supplies keyboard navigation without adding
+      // The scrollable table supplies keyboard navigation without adding
       // thousands of tab stops inside the SVG.
       element.setAttribute('aria-label', node.label);
       element.addEventListener('click', () => selectNode(node.id));
     }
-    search.addEventListener('input', () => { selected = null; inspect(); render(); });
-    externals.addEventListener('change', render);
-    internals.addEventListener('change', render);
+    function renderListFromStart() {
+      render();
+      listViewport.scrollTop = 0;
+    }
+    search.addEventListener('input', () => { selected = null; inspect(); renderListFromStart(); });
+    externals.addEventListener('change', renderListFromStart);
+    internals.addEventListener('change', renderListFromStart);
     labels.addEventListener('change', updateLabels);
-    results.addEventListener('change', () => { if (results.value) selectNode(results.value); });
+    sort.addEventListener('change', renderListFromStart);
+    results.addEventListener('click', event => {
+      const button = event.target.closest('button[data-node-choice]');
+      if (!button) return;
+      const id = button.dataset.nodeChoice;
+      selectNode(id);
+      const replacement = results.querySelector(`[data-node-choice="${id}"]`);
+      if (replacement) {
+        replacement.focus({ preventScroll: true });
+        replacement.scrollIntoView({ block: 'nearest' });
+      }
+    });
+    results.addEventListener('keydown', event => {
+      const button = event.target.closest('button[data-node-choice]');
+      if (!button || !['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'].includes(event.key)) return;
+      event.preventDefault();
+      const buttons = [...results.querySelectorAll('button[data-node-choice]')];
+      const current = buttons.indexOf(button);
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1
+        : Math.max(0, Math.min(buttons.length - 1, current + ({ ArrowDown: 1, ArrowUp: -1, PageDown: 10, PageUp: -10 }[event.key])));
+      button.tabIndex = -1;
+      buttons[next].tabIndex = 0;
+      buttons[next].focus({ preventScroll: true });
+      buttons[next].scrollIntoView({ block: 'nearest' });
+    });
     document.getElementById('graph-zoom-in').addEventListener('click', () => zoom(.7));
     document.getElementById('graph-zoom-out').addEventListener('click', () => zoom(1 / .7));
     document.getElementById('graph-reset').addEventListener('click', () => {
       selected = null; search.value = ''; externals.checked = true; internals.checked = true;
-      view = [0, 0, 3000, 3000]; setView(); inspect(); render();
+      view = [0, 0, 3000, 3000]; setView(); inspect(); renderListFromStart();
     });
     let drag = null;
     svg.addEventListener('pointerdown', event => {

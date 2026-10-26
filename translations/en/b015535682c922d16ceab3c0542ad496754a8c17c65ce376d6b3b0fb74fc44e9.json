@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "b015535682c922d16ceab3c0542ad496754a8c17c65ce376d6b3b0fb74fc44e9",
+  "purpose": "meta-description",
+  "page": "/en/cestovani-ekvador-galapagy-2017/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": "Ekvádor, Galapágy 2017",
+  "translatedFragment": "Ecuador, Galápagos 2017",
+  "createdAt": "2026-10-26T11:18:09.547Z"
+}

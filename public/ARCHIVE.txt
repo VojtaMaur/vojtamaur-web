@@ -846,6 +846,7 @@ PARTIAL PAGE SNAPSHOTS:
 	https://web.archive.org/web/20261005102254/https://vojtamaur.cz/en/cestovani/
 	https://web.archive.org/web/20261005102339/https://vojtamaur.cz/en/clipboard-smetiste/
 	https://web.archive.org/web/20261005102424/https://vojtamaur.cz/en/docasne-entity/
+	https://web.archive.org/web/20261026102544/https://vojtamaur.cz/link-graph/
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/

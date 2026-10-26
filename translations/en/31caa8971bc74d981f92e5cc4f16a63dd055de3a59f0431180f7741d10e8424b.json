@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "hash": "31caa8971bc74d981f92e5cc4f16a63dd055de3a59f0431180f7741d10e8424b",
+  "purpose": "html-region",
+  "page": "/en/cestovani-ekvador-galapagy-2017/",
+  "sourceLang": "CS",
+  "targetLang": "EN-US",
+  "glossaryRevision": "none",
+  "glossaryId": "08f85824-1a74-45c3-94c8-6d5965be47b9",
+  "deepl": {
+    "tagHandling": "html",
+    "tagHandlingVersion": "v2",
+    "splitSentences": "nonewlines",
+    "preserveFormatting": true,
+    "minRequestIntervalMs": 1200,
+    "retryAttempts": 8,
+    "retryBaseDelayMs": 2000,
+    "retryMaxDelayMs": 60000
+  },
+  "selectorPolicyRevision": 2,
+  "manual": false,
+  "locked": false,
+  "edited": false,
+  "editedAt": null,
+  "editedBy": null,
+  "sourceFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Ekvádor, Galapágy 2017</h1> <p class=\"post-meta\">Video, fotografie</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-1.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-2.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-3.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-3.jpg\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-4.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-4.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-5.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-5.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-6.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-6.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-7.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-7.jpg\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-8.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-8.jpg\" alt=\"\"> </a>  </figure> </div> ",
+  "translatedFragment": " <div class=\"post-header\">  <h1 class=\"post-title\">Ecuador, Galápagos 2017</h1> <p class=\"post-meta\">Video, photos</p> </div> <div class=\"post-body\"> <span data-i18n-protected=\"p0\" translate=\"no\" class=\"notranslate\"></span>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-1.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-1.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-2.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-2.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-3.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-3.jpg\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-4.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-4.jpg\" alt=\"\"> </a>  </figure>\n<div class=\"media-row media-row--bordered\"> <div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-5.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-5.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-6.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-6.jpg\" alt=\"\"> </a>   </div><div class=\"media-row__item\"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-7.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-7.jpg\" alt=\"\"> </a>   </div> </div>\n<figure class=\"figure figure--full figure--center \"> <a href=\"/images/cestovani-ekvador-galapagy-2017-obr-8.jpg\"> <img src=\"/images/cestovani-ekvador-galapagy-2017-obr-8.jpg\" alt=\"\"> </a>  </figure> </div> ",
+  "createdAt": "2026-10-26T11:18:08.238Z"
+}

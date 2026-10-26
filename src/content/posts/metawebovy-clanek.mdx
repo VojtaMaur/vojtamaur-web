@@ -31,7 +31,7 @@ Zahrnují kanonický zdrojový repozitář, jeho kopie a kompletní statické sn
 
 Projekt existuje také jako Python CLI balíček distribuovaný přes GitHub a PyPI, včetně vložených fallback snapshotů vybraných textových artefaktů.  
 
-Digitální archivace tohoto webu tak využívá kromě vlastní domény také služby GitHub, GitLab, Codeberg, SourceForge, Neocities, Cloudflare, Netlify, Vercel, Firebase, ChatGPT Sites, Arweave, Pollux.casa (Gemini), envs.net (Gemini + Gopher), Software Heritage, Internet Archive, Webarchiv, Zenodo, Figshare, Open Science Framework, Permanent.org, Proton.me, Pinata, Hugging Face, kaggle, YouTube, Spotify, File Garden, NudgeHost, Catbox, CYX Share, Ocen Share, Node 616, pOne.Rs, kappa.lol, Lulu, Kobo, Z-Library, Bookracy, Library Genesis, PyPI, Perma.cc, archive.today, Ghost Archive, Arquivo.pt, Megalodon a paste.rs.  
+Digitální archivace tohoto webu tak využívá kromě vlastní domény také služby GitHub, GitLab, Codeberg, SourceForge, Neocities, Cloudflare, Netlify, Vercel, Firebase, ChatGPT Sites, Arweave, Pollux.casa (Gemini), envs.net (Gemini + Gopher), Software Heritage, Internet Archive, Webarchiv, Zenodo, Figshare, Open Science Framework, Permanent.org, Proton.me, Pinata, Hugging Face, kaggle, YouTube, Spotify, File Garden, NudgeHost, Catbox, CYX Share, Ocen Share, Node 616, pOne.Rs, kappa.lol, Lulu, Kobo, Z-Library, Bookracy, Library Genesis, PyPI, Perma.cc, archive.today, Ghost Archive, Arquivo.pt, Megalodon, Rentry.co a paste.rs.  
 
 Zařazení webu do výběrové archivace Národní knihovny České republiky bylo stvrzeno uzavřením licenční smlouvy a doloženo [oficiálním potvrzením](/images/metawebovy-clanek-webarchiv-potvrzeni.jpg) ze dne 7. října 2026 a [certifikátem](/images/metawebovy-clanek-webarchiv-certifikat.jpg) o zařazení do Webarchivu.
 
@@ -75,27 +75,73 @@ Ne každý deployment musí být podepsaný. Podepsaný build musí obsahovat so
 
 ## EXPORTY
 
+Podrobnosti o jednotlivých exportech a jejich generování jsou uvedeny v [technické dokumentaci](/documentation/). Odkazy na již vytvořené exporty jsou dostupné v souboru [ARCHIVE.txt](/ARCHIVE.txt).
+
+### Offline verze webu (USB build)
+
+Web lze sestavit také do samostatné offline verze, která umožňuje procházet jeho stránky přímo z lokálního úložiště bez webového serveru nebo internetového připojení. Při tomto buildu se upravuje struktura výstupních HTML souborů a relativní cesty, aby bylo možné web spouštět například z USB disku nebo jiného archivního média. Offline sestavení tak uchovává nejen obsah článků, ale i původní strukturu a vzhled webu.
+
+### Plain-text (TXT)
+
 Web při každém buildu generuje plain-text export všech článků. Obsahuje textový obsah příspěvků v lineární podobě bez závislosti na CSS, JavaScriptu nebo konkrétní webové technologii. Slouží jako minimální archivní vrstva pro indexaci, offline čtení, fulltextové vyhledávání a dlouhodobou rekonstruovatelnost obsahu i v případě částečného rozpadu původní struktury webu. Textový export je vhodný i pro velké jazykové modely.
 
 [Zobrazit textový export všech článků (ALL_POSTS.txt)](/ALL_POSTS.txt)
 
-Pro strojové zpracování je k dispozici ručně spouštěný JSON-LD export, který zahrnuje české i anglické texty článků, metadata a odkazy na média. Využívá standardní slovník Schema.org doplněný o vlastní pojmy popsané ve [slovníku metadat tohoto webu](/ns/). Zachovává tak význam jednotlivých polí i vztahy mezi jazykovými verzemi článků.
+### Markdown (MD)
+
+Vedle plain-text exportu je k dispozici také ručně generovaný export do formátu Markdown (MD), který zachovává strukturu článků, metadata a odkazy na externí média. Je určen především pro čtení, další zpracování a publikování na platformách podporujících Markdown.
+
+### Gemini / Gopher (Gemtext)
+
+Při buildu webu s překlady se automaticky generuje také samostatná česko-anglická textová verze určená pro protokoly Gemini a Gopher. Vychází z výsledného HTML a zachovává strukturu článků, nadpisy, navigaci i odkazy na externí média. Export je ukládán ve formátu Gemtext (.gmi) doplněném o navigační soubory `gophermap`, takže jej lze publikovat prostřednictvím obou protokolů.
+
+[Gemini verze webu](gemini://envs.net/~vojtamaur/) | [Gopher verze webu](gopher://envs.net/1/~vojtamaur)
+
+### JSON-LD
+
+Pro strojové zpracování je k dispozici JSON-LD export, který zahrnuje české i anglické texty článků, metadata a odkazy na média. Využívá standardní slovník Schema.org doplněný o vlastní pojmy popsané ve [slovníku metadat tohoto webu](/ns/). Zachovává tak význam jednotlivých polí i vztahy mezi jazykovými verzemi článků.
+
+[Zobrazit strojově čitelný export všech článků (ALL_POSTS.json)](/ALL_POSTS.json)
+
+### Rosetta (vícejazyčný export)
 
 Z tohoto JSON-LD exportu vzniká také vícejazyčný „Rosetta“ export, ve kterém LLM překládá jeho český obsah do zhruba sta jazyků. Výsledkem jsou samostatné plain-text exporty jednotlivých jazykových verzí.
 
 [„Rosetta“ export — rozcestník jazykových verzí](/rosetta/)
 
+### PDF
+
 Obsah webu je možné ručně exportovat také do PDF, které zachovává jeho obsah v podobě vhodné pro čtení, tisk a dlouhodobou archivaci nezávislou na samotném webu. Podrobnosti o způsobu generování a struktuře exportu jsou uvedeny v technické dokumentaci výše.
 
+### EPUB
+
 Obdobně je vytvářen také EPUB export, určený především pro elektronické čtečky a další software pracující s elektronickými knihami. Oproti PDF používá přizpůsobivý tok textu a představuje další reprezentaci obsahu webu.
+
+### Slow-Scan Television (SSTV)
 
 Samostatnou reprezentaci obsahu tvoří také SSTV export z 10. září 2026, který automaticky převádí textový a obrazový obsah webu na stránky optimalizované pro standardní obrazový přenos Slow-Scan Television (SSTV) v režimu PD120 (640 × 496 px). Jednotlivé stránky jsou zakódovány jako zvukové přenosy ve formátu WAV a lze je zpětně zobrazit běžným SSTV přijímačem bez původního HTML nebo webového prohlížeče. Kompletní export má přibližně 21 GB a 61 hodin zvuku.
 
 [Stáhnout SSTV export (Internet Archive)](https://archive.org/details/vojtamaur-cz-sstv-edition)
 
+### Morseova abeceda
+
+Experimentální export do mezinárodní Morseovy abecedy převádí české i anglické články do jednoduché znakové reprezentace tvořené tečkami, čárkami a oddělovači.
+
+### Další specializované exporty
+
+Další nástroje umožňují filtrované a kompaktní textové exporty, ultrakompaktní PDF s obrázky, textové PDF inspirované Memory of Mankind a souhrnné PDF nebo EPUB metawebového článku s doprovodnými podklady.
+
+### Verbální export
+
 Vedle strojově generovaných exportů existuje také přibližně šestihodinový verbální export webu z 29. srpna 2026, ve kterém postupně procházím, čtu a vlastními slovy komentuji jeho obsah. Záznam tak kromě samotných textů zachycuje také dodatečný kontext, vzpomínky, vysvětlení a informace, které nejsou přímo součástí webu.  
 
 [Přehrát verbální export webu (YouTube)](https://www.youtube-nocookie.com/embed/xOdeVAuI-Wc)
+
+### Graf odkazů (GraphML)
+
+Při každém buildu se automaticky generuje graf interních a externích odkazů webu. Zachycuje strukturu stránek a jejich vzájemné propojení. Dostupný je jako interaktivní vizualizace, vektorový obrázek (SVG) a strojově čitelné exporty GraphML a JSON.
+
+[Zobrazit graf odkazů](/link-graph/)
 
 ## OFFLINE ARCHIVNÍ VRSTVA
 

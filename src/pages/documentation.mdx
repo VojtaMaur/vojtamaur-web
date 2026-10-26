@@ -297,6 +297,8 @@ Used for the Propagační videa section. Contains metadata for external YouTube 
 
 `PostLayout.astro` wraps article content in the main layout and creates a shared wrapper for article pages.
 
+`BaseLayout.astro` resolves the document title from an explicit `title` prop first, then `Astro.props.frontmatter.title` for MDX pages using the frontmatter `layout` field, then the default site name `Vojta Maur`. Empty or non-string title values are skipped. This makes the documentation page use its existing `title: Technical Documentation` metadata in the browser tab without changing titles explicitly passed by Astro pages.
+
 ### 5.2 Dynamic routing through `[slug].astro`
 
 The `[slug].astro` file is the central route for content from the `posts` collection. It handles:
@@ -2558,6 +2560,57 @@ npm run test:markdown
 ```
 
 The output is UTF-8 without BOM and uses LF line endings, so the first character is the Markdown title marker. Writes use a temporary file and atomic replacement after conversion succeeds. The command reports selected article count, byte size, output path and SHA-256. Generated files in `exports/` remain excluded from Git.
+
+### 9.6.14 Build-time website link graph
+
+The single page [/link-graph/](/link-graph/) displays a directed graph of the built website, with search, node selection, incoming/outgoing neighbour lists, external/internal-target filters, zoom, dragging and a fullscreen button. Fullscreen retains all graph controls and closes with its button or Escape; when the native browser API is unavailable or denied, a viewport-filling panel provides the same controls without dependencies. It shares the site's normal layout. This page is Czech; the graph includes both Czech and English pages and other built HTML. The homepage links to it.
+
+Every normal web and USB build **generates the graph by default**. The web pipelines run `npm run generate:link-graph` after English postprocessing, existing exports, source-package generation and sitemap enrichment, but before integrity generation. USB pipelines run it after `usb-rewrite.mjs` and before integrity, including the translating/strict helper scripts. Signed builds subsequently sign the manifest containing the graph. Arweave builds inherit the web graph and preserve its relative links; canonical node URL metadata remains tied to the main site. Gemini/Gopher generation and manual article exports are unchanged.
+
+Generated artifacts:
+
+```text
+dist/link-graph/index.html       # web page (USB: dist/link-graph.html)
+dist/link-graph/site-graph.svg   # complete static drawing, no JavaScript
+dist/link-graph/site-graph.graphml
+dist/link-graph/site-graph.json
+```
+
+The HTML embeds both SVG and JSON directly; it does not fetch data or require a CDN, browser module loader or server. It works under `file://` in the USB build. Without JavaScript, the static graph, downloads and expandable GraphML source remain available. Every SVG node contains a text label and a full title/URL tooltip. The overview initially shows labels for the 65 most connected nodes for legibility; other labels appear on hover. On the interactive page, the “Všechny názvy” checkbox reveals all labels, as do search, node selection and zooming to a viewBox width of 1200 or less. Long visible labels use an ellipsis after 55 characters; full titles and URLs remain in tooltips, the node inspector and JSON/GraphML. Toggling labels affects only the display, not the exported graph data. All three formats share stable node IDs, coordinates and directed edges. Position is a deterministic geometric layout by node type, not a measure of semantic similarity. JSON is versioned with `schemaVersion: 1`; nodes carry `id`, `url`, `label`, `kind`, `file`, `x`, `y`, and edges carry `source`, `target`, `count`, `linkCount`, `embedCount`, `redirectCount`. The latter three count ordinary hyperlinks, embedded local HTML pages and explicit local HTML meta-refresh redirects; `count` is their sum. Edges consisting only of embedding are dashed; redirect-only edges are dotted. The node inspector identifies all relationship types. GraphML preserves the same fields, plus graph-level site and extraction scope.
+
+The optional generator adds **no dependencies**. It uses standard Node.js APIs and Cheerio, which is already a project dependency for existing exports/postprocessing. `scripts/generate-link-graph.mjs` is a small dependency-free entry point that dynamically imports `scripts/lib/link-graph.mjs` inside a catch boundary. A missing parser/module, generator exception or output-write error prints a clear `[link-graph] WARNING`, attempts to remove partial/stale graph artifacts and reset the graph page to an explanatory fallback, and returns successfully so the rest of the build continues. Cleanup problems also produce warnings. This protects the optional graph step; it does not change existing failure handling in Astro or other required steps, which already use Cheerio themselves. The page source never imports the generator. Development mode displays the fallback because it has no completed build to scan.
+
+Graph labels use the document's HTML `head > title` with the trailing `| Vojta Maur` suffix removed. If that title is empty or only the generic site name `Vojta Maur`, the first `h1` is used; the page route is the final fallback. Whitespace is normalized, and SVG tooltip titles are never mistaken for the document title. This changes display labels, not node URLs or IDs; complete URLs remain available in tooltips and the inspector.
+
+Manual generation and regression checks:
+
+```bash
+npm run generate:link-graph
+npm run test:link-graph
+```
+
+Manual generation changes `dist/`; rerun integrity generation and, for signed output, signing afterwards. The regression tests use temporary fixtures, including duplicate/relative/base URLs, query/fragment normalization, XML/inline-JSON escaping, all export formats, reruns, portable paths, local HTML demo embeddings (including mixed link/embed edges and excluded iframe types), a missing dynamically imported module and recovery after an optional error.
+
+To simulate an optional generator failure through the full default pipeline in PowerShell:
+
+```powershell
+$env:LINK_GRAPH_FORCE_FAILURE = '1'
+npm run build:web
+Remove-Item Env:LINK_GRAPH_FORCE_FAILURE
+npm run build:web
+```
+
+The first build should warn and still complete all required steps. The final build restores the normal graph. The flag only affects the graph; it is intended for testing failure isolation.
+
+Extraction scope and limitations:
+
+- Sources are local built `.html` files, including public demos and navigation; `404.html` is excluded as a source. Symlinks are not followed. Nothing is fetched from the internet.
+- Rendered `a[href]` and `area[href]` HTTP(S) links are counted. In addition, `iframe[src]` contributes an embedding relationship when its target resolves to an existing same-origin built HTML page, including local interactive demos. An iframe with `srcdoc` is ignored because that content overrides `src`. Relative links and iframe URLs respect the page URL and an HTML `base` URL. Explicit HTML `meta[http-equiv="refresh"]` URLs are recorded separately as redirects when they resolve to existing same-origin built HTML pages (for example `/pf2026/` to `/demos/pf2026/`). No HTTP or JavaScript redirects are guessed or followed. No canonical tag is treated as an outgoing link.
+- An internal URL has the exact origin `https://vojtamaur.cz`; different protocols, subdomains and mirrors remain external. The graph uses complete external URL targets, not one node per domain, and does not guess redirects.
+- Existing internal HTML aliases (`index.html`, directory paths and USB `.html` routes) merge into their page node. Internal queries/fragments and external fragments merge, while external queries remain distinct. Repeated directed source/target relationships merge into one edge with `linkCount`, `embedCount`, `redirectCount` and their total `count`; self-links are omitted.
+- Non-page internal targets are labelled `internal`; they can be assets, generated exports or unresolved paths. This is not an availability/link-health report.
+- It cannot discover backlinks from third-party websites, JavaScript-created links, remote iframe sources, iframe `srcdoc`, PDF/media/script sources, bare textual URLs or relationships inside PDFs, TXT/JSON exports and remote embedded pages. Email, telephone and other non-HTTP(S) schemes are excluded.
+- The graph page's generated SVG, downloads and neighbour UI are excluded from subsequent scans, so manual reruns do not create recursive presentation links.
 
 ### 9.7 Arweave / Permaweb build
 

@@ -158,12 +158,6 @@ ARCHIVAL COPIES AND DISTRIBUTIONS:
 	kaggle
 	https://www.kaggle.com/datasets/vojtamaur/vojtamaur-cz-rosetta-multilingual-export-2026-09
 	https://www.kaggle.com/datasets/vojtamaur/vojtamaur-cz-morse-code-archival-text-export
-	paste.rs (additional equivalent copies exist)
-	https://paste.rs/s1c6U
-	https://paste.rs/DHEs7
-	https://paste.rs/EfqUS
-	https://paste.rs/f8rti
-	https://paste.rs/C34H3
 	Proton.me
 	https://drive.proton.me/urls/9MK543P588#Lz2xoUSJ9upD
 	https://drive.proton.me/urls/2HPKXJABCG#CnTLdNh55HA9
@@ -286,6 +280,16 @@ ARCHIVAL COPIES AND DISTRIBUTIONS:
 	https://libgen.bz/edition.php?id=208995647
 	Spotify
 	https://open.spotify.com/show/6eybq6M9VcyEd76Re925U2
+	paste.rs (additional equivalent copies exist)
+	https://paste.rs/s1c6U
+	https://paste.rs/DHEs7
+	https://paste.rs/EfqUS
+	https://paste.rs/f8rti
+	https://paste.rs/C34H3
+	Rentry.co
+	https://rentry.co/bfm7b5a3
+	https://rentry.co/2pdbfdcd
+	https://rentry.co/qm9azko3
 	
 PARTIAL PAGE SNAPSHOTS:
 	Internet Archive (additional snapshots may exist)

@@ -1,0 +1,277 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Graf odkazů | Vojta Maur" description="Vztahy mezi stránkami webu a odkazy z webu do internetu. SVG, GraphML a JSON ke stažení." canonicalPath="/link-graph/">
+  <main class="post-page graph-page">
+    <h1>Graf odkazů</h1>
+    <p>Stránky tohoto webu a jejich odkazy dovnitř i ven do internetu, včetně vložených místních HTML dem a místních přesměrování v HTML. Šipky míří od zdrojové stránky k cíli vztahu.</p>
+    <section id="graph-workspace" aria-label="Interaktivní graf odkazů">
+    <div id="graph-controls" hidden>
+      <label for="graph-search">Najít stránku nebo URL</label>
+      <input id="graph-search" type="search" placeholder="Název, doména nebo část URL" autocomplete="off" />
+      <div class="graph-toolbar">
+        <label><input id="graph-externals" type="checkbox" checked /> Externí URL</label>
+        <label><input id="graph-internals" type="checkbox" checked /> Ostatní interní cíle</label>
+        <label><input id="graph-labels" type="checkbox" /> Všechny názvy</label>
+        <button id="graph-zoom-in" type="button" aria-label="Přiblížit graf">+</button>
+        <button id="graph-zoom-out" type="button" aria-label="Oddálit graf">−</button>
+        <button id="graph-reset" type="button">Celý graf</button>
+        <button id="graph-fullscreen" type="button" aria-pressed="false">Celá obrazovka</button>
+      </div>
+      <p class="graph-help">Kliknutím na uzel zobrazíte jeho přímé sousedy. Pro výběr klávesnicí použijte seznam níže. Graf posunete tažením a přiblížíte tlačítky nebo Ctrl + kolečkem.</p>
+      <p class="graph-help">V celkovém přehledu mají názvy nejpropojenější uzly. Další názvy se ukážou při najetí, hledání, výběru nebo větším přiblížení. Přepínač „Všechny názvy“ je zobrazí najednou. Celou obrazovku zavřete tlačítkem nebo klávesou Esc.</p>
+      <p id="graph-status" role="status" aria-live="polite"></p>
+    </div>
+    <template id="link-graph-start"></template>
+    <p role="status">Graf pro tento build není k dispozici. Vzniká automaticky při buildu webu; v režimu vývoje se negeneruje. Případné selhání je uvedeno v logu buildu.</p>
+    <template id="link-graph-end"></template>
+    <section id="graph-inspector" class="graph-inspector" hidden aria-label="Výběr a vztahy uzlu">
+      <div>
+        <label for="graph-results">Uzly odpovídající hledání (nejvýše 80)</label>
+        <select id="graph-results" size="7" aria-label="Vybrat uzel grafu"></select>
+      </div>
+      <div id="graph-node-details" aria-live="polite">Vyberte uzel v grafu nebo v seznamu.</div>
+    </section>
+    </section>
+    <noscript><p>Bez JavaScriptu je k dispozici celý statický graf a jeho exporty. Interaktivní výběr a přibližování vyžadují JavaScript.</p></noscript>
+    <p class="graph-legend">Modrá: HTML stránky · hnědá: ostatní interní cíle (například soubory nebo nerozpoznané cesty) · fialová: externí URL. Čárkovaná hrana: vložení místní HTML stránky přes iframe. Tečkovaná hrana: místní přesměrování v HTML. Rozmístění je geometrické; vzdálenost nevyjadřuje významovou podobnost.</p>
+    <details class="graph-limits">
+      <summary>Co graf zachycuje a jaké má limity</summary>
+      <p>Graf vzniká z odkazů <code>a[href]</code> a <code>area[href]</code> v lokálně sestavených HTML stránkách včetně navigace a samostatných HTML ukázek. Zachycuje také <code>iframe[src]</code> mířící na existující místní HTML stránku, například interaktivní demo. Samostatně zachycuje i přesměrování v HTML přes <code>meta refresh</code> mířící na existující místní HTML stránku. Běžné odkazy, vložení a přesměrování rozlišuje; opakované vztahy mezi stejnými uzly se sloučí a zachovají počty jednotlivých typů. Zahrnuje české i anglické stránky; 404 se neprochází jako zdroj.</p>
+      <p>Nestahuje žádné stránky z internetu, neověřuje dostupnost cílů a nezjišťuje příchozí odkazy z cizích webů. Nezachytí odkazy vytvořené až JavaScriptem, vzdálené iframe, přesměrování přes JavaScript nebo HTTP, iframe s <code>srcdoc</code>, vložené PDF, zdroje obrázků a skriptů, textové URL bez odkazu ani obsah PDF. Interní fragmenty a parametry se slučují; externí parametry se zachovávají a fragmenty slučují. Odkazy na stejnou stránku se vynechávají. E-mailové, telefonní a jiné protokoly mimo HTTP(S) se vynechávají.</p>
+      <p>Interní jsou adresy se stejným originem jako <code>https://vojtamaur.cz</code>; zrcadla, subdomény a jiný protokol jsou externí. Jedna externí URL tvoří jeden uzel, bez odhadování přesměrování. SVG obsahuje celý graf i popisky všech uzlů. V přehledu je většina názvů skrytá kvůli čitelnosti; lze je zobrazit přepínačem „Všechny názvy“. Dlouhé názvy jsou zkráceny výpustkou, celý název a URL jsou v bublině po najetí, detailu uzlu, JSON a GraphML.</p>
+    </details>
+    <p><a href="/documentation/">Technická dokumentace</a> · <a href="/">Zpět na úvodní stránku</a></p>
+  </main>
+</BaseLayout>
+
+<style is:inline>
+  .graph-page a { text-decoration: underline; text-underline-offset: .15em; }
+  .graph-page [hidden] { display: none !important; }
+  .graph-page input[type="search"], .graph-page select { width: 100%; font: inherit; padding: .45rem; }
+  .graph-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: .7rem; margin-top: .7rem; }
+  .graph-toolbar button { font: inherit; padding: .3rem .8rem; background: white; color: #171717; border: 1px solid #888; cursor: pointer; }
+  #graph-workspace:fullscreen, #graph-workspace.is-fullscreen-fallback { background: white; color: #171717; width: 100%; height: 100%; padding: 1rem; overflow: auto; }
+  #graph-workspace.is-fullscreen-fallback { position: fixed; inset: 0; z-index: 10000; }
+  #graph-workspace.is-expanded .graph-canvas svg { height: max(320px, calc(100dvh - 330px)); }
+  #graph-workspace.is-expanded .graph-help { margin: .4rem 0; }
+  .graph-page :focus-visible { outline: 3px solid #175f9c; outline-offset: 3px; }
+  .graph-help, .graph-legend { font-size: .9rem; color: #555; }
+  .graph-canvas { border: 1px solid #aaa; background: white; overflow: hidden; }
+  .graph-canvas svg { display: block; width: 100%; height: min(72vh, 750px); min-height: 320px; touch-action: pan-y; }
+  .graph-canvas.is-interactive svg { touch-action: none; cursor: grab; }
+  .graph-canvas.is-interactive, .graph-canvas.is-interactive * { -webkit-user-select: none; user-select: none; }
+  .graph-canvas [data-node] { cursor: pointer; }
+  .graph-canvas [data-node].is-selected circle { stroke: #000; stroke-width: 4; }
+  .graph-downloads { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .graph-xml pre { max-height: 24rem; overflow: auto; background: #f4f4f4; padding: 1rem; font-size: .8rem; }
+  .graph-inspector { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin: 1.5rem 0; }
+  .graph-inspector > div { min-width: 0; overflow-wrap: anywhere; }
+  .graph-inspector ul { padding-left: 1.2rem; max-height: 22rem; overflow: auto; }
+  .graph-inspector button { font: inherit; text-align: left; cursor: pointer; border: 0; padding: .2rem 0; background: none; color: #175f9c; text-decoration: underline; }
+  .graph-limits { margin-top: 1.5rem; }
+  @media (max-width: 650px) { .graph-inspector { grid-template-columns: 1fr; } }
+</style>
+
+<script is:inline>
+(() => {
+  const payload = document.getElementById('link-graph-data');
+  if (!payload) return;
+  try {
+    const graph = JSON.parse(payload.textContent);
+    const generated = document.querySelector('[data-link-graph-generated]');
+    const svg = generated.querySelector('svg');
+    const search = document.getElementById('graph-search');
+    const externals = document.getElementById('graph-externals');
+    const internals = document.getElementById('graph-internals');
+    const labels = document.getElementById('graph-labels');
+    const workspace = document.getElementById('graph-workspace');
+    const fullscreenButton = document.getElementById('graph-fullscreen');
+    const results = document.getElementById('graph-results');
+    const status = document.getElementById('graph-status');
+    const details = document.getElementById('graph-node-details');
+    const byId = new Map(graph.nodes.map(n => [n.id, n]));
+    const nodeElements = [...svg.querySelectorAll('[data-node]')];
+    const edgeElements = [...svg.querySelectorAll('[data-source]')];
+    const adjacency = new Map(graph.nodes.map(n => [n.id, new Set([n.id])]));
+    for (const edge of graph.edges) {
+      adjacency.get(edge.source).add(edge.target);
+      adjacency.get(edge.target).add(edge.source);
+    }
+    let selected = null;
+    let view = [0, 0, 3000, 3000];
+    const allowed = n => (externals.checked || n.kind !== 'external') && (internals.checked || n.kind !== 'internal');
+    const hrefFor = node => node.kind === 'external' ? node.url : generated.dataset.rootPrefix + node.file;
+    const updateLabels = () => svg.classList.toggle('show-all-labels', labels.checked || !!selected || !!search.value.trim() || view[2] <= 1200);
+    const setView = () => { svg.setAttribute('viewBox', view.join(' ')); updateLabels(); };
+    let fallbackFullscreen = false;
+    let previousBodyOverflow = '';
+    function syncFullscreen() {
+      const expanded = document.fullscreenElement === workspace || fallbackFullscreen;
+      const wasExpanded = workspace.classList.contains('is-expanded');
+      workspace.classList.toggle('is-expanded', expanded);
+      fullscreenButton.setAttribute('aria-pressed', String(expanded));
+      fullscreenButton.textContent = expanded ? 'Zavřít celou obrazovku' : 'Celá obrazovka';
+      if (wasExpanded && !expanded) fullscreenButton.focus();
+    }
+    function setFallbackFullscreen(enabled) {
+      if (enabled) previousBodyOverflow = document.body.style.overflow;
+      document.body.style.overflow = enabled ? 'hidden' : previousBodyOverflow;
+      fallbackFullscreen = enabled;
+      workspace.classList.toggle('is-fullscreen-fallback', enabled);
+      syncFullscreen();
+    }
+    fullscreenButton.addEventListener('click', async () => {
+      if (fallbackFullscreen) { setFallbackFullscreen(false); return; }
+      try {
+        if (document.fullscreenElement === workspace) await document.exitFullscreen();
+        else if (workspace.requestFullscreen && document.fullscreenEnabled) await workspace.requestFullscreen();
+        else setFallbackFullscreen(true);
+      } catch (error) {
+        // Browsers may deny native fullscreen in embedded/offline contexts.
+        // Keep the same controls available in a viewport-filling panel.
+        if (document.fullscreenElement !== workspace) setFallbackFullscreen(true);
+      }
+    });
+    document.addEventListener('fullscreenchange', syncFullscreen);
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      if (fallbackFullscreen) { event.preventDefault(); setFallbackFullscreen(false); }
+      else if (document.fullscreenElement === workspace) {
+        event.preventDefault();
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+    function zoom(factor) {
+      const width = Math.max(120, Math.min(9000, view[2] * factor));
+      const scale = width / view[2];
+      const height = view[3] * scale;
+      view = [view[0] + (view[2] - width) / 2, view[1] + (view[3] - height) / 2, width, height];
+      setView();
+    }
+    function selectNode(id) {
+      selected = id;
+      search.value = '';
+      inspect();
+      render();
+    }
+    function inspect() {
+      details.replaceChildren();
+      if (!selected) { details.textContent = 'Vyberte uzel v grafu nebo v seznamu.'; return; }
+      const node = byId.get(selected);
+      const heading = document.createElement('h2');
+      heading.textContent = node.label;
+      const link = document.createElement('a');
+      link.textContent = node.url;
+      link.href = hrefFor(node);
+      if (node.kind === 'external') link.rel = 'noopener noreferrer';
+      details.append(heading, link);
+      for (const [direction, title] of [['source', 'Odchozí vztahy'], ['target', 'Příchozí vztahy v tomto buildu']]) {
+        const edges = graph.edges.filter(e => e[direction] === selected);
+        const label = document.createElement('h3');
+        label.textContent = `${title} (${edges.length})`;
+        const list = document.createElement('ul');
+        for (const edge of edges) {
+          const other = byId.get(edge[direction === 'source' ? 'target' : 'source']);
+          const item = document.createElement('li');
+          const button = document.createElement('button');
+          button.type = 'button';
+          const types = [];
+          if (edge.linkCount) types.push(`odkaz ${edge.linkCount}×`);
+          if (edge.embedCount) types.push(`vložení HTML stránky ${edge.embedCount}×`);
+          if (edge.redirectCount) types.push(`přesměrování v HTML ${edge.redirectCount}×`);
+          button.textContent = `${other.label} (${types.join('; ')})`;
+          button.title = other.url;
+          button.addEventListener('click', () => selectNode(other.id));
+          item.append(button);
+          list.append(item);
+        }
+        details.append(label, list);
+      }
+    }
+    function render() {
+      const query = search.value.trim().toLocaleLowerCase('cs');
+      const order = { page: 0, internal: 1, external: 2 };
+      const matches = graph.nodes.filter(n => allowed(n) && `${n.label} ${n.url}`.toLocaleLowerCase('cs').includes(query))
+        .sort((a, b) => order[a.kind] - order[b.kind] || a.label.localeCompare(b.label, 'cs'));
+      let visible = new Set(graph.nodes.filter(allowed).map(n => n.id));
+      if (selected) visible = new Set([...adjacency.get(selected)].filter(id => allowed(byId.get(id))));
+      else if (query) {
+        const neighbours = new Set(matches.flatMap(n => [...adjacency.get(n.id)]));
+        visible = new Set([...visible].filter(id => neighbours.has(id)));
+      }
+      for (const element of nodeElements) {
+        const id = element.dataset.node;
+        element.style.display = visible.has(id) ? '' : 'none';
+        element.classList.toggle('is-selected', id === selected);
+      }
+      for (const element of edgeElements) {
+        const touchesSelection = !selected || element.dataset.source === selected || element.dataset.target === selected;
+        element.style.display = visible.has(element.dataset.source) && visible.has(element.dataset.target) && touchesSelection ? '' : 'none';
+        element.setAttribute('stroke-opacity', selected ? '.65' : '.16');
+      }
+      updateLabels();
+      results.replaceChildren();
+      // Always retain the selected option even when its alphabetical position
+      // is beyond the bounded search list.
+      const options = matches.slice(0, 80);
+      if (selected && !options.some(n => n.id === selected)) options.unshift(byId.get(selected));
+      for (const node of options.slice(0, 80)) {
+        const option = document.createElement('option');
+        option.value = node.id;
+        option.textContent = node.label;
+        option.title = node.url;
+        results.append(option);
+      }
+      results.value = selected || '';
+      status.textContent = `${visible.size} z ${graph.nodes.length} uzlů zobrazeno. Hledání: ${matches.length} shod.${selected ? ' Zobrazeni přímí sousedé vybraného uzlu.' : ''}`;
+    }
+    for (const element of nodeElements) {
+      const node = byId.get(element.dataset.node);
+      // The bounded native select supplies keyboard navigation without adding
+      // thousands of tab stops inside the SVG.
+      element.setAttribute('aria-label', node.label);
+      element.addEventListener('click', () => selectNode(node.id));
+    }
+    search.addEventListener('input', () => { selected = null; inspect(); render(); });
+    externals.addEventListener('change', render);
+    internals.addEventListener('change', render);
+    labels.addEventListener('change', updateLabels);
+    results.addEventListener('change', () => { if (results.value) selectNode(results.value); });
+    document.getElementById('graph-zoom-in').addEventListener('click', () => zoom(.7));
+    document.getElementById('graph-zoom-out').addEventListener('click', () => zoom(1 / .7));
+    document.getElementById('graph-reset').addEventListener('click', () => {
+      selected = null; search.value = ''; externals.checked = true; internals.checked = true;
+      view = [0, 0, 3000, 3000]; setView(); inspect(); render();
+    });
+    let drag = null;
+    svg.addEventListener('pointerdown', event => {
+      if (event.button !== 0 || event.target.closest('[data-node]')) return;
+      const matrix = svg.getScreenCTM();
+      if (!matrix) return;
+      event.preventDefault();
+      drag = { x: event.clientX, y: event.clientY, view: [...view], scale: matrix.a };
+      svg.setPointerCapture(event.pointerId);
+    });
+    svg.addEventListener('pointermove', event => {
+      if (!drag) return;
+      view = [drag.view[0] - (event.clientX - drag.x) / drag.scale, drag.view[1] - (event.clientY - drag.y) / drag.scale, drag.view[2], drag.view[3]];
+      setView();
+    });
+    const endDrag = () => { drag = null; };
+    svg.addEventListener('pointerup', endDrag);
+    svg.addEventListener('pointercancel', endDrag);
+    svg.addEventListener('lostpointercapture', endDrag);
+    svg.addEventListener('wheel', event => {
+      if (!event.ctrlKey) return;
+      event.preventDefault(); zoom(event.deltaY > 0 ? 1.15 : 1 / 1.15);
+    }, { passive: false });
+    document.getElementById('graph-controls').hidden = false;
+    document.getElementById('graph-inspector').hidden = false;
+    generated.querySelector('.graph-canvas').classList.add('is-interactive');
+    render();
+  } catch (error) {
+    console.warn('[link-graph] Interaktivní ovládání není dostupné; statický graf a soubory zůstávají k dispozici.', error);
+  }
+})();
+</script>

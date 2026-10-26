@@ -4,7 +4,8 @@ import Header from "../components/Header.astro";
 import { localizePath, type Lang } from "../lib/i18n";
 
 const {
-  title = "Vojta Maur",
+  title: directTitle,
+  frontmatter,
   description = "Osobní web Vojty Maura",
   lang = "cs",
   canonicalPath,
@@ -13,6 +14,7 @@ const {
   noindex = false,
 } = Astro.props as {
   title?: string;
+  frontmatter?: { title?: string };
   description?: string;
   lang?: Lang;
   canonicalPath?: string;
@@ -20,6 +22,12 @@ const {
   alternateEnPath?: string;
   noindex?: boolean;
 };
+
+// Astro pages pass title directly; MDX layout metadata lives in frontmatter.
+// Keep explicit page props first, then fall back to MDX and the site name.
+const title = (typeof directTitle === "string" && directTitle.trim())
+  || (typeof frontmatter?.title === "string" && frontmatter.title.trim())
+  || "Vojta Maur";
 
 const pathname = Astro.url.pathname;
 const pathForCs = alternateCsPath ?? localizePath(pathname, "cs");

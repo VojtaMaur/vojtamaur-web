@@ -188,6 +188,8 @@ npm run export:epub:metaweb
 npm run export:pdf
 npm run export:pdf:metaweb
 npm run export:sstv
+npm run export:images
+npm run export:images:metaweb
 npm run export:markdown
 ```
 
@@ -230,6 +232,8 @@ Meaning of the main scripts:
 - `npm run export:pdf` – manually exports article pages from the finished `dist/` build to archival PDF files; this command is not part of the normal build pipeline
 - `npm run export:pdf:metaweb` – manually creates one archival PDF containing the bilingual metaweb article and its directly related preservation files; this command is not part of any build pipeline
 - `npm run export:sstv` – manually renders indexed articles from the finished `dist/` build to numbered PNG frames at native SSTV mode dimensions; defaults to Czech PD120 output under `exports/sstv/pd120/`, does not run a build or generate audio, and is not part of any build pipeline (section 9.6.8)
+- `npm run export:images` – converts the latest complete bilingual site PDF into a numbered gallery edition in separate Czech and English folders; also runs in `export-all.bat` (section 9.6.15).
+- `npm run export:images:metaweb` – converts the complete bilingual Metaweb PDF into one numbered page sequence with all appendices (section 9.6.15).
 - `npm run export:markdown` – manually creates one readable Markdown archive from the full rendered HTML in `dist/ALL_POSTS.json`; supports language, section and date filters, and runs only when explicitly requested (section 9.6.13).
 - `npm run export:morse` – manually converts the existing `dist/ALL_POSTS.json` through the compact text serializer into an ASCII Morse edition under `exports/`; supports `--lang cs|en|both`, defaults to one bilingual file, and is also included in `export-all.bat` (section 9.6.11)
 
@@ -1664,11 +1668,11 @@ require the local tools described above.
 
 The manual TXT, Markdown, Morse, PDF, Ultra PDF, MoM-like PDF and EPUB exporters append the local export start time to automatically generated filenames, before the extension: `-YYYY-MM-DD_HH-MM-SS-ffffff`. For example, `vojtamaur-web-export-ultra-2026-10-05_14-30-00-123456.pdf` and `vojtamaur-web-export-ultra-2026-10-05_14-30-00-123456.manifest.json` belong to the same run. Microseconds distinguish repeated runs, including multiple exports on the same day. Separate article exports also receive the timestamp. An explicit `--output` is used exactly as supplied, including its adjacent TXT and manifest names. `--no-timestamp` restores legacy automatic names; `--timestamp YYYY-MM-DD_HH-MM-SS-ffffff` selects a specific edition timestamp. PDF/A and uncompressed derivative labels precede the timestamp. The generated build files in `dist/` retain their stable names.
 
-`export-all.bat` generates one shared timestamp in `VOJTAMAUR_EXPORT_TIMESTAMP` for all fourteen steps, including the SSTV output directory. A new batch run creates a new timestamp and preserves older editions. Metaweb PDF includes the Ultra PDF with that same timestamp, creating it at that exact path if needed; a standalone Metaweb PDF run creates its own matching Ultra edition. MoM-like automatic English and bilingual names add `-en` and `-cs-en`, respectively, before the timestamp. Metaweb EPUB uses an `.epub.manifest.json` sidecar so it can coexist with the PDF's `.manifest.json` without replacing it.
+`export-all.bat` generates one shared timestamp in `VOJTAMAUR_EXPORT_TIMESTAMP` for all sixteen steps, including the SSTV and gallery image output directories. A new batch run creates a new timestamp and preserves older editions. Metaweb PDF includes the Ultra PDF with that same timestamp, creating it at that exact path if needed; a standalone Metaweb PDF run creates its own matching Ultra edition. MoM-like automatic English and bilingual names add `-en` and `-cs-en`, respectively, before the timestamp. Metaweb EPUB uses an `.epub.manifest.json` sidecar so it can coexist with the PDF's `.manifest.json` without replacing it.
 
 The default output listings in the sections below and above show the base names; the timestamp is appended automatically unless an explicit `--output` or `--no-timestamp` is used.
 
-The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, runs the fourteen export steps sequentially, and stops immediately if any command fails. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow requires both `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json` from the existing build and begins with separate English and Czech compact text exports, followed by Czech, English and combined Czech + English Markdown exports covering every section. It uses the built JSON without regenerating it, preserving the bytes covered by any existing build checksum manifest or signature. The PDF steps include separate Czech and English MoM-like editions of `volna-tvorba` at the default 4 pt font size. After the PDF steps it creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs, preserving animated GIFs. The SSTV PNG export is the final step:
+The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, and runs sixteen export steps sequentially. The fourteen existing exporters retain their failure handling. The two gallery image scopes run independently at the end: missing optional tools produce warnings (status 3), while actual conversion errors fail the batch after both scopes have been attempted. If optional Ghostscript is absent, the standard PDF step uses uncompressed archive quality instead of stopping all exports. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow requires both `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json` from the existing build and begins with separate English and Czech compact text exports, followed by Czech, English and combined Czech + English Markdown exports covering every section. It uses the built JSON without regenerating it, preserving the bytes covered by any existing build checksum manifest or signature. The PDF steps include separate Czech and English MoM-like editions of `volna-tvorba` at the default 4 pt font size. After the PDF steps it creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs, preserving animated GIFs. The SSTV PNG export is followed by the two gallery image exports (section 9.6.15):
 
 ```bat
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
@@ -1685,6 +1689,8 @@ python scripts/export-metaweb-pdf.py
 python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
 python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
 python scripts/export-site-sstv.py
+python scripts/export-site-images.py --scope all
+python scripts/export-site-images.py --scope metaweb
 ```
 
 Run the complete workflow with:
@@ -1695,7 +1701,7 @@ export-all.bat
 
 The batch file also reuses the current `dist/` and does not create a web build. If the last build was a USB variant, restore a standard web build before running `export-all.bat`.
 
-The SSTV PNG export runs last in `export-all.bat` and can also be run separately with `npm run export:sstv` (section 9.6.8). The batch does not generate SSTV audio.
+The SSTV PNG export precedes the final gallery image steps in `export-all.bat` and can also be run separately with `npm run export:sstv` (section 9.6.8). The batch does not generate SSTV audio.
 
 ### 9.6.6 Manual EPUB exports
 
@@ -1984,7 +1990,7 @@ scripts/export-site-sstv.py
 requirements-sstv-export.txt
 ```
 
-It creates numbered RGB PNG pages at the native resolution of the selected standard SSTV mode. Each PNG represents one complete frame. The exporter is started explicitly with `npm run export:sstv` or as the final step of `export-all.bat`; it is not called by any normal web, USB, Arweave, or Gemini build.
+It creates numbered RGB PNG pages at the native resolution of the selected standard SSTV mode. Each PNG represents one complete frame. The exporter is started explicitly with `npm run export:sstv` or as step 14 of `export-all.bat`; it is not called by any normal web, USB, Arweave, or Gemini build.
 
 #### Setup and build-before-export workflow
 
@@ -2556,14 +2562,13 @@ exports/ALL_POSTS__lang-cs__section-volna-tvorba__from-2020-01-01-<timestamp>.md
 ```bash
 python scripts/export-site-markdown.py --input exports/older-ALL_POSTS.json --language cs --output exports/ALL_POSTS.md
 python scripts/export-site-markdown.py --timestamp 2026-10-23_09-00-00-123456
-npm run test:markdown
 ```
 
 The output is UTF-8 without BOM and uses LF line endings, so the first character is the Markdown title marker. Writes use a temporary file and atomic replacement after conversion succeeds. The command reports selected article count, byte size, output path and SHA-256. Generated files in `exports/` remain excluded from Git.
 
 ### 9.6.14 Build-time website link graph
 
-The single page [/link-graph/](/link-graph/) displays a directed graph of the built website, with search, node selection, incoming/outgoing neighbour lists, external/internal-target filters, zoom, dragging and a fullscreen button. Fullscreen retains all graph controls and closes with its button or Escape; when the native browser API is unavailable or denied, a viewport-filling panel provides the same controls without dependencies. It shares the site's normal layout. This page is Czech; the graph includes both Czech and English pages and other built HTML. The homepage links to it.
+The single page [/link-graph/](/link-graph/) displays a directed graph of the built website, with search, node selection, incoming/outgoing neighbour lists, external/internal-target filters, zoom, dragging and a fullscreen button. On touchscreens, one finger pans and two fingers pinch to zoom while keeping the graph point under their moving midpoint. Pointer Events track each contact independently, including gestures starting on nodes. A tap selects a node; dragging or pinching suppresses accidental selection. Adding or lifting a finger rebases the gesture without jumping, and lifting one finger allows continued panning. Pointer cancellation and lost capture end only the affected contact. Zoom remains limited to viewBox widths of 120–9000, matching the buttons; mouse dragging and Ctrl + wheel remain available. No gesture dependency is required. Fullscreen retains all graph controls and closes with its button or Escape; when the native browser API is unavailable or denied, a viewport-filling panel provides the same controls without dependencies. It shares the site's normal layout. This page is Czech; the graph includes both Czech and English pages and other built HTML. The homepage links to it.
 
 Every normal web and USB build **generates the graph by default**. The web pipelines run `npm run generate:link-graph` after English postprocessing, existing exports, source-package generation and sitemap enrichment, but before integrity generation. USB pipelines run it after `usb-rewrite.mjs` and before integrity, including the translating/strict helper scripts. Signed builds subsequently sign the manifest containing the graph. Arweave builds inherit the web graph and preserve its relative links; canonical node URL metadata remains tied to the main site. Gemini/Gopher generation and manual article exports are unchanged.
 
@@ -2592,10 +2597,9 @@ Manual generation and regression checks:
 
 ```bash
 npm run generate:link-graph
-npm run test:link-graph
 ```
 
-Manual generation changes `dist/`; rerun integrity generation and, for signed output, signing afterwards. The regression tests use temporary fixtures, including duplicate/relative/base URLs, query/fragment normalization, XML/inline-JSON escaping, all export formats, reruns, portable paths, local HTML demo embeddings (including mixed link/embed edges and excluded iframe types), a missing dynamically imported module and recovery after an optional error.
+Manual generation changes `dist/`; rerun integrity generation and, for signed output, signing afterwards.
 
 To simulate an optional generator failure through the full default pipeline in PowerShell:
 
@@ -2668,6 +2672,134 @@ dist-arweave/integrity.json
 The source of truth remains the normal project source. `dist-arweave/` is a generated deployment artifact and should not be edited manually.
 
 ---
+
+### 9.6.15 Gallery page images from archival PDFs
+
+`scripts/export-site-images.py` converts the existing combined bilingual article PDF
+(`--scope all`, default) or the complete Metaweb PDF (`--scope metaweb`). It reads
+those PDF bytes and their exporter manifests, preserving their exact pagination,
+article selection/order, English postprocess state, snapshots and appendices.
+It does not rebuild the site, rerender HTML, translate, access the network or
+modify `dist/`, source PDFs, existing exports or integrity signatures. SSTV's
+simplified typography and native radio dimensions are deliberately not used for
+this visual gallery edition. Shared timestamp naming and Ghostscript discovery
+are reused from the existing export helpers.
+
+```bash
+npm run export:images
+npm run export:images:metaweb
+python scripts/export-site-images.py --scope all --format jpg --quality 85 --dpi 150 --max-edge 2560
+python scripts/export-site-images.py --scope metaweb --format png --batch-size 50
+python scripts/export-site-images.py --pdf "exports/vojtamaur-web-export-all-cs-en-2026-10-22_09-03-12-113251.pdf" --source-manifest "exports/vojtamaur-web-export-pdf-2026-10-22_09-03-12-113251.manifest.json"
+```
+
+With no explicit input or edition timestamp, standalone runs select the newest
+ordinary timestamped PDF by its filename, then require its matching manifest.
+`--pdf` and `--source-manifest` support custom or relocated inputs. The source
+PDF's hash/size must match the manifest, and bookmarks must agree with article
+languages or Metaweb section ranges. Missing/ambiguous metadata fails rather
+than guessing languages. Source PDF/manifest hashes are rechecked before the
+finished directory is exposed.
+
+`export-all.bat` runs both scopes after SSTV and selects only source PDFs with
+its exact `VOJTAMAUR_EXPORT_TIMESTAMP`. It never falls back to an older edition
+if that input is missing. `--timestamp YYYY-MM-DD_HH-MM-SS-ffffff` explicitly
+selects an input/output edition when no `--pdf` is supplied. Each standalone
+run otherwise receives a fresh output timestamp. Existing output folders are
+never overwritten, even when an explicit/shared timestamp is repeated.
+
+Output layout (one independent edition for each scope):
+
+```text
+exports/vojtamaur-web-export-images-all-YYYY-MM-DD_HH-MM-SS-ffffff/
+  cs/000001.jpg  000002.jpg ...
+  en/000001.jpg  000002.jpg ...
+  manifest.json
+  SHA256SUMS.txt
+  README.txt
+  upload-cs.txt
+  upload-en.txt
+  upload-cs-001.txt ...
+  upload-en-001.txt ...
+
+exports/vojtamaur-web-export-images-metaweb-YYYY-MM-DD_HH-MM-SS-ffffff/
+  000001.jpg  000002.jpg ...
+  manifest.json
+  SHA256SUMS.txt
+  README.txt
+  upload.txt
+  upload-001.txt ...
+```
+
+The full-site export numbers `cs/` and `en/` separately from `000001`. Metaweb
+has one bilingual sequence directly in its edition folder, with each source PDF
+page exactly once in original order and no language subfolders or duplicated
+appendices. Its visible footer uses `CS+EN`. A white footer band
+is appended below each complete page raster, without covering its content:
+website, edition language, local page/total, and original PDF page number.
+`--no-footer` keeps only the source raster. Image dimensions include the band;
+`--max-edge` caps the final width/height without stretching. The manifest maps
+each image back to its PDF page, section/article, source language, translation
+status and public route where available. It records pixel dimensions, byte
+counts, selected format, effective rendering DPI and SHA-256.
+Paths inside the edition are relative with forward slashes. Source identity is
+recorded by filename/hash, without requiring the original machine's directories.
+
+For the full-site export, language-specific article pages appear only in the
+corresponding language folder; the original bilingual PDF index appears in both.
+Existing English translation fallbacks retain their source PDF manifest status.
+For Metaweb, every PDF page remains in one complete bilingual sequence: title,
+contents, both article versions, image appendix, Ultra PDF, archive map,
+documentation and integrity appendices. Sections retain their original languages;
+no content is translated or moved into separate language editions.
+
+Default `--format jpg` uses optimized JPEG consistently for the entire export,
+including both full-site language folders. `--quality` defaults to 85, with JPEG
+4:4:4 to preserve coloured text. Use `--format png` to produce only lossless PNG
+rasters instead. There is no `--format auto`, per-page format switching or mixed
+JPG/PNG output. A new format choice applies to the whole invocation and creates
+a separate timestamped edition. Default rendering is 150 DPI with a 2560-pixel
+final edge cap. Large PDF sheets are rendered at a bounded effective DPI before
+resizing. Only groups of up to eight page rasters are staged at a time.
+
+No new Python package is required: `pypdf` from the PDF requirements and `Pillow`
+from existing SSTV/EPUB requirements are reused. The renderer prefers existing
+Ghostscript and otherwise tries Poppler `pdftoppm`. Options `--backend auto|ghostscript|poppler`, `--ghostscript PATH` and `--pdftoppm PATH` override
+discovery. Neither renderer is installed automatically. Missing optional
+libraries/renderers return exit status 3; invalid input, render failures and
+integrity failures return 1. Interrupted/failed conversion does not expose a
+partially complete final edition. The batch reports unavailable image exports
+and completes the other exporters; it uses ordinary uncompressed PDF archive
+quality when optional Ghostscript compression is unavailable.
+
+`--batch-size` defaults to 100 images per upload list and can be changed to suit
+a particular gallery. Lists reference the original files and do not duplicate
+images. `--max-file-mb NUMBER` records warnings about individual files above a
+chosen MiB limit; it does not silently degrade quality. Gallery file-count,
+pixel, byte and content limits vary: these lists do not guarantee that any
+platform accepts hundreds of pages in one post or album. Check current service
+rules before uploading. Upload images in numeric order, credit Vojta Maur and
+`https://vojtamaur.cz/`, and retain the original files. Galleries may strip
+metadata, rename files, change ordering or recompress images. Visible numbering
+survives metadata stripping; local hashes verify original bytes, not a gallery's
+recompressed copies. Raster output loses selectable text, clickable hyperlinks,
+animations and interactive content. Existing PDF clipping/pagination limitations
+remain; HTML/text/source archives are still needed for full recovery.
+
+```bash
+python scripts/export-site-images.py --verify "exports/EDITION-FOLDER"
+python scripts/export-site-images.py --scope all --pages 1,6-8,790
+```
+
+Verification works after copying the complete edition to another directory or
+machine, without the source PDFs or renderer. It checks the file inventory,
+checksums, image dimensions/mode, consistent format and contiguous numbering.
+Metaweb verification also checks that the selected source pages occur exactly
+once in PDF order. Verification remains compatible with older mixed-format
+version-1 editions, without changing those files. `SHA256SUMS.txt`
+covers images, manifest, README and upload lists; these checks are not a digital
+signature. `--pages` creates an explicitly named `*-preview-*` edition and marks
+it as partial when the selected source pages do not cover the complete PDF.
 
 ## 10. Exact special build logic
 
@@ -3649,6 +3781,7 @@ Possible future directions for the project:
   - [AT Protocol](https://atproto.com/) – preservation of textual archival content through custom records in a public account repository, potentially using a dedicated Lexicon and splitting larger exports into multiple records; persistence depends on the hosting Personal Data Server (PDS) and any independent replication
   - [Keybase](https://keybase.io/) – storage of archival exports or static website files in the publicly accessible, cryptographically signed Keybase Filesystem (`/keybase/public/`), subject to the service's continued operation and storage policies
   - [FOREVER](https://www.forever.com/) – evaluation as an additional long-term digital preservation service, complementing the existing use of [Permanent.org](https://www.permanent.org/) and providing further redundancy through an independent archival provider
+  - [Auto Drive (Autonomys Network)](https://ai3.storage/) – evaluation of decentralized archival storage for public website exports (e.g. ZIP, PDF, or ALL_POSTS.txt), using an independent blockchain-based storage network; practical upload limits, costs, public retrieval, and long-term data availability require verification
 - evaluation of using LLM agents to perform the archivist's role, scaling web discovery and preservation by running many parallel instances
 - evaluation of Bitcoin Ordinals inscriptions as an immutable, blockchain-based archival medium, embedding selected small digital artifacts directly into the Bitcoin blockchain to provide highly durable, publicly retrievable copies independent of conventional hosting infrastructure
 - implementation of standardized RSS and JSON Feed endpoints (e.g. /rss.xml and /feed.json) for machine-readable syndication and independent subscription to newly published content

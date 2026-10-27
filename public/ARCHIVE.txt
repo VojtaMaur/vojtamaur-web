@@ -47,6 +47,8 @@ COPIES OF GITHUB REPOSITORY:
 	https://codeberg.org/vojta_maur/pages
 	SourceForge
 	https://sourceforge.net/projects/vojtamaur/
+	repo.or.cz
+	https://repo.or.cz/vojtamaur-web.git
 	Software Heritage (archival ingest of repository)
 	https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/VojtaMaur/vojtamaur-web
 	Internet archive (archival ingest of repository)
@@ -290,6 +292,8 @@ ARCHIVAL COPIES AND DISTRIBUTIONS:
 	https://rentry.co/bfm7b5a3
 	https://rentry.co/2pdbfdcd
 	https://rentry.co/qm9azko3
+	Scratch
+	https://scratch.mit.edu/projects/1396218224/
 	
 PARTIAL PAGE SNAPSHOTS:
 	Internet Archive (additional snapshots may exist)
@@ -1119,6 +1123,12 @@ PARTIAL PAGE SNAPSHOTS:
 	https://megalodon.jp/2026-0706-2009-30/https://vojtamaur.cz:443/en/cestovani-recko-2020/
 	https://megalodon.jp/2026-0706-2010-50/https://vojtamaur.cz:443/cestovani/
 	https://megalodon.jp/2026-0722-1228-48/https://vojtamaur.cz:443/en/plevel/
+	Kiroku
+	https://kiroku.today/en/a/9178126c99qclzx6
+	https://kiroku.today/en/a/2b71e4f866qcqtmm
+	https://kiroku.today/en/a/24c9d42defqcrx4y
+	https://kiroku.today/en/a/1b11e1999eqctu3k
+	https://kiroku.today/en/a/8a3f1b4658qcv665
 	Perma.cc
 	https://perma.cc/5W67-Z395
 	https://perma.cc/KHP9-63FL

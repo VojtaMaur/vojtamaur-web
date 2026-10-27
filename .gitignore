@@ -36,7 +36,7 @@ metadata-report*.json
 vojtamaur-web-source*.zip
 source/vojtamaur-web-source*.zip
 
-# generated filtered text exports
+# generated exports
 exports/
 
 # Python bytecode cache

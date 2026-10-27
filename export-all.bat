@@ -2,6 +2,8 @@
 setlocal EnableExtensions EnableDelayedExpansion
 chcp 65001 >nul
 set "PYTHONUTF8=1"
+set "EXPORT_WARNINGS=0"
+set "IMAGE_EXPORT_EXIT=0"
 
 pushd "%~dp0" || exit /b 1
 
@@ -100,13 +102,14 @@ if not defined GS_EXE (
     )
 )
 
-if not defined GS_EXE (
+if defined GS_EXE (
+    set PDF_QUALITY_ARGS=--pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "!GS_EXE!"
+) else (
     echo.
-    echo [ERROR] Ghostscript 64-bit executable gswin64c.exe was not found.
-    echo The standard PDF export uses --pdf-quality ebook and requires Ghostscript.
-    echo Install Ghostscript, then run this BAT again.
-    set "EXPORT_EXIT=15"
-    goto :failed
+    echo [WARN] Optional Ghostscript not found. Standard PDF will use uncompressed archive quality.
+    echo [WARN] Image exports will try Poppler, or report unavailable and let other exports finish.
+    set "PDF_QUALITY_ARGS=--pdf-quality archive"
+    set "EXPORT_WARNINGS=1"
 )
 
 echo.
@@ -114,7 +117,7 @@ echo [OK] Node.js found.
 echo [OK] Python found.
 echo [OK] Python dependencies ready.
 echo [OK] Playwright Chromium ready.
-echo [OK] Ghostscript: !GS_EXE!
+if defined GS_EXE echo [OK] Ghostscript: !GS_EXE!
 
 rem ===========================================================================
 rem EXPORT WORKFLOW
@@ -131,7 +134,7 @@ if not defined VOJTAMAUR_EXPORT_TIMESTAMP (
 echo [EDITION] !VOJTAMAUR_EXPORT_TIMESTAMP!
 
 echo.
-echo [1/14] Compact English Free Creation text export
+echo [1/16] Compact English Free Creation text export
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -139,7 +142,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/14] Compact Czech Free Creation text export
+echo [2/16] Compact Czech Free Creation text export
 python scripts/filter-all-posts.py --language cs --section volna-tvorba --format compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -147,7 +150,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/14] Czech Markdown export (all sections)
+echo [3/16] Czech Markdown export (all sections)
 python scripts/export-site-markdown.py --language cs --section all
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -155,7 +158,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/14] English Markdown export (all sections)
+echo [4/16] English Markdown export (all sections)
 python scripts/export-site-markdown.py --language en --section all
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -163,7 +166,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [5/14] Bilingual Markdown export (all sections)
+echo [5/16] Bilingual Markdown export (all sections)
 python scripts/export-site-markdown.py --language both --section all
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -171,7 +174,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [6/14] Bilingual Morse text export
+echo [6/16] Bilingual Morse text export
 python scripts/export-site-morse.py --lang both
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -179,15 +182,15 @@ if errorlevel 1 (
 )
 
 echo.
-echo [7/14] Standard archival PDF export
-python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-quality 75 --ghostscript "!GS_EXE!"
+echo [7/16] Standard archival PDF export
+python scripts/export-site-pdf.py !PDF_QUALITY_ARGS!
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
     goto :failed
 )
 
 echo.
-echo [8/14] Ultra-compact Czech PDF export
+echo [8/16] Ultra-compact Czech PDF export
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -195,7 +198,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [9/14] MoM-like Czech Free Creation PDF export
+echo [9/16] MoM-like Czech Free Creation PDF export
 python scripts/export-site-mom-like.py --lang cs
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -203,7 +206,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [10/14] MoM-like English Free Creation PDF export
+echo [10/16] MoM-like English Free Creation PDF export
 python scripts/export-site-mom-like.py --lang en
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -211,7 +214,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [11/14] Metaweb archival PDF export
+echo [11/16] Metaweb archival PDF export
 python scripts/export-metaweb-pdf.py
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -219,7 +222,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [12/14] Compact bilingual Metaweb EPUB export
+echo [12/16] Compact bilingual Metaweb EPUB export
 python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -227,7 +230,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [13/14] Compact Czech and English site EPUB exports
+echo [13/16] Compact Czech and English site EPUB exports
 python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -235,16 +238,47 @@ if errorlevel 1 (
 )
 
 echo.
-echo [14/14] SSTV PNG export
+echo [14/16] SSTV PNG export
 python scripts/export-site-sstv.py
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
     goto :failed
 )
 
+rem Gallery exports consume only the PDFs/manifests from this exact shared edition.
+rem Exit 3 means an optional rasterizer/dependency is unavailable. Run both scopes
+rem before propagating a real conversion failure; never hide a corrupt source PDF.
+echo.
+echo [15/16] Complete bilingual site gallery images
+python scripts/export-site-images.py --scope all
+set "IMAGE_RESULT=!ERRORLEVEL!"
+if "!IMAGE_RESULT!"=="3" (
+    echo [WARN] Site gallery images unavailable; other exports are preserved.
+    set "EXPORT_WARNINGS=1"
+) else if not "!IMAGE_RESULT!"=="0" (
+    set "IMAGE_EXPORT_EXIT=!IMAGE_RESULT!"
+)
+
+echo.
+echo [16/16] Complete Metaweb gallery images
+python scripts/export-site-images.py --scope metaweb
+set "IMAGE_RESULT=!ERRORLEVEL!"
+if "!IMAGE_RESULT!"=="3" (
+    echo [WARN] Metaweb gallery images unavailable; other exports are preserved.
+    set "EXPORT_WARNINGS=1"
+) else if not "!IMAGE_RESULT!"=="0" (
+    set "IMAGE_EXPORT_EXIT=!IMAGE_RESULT!"
+)
+if not "!IMAGE_EXPORT_EXIT!"=="0" (
+    set "EXPORT_EXIT=!IMAGE_EXPORT_EXIT!"
+    goto :failed
+)
+
 echo.
 echo ============================================================
-echo   All exports completed successfully.
+echo   Export workflow completed.
+if "!EXPORT_WARNINGS!"=="1" echo   See WARN messages for optional tools/exports.
+if "!EXPORT_WARNINGS!"=="0" echo   All exports completed successfully.
 echo ============================================================
 popd
 pause

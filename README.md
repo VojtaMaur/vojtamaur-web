@@ -318,7 +318,9 @@ The default web and USB build pipelines also generate `/link-graph/`, an interac
 
 Graph generation is optional for build success: import/parser/output errors print `[link-graph] WARNING`, remove incomplete graph downloads where possible, leave an explanatory page, and allow the normal build to continue. The graph is enabled by default. `npm run generate:link-graph` regenerates it from existing `dist/`; then rerun `npm run generate:integrity` (and sign again if needed), because this changes build bytes. Never regenerate after signing without refreshing integrity and the signature.
 
-`npm run test:link-graph` checks extraction, export consistency, offline paths and optional failures. For an end-to-end failure check in PowerShell, set `$env:LINK_GRAPH_FORCE_FAILURE='1'`, run `npm run build:web`, then remove that test variable with `Remove-Item Env:LINK_GRAPH_FORCE_FAILURE`. A warning and a successful main build are expected; run a normal build afterwards to restore the graph.
+The graph supports one-finger panning and two-finger pinch zoom around the moving midpoint of the touches. Gestures can start on a node; a tap selects it, while a drag or pinch suppresses accidental selection. Lifting one finger continues as panning without a jump. Mouse dragging, zoom buttons and Ctrl + wheel remain available. The gestures use native Pointer Events without another dependency.
+
+For an end-to-end failure check in PowerShell, set `$env:LINK_GRAPH_FORCE_FAILURE='1'`, run `npm run build:web`, then remove that test variable with `Remove-Item Env:LINK_GRAPH_FORCE_FAILURE`. A warning and a successful main build are expected; run a normal build afterwards to restore the graph.
 
 The graph also inventories published content files under `files/`, `images/` and `keys/`, so unlinked files such as `/images/kurt-godel-rat.jpg` appear as isolated nodes. Only HTML documents from `demos/` are included; their support images/data are excluded even when linked. CSS/JavaScript and similar technical assets are excluded. The final SHA-256 manifest is produced after the graph and includes its artifacts; the graph enumerates those three finished content folders without rehashing them or depending on that manifest. The node browser is a full-width table with wrapping names/paths and separate incoming/outgoing columns.
 
@@ -394,6 +396,36 @@ the exporter explicitly reports that external PDF/A validation was not performed
 Ordinary PDF remains the default, and `export-all.bat` does not request PDF/A.
 See documentation section 9.6.5 for presets, override semantics, validation and
 the bounded target-size search (status 2 when the limit cannot be reached).
+
+## Gallery image exports
+
+`export-all.bat` now also converts its exact bilingual site PDF and Metaweb PDF
+into separate timestamped `exports/vojtamaur-web-export-images-{all|metaweb}-.../`
+editions. The full-site export has numbered `cs/` and `en/` images. Metaweb is
+one bilingual numbered sequence directly in its edition folder, preserving every
+PDF page exactly once in source order, including all appendices. Both contain a
+manifest, SHA-256 checksums and configurable upload batch lists. No website build
+is performed.
+Standalone commands reuse the latest matching PDF and require its authentic
+manifest (use `--pdf` and `--source-manifest` for custom/relocated inputs):
+
+```bash
+npm run export:images
+npm run export:images:metaweb
+python scripts/export-site-images.py --scope all --format jpg --quality 85 --dpi 150 --max-edge 2560
+python scripts/export-site-images.py --verify "exports/EDITION-FOLDER"
+```
+
+Default `--format jpg` uses JPEG consistently for the complete edition. There
+is no automatic format selection or mixing of file types. JPEG is lossy; choose
+`--format png` to use lossless PNG for the complete edition instead. Existing
+Pillow and pypdf dependencies are reused. Either existing Ghostscript or optional
+Poppler (`pdftoppm`) renders the PDFs; nothing is downloaded or installed by the
+image exporter. Missing optional tools return status 3 and do not block other
+batch exports. Without Ghostscript the standard PDF step uses archive quality.
+The full site's shared PDF index retains its original languages in both folders.
+Metaweb retains the complete bilingual PDF as one sequence. See documentation section
+9.6.15 for input selection, numbering, configuration and gallery limitations.
 
 ## Documentation
 

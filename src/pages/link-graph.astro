@@ -77,7 +77,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <button id="graph-reset" type="button">Celý graf</button>
         <button id="graph-fullscreen" type="button" aria-pressed="false">Celá obrazovka</button>
       </div>
-      <p class="graph-help">Kliknutím na uzel zobrazíte jeho přímé sousedy. Pro výběr klávesnicí použijte seznam níže. Graf posunete tažením a přiblížíte tlačítky nebo Ctrl + kolečkem.</p>
+      <p class="graph-help">Kliknutím na uzel zobrazíte jeho přímé sousedy. Pro výběr klávesnicí použijte seznam níže. Graf posunete tažením; na mobilu jedním prstem, přiblížíte a oddálíte dvěma prsty. Použít můžete také tlačítka nebo Ctrl + kolečko.</p>
       <p class="graph-help">Názvy: „Automaticky“ je odhaluje podle přiblížení a výběru, „Všechny“ je zobrazí najednou a „Jen při najetí“ nechá viditelný pouze název uzlu pod kurzorem, i při přiblížení. Celou obrazovku zavřete tlačítkem nebo klávesou Esc.</p>
       <p id="graph-status" role="status" aria-live="polite"></p>
     </div>
@@ -123,6 +123,92 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 
 <script is:inline>
+function setupGraphGestures(svg, getView, applyView) {
+  const pointers = new Map();
+  let start = null;
+  let suppressClick = false;
+  const centre = points => points.length > 1
+    ? { x: (points[0].x + points[1].x) / 2, y: (points[0].y + points[1].y) / 2 }
+    : { x: points[0].x, y: points[0].y };
+  const distance = points => points.length > 1 ? Math.hypot(points[1].x - points[0].x, points[1].y - points[0].y) : 0;
+  function graphPoint(point) {
+    // Include SVG letterboxing and the current viewBox, rather than assuming
+    // that the graph fills the canvas or starts at the screen origin.
+    const m = svg.getScreenCTM();
+    if (!m) return null;
+    const determinant = m.a * m.d - m.b * m.c;
+    if (!determinant) return null;
+    const x = point.x - m.e, y = point.y - m.f;
+    return { x: (m.d * x - m.c * y) / determinant, y: (m.a * y - m.b * x) / determinant };
+  }
+  function rebase() {
+    const points = [...pointers.values()].slice(0, 2);
+    const midpoint = points.length ? centre(points) : null;
+    const anchor = midpoint && graphPoint(midpoint);
+    start = anchor ? { view: [...getView()], midpoint, anchor, distance: distance(points) } : null;
+  }
+  svg.addEventListener('pointerdown', event => {
+    if (event.button !== 0 || (event.pointerType !== 'touch' && event.target.closest('[data-node]'))) return;
+    if (!pointers.size) suppressClick = false;
+    event.preventDefault();
+    pointers.set(event.pointerId, { x: event.clientX, y: event.clientY, target: event.target });
+    if (pointers.size > 1) suppressClick = true;
+    rebase();
+    // Capture on the original element so a tap on a node still clicks that
+    // node. A pinch or drag is blocked by the capturing click listener below.
+    event.target.setPointerCapture(event.pointerId);
+  });
+  svg.addEventListener('pointermove', event => {
+    const pointer = pointers.get(event.pointerId);
+    if (!pointer || !start) return;
+    event.preventDefault();
+    pointer.x = event.clientX;
+    pointer.y = event.clientY;
+    const points = [...pointers.values()].slice(0, 2);
+    const midpoint = centre(points);
+    if (points.length === 1 && !suppressClick) {
+      if (Math.hypot(midpoint.x - start.midpoint.x, midpoint.y - start.midpoint.y) < 5) return;
+      suppressClick = true;
+    }
+    const current = graphPoint(midpoint);
+    const gap = distance(points);
+    if (!current || (points.length > 1 && !gap)) return;
+    if (points.length > 1 && !start.distance) { rebase(); return; }
+    const width = Math.max(120, Math.min(9000, start.view[2] * (points.length > 1 ? start.distance / gap : 1)));
+    const height = start.view[3] * width / start.view[2];
+    const view = getView();
+    applyView([
+      start.anchor.x - (current.x - view[0]) * width / view[2],
+      start.anchor.y - (current.y - view[1]) * height / view[3],
+      width, height,
+    ]);
+  });
+  function finish(event) {
+    if (!pointers.has(event.pointerId)) return;
+    if (event.type !== 'pointerup') suppressClick = true;
+    pointers.delete(event.pointerId);
+    // Continue smoothly with the remaining finger, or a different pair.
+    rebase();
+  }
+  svg.addEventListener('pointerup', finish);
+  svg.addEventListener('pointercancel', finish);
+  svg.addEventListener('lostpointercapture', finish);
+  svg.addEventListener('click', event => {
+    if (!suppressClick) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }, true);
+  return {
+    cancel() {
+      const captures = [...pointers.entries()];
+      pointers.clear(); start = null; suppressClick = true;
+      for (const [id, pointer] of captures) {
+        if (pointer.target.hasPointerCapture(id)) pointer.target.releasePointerCapture(id);
+      }
+    },
+  };
+}
+
 (() => {
   const payload = document.getElementById('link-graph-data');
   if (!payload) return;
@@ -369,28 +455,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     });
     document.getElementById('graph-zoom-in').addEventListener('click', () => zoom(.7));
     document.getElementById('graph-zoom-out').addEventListener('click', () => zoom(1 / .7));
+    const gestures = setupGraphGestures(svg, () => view, next => { view = next; setView(); });
     document.getElementById('graph-reset').addEventListener('click', () => {
+      gestures.cancel();
       selected = null; search.value = ''; externals.checked = true; internals.checked = true;
       view = [0, 0, 3000, 3000]; setView(); inspect(); renderListFromStart();
     });
-    let drag = null;
-    svg.addEventListener('pointerdown', event => {
-      if (event.button !== 0 || event.target.closest('[data-node]')) return;
-      const matrix = svg.getScreenCTM();
-      if (!matrix) return;
-      event.preventDefault();
-      drag = { x: event.clientX, y: event.clientY, view: [...view], scale: matrix.a };
-      svg.setPointerCapture(event.pointerId);
-    });
-    svg.addEventListener('pointermove', event => {
-      if (!drag) return;
-      view = [drag.view[0] - (event.clientX - drag.x) / drag.scale, drag.view[1] - (event.clientY - drag.y) / drag.scale, drag.view[2], drag.view[3]];
-      setView();
-    });
-    const endDrag = () => { drag = null; };
-    svg.addEventListener('pointerup', endDrag);
-    svg.addEventListener('pointercancel', endDrag);
-    svg.addEventListener('lostpointercapture', endDrag);
     svg.addEventListener('wheel', event => {
       if (!event.ctrlKey) return;
       event.preventDefault(); zoom(event.deltaY > 0 ? 1.15 : 1 / 1.15);

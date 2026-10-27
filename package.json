@@ -13,7 +13,6 @@
     "generate:source-bundle": "node scripts/generate-source-bundle.mjs",
     "generate:sitemap": "node scripts/enrich-sitemap.mjs",
     "generate:link-graph": "node scripts/generate-link-graph.mjs",
-    "test:link-graph": "node --test scripts/test-link-graph.mjs",
     "test:rosetta": "node --test scripts/tests/rosetta.test.mjs",
     "test:sitemap": "node --test scripts/tests/sitemap.test.mjs",
     "test:wayback": "python -B -m unittest discover -s scripts/tests -p test_wayback.py",
@@ -50,8 +49,9 @@
     "export:pdf:build": "python scripts/export-site-pdf.py --build-command \"npm run build:web:strict\"",
     "export:pdf:metaweb": "python scripts/export-metaweb-pdf.py",
     "export:sstv": "python scripts/export-site-sstv.py",
+    "export:images": "python scripts/export-site-images.py",
+    "export:images:metaweb": "python scripts/export-site-images.py --scope metaweb",
     "export:markdown": "python scripts/export-site-markdown.py",
-    "test:markdown": "python -B scripts/test_markdown_export.py",
     "export:morse": "python scripts/export-site-morse.py",
     "export:mom-like": "python scripts/export-site-mom-like.py"
   },

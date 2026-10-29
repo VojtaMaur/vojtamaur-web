@@ -1,0 +1,3 @@
+# Optional manual exporter dependencies; not part of the website build.
+Pillow>=10.0,<13
+segno==1.6.6

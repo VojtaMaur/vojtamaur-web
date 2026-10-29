@@ -1,0 +1,3 @@
+# Pixel scanning and --verify-qr; raw .ma decoding uses the standard library + Node.
+Pillow>=10.0,<13
+zxing-cpp==2.3.0

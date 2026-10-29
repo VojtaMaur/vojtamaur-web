@@ -1,0 +1,18 @@
+[package]
+name = "meme-archive-raptorq"
+version = "1.0.0"
+edition = "2024"
+publish = false
+license = "Apache-2.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+raptorq = "=2.0.1"
+
+[profile.release]
+opt-level = "s"
+lto = true
+panic = "abort"
+strip = true

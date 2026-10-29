@@ -462,3 +462,12 @@ Keep finished, selected non-English translations as `public/rosetta/ALL_POSTS__l
 An optional root `rosetta.json` keeps the matching export state and supplies translation-edition date and validation metadata during the build. It stays out of the public build and source ZIP. The build never reads `exports/` or calls a translation API. Replace the selected TXT and matching JSON manually when updating this edition. UI notices live in `src/lib/rosetta-copy.ts`. See documentation section 9.6.10 for publication and source-package recovery details.
 
 After a web or USB build, run `npm run test:rosetta` to check all published language pages, dates, links and original TXT bytes.
+
+## Meme archive export
+
+Manual, independent meme editions embed real RFC 6330 RaptorQ symbols of the
+compressed `ALL_POSTS.txt` in binary QR codes. Supports deterministic seeds,
+continuous generation, resume, and reconstruction from image pixels. Existing
+builds and `export-all.bat` do not invoke it. See
+[scripts/meme-archive/README.md](scripts/meme-archive/README.md) for isolated
+optional dependencies, commands, format specification and validation.

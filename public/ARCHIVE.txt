@@ -143,6 +143,7 @@ ARCHIVAL COPIES AND DISTRIBUTIONS:
 	https://archive.org/details/vojtamaur-web-rosetta-export-2026-09-23-separate-files
 	https://archive.org/details/vojtamaur.cz-all_posts-morse-export-2026-09-27
 	https://archive.org/details/vojtamaur.cz-morse-code-archival-export-2026-09-28
+	https://archive.org/details/memes_en_20261029
 	Permanent.org
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r7
 	https://app.permanent.org/p/archive/0kx0-0000/0kx0-0005/2230361/record/0kx0-00r8
@@ -294,6 +295,16 @@ ARCHIVAL COPIES AND DISTRIBUTIONS:
 	https://rentry.co/qm9azko3
 	Scratch
 	https://scratch.mit.edu/projects/1396218224/
+	E-Hentai Galleries
+	https://e-hentai.org/g/4285153/e990090927/
+	https://e-hentai.org/g/4285445/cd0f246130/
+	https://e-hentai.org/g/4289292/ab42825bad/
+	Rajče
+	https://www.rajce.idnes.cz/vojtamaur/album/vojtamaur-cz-kompletni-archiv-webu-ceska-verze
+	https://www.rajce.idnes.cz/vojtamaur/album/vojtamaur-cz-complete-website-archive-english-edition
+	https://www.rajce.idnes.cz/vojtamaur/album/vojtamaur-cz-metawebovy-clanek-metaweb-article-cs-en
+	Not Forgotten Preservation Library
+	https://libraryrecords.not-forgotten.com/digital/collection/p21072coll2/id/3361/rec/1
 	
 PARTIAL PAGE SNAPSHOTS:
 	Internet Archive (additional snapshots may exist)
@@ -851,6 +862,8 @@ PARTIAL PAGE SNAPSHOTS:
 	https://web.archive.org/web/20261005102339/https://vojtamaur.cz/en/clipboard-smetiste/
 	https://web.archive.org/web/20261005102424/https://vojtamaur.cz/en/docasne-entity/
 	https://web.archive.org/web/20261026102544/https://vojtamaur.cz/link-graph/
+	https://web.archive.org/web/20261027125344/https://e-hentai.org/g/4285153/e990090927/
+	https://web.archive.org/web/20261027141933/https://e-hentai.org/g/4285445/cd0f246130/
 	archive.today
 	http://archive.today/2026.05.08-163926/https://vojtamaur.cz/
 	http://archive.today/2026.05.08-164227/https://vojtamaur.cz/en/

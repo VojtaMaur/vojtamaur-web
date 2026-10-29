@@ -53,7 +53,10 @@
     "export:images:metaweb": "python scripts/export-site-images.py --scope metaweb",
     "export:markdown": "python scripts/export-site-markdown.py",
     "export:morse": "python scripts/export-site-morse.py",
-    "export:mom-like": "python scripts/export-site-mom-like.py"
+    "export:mom-like": "python scripts/export-site-mom-like.py",
+    "export:meme": "python scripts/meme-archive/generate.py",
+    "decode:meme": "python scripts/meme-archive/decode.py",
+    "test:meme": "python -B -m unittest discover -s scripts/meme-archive -p test_*.py"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",

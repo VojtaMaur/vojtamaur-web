@@ -1,3 +1,20 @@
+## 0.10.0 — lokální GUI nad stávajícím CLI
+
+Přidán run-gui.cmd a swarm.py gui: lokální Python HTTP panel, žádný frontend
+build/runtime navíc. Výběr brainstorming/cheap/experimentálního profilu, role,
+modely, limity, nová a pokračující práce, aktuální aktivita, nápady, reporty,
+approvals a Swarm CMD. Samostatné skutečné CMD zůstává alternativou. Profily
+se ukládají mimo produkci, klíč je pouze v relaci/prostředí, stav se čte read-only.
+Komentáře se předávají přes operator-inbox bez druhého SQLite writera, aplikují
+se mezi batchi; model vidí poslední tři a novější konfliktní preference mají
+přednost. Nemění oprávnění ani hard limity. Stará RUNNING metadata po pádu
+neblokují resume bez skutečného OS locku. [Návod a hranice](GUI.md).
+
+Ověřeno 34 GUI/review/comment testy (33 prošlo, 1 volitelný symlink skip).
+Browser smoke dokončil nový offline běh, komentáře, resume, report a konzoli;
+core/CLI, coding worker a brainstorming regrese prošly. Nejde o placený výzkum. Veřejná
+dokumentace webu se touto změnou neupravuje.
+
 ## 0.9.4 — skutečně konečné uzavření
 
 close-research nyní defaultně připraví report-only: zastaví další kritiku,

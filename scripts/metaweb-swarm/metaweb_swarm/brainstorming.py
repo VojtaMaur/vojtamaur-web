@@ -62,6 +62,8 @@ def read_idea(api, idea_id, offset=0, limit=6000):
 def prompt(engine, agent):
     """Remove the legacy implement/test/deposit instructions, not just Docker."""
     config=engine.state['config'];directory=engine.store.run_dir/'context'
+    from .operator_comments import instructions as operator_instructions
+    guidance=operator_instructions(engine.state)
     if agent.get('final_report_only'):
         from .research_closure import report_packet
         return ('FINAL SYNTHESIS ONLY. No tools, new research or requests for more evidence. '
@@ -73,7 +75,7 @@ def prompt(engine, agent):
             'with reasons. UNREVIEWED must stay explicitly unreviewed; do not invent missing audit verdicts, '
             'eligibility, pricing, novelty or successful implementation. State incomplete evidence and that '
             'research/review were stopped at the budget limit. No implementation occurred. '
-            'Future work belongs in handoff_leads, not unexplored_leads.\n'+canonical(report_packet(engine.state)))
+            'Future work belongs in handoff_leads, not unexplored_leads.\n'+guidance+canonical(report_packet(engine.state)))
     corpus='\n'.join((directory/name).read_text(encoding='utf-8')
                      for name in ('CORE.md','CURRENT_STATE.md') if (directory/name).is_file())
     instructions=(
@@ -99,6 +101,7 @@ def prompt(engine, agent):
         'Complete YOUR assigned research when evidence/proposals/criticism are recorded. Future implementation '
         'and questions outside your remaining bounded assignment belong in handoff_leads, not unexplored_leads. '
         'Never reject an idea merely because it has not been implemented.\n')
+    instructions+=guidance
     if agent.get('research_closure'):
         instructions+=('CLOSING PHASE: no new mechanisms or discovery. Existing research sketches were retained '
             'as unverified drafts. Read context/CLOSURE_SKETCHES.json for original proposals and provenance. '

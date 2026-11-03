@@ -316,6 +316,8 @@ async def step(owner,history,api,config,model_provider=None):
         'The host automatically freezes and reruns this final script once and records its exact files; no IDs, planning forms or record_test calls. '
         'The final independent reviewer judges scope from actual code/output. Use BLOCKED only for a concrete missing capability; a normal code error should be repaired. '
         'If interrupted, continue from existing files and recorded errors. Do not research another candidate.')
+    from .operator_comments import instructions as operator_instructions
+    instructions+=operator_instructions(api.engine.state)
     session=create_session(api)
     shell=Shell(session=session,workspace_scope=SandboxWorkspaceScope(cwd='.'))
     tools=shell.tools()

@@ -17,6 +17,14 @@ from .roles import seed_agents
 def parser():
     cli = argparse.ArgumentParser(description="Metaweb swarm: isolated copies, independent autonomy/capabilities/approval, durable audit")
     commands = cli.add_subparsers(dest="command", required=True)
+    gui=commands.add_parser('gui',help='Local graphical dashboard with the existing CLI console')
+    gui.add_argument('--project',type=Path,default=PACKAGE_ROOT.parent.parent)
+    gui.add_argument('--runs-root',type=Path)
+    gui.add_argument('--port',type=int,default=0)
+    gui.add_argument('--no-browser',action='store_true')
+    comment=commands.add_parser('comment',help='Queue operator research guidance for next bounded round')
+    comment.add_argument('run_dir',type=Path)
+    comment.add_argument('--text',required=True)
     for name in ("init", "start"):
         init = commands.add_parser(name, help="Snapshot production read-only" if name == "init" else "Check prerequisites, initialize a NEW run and start the selected backend")
         init.add_argument("--project", required=True, type=Path)
@@ -153,6 +161,11 @@ def doctor(backend, docker_check=False, config_path=None, output_format="json"):
 def main(argv=None):
     args = parser().parse_args(argv)
     try:
+        if args.command=='gui':
+            from .gui import serve
+            project=args.project.resolve()
+            serve(project,args.runs_root or project.parent/'metaweb-swarm-runs',args.port,not args.no_browser)
+            return 0
         if args.command == "doctor":
             return doctor(args.backend, args.docker_check, args.config, args.format)
         if args.command in ("init", "start"):
@@ -199,6 +212,10 @@ def main(argv=None):
                 return main(["run", str(path), "--backend", args.backend])
             return 0
         run_dir = check_run(args.run_dir)
+        if args.command=='comment':
+            from .operator_comments import enqueue_comment
+            print(json.dumps(enqueue_comment(run_dir,args.text),ensure_ascii=False,indent=2))
+            return 0
         if args.command == "pause":
             atomic_write(run_dir / "PAUSE.flag", now() + "\n")
             print("Pause requested; current bounded batch finishes before pausing.")

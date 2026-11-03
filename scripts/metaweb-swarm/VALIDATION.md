@@ -1,3 +1,20 @@
+## 0.10.0 — lokální GUI a operator comments
+
+`tests.test_gui`, `tests.test_gui_review`, `tests.test_operator_comments`:
+33 z 34 testů prošlo za 8.432 s, jeden volitelný Windows symlink test přeskočen pro
+chybějící oprávnění. Pokryté jsou token/Host/Origin a lokální HTTP, bezpečné argv,
+redakce klíče, vyhrazené cesty, read-only stav, platné profily, skutečný writer
+lock, stale RUNNING zotavení, fronta komentářů, pořadí, crash idempotence a
+prompty se zachovanými oprávněními. Syntaxe 80 Python zdrojů a shoda verze 0.10.0
+s pyproject prošly. Browser smoke následně dokončil vytvoření offline demo běhu,
+komentář před startem i za běhu, resume se stejným demo backendem, report a
+`doctor` přes Swarm CMD. Potvrzeno COMPLETED, nula tokenů, komentář aplikován
+právě jednou, všechny čtyři základní výstupy existují. Testovací projekt i běhy
+byly oddělené od produkce. Žádné placené modelové volání ani upload.
+Navíc prošlo 25 core/CLI, 18 coding-worker a 10 brainstorming regresních testů.
+Logy a GUI_SMOKE_PROOF.json jsou ve vývojových outputs.
+[Návod GUI](docs/GUI.md).
+
 ## 0.9.2 — 2026-11-03: rozsah kontextu pro brainstorming
 
 Prompt již neobsahuje celý packet kandidáta s opakovanými submissions/revisions

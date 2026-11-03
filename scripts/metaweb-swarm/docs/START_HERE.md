@@ -1,3 +1,19 @@
+# Spuštění přes GUI nebo CMD (0.10.0)
+
+Nejjednodušší lokální panel:
+
+```cmd
+cd /d G:\vojtamaur-web\scripts\metaweb-swarm
+run-gui.cmd
+```
+
+Samotný panel nevolá placené API ani Docker. Nabízí nový běh, modely a role,
+limity, pokračování v uložených bězích, log/Swarm CMD, reporty a komentáře před
+startem i na další bezpečné hranici běžící práce. [Úplný návod GUI](GUI.md).
+Profily nových běhů nemění staré checkpointy; u resume lze explicitně rozšířit
+rozpočty. Klíč z CMD se převezme, případně jej zadej jen pro GUI relaci.
+Níže zůstávají dostupné původní CLI a historické podrobnosti.
+
 ## 0.9.4 — skutečně konečné uzavření
 
 close-research nyní defaultně připraví report-only: zastaví další kritiku,

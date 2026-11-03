@@ -1,6 +1,13 @@
 # Metaweb agent swarm
 
-**0.9.2 — výchozí je výzkum a brainstorming.** Roj hledá nápady, ověřuje novost
+**0.10.0 — lokální GUI a zachované CLI.**
+
+Grafický ovládací panel spustíš příkazem `run-gui.cmd` ve složce swarmu.
+Otevře se lokálně v prohlížeči, bez Node/npm nebo dalších frontend závislostí.
+Nové běhy, modely/role, limity, průběh, pokračování, reporty a komentáře agentům
+jsou na jednom místě; původní CLI dál funguje. [Návod k GUI](docs/GUI.md).
+
+**Výchozí je výzkum a brainstorming.** Roj hledá nápady, ověřuje novost
 proti Metawebu/ARCHIVE.txt, čte primární zdroje, kritizuje návrhy a připraví report.
 Realizace je záměrně odložená a probíhá zvlášť s člověkem, například v ChatGPT Work.
 Další vývoj plné autonomie je strategicky odložen; dosavadní schopnosti zůstávají

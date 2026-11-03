@@ -444,7 +444,7 @@ def generate_reports(run_dir: Path, state: dict) -> None:
     for error in event_errors:
         timeline.extend([f"Čtení logu: {_text(error)}", ""])
     lines.extend(['## Návrhy čekající na posouzení identity', '', _code(state.get('pending_candidate_reviews', [])), ''])
-    manifest = {"discovery_leads":state.get('discovery_leads', []), "pending_candidate_reviews": state.get('pending_candidate_reviews', []), "schema_version": 1, "run_id": state.get("run_id"), "created_at": state.get("created_at"),
+    manifest = {"operator_comments":state.get("operator_comments", []), "discovery_leads":state.get('discovery_leads', []), "pending_candidate_reviews": state.get('pending_candidate_reviews', []), "schema_version": 1, "run_id": state.get("run_id"), "created_at": state.get("created_at"),
                 "updated_at": state.get("updated_at"), "status": status, "stop_reason": state.get("stop_reason"),
                 "backend": backend, "demo_fixture": is_demo, "usage": usage, "config": config,
                 "http_smoke": state.get("http_smoke"), "objective": state.get("objective"), "software_version": state.get("software_version"),

@@ -19,6 +19,8 @@ SEED_ROLES = [
 def seed_agents(config):
     selected = config.get("seed_roles", [])
     roster = [s for s in SEED_ROLES if not selected or s[1] in selected]
+    if config.get('task_style')=='brainstorming':
+        roster=[s for s in roster if s[1]!='Prototyper']
     if config["max_agents"] < len(roster):
         raise ValueError("max_agents must allow the selected seed roles")
     agents = []

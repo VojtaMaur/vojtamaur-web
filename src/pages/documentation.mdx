@@ -191,6 +191,9 @@ npm run export:sstv
 npm run export:images
 npm run export:images:metaweb
 npm run export:markdown
+npm run export:meme
+npm run decode:meme
+npm run test:meme
 ```
 
 Meaning of the main scripts:
@@ -236,6 +239,9 @@ Meaning of the main scripts:
 - `npm run export:images:metaweb` – converts the complete bilingual Metaweb PDF into one numbered page sequence with all appendices (section 9.6.15).
 - `npm run export:markdown` – manually creates one readable Markdown archive from the full rendered HTML in `dist/ALL_POSTS.json`; supports language, section and date filters, and runs only when explicitly requested (section 9.6.13).
 - `npm run export:morse` – manually converts the existing `dist/ALL_POSTS.json` through the compact text serializer into an ASCII Morse edition under `exports/`; supports `--lang cs|en|both`, defaults to one bilingual file, and is also included in `export-all.bat` (section 9.6.11)
+- `npm run export:meme` – manually creates random meme PNGs carrying reconstructable RaptorQ QR fragments of the complete existing `ALL_POSTS.txt`; English captions/footer and a calculated full-edition count are the defaults, with optional language, count, continuous generation and resume (section 9.6.16).
+- `npm run decode:meme` – reconstructs the exact TXT from raw QR bytes scanned from enough meme images of one edition, with gzip and SHA-256 verification (section 9.6.16).
+- `npm run test:meme` – runs the standalone meme archive regression tests, including actual QR/RaptorQ recovery, languages and resume (section 9.6.16).
 
 All signed build variants and both standalone signing commands use the same history mechanism: after successful signature verification and status/metadata writes, they record the current build in the project-root `BUILD_HASH_HISTORY.txt`. Unsigned build commands do not append records. The source-bundle step supplies the history snapshot required by the subsequent integrity pass; see section 9.6.1.
 
@@ -1701,7 +1707,7 @@ export-all.bat
 
 The batch file also reuses the current `dist/` and does not create a web build. If the last build was a USB variant, restore a standard web build before running `export-all.bat`.
 
-The SSTV PNG export precedes the final gallery image steps in `export-all.bat` and can also be run separately with `npm run export:sstv` (section 9.6.8). The batch does not generate SSTV audio.
+The SSTV PNG export precedes the final gallery image steps in `export-all.bat` and can also be run separately with `npm run export:sstv` (section 9.6.8). The batch does not generate SSTV audio. The meme archive is a separate manual workflow and is not one of the batch steps; see section 9.6.16.
 
 ### 9.6.6 Manual EPUB exports
 
@@ -2809,6 +2815,159 @@ According to the [official E-Hentai documentation](https://ehwiki.org/wiki/Expun
 
 As of October 29, 2026, both expunged editions remained accessible through their direct URLs, with their images intact. This illustrates the distinction between removal from a platform's public catalogue and actual loss of hosted content. Continued availability is not guaranteed, however, and direct links should be periodically verified.
 
+### 9.6.16 Meme archive: random images with reconstructable QR fragments
+
+`scripts/meme-archive/generate.py` creates a manual PNG edition by randomly and independently choosing an image from this website and upper/lower text excerpts from its articles. A meme can have an upper caption, a lower caption, or both, with equal probability. Their meanings need not match. Each PNG also carries one binary QR fragment of the complete compressed `ALL_POSTS.txt`, encoded with standard RaptorQ fountain coding. Enough different fragments from the same edition reconstruct the exact original TXT bytes even when some memes are unavailable.
+
+This exporter reads an existing build; it does not build the website, refresh translations, change `dist/` or its integrity files, or publish anything. It is not invoked by web, USB, Arweave or Gemini builds, or by `export-all.bat`. A small `--count` is a sample, not a complete archival edition. Omit `--count` for the automatically calculated full edition.
+
+#### Dependencies and entry points
+
+The runtime requires Python 3.11+ and Node.js 18+. Pillow and Segno are the optional manual-export dependencies; zxing-cpp is additionally needed for decoding QR images or verifying generated QR codes. They are separate from the website's npm dependencies. For an isolated Windows installation, run from the repository root:
+
+```powershell
+python -m venv exports/.meme-venv
+exports/.meme-venv/Scripts/python -m pip install -r scripts/meme-archive/requirements.txt -r scripts/meme-archive/requirements-decode.txt
+exports/.meme-venv/Scripts/python scripts/meme-archive/generate.py --verify-qr
+```
+
+On Linux/macOS, use the environment's `bin/python` instead of `Scripts/python`. The remaining examples assume the dependencies are available to `python`; otherwise substitute the explicit environment interpreter above. The npm aliases `export:meme`, `decode:meme` and `test:meme` use `python` from the current environment.
+
+RaptorQ is supplied as an approximately 200 KiB offline WASM codec, built from the unmodified `cberner/raptorq` 2.0.1 sources. Normal generation and recovery require neither a Rust compiler nor an npm/pip RaptorQ package, and download nothing. The Apache-2.0 license is in `scripts/meme-archive/RAPTORQ-LICENSE.txt`. The small ABI adapter and optional rebuild instructions are in `scripts/meme-archive/wasm-adapter/`; `build.py` verifies the pinned upstream source archive SHA-256 before compiling it. This rebuild is never invoked by the exporter or website builds.
+
+#### Full editions, language and random selection
+
+```powershell
+# Full edition: English captions/footer, automatically calculated image count.
+npm run export:meme -- --verify-qr
+
+# Other caption/footer languages; the QR archive remains complete in every case.
+python scripts/meme-archive/generate.py --language CS --verify-qr
+python scripts/meme-archive/generate.py --language EN+CS --verify-qr
+
+# Preview only: these three images will normally not be enough for recovery.
+python scripts/meme-archive/generate.py --count 3 --verify-qr
+
+# Reproducible selection, or continued generation until stopped.
+python scripts/meme-archive/generate.py --seed my-edition --verify-qr
+python scripts/meme-archive/generate.py --continuous --interval 0.25 --verify-qr
+```
+
+`--language EN` is the default; `CS` and `EN+CS` are also supported. `--lang` is an alias and case does not matter. The catalogue reads article titles, headings and paragraph excerpts from `dist/ALL_POSTS.json`, filtered by `inLanguage`. If JSON is absent, it uses the `LANGUAGE` headers in `dist/ALL_POSTS.txt`. Missing requested languages are errors rather than silently mixing another language into the captions. English HTML extraction excludes protected original-language blocks marked `translate="no"`, `notranslate` or `data-i18n="protect"`, and blocks declaring a different `lang`. Existing words within source pictures are not translated. EN+CS allows captions from both language pools and uses a bilingual footer.
+
+Caption language does not filter the encoded archive: every edition preserves the complete original input TXT, including its Czech and English article versions. The default archive input is `dist/ALL_POSTS.txt`; `--input` can select another existing UTF-8 TXT. Changing this input does not replace the caption source catalogue. The archive preserves the text export's scope and limitations, including its media placeholders and existing code truncation; it does not embed the website's image/video binaries or restore the HTML/source repository.
+
+Images come from readable rasters under `public/images/`, including images unused by articles. The image and both captions are selected independently using a deterministic per-index random generator. Captions are shortened at word boundaries to at most 120 characters by default. `kurt-godel-rat.jpg` has relative selection weight 1.25 against 1 for other images: a small increase, not a forced appearance. `--rat-weight` changes this ratio. GIF sources use their first frame; unsupported or unreadable images are recorded in the catalogue's skipped-image list.
+
+#### Layout, counts and configurable defaults
+
+Default output is lossless PNG, 1080 pixels wide, with an 810-pixel-high photograph and a separate white QR footer. Captions use a bold font, normally Impact or DejaVu Sans Bold, with white text and a black outline. The renderer contains/pads source images to retain their full aspect ratio. The default QR has a 512-byte RaptorQ symbol plus a 41-byte transport envelope, byte mode, error correction M, and four pixels per module. This gives QR version 18, a four-module quiet zone, and a 388 × 388 pixel QR area. The normal total image height is 1230 pixels; narrow layouts or longer bilingual text can enlarge the footer instead of clipping it.
+
+The localized footer explains that the QR contains a fountain-code archive fragment, identifies the edition and meme number, and displays a recovery count calculated from the actual transfer object:
+
+- `F` is the compressed transfer object's byte length, including its one-time object wrapper; `T` is the symbol size; `Z` is the source block count.
+- The theoretical minimum is `K = ceil(F/T)` distinct symbols, equal to the sum of source symbols across all blocks. The practical footer estimate is `K + 2*Z`, allowing two additional repair symbols per block.
+- Enough independent symbols must be available for every source block. Duplicated images do not count twice, and an arbitrary unbalanced selection is not guaranteed to reconstruct at the displayed estimate.
+- The default number of generated memes is the sum of `ceil(1.15*K_b) + 8` over source blocks, providing more redundancy than the minimum. `--count N` explicitly overrides that output count; it does not change the recovery requirement printed in the footer.
+
+For the verified October 29, 2026 snapshot, the object was 131,304 bytes at `T=512`, requiring at least 257 different symbols. Its footer therefore displayed approximately 259+ memes, while the full default export generated 304 PNGs. These are measured snapshot values, not hardcoded defaults; a different archive or symbol size recalculates them.
+
+Other options are `--symbol-size 64..1024`, `--ecc M|Q|H`, `--qr-scale` (at least 4), `--width` (at least 512), `--image-height` (at least 320), `--max-text-chars 20..240`, `--font`, `--project-root`, `--output-dir` and `--timestamp`. Larger symbols/ECC may require a wider image. The encoder splits the object into source blocks of at most 1,024 source symbols, with at most 255 blocks. The bundled backend limits the transfer object to 64 MiB; the generator also limits the uncompressed input to 64 MiB.
+
+#### Output, edition identity and resume
+
+Each new run creates a new directory under `exports/` and refuses to overwrite an existing edition:
+
+```text
+exports/vojtamaur-web-export-meme-archive-YYYY-MM-DD_HH-MM-SS-ffffff/
+  README.txt
+  manifest.json
+  catalog.json
+  archive.rq
+  memes.jsonl
+  state.json
+  memes/00000001.png
+  memes/00000002.png
+  ...
+  decoder/
+```
+
+Timestamp naming reuses `scripts/export_naming.py`, including `VOJTAMAUR_EXPORT_TIMESTAMP` and explicit `--timestamp`. The output parent and resume directory must remain under the selected project's `exports/` tree. This generated tree remains excluded from Git and outside the signed website build.
+
+`manifest.json` records the seed, immutable recipe, input hashes, rendering settings, font hash, standard RaptorQ OTI and source-symbol counts. `catalog.json` freezes caption candidates, image order, provenance and image SHA-256 values; it does not copy source images. `archive.rq` freezes the transfer object. `memes.jsonl` is the committed provenance/hash journal for generated PNGs; `state.json` is a convenient progress summary.
+
+A random default seed creates a new edition. A fixed `--seed`, identical archived bytes, catalogue, font bytes and rendering settings reproduce the same 128-bit edition ID and packets; the timestamp is not part of that ID. Identical PNG bytes additionally require compatible Python/Pillow/Segno versions. Preserve the frozen catalogue, object, original images and font when reproducing after source changes.
+
+```powershell
+python scripts/meme-archive/generate.py --resume exports/EDITION --count 100 --verify-qr
+python scripts/meme-archive/generate.py --resume exports/EDITION --continuous --verify-qr
+```
+
+Replace `EDITION` with the actual timestamped directory name. On resume, `--count 100` adds 100 memes after the last committed one. Resume uses the frozen archive and catalogue even if `dist/` has changed; changing a selected source image or the font is rejected. A relocated identical font can be supplied with `--font`. Language and other edition parameters cannot be changed during resume. Version-1.0 and version-1.1 editions retain their original catalogue/footer behavior when resumed with the current 1.1.1 generator.
+
+Ctrl+C stops generation. A crash-released operating-system lock prevents concurrent writers without leaving a permanently blocking stale lock. An uncommitted last PNG is regenerated; an incomplete final journal line is backed up and discarded. Missing or modified committed PNGs are errors. Recovery depends on the journal rather than trusting a possibly stale progress counter.
+
+Packets are scheduled round-robin across blocks, first systematic source symbols and then individual repair symbols. `--start-index` can begin a new output directory further along the same deterministic edition sequence. Continuous generation computes packets on demand rather than retaining all previous packets in memory. It is bounded by disk space and the RFC's 24-bit Encoding Symbol ID: at most 16,777,216 symbols per block, after which it fails rather than wrapping IDs.
+
+#### Binary QR transport and independent decoding
+
+The application wrapper is **MA1**. Its coding algorithm is standard [RaptorQ, RFC 6330](https://www.rfc-editor.org/rfc/rfc6330.html), FEC Encoding ID 6, with the unchanged RFC OTI and FEC Payload ID. The compact QR payload contains raw binary bytes, not a URL, JSON, base64 or Unicode text. An ordinary phone scanner may show unreadable characters; the archive decoder needs the scanner's raw byte result.
+
+All integers use network byte order. Each QR contains exactly one symbol:
+
+| Byte offset | Size | Field |
+| --- | --- | --- |
+| 0 | 2 bytes | ASCII `MA` magic |
+| 2 | 1 byte | Application version, 1 |
+| 3 | 1 byte | FEC Encoding ID, 6 |
+| 4 | 1 byte | Compression ID, 1 for gzip |
+| 5 | 16 bytes | Edition ID |
+| 21 | 12 bytes | Standard RFC 6330 OTI |
+| 33 | 4 bytes | Standard FEC Payload ID: 8-bit SBN and 24-bit ESI |
+| 37 | T bytes | Complete source/repair symbol, including padding |
+| 37+T | 4 bytes | Big-endian CRC32 of all preceding bytes |
+
+The 12-byte OTI contains `F` (5 bytes), one zero reserved byte, `T` (2 bytes), `Z` (1 byte), sub-block count `N` (2 bytes) and alignment `Al` (1 byte). MA1 uses the profile `N=1`, `Al=1`; carrying this information in every image makes reconstruction independent of a first image or external manifest.
+
+The transferred object is ASCII `MAO1`, followed by the 32-byte SHA-256 of the original TXT and one [gzip member, RFC 1952](https://www.rfc-editor.org/rfc/rfc1952.html), containing those exact TXT bytes. Generation uses compression level 9, MTIME=0 and OS=255 without a filename. This adds a one-time 36-byte object wrapper instead of repeating the full hash in every QR. The complete byte-level specification and independent-decoder procedure are maintained in `scripts/meme-archive/FORMAT.md` and copied into every edition's `decoder/` directory.
+
+```powershell
+# Decode only the images; no manifest, archive.rq or original website is required.
+python scripts/meme-archive/decode.py exports/EDITION/memes --output exports/ALL_POSTS.recovered.txt
+
+# The edition also carries its own standalone decoder and WASM codec.
+python exports/EDITION/decoder/decode.py exports/EDITION/memes --output exports/ALL_POSTS.recovered.txt
+
+# Select one edition from a mixed collection; replace the placeholder with its ID.
+npm run decode:meme -- exports/received-memes --edition EDITION_ID_HEX --output exports/ALL_POSTS.selected.txt
+```
+
+The decoder scans actual PNG/JPEG/WebP pixels; it does not obtain the archive from PNG metadata, filenames, the manifest or `archive.rq`. It also accepts individual images, directories and raw `.ma` packets. Identical symbols are deduplicated, conflicting payloads or OTI are errors, and valid mixed editions are rejected unless explicitly filtered with `--edition`. Damaged QR packets are reported and discarded.
+
+Output is written only after RaptorQ reconstruction, gzip CRC/size validation and verification of the full original TXT SHA-256. BOM and line endings are preserved. Existing output requires `--force`; insufficient symbols return status 2 without writing an incomplete TXT. The decompressed output limit defaults to 64 MiB (`--max-output-bytes`); `--max-transfer-bytes` can restrict input further, within the bundled backend's fixed 64 MiB cap. CRC/SHA-256 detect corruption but are not an author's signature.
+
+Keep original PNGs: resizing, cropping, printing or gallery recompression can make individual QR codes unreadable. QR error correction repairs damage inside one code; RaptorQ repairs missing symbols across images. Neither guarantees recovery after arbitrary damage or from too few independent symbols.
+
+#### Verification performed
+
+`--verify-qr` rescans each finished PNG and compares its raw QR bytes with the intended payload before committing that meme to the journal. The regression suite can be run without building the website:
+
+```powershell
+npm run test:meme
+python -B -m unittest discover -s scripts/meme-archive -p "test_*.py"
+```
+
+On October 29, 2026, all 24 tests passed. They cover reference RaptorQ packet vectors cross-checked against a separately packaged native codec, shuffled repair-only recovery across uneven source blocks, invalid headers/checksums, bounded decompression, language filtering, localized/narrow footers, recovery-count recalculation after changing real input bytes or symbol size, deterministic generation, resume and interrupted journals, mixed editions, locks and output protection. Legacy 1.0/1.1 resume was additionally compared byte-for-byte against the original generators.
+
+The complete English edition `vojtamaur-web-export-meme-archive-2026-10-29_10-01-07-861691` contains all 304 PNGs. Every QR was verified, and its bundled decoder independently scanned all 304 image files and reconstructed the full 574,282-byte `ALL_POSTS.txt`, byte-identical to the original. The recovered file is under that edition's `reconstructed/ALL_POSTS.txt`; `validation.json` records the result. Its TXT SHA-256 is:
+
+```text
+b0a1d7f40da1748d638620db71c3a7ae0c43b2fa77ca5da56cebcaa4f05d36a5
+```
+
+An earlier complete edition was also tested by withholding its first 40 source-symbol images, shuffling the remaining 264 and adding a duplicate; it still reconstructed exactly using repair symbols. Withholding images from a test input did not delete them from either export. Additional localized examples remained readable after 50% resizing and JPEG quality-85 recompression. These are recorded tests on specific files, not a guarantee for every image transformation or hosting service.
+
+
 ## 10. Exact special build logic
 
 The `build:usb` script is defined as a USB-targeted Astro build followed by postprocessing. In the current translation-aware workflow, the effective order is:
@@ -3814,7 +3973,6 @@ Possible future directions for the project:
   - inclusion of `documentation.mdx` as an embedded package snapshot alongside the existing `ALL_POSTS.txt` and `ARCHIVE.txt`, ensuring that the project documentation remains accessible offline even without a previously populated cache; the `vojtamaur docs` command should also be updated to use this bundled file as an offline fallback rather than relying solely on downloaded content or the existing HTML cache
   - correction of Arweave/ArDrive fallback URLs, particularly documentation paths that may require explicit `/documentation/index.html` rather than `/documentation/`, subject to verification against the deployed archive structure
   - expansion and verification of the configured fallback mirrors to include newly established website deployments, ensuring that each source provides the expected files and compatible URL paths
-- evaluation of fountain codes (e.g. LT or Raptor codes) for distributed archival storage, encoding digital data into a potentially unlimited number of redundant fragments distributed across independent platforms or physical media (e.g. QR codes); the original data could be reconstructed from any sufficiently large subset of surviving fragments, without requiring specific fragments to remain available
 
 ### 14.2 Failed attempts and abandoned approaches
 
@@ -3833,11 +3991,11 @@ The following approaches were tested or seriously evaluated but were ultimately 
 - inclusion of `vojtamaur.cz` in the [Lunar Codex](https://www.lunarcodex.com/) was considered as a potential form of lunar archival preservation; however, the project closed submissions in August 2025 and has stated that it does not plan to reopen them. The approach was therefore abandoned indefinitely without contacting the organization, although its submission status may be reassessed in the future
 - experimental preservation of `vojtamaur.cz` by transmitting its Morse code exports as HTTP requests (e.g. `/dot` and `/dash`), potentially reconstructable from publicly archived server access logs, was considered using the [CDSL dataset](https://github.com/cdsl-research/website-access-logs-public). Following the laboratory's closure, publication of new logs ceased. On 2026-10-13, former member Tomoyuki Koyama was contacted and kindly offered to continue collecting logs if needed, although future public releases remain unconfirmed. The experiment remains unimplemented.
 
-### 14.3 Temporarily unavailable or externally blocked approaches
+### 14.3 Temporarily unavailable, blocked, or deferred approaches
 
-The following approaches were considered suitable for the project's long-term preservation and distribution objectives, and in some cases implementation was attempted, but their completion is currently prevented by external technical, administrative, or operational limitations. Unlike abandoned approaches, these options remain of interest and may be revisited if the relevant circumstances change.
+The following approaches remain relevant to the project's long-term preservation and distribution objectives, but their implementation or further development is currently unavailable, blocked, or deliberately deferred. Reasons may include external technical, administrative, or operational limitations, maintenance costs, or strategic considerations. Unlike abandoned approaches, these options remain of interest and may be revisited if circumstances change.
 
-- currently none
+- **Metaweb Swarm autonomous execution:** Further development of fully autonomous implementation capabilities has been temporarily deprioritized. The main reason is the expectation that major AI companies, particularly OpenAI with products such as Dot, may soon offer comparable autonomous agent capabilities. Given their substantially greater development resources, independently building and maintaining a parallel system may not be a sensible investment of time, especially considering the complexity of the framework and the risk of breaking changes to AI APIs and SDKs. Metaweb Swarm will therefore primarily serve as a research and brainstorming system, with optional experimental prototyping and execution capabilities. Promising discoveries will be implemented separately with human oversight and assistance from ChatGPT Work. Further development of autonomous execution may be reconsidered depending on the capabilities and availability of commercial agent systems, particularly OpenAI Dot in the Czech Republic.
 
 ---
 

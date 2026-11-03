@@ -7,7 +7,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from .config import load_config, validate_config, round_allowance
+from .config import load_config, validate_config, round_allowance, PACKAGE_ROOT
 from .engine import Engine, initialize, decide, unblock, refresh_reports, select_implementation, finish_research
 from .storage import Store, atomic_write, now, run_lock
 from .models import TIERS
@@ -21,7 +21,8 @@ def parser():
         init = commands.add_parser(name, help="Snapshot production read-only" if name == "init" else "Check prerequisites, initialize a NEW run and start the selected backend")
         init.add_argument("--project", required=True, type=Path)
         init.add_argument("--runs-root", required=True, type=Path)
-        init.add_argument("--config", type=Path)
+        init.add_argument("--config", type=Path, default=PACKAGE_ROOT / 'config.research.json',
+                          help="New-run profile (default: brainstorming config.research.json)")
         task = init.add_mutually_exclusive_group()
         task.add_argument("--task", help="Operator research objective for this NEW run (up to 12000 characters)")
         task.add_argument("--task-file", type=Path, help="Read an operator objective from a UTF-8 text file, retained in checkpoint")
@@ -74,10 +75,17 @@ def parser():
     for field in ("input_tokens", "output_tokens", "web_search_calls"):
         command.add_argument("--" + field.replace("_", "-"), type=int, required=True)
     command.add_argument("--note", required=True)
+    command=commands.add_parser('close-research',help='Capture existing sketches and prepare critique/report only; no model calls')
+    command.add_argument('--report-only',action=argparse.BooleanOptionalAction,default=True,help='Default: stop review; one final synthesis, no model tools. --no-report-only selects legacy review phase')
+    command.add_argument('run_dir',type=Path)
+    command.add_argument('--note',required=True)
+    command.add_argument('--extend-tokens',type=int,default=0)
+    command.add_argument('--extend-seconds',type=int,default=0)
+    command.add_argument('--extend-steps',type=int,default=0)
     command = commands.add_parser("doctor")
     command.add_argument("--backend", choices=("demo", "openai"), default="demo")
     command.add_argument("--docker-check", action="store_true", help="Read-only Linux daemon and local image readiness check")
-    command.add_argument("--config", type=Path)
+    command.add_argument("--config", type=Path, default=PACKAGE_ROOT / 'config.research.json')
     command.add_argument("--format", choices=("json", "text"), default="json")
     return cli
 
@@ -94,7 +102,7 @@ def doctor(backend, docker_check=False, config_path=None, output_format="json"):
     from .workspace import DockerExecutor
     checks = {"python": sys.version.split()[0], "offline_core": "available", "docker": DockerExecutor.executable() is not None,
               "openai_api_key_present": bool(os.getenv("OPENAI_API_KEY")), "api_called": False}
-    config = load_config(config_path)
+    config = load_config(config_path or PACKAGE_ROOT / 'config.research.json')
     checks["models"] = [{k: a.get(k) for k in ("role", "model_tier", "model")} for a in seed_agents(config)]
     checks["execution_policy"] = {k: config[k] for k in ("run_mode", "external_scope", "approval_required", "experiments")}
     checks['http'] = {'access':config.get('http_access','disabled'), 'max_requests':config.get('max_http_requests',100),
@@ -215,6 +223,14 @@ def main(argv=None):
                 store.close()
             return 0
         with run_lock(run_dir):
+            if args.command=='close-research':
+                from .research_closure import prepare
+                engine=Engine(run_dir,None,'openai')
+                try:
+                    result=prepare(engine,args.note,args.extend_tokens,args.extend_seconds,args.extend_steps,args.report_only)
+                    print(f"Closure prepared: report_only={result.get('report_only',False)}, {len(engine.state['ideas'])} current ideas. No paid API call. Resume explicitly.")
+                finally:engine.close()
+                return 0
             if args.command in {'deposit-plan','deposit-execute'}:
                 from .deposit_execution import operator_command
                 steps=None

@@ -1,5 +1,11 @@
 # Knihovny v agentních workspaces
 
+> Od 0.9.0 je výchozí [brainstorming](BRAINSTORMING.md) bez realizace a Dockeru.
+> Tento dokument popisuje volitelný experimentální režim: `run-experimental.cmd`
+> s `config.http.json`. Starší zmínky `run-http.cmd` či realizačního
+> `config.research.json` níže patří historii; aktuální [příkazy jsou zde](START_HERE.md).
+
+
 Od verze 0.3.1 může agent požádat o **libovolný pojmenovaný Python package z PyPI**.
 Není whitelist balíčků ani schválení každé instalace. Operátor schopnost zapíná
 v konfiguraci; instalace běží pouze v Dockeru. Windows Python a produkční web

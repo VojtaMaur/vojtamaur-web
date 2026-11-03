@@ -1,0 +1,11 @@
+{
+  "candidates": 16,
+  "existing_critiques": 9,
+  "tools": 0,
+  "max_model_requests": 1,
+  "prompt_chars": 11811,
+  "conservative_request_bound_with_5000_system_chars": 26600,
+  "remaining_tokens": 45915,
+  "original_checkpoint_unchanged": true,
+  "paid_api_calls": 0
+}

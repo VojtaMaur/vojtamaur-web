@@ -588,8 +588,20 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
         return json.dumps(_jsonable(tools_api.review_prototype_plan(plan_id,verdict,reason,mechanism_operation,evidence_code)),ensure_ascii=False)
 
     available += [read_failed_experiment,record_failure_diagnosis,read_revised_test,read_report_detail,get_prototype_review_facts,prepare_prototype_input,execute_prototype,read_prototype_plan,review_prototype_plan]
-    smoke = getattr(getattr(tools_api, 'engine', None), 'state', {}).get('config', {}).get('http_smoke_test')
-    if smoke:
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    def read_research_idea(idea_id: str, offset: int=0, limit: int=6000) -> str:
+        """Brainstorming: page the full current IDEA, including original provenance. Prefer current scoped task first; history is optional evidence. Follow next_offset only as needed."""
+        from .brainstorming import read_idea
+        return json.dumps(_jsonable(read_idea(tools_api,idea_id,offset,limit)),ensure_ascii=False)
+    available.append(read_research_idea)
+    profile = getattr(getattr(tools_api, 'engine', None), 'state', {}).get('config', {})
+    if profile.get('task_style')!='brainstorming':
+        available=[tool for tool in available if tool.name!='read_research_idea']
+    smoke = profile.get('http_smoke_test')
+    if profile.get('task_style')=='brainstorming':
+        from .brainstorming import tools as brainstorming_tools
+        available=brainstorming_tools(tools_api.agent,available)
+    elif smoke:
         available = [read_file, note] if getattr(tools_api, 'agent', {}).get('work_kind') == 'SYNTHESIS' else [read_file, note, http_request, verify_http_copy]
     elif getattr(getattr(tools_api, 'engine', None), 'state', {}).get('config', {}).get('task_style') == 'focused':
         from .tasking import TOOL_SETS
@@ -779,6 +791,7 @@ class OpenAIBackend:
             raise BackendBlocked("Set an explicit OpenAI API model in configuration", history=history)
         if self.model_provider is None and not os.environ.get("OPENAI_API_KEY"):
             raise BackendBlocked("OPENAI_API_KEY is not set", history=history)
+        if agent.get('final_report_only'):config=dict(config,max_turns=1)
         input_items = _jsonable(history) + [{"role": "user", "content": prompt}]
         history_chars = config.get("history_chars", 150000)
         if len(json.dumps(input_items, ensure_ascii=False)) > history_chars:
@@ -843,6 +856,11 @@ class OpenAIBackend:
             )
             from .review_dispatch import instruction_suffix, wrap_provider
             base_instructions=sdk_agent.instructions
+            if config.get('task_style')=='brainstorming':
+                base_instructions+=('\nTHIS RUN IS RESEARCH ONLY: brainstorm, verify sources, critique and report. '
+                    'Implementation is deliberately deferred. Do not execute code, install packages, upload, '
+                    'create accounts or modify repositories. Unimplemented useful ideas remain retained; '
+                    'zero experiments/deposits is expected. Hand off future realization to the human.\n')
             sdk_agent.instructions=lambda context,current: base_instructions+instruction_suffix(tools_api)
             run_config = sdk.RunConfig(model_provider=wrap_provider(sdk,provider,tools_api), tracing_disabled=True,
                                        trace_include_sensitive_data=False)

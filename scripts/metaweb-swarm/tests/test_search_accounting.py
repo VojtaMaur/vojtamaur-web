@@ -82,6 +82,31 @@ class AccountingTests(unittest.IsolatedAsyncioTestCase):
         reservation,progress=self.replay(response(),usd=None)
         self.assertEqual(self.engine.state['budget_reservations'][reservation['id']]['status'],'UNKNOWN')
 
+    def no_dollar_limit(self):
+        self.engine.state['config'].update(estimated_budget_usd=None,model_prices={},
+            input_price_per_million=None,output_price_per_million=None,web_search_price_per_call=None)
+
+    def test_no_usd_budget_or_prices_settles_known_ambiguous_attempt_without_dropping_usage(self):
+        self.no_dollar_limit()
+        reservation,progress=self.replay(response())
+        self.assertFalse(self.engine.state['budget_reservations'])
+        closed=self.engine.state['budget_settlements'][reservation['id']]
+        self.assertIsNone(closed['actual_usd_at_reserved_prices'])
+        self.assertIsNone(closed['search_accounting_overage']['conservative_actual_usd'])
+        self.assertFalse(closed['search_accounting_overage']['usd_limit_configured'])
+        self.assertEqual(self.engine.state['usage']['web_search_calls'],2)
+        self.assertIsNone(self.api.model_settlement_issue())
+
+    def test_no_usd_budget_does_not_excuse_real_completed_search_overage(self):
+        self.no_dollar_limit();data=response();data['output'][1]['status']='completed'
+        reservation,progress=self.replay(data)
+        self.assertEqual(self.engine.state['budget_reservations'][reservation['id']]['status'],'UNKNOWN')
+
+    def test_no_usd_budget_does_not_excuse_token_overage(self):
+        self.no_dollar_limit()
+        reservation,progress=self.replay(response(),input_tokens=100)
+        self.assertEqual(self.engine.state['budget_reservations'][reservation['id']]['status'],'UNKNOWN')
+
     def test_missing_usage_is_still_blocked(self):
         data=response();data['raw_usage']=None;data['usage']={}
         reservation,progress=self.replay(data)
@@ -111,3 +136,8 @@ class AccountingTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(self.engine.state['budget_reservations'])
         self.assertEqual(result['usage']['web_search_calls'],2)
         self.assertTrue(any(r.get('search_accounting_overage') for r in self.engine.state['budget_settlements'].values()))
+
+    @unittest.skipUnless(__import__('tests.test_backend',fromlist=['SDK_AVAILABLE']).SDK_AVAILABLE,'SDK optional')
+    async def test_sdk_search_settlement_without_dollar_budget(self):
+        self.no_dollar_limit()
+        await self.test_actual_sdk_hooks_settle_ambiguous_search_and_return_output()

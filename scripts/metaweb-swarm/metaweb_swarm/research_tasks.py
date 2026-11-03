@@ -6,7 +6,7 @@ from .storage import canonical
 
 def enabled(state):
     config = state.get('config',{})
-    return bool(config.get('research_handoffs') and config.get('task_style') == 'research'
+    return bool(config.get('research_handoffs') and config.get('task_style') in {'research','brainstorming'}
                 and not config.get('sandbox_smoke_test') and not config.get('http_smoke_test'))
 
 
@@ -311,6 +311,7 @@ def recover(engine):
     from .config import round_allowance
     from .deposit_handoff import report_revision
     for agent in state['agents']:
+        if state.get('research_closure',{}).get('report_only') and agent.get('work_kind')!='SYNTHESIS':continue
         retry_local=(agent.get('work_kind')=='LOCAL' and agent['status']=='BLOCKED'
                      and agent.get('reason_for_stopping','').startswith(('Current local assignments','FAILED_CODE_','PROTOTYPE_PLAN_REVIEW_PENDING')))
         retry_review=(agent.get('work_kind')=='REVIEW' and agent['status']=='BLOCKED'

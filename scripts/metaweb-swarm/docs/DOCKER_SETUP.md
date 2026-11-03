@@ -1,5 +1,11 @@
 # Docker and sandbox setup
 
+> Od 0.9.0 je výchozí [brainstorming](BRAINSTORMING.md) bez realizace a Dockeru.
+> Tento dokument popisuje volitelný experimentální režim: `run-experimental.cmd`
+> s `config.http.json`. Starší zmínky `run-http.cmd` či realizačního
+> `config.research.json` níže patří historii; aktuální [příkazy jsou zde](START_HERE.md).
+
+
 This document belongs to the swarm framework. It is not part of the public website documentation. Update the checked-state section after each installation or runtime test; setup instructions alone are not evidence that a sandbox works.
 
 ## Checked state — 2026-10-07

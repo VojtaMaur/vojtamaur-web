@@ -1,5 +1,11 @@
 # Obecné HTTP ruce pro Metaweb swarm
 
+> Od 0.9.0 je výchozí [brainstorming](BRAINSTORMING.md) bez realizace a Dockeru.
+> Tento dokument popisuje volitelný experimentální režim: `run-experimental.cmd`
+> s `config.http.json`. Starší zmínky `run-http.cmd` či realizačního
+> `config.research.json` níže patří historii; aktuální [příkazy jsou zde](START_HERE.md).
+
+
 Verze 0.4.0 přidává obecné HTTP/API požadavky. Agent čte dokumentaci dosud neznámé služby, sestavuje URL, metodu, hlavičky a tělo, uploaduje veřejné exporty a čte odpovědi. Žádná integrace pro konkrétní službu není nutná. Browser/computer-use fallback není implementovaný.
 
 ## Spuštění a oprávnění

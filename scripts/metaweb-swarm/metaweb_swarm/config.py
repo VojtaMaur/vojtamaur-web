@@ -41,8 +41,10 @@ def validate_config(config):
     exports = config.get("export_filenames")
     if exports is not None and (not isinstance(exports, list) or not exports or any(not isinstance(item, str) or not item.strip() for item in exports)):
         raise ValueError("export_filenames must be a nonempty list of export-relative file names or null")
-    if config.get("task_style", "research") not in {"research", "focused"}:
-        raise ValueError("task_style must be research or focused")
+    if config.get("task_style", "research") not in {"research", "focused", "brainstorming"}:
+        raise ValueError("task_style must be research, focused or brainstorming")
+    from .brainstorming import validate as validate_brainstorming
+    validate_brainstorming(config)
     assignments = config.get("role_assignments", {})
     if not isinstance(assignments, dict) or any(not isinstance(k, str) or not 1 <= len(k.strip()) <= 160 or not isinstance(v, str) or not 1 <= len(v.strip()) <= 4000 for k, v in assignments.items()):
         raise ValueError("role_assignments must map role names to nonempty assignments up to 4000 characters")

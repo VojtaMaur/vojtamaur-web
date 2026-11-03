@@ -56,7 +56,7 @@ class SchedulingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             project = Path(temp) / 'project'
             project.mkdir()
-            config = load_config(PACKAGE_ROOT / 'config.research.json')
+            config = load_config(PACKAGE_ROOT / 'config.http.json')
             config['run_mode'] = 'autonomous'  # Scheduler coverage includes realization; supervised deliberately defers it.
             config['max_steps'] = 10  # Tight budget; empty coding dispatches are deliberately skipped.
             run = initialize(project, Path(temp) / 'runs', config)

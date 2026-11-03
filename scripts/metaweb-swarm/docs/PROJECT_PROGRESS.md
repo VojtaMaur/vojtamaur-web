@@ -1,3 +1,135 @@
+## 0.9.4 — skutečně konečné uzavření
+
+close-research nyní defaultně připraví report-only: zastaví další kritiku,
+hosted search i dokumentové tool calls. Pokud ještě nejsou IDEA, nejprve
+zachytí staré sketches bez placeného API. Následné resume má jediného reportéra
+s nulovým seznamem tools a max_turns=1. Dostává kompaktní packet všech IDEA,
+stávajících kritik a výslovných UNREVIEWED mezer; žádný chybějící posudek se
+nepředstírá. Výslednou strukturovanou summary zaznamená host jako report receipt
+v auditu, bez potřeby dalšího nástrojového volání. Není to potvrzení kandidátů.
+
+Příprava report-only je idempotentní, zachová původní stavy/historie v auditu,
+nepřidává rozpočet bez explicitních parametrů. Modely/ceny/credentials se nemění.
+Stará vícekolová kritika je pouze přes --no-report-only; pro konečné uzavření
+ji nepoužívej. Automatické znovuotevírání nedokončených kritik je report-only
+fází zablokované. Reporter má přesně jedno další kolo; opakované modelové
+volání nenavyšuje limit automaticky. Další chyby či limity se hlásí pravdivě.
+
+Ověření: 27 SDK/report/closure regresí, včetně skutečného Agents SDK s fake
+providerem: jeden modelový požadavek, žádný tool, dokončený report receipt,
+nezměněný kandidát a žádné smyšlené kritiky. Kopie posledního checkpointu:
+16 kandidátů, 9 kritik, packet cca 11800 znaků, konzervativní request rezerva
+cca 26700 tokenů včetně 5000 systémových znaků a 4000 výstupu; zůstává 45915.
+Nebylo potřeba další navýšení tokenů. Původní run při replayi nezměněn, API 0.
+
+Příprava (bez placeného API):
+
+```cmd
+G:\metaweb-swarm-env\Scripts\python.exe swarm.py close-research "CESTA_BEHU" --report-only --note "Konecna synteza bez dalsiho hledani"
+```
+
+Potom resume s --backend openai provede jednorázovou placenou syntézu. Historické
+postupy vícekolového uzavírání níže nejsou doporučený finální postup.
+
+## 0.9.3 — Explicitní uzavření běhu
+
+`close-research` je operator-only příprava, nikoli placený modelový běh. Načte
+z dosavadního auditu argumenty screen_carrier s konkrétním proposed_change,
+uchová celé původní sketches v context/CLOSURE_SKETCHES.json a přes běžné
+policy/admission kontroly a deterministický dedup zachytí neověřené kandidáty. Opakované formulace
+stejného providera od téhož agenta odkazují na stejný kandidát; různí poskytovatelé
+mohou být varianty téhož mechanismu a musí je posoudit kritik. UNKNOWN pricing,
+žádný PASS nebo tvrzení o novosti/realizaci se negenerují. Záznamy bez konkrétního
+proposed_change se automaticky nemění v nápad. Původní audit zůstává zachovaný.
+
+Discovery/coordination role se zastaví, původní stavy jsou v closure auditu.
+Historie modelových konverzací se archivují před resetem; dokumenty a tool
+receipts zůstávají. Kritici dostanou omezenou round allowance podle počtu IDEA,
+reportér dvě kola. Hosted search i vytváření nových kandidátů/specialistů jsou
+v uzavírací fázi vypnuté. Kritici mohou dočíst nezbytné primární dokumenty;
+reportér uzavírá stávající IDEA. Neznámé provider rezervace musí nejprve vyřešit
+operátor, closure je nepřepisuje.
+
+Příprava je idempotentní: opakování nepřidává stejné nápady ani stejné rozšíření
+limitů. Rozšíření tokenů/času/kroků je explicitní, default nula. Ceny, credentials,
+režim brainstormingu ani approvals se nemění. Automatická rezervace části
+rozpočtu pro závěr budoucích nových běhů zatím není součástí tohoto příkazu.
+
+Příklad pro existující silný run; přidává maximálně 2M tokenů, 30 minut a 30 kol:
+
+```cmd
+G:\metaweb-swarm-env\Scripts\python.exe swarm.py close-research "G:\metaweb-swarm-runs\20261103-092847-bc19693a" --note "Uzavrit dosavadni navrhy bez dalsi discovery" --extend-tokens 2000000 --extend-seconds 1800 --extend-steps 30
+G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261103-092847-bc19693a" --backend openai
+```
+
+První příkaz nevolá model, druhý pokračuje placenou kritikou a reportem.
+Závěry mohou být REVISE/deferred; ukončení role není potvrzení mechanismu.
+
+## 2026-11-03: modely po dokončení brainstormingu
+
+Run 20261103-082635-0ef17a77 dokončil oba kritiky (8 posudků pro 4 IDEA) a reportéra.
+Výzkumníci vyčerpali vlastní kola; nejde o technickou blokaci. Všechny návrhy mají
+REVISE pro konkrétní evidence/novelty gaps; nejsou ověřené ani realizované.
+Nové brainstorming runy: flag gpt-6.1-sol, strong gpt-6.1-terra, cheap gpt-6-luna.
+Levný profil všech gpt-5.4-mini zachován v config.cheap.json. Staré runy ani
+experimentální profily se nemění. Standardní ceny za 1M input/output tokenů:
+Sol $2/$10, Terra $1/$5, Luna $0.10/$0.50. Web search $0.01 za call plus vstupní
+search tokeny. Config obsahuje model_prices pro orientační náklady; nezavádí nový
+USD limit, ponechává token/runtime/round limity. Odhad ignoruje cache slevy;
+nejde o provider invoice. Při >272k input tokenů na request je ceník odlišný;
+zde omezené textové requesty používají běžné krátké kontexty.
+Ověřeno v OpenAI Docs 2026-11-03:
+https://developers.openai.com/api/docs/models/gpt-6.1-sol
+https://developers.openai.com/api/docs/models/gpt-6.1-terra
+https://developers.openai.com/api/docs/models/gpt-6-luna
+https://developers.openai.com/api/docs/pricing
+Dostupnost na konkrétním API projektu a živé modelové chování nebyly volány.
+
+## 0.9.2 — 2026-11-03: rozsah kontextu pro brainstorming
+
+Prompt již neobsahuje celý packet kandidáta s opakovanými submissions/revisions
+ani souhrn všech kandidátů. Obsahuje omezenou hlavičku přidělení a náhled
+zachyceného kontextu; úplné podklady zůstávají dostupné přes nástroje. Research
+a review packets vynechávají pouze historii submissions/revisions, nikoli aktuální
+tvrzení, mechanismus nebo evidence. Nový read_research_idea(idea_id,offset,limit)
+vrací úplný záznam včetně provenance po stránkách. Bounded report/index nástroje
+zůstávají dostupné. CORE/CURRENT_STATE lze dočíst přes read_file.
+
+Prošlo 58 souvisejících testů. Replay checkpointu 20261103-082635-0ef17a77 ověřil
+všechny role pod původním limitem 20000 znaků (kritici 8543/8523, reportér 8620),
+nezměněné aktuální důkazy/mechanismus a přesné složení úplné provenance z paged
+reads. Test s uměle dlouhou historií také prošel. Bez placeného API, bez změny
+původního checkpointu nebo cen/modelů. Všechny tiery nadále gpt-5.4-mini.
+
+Pokračuj v existujícím běhu přes resume; není třeba znovu platit discovery.
+Tato aktualizace nezvětšuje prompt_chars ani rozpočty a nezahajuje běh sama.
+
+## 0.9.1 — 2026-11-03: rezervace hledání bez USD rozpočtu
+
+Poslední levný běh 20261103-075543-61c15206 se zastavil před kritiky/reportérem:
+jedno dokončené hledání + jeden nedokončený search item se zdroji byly správně
+konzervativně započítané jako dvě položky, ale ošetření této známé nejednoznačnosti
+vyžadovalo USD ceny i v profilu bez USD limitu. Nově se bez dolarového rozpočtu
+ověří známá spotřeba proti předem rezervovaným tokenovým mezím. Při USD limitu
+zůstává požadavek na cenové krytí. Skutečná dokončená hledání nad cap, tokenové
+překročení, chybějící usage a již UNKNOWN rezervace se nadále zablokují.
+
+Prošlo 42 testů (search accounting, budget, brainstorming), včetně skutečného
+SDK s fake providerem. Přesná odpověď z tohoto runu prošla offline replayem v
+paměťové kopii transakce; obě hledání zůstala započítaná. Původní checkpoint se
+nemění ani automaticky nereconciluje. Nový testovací běh: `run.cmd`. Všechny
+modely zůstávají gpt-5.4-mini, bez Dockeru/instalací/uploadů. Žádné placené API
+volání nebylo spuštěno.
+
+## 0.9.0 — 2026-11-03: strategický ústup k výzkumu
+
+Výchozí brainstorming bez Dockeru/PyPI/realizace a bez kopírování exportů.
+Zachován web search, primární zdroje, kritika, dedupe, emergence a report pro
+člověka. Nerealizované nápady nejsou zamítnuté. Původní plný režim je volitelný
+experimentální prototyp v run-experimental.cmd/config.http.json; další vývoj
+autonomní realizace je odložený. Modely, API/SDK a staré runy se nemigrují.
+[Současný návod](START_HERE.md) · [Rozhodnutí a hranice](BRAINSTORMING.md).
+
 ## 0.8.4 — 2026-10-23
 
 Auditor v kole 11 runu `20261022-105239-d403be02` spotřeboval všech 12 požadavků
@@ -527,3 +659,13 @@ Read-only replay reálného běhu ověřil typed fact conflict/correction a actu
 1.29MB EPUB copy. Starý descriptor-only test zůstává omezenou komponentou,
 nikoli novou ověřenou archivní vrstvou. Žádná placená inference, public upload
 ani změna configů, modelů, budgetů a původních výsledků. [Návod](PAYLOAD_AND_REVIEW_FACTS.md).
+
+Host capture používá zvláštní operator-only cestu: deterministické slučování
+a běžné policy/admission kontroly zůstávají, ale nevykonává placené sémantické
+posouzení identity. Takto zachycené IDEA mají closure_provisional=true a jejich
+počet není počet nových mechanismů. Různé aliasy stejné služby mohou zůstat
+samostatnými provizorními variantami, které mají kritici výslovně označit. SDK
+nemá přístup k parametru host_closure_capture a v closing fázi nemá submit_idea.
+Ověření: 44 souvisejících testů a následná 28-case SDK/closure/profile sada
+po doplnění operator-only capture. Offline fixture dokončila dva kritiky a
+report bez nové discovery, bez API a bez mutací původního runu.

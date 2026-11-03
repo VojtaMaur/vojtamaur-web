@@ -1,3 +1,52 @@
+## 0.9.2 — 2026-11-03: rozsah kontextu pro brainstorming
+
+Prompt již neobsahuje celý packet kandidáta s opakovanými submissions/revisions
+ani souhrn všech kandidátů. Obsahuje omezenou hlavičku přidělení a náhled
+zachyceného kontextu; úplné podklady zůstávají dostupné přes nástroje. Research
+a review packets vynechávají pouze historii submissions/revisions, nikoli aktuální
+tvrzení, mechanismus nebo evidence. Nový read_research_idea(idea_id,offset,limit)
+vrací úplný záznam včetně provenance po stránkách. Bounded report/index nástroje
+zůstávají dostupné. CORE/CURRENT_STATE lze dočíst přes read_file.
+
+Prošlo 58 souvisejících testů. Replay checkpointu 20261103-082635-0ef17a77 ověřil
+všechny role pod původním limitem 20000 znaků (kritici 8543/8523, reportér 8620),
+nezměněné aktuální důkazy/mechanismus a přesné složení úplné provenance z paged
+reads. Test s uměle dlouhou historií také prošel. Bez placeného API, bez změny
+původního checkpointu nebo cen/modelů. Všechny tiery nadále gpt-5.4-mini.
+
+Pokračuj v existujícím běhu přes resume; není třeba znovu platit discovery.
+Tato aktualizace nezvětšuje prompt_chars ani rozpočty a nezahajuje běh sama.
+
+## 0.9.1 — 2026-11-03: rezervace hledání bez USD rozpočtu
+
+Poslední levný běh 20261103-075543-61c15206 se zastavil před kritiky/reportérem:
+jedno dokončené hledání + jeden nedokončený search item se zdroji byly správně
+konzervativně započítané jako dvě položky, ale ošetření této známé nejednoznačnosti
+vyžadovalo USD ceny i v profilu bez USD limitu. Nově se bez dolarového rozpočtu
+ověří známá spotřeba proti předem rezervovaným tokenovým mezím. Při USD limitu
+zůstává požadavek na cenové krytí. Skutečná dokončená hledání nad cap, tokenové
+překročení, chybějící usage a již UNKNOWN rezervace se nadále zablokují.
+
+Prošlo 42 testů (search accounting, budget, brainstorming), včetně skutečného
+SDK s fake providerem. Přesná odpověď z tohoto runu prošla offline replayem v
+paměťové kopii transakce; obě hledání zůstala započítaná. Původní checkpoint se
+nemění ani automaticky nereconciluje. Nový testovací běh: `run.cmd`. Všechny
+modely zůstávají gpt-5.4-mini, bez Dockeru/instalací/uploadů. Žádné placené API
+volání nebylo spuštěno.
+
+## 0.9.0 — 2026-11-03
+
+Výchozí CLI/CMD brainstorming bez Dockeru, PyPI, export intake a realizace.
+75 souvisejících regresí prošlo; rozšířená závěrečná sada 9 testů také prošla.
+Celý offline research flow skončil COMPLETED s jedním nerealizovaným kandidátem,
+dvěma kritikami a report receipt pro všechny aktuální IDEA; žádná realizace,
+schválení či Docker nebyly potřeba. Ověřené výstupy: SWARM_REPORT.md, TIMELINE.md,
+ideas.jsonl, manifest.json a platný audit chain. Skutečné CMD aliasy vybraly
+správný profil (stub interpreter), skutečný Agents SDK s fake providerem dostal
+pouze výzkumné nástroje. Původní experimentální profily nadále validní a zachované.
+Bez placeného API; fixture neprokazuje kvalitu živého výzkumu.
+[Podrobný rozsah](docs/validation/BRAINSTORMING_TESTS.txt).
+
 ## 0.8.4 — 2026-10-23
 
 Auditor v kole 11 runu `20261022-105239-d403be02` spotřeboval všech 12 požadavků

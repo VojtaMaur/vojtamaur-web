@@ -1,0 +1,27 @@
+{
+  "run_id": "20261103-075543-61c15206",
+  "reservation_id": "AGENT-006:8",
+  "replay": "In-memory reconstruction of the reservation immediately before the known provider response, not reconciliation of the live run.",
+  "search_statuses": [
+    "completed",
+    "searching"
+  ],
+  "actual_usage": {
+    "input_tokens": 18461,
+    "output_tokens": 930,
+    "total_tokens": 19391,
+    "web_search_calls": 2
+  },
+  "settled_without_usd_prices": true,
+  "audit_note": {
+    "unfinished_attempts": 1,
+    "accounted_searches": 2,
+    "requested_search_cap": 1,
+    "reserved_usd": null,
+    "conservative_actual_usd": null,
+    "usd_limit_configured": false,
+    "meaning": "Unfinished items remain charged conservatively. Known token usage fits the pre-request reservation; configured USD bounds also hold. Without prices, USD is unknown. Not proof of provider billing or free searches."
+  },
+  "original_checkpoint_unchanged": true,
+  "paid_api_calls": 0
+}

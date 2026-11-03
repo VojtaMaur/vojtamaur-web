@@ -3,6 +3,8 @@
 
 class DemoBackend:
     async def step(self, agent, prompt, history, tools_api, config):
+        if config.get('task_style')=='brainstorming':
+            return self.brainstorming_step(agent,history,tools_api)
         role = agent["role"]
         tools_api.note("DEMO fixture: no API call, no search, no preservation claim.")
         if "Meta-Archivist" in role:
@@ -28,6 +30,29 @@ class DemoBackend:
                            "summary": f"DEMO fixture for {role}", "unexplored_leads": [], "blind_spots": ["Live API/search and Docker execution have not been exercised."]},
                 "history": history, "usage": {"requests": 0, "input_tokens": 0, "output_tokens": 0, "total_tokens": 0, "web_search_calls": 0},
                 "raw": {"demo": True}}
+
+    def brainstorming_step(self,agent,history,api):
+        """Exercise the research handoff without the legacy execution fixture."""
+        api.note('DEMO brainstorming fixture: no search, execution or preservation claim.')
+        if agent['role']=='Loophole Archivist':
+            api.submit_idea(self.idea('[DEMO] Research proposal retained for human evaluation',
+                                     'demo brainstorming mechanism','FREE','INVESTIGATING'))
+        if agent.get('work_kind')=='REVIEW':
+            task=api.get_review_task()
+            if task.get('kind')=='RESEARCH_IDEA':
+                api.record_critique(task['target_id'],'REVISE',
+                    'Offline fixture has no observed primary evidence; retain the research hypothesis.',
+                    decision_basis='EVIDENCE_GAP')
+        if agent.get('work_kind')=='SYNTHESIS':
+            api.get_research_task()
+            api.record_research_report([i['id'] for i in api.engine.state['ideas']],
+                'DEMO only: one research hypothesis and its evidence gaps were retained for human evaluation. No code, packages or deposit was executed.',
+                ['Offline fixture, not a live model or web research result.'])
+        return {'output':{'status':'COMPLETED','reason_for_stopping':'Offline research assignment recorded.',
+                          'summary':'DEMO brainstorming fixture; realization deferred.',
+                          'unexplored_leads':[],'blind_spots':[],
+                          'handoff_leads':['Human evaluation of the retained research proposal.']},
+                'history':history,'usage':{},'raw':{'demo':True}}
 
     @staticmethod
     def idea(title, mechanism, payment, status, blocker=""):

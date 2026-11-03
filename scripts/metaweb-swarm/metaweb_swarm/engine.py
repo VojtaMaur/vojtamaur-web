@@ -115,7 +115,11 @@ class ToolAPI(HttpTools):
 
     def get_review_task(self):
         from .review_tasks import current
-        return current(self.engine.state,self.agent) or {'kind':'NONE','stage':'DONE','next_action':'No assigned review packet.'}
+        result=current(self.engine.state,self.agent) or {'kind':'NONE','stage':'DONE','next_action':'No assigned review packet.'}
+        if self.engine.state['config'].get('task_style')=='brainstorming':
+            from .brainstorming import compact_packet
+            result=compact_packet(result)
+        return result
 
     def list_current_ideas(self):
         from .research_tasks import inventory
@@ -124,6 +128,9 @@ class ToolAPI(HttpTools):
     def get_research_task(self):
         from .research_tasks import packet
         result = packet(self.engine.state, self.agent)
+        if self.engine.state['config'].get('task_style')=='brainstorming':
+            from .brainstorming import compact_packet
+            result=compact_packet(result)
         if self.agent.get('work_kind') == 'SYNTHESIS':
             from .deposit_handoff import report_revision
             self.agent['research_report_revision'] = report_revision(self.engine.state)
@@ -329,6 +336,8 @@ class ToolAPI(HttpTools):
 
     def implementation_allowed(self, idea_id):
         config = self.engine.state["config"]
+        if config.get('task_style')=='brainstorming':
+            return 'BRAINSTORMING_RESEARCH_ONLY'
         if self.agent.get('work_kind') == 'SYNTHESIS':
             return 'SYNTHESIS_ROLE_READ_ONLY'
         if idea_id and self.idea(idea_id)["status"] == "REJECTED":
@@ -932,7 +941,9 @@ class ToolAPI(HttpTools):
                 raise ValueError('Run-local comparison capacity reached (32 ideas); review existing IDs before adding more')
             return comparison_request(normalized, self.engine.state['ideas'])
 
-    def submit_idea(self, data, dedup_decision=None):
+    def submit_idea(self, data, dedup_decision=None, *, host_closure_capture=False):
+        if host_closure_capture and not self.engine.state.get('research_closure'):
+            raise ValueError('Operator closure capture required')
         from .research_tasks import admission
         issue=admission(self,data)
         if issue: return issue
@@ -1025,10 +1036,10 @@ class ToolAPI(HttpTools):
             candidates = self.engine.state["ideas"]
             requested_id = data.get("id", "")
             existing = resolve(candidates, idea, requested_id)
-            if not requested_id and self.engine.state['config'].get('semantic_dedupe', False):
+            if not requested_id and self.engine.state['config'].get('semantic_dedupe', False) and not host_closure_capture:
                 from .candidate_gate import certain_match
                 existing = certain_match(candidates, idea)
-            if not existing and candidates and self.engine.state['backend'] == 'openai' and self.engine.state['config'].get('semantic_dedupe', False) and dedup_decision is None:
+            if not existing and candidates and self.engine.state['backend'] == 'openai' and self.engine.state['config'].get('semantic_dedupe', False) and dedup_decision is None and not host_closure_capture:
                 return {'status': 'DEFERRED', 'reason': 'RUN_LOCAL_COMPARISON_REQUIRED', 'next_action': 'Resubmit through the SDK candidate gate; no new ID created.'}
             if not existing and dedup_decision is not None:
                 from .candidate_gate import validate_decision
@@ -1215,6 +1226,9 @@ class Engine:
         return self.active_base_seconds + time.monotonic() - self.active_start_time
 
     def prompt(self, agent):
+        if self.state['config'].get('task_style')=='brainstorming':
+            from .brainstorming import prompt
+            return prompt(self,agent)
         from .research_tasks import enabled as research_enabled
         if research_enabled(self.state) and agent.get('work_kind')=='SYNTHESIS':
             from .report_packet import build
@@ -1440,6 +1454,11 @@ class Engine:
             from .review_contract import complete_review
             output,review_completion=complete_review(self.state,agent,result["output"],output)
             from .research_tasks import complete as complete_research
+            if agent.get('final_report_only') and output['status']=='COMPLETED':
+                from .deposit_handoff import report_revision
+                agent['research_report_revision']=report_revision(self.state)
+                api.record_research_report([i['id'] for i in self.state['ideas']],output['summary'],
+                    ['Final synthesis from retained evidence; unreviewed candidates remain unreviewed.'])
             from .prototype_revision import finish as finish_revision
             finish_revision(api)
             from .prototype_workflow import finish as finish_workflow

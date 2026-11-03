@@ -1,5 +1,11 @@
 # Režimy roje a oprávnění
 
+> Od 0.9.0 je výchozí [brainstorming](BRAINSTORMING.md) bez realizace a Dockeru.
+> Tento dokument popisuje volitelný experimentální režim: `run-experimental.cmd`
+> s `config.http.json`. Starší zmínky `run-http.cmd` či realizačního
+> `config.research.json` níže patří historii; aktuální [příkazy jsou zde](START_HERE.md).
+
+
 Pracovní dokument frameworku; nic z něj se zatím nevkládá do dokumentace webu.
 Instalace a příkazy: [README](../README.md). Docker: [DOCKER_SETUP](DOCKER_SETUP.md).
 

@@ -245,6 +245,11 @@ def generate_reports(run_dir: Path, state: dict) -> None:
              "Přidělení modelů:", "", _code([{k: a.get(k) for k in ("id", "role", "model_tier", "model")} for a in agents]), "",
              "Verze runtime/SDK:", "", _code(state.get("runtime_versions", {})), "",
              "## Závěr", ""]
+    if config.get('task_style')=='brainstorming':
+        lines.extend(['**Brainstorming / výzkum bez realizace.** Výstupem jsou nápady, zdroje, kritika a předání člověku.',
+                      'Nulový počet Docker pokusů, testů a externích uložení je záměr. Nerealizované nápady nejsou zamítnuté.', ''])
+    elif config.get('experiments')=='docker' or config.get('external_scope')=='external':
+        lines.extend(['**Experimentální prototyp realizace.** Volitelný režim; další vývoj plné autonomie je odložen.', ''])
     if config.get('http_smoke_test'):
         scope = 'veřejné HTTPS služby' if config.get('http_smoke_service') else 'lokální služby'
         lines.extend([f"**HTTP integrační test {scope}.** Nejde o nový preservation mechanism ani archivní deposit.",
@@ -267,7 +272,7 @@ def generate_reports(run_dir: Path, state: dict) -> None:
                   "COMPLETED u agenta/runu znamená dokončenou přidělenou práci; u kandidáta vyžaduje hostem ověřenou deposit receipt. PROTOTYPED vyžaduje lokální artefakt a zaznamenaný úspěšný Docker test; obecný výzkum od 0.6.10 navíc vyžaduje nezávislé FULL_MECHANISM posouzení testu;",
                   "neprokazuje externí publikaci ani dlouhodobé uchování. BLOCKED je překážka vyžadující",
                   "zásah/podklad, REJECTED je zamítnutý návrh a LIMIT_REACHED znamená vyčerpaný limit.", ""])
-    lines.extend(["## Režim a skutečná realizace", "", _code({k: config.get(k) for k in ("run_mode", "external_scope", "approval_required", "experiments")}), "",
+    lines.extend(["## Režim a skutečná realizace", "", _code({k: config.get(k) for k in ("task_style", "run_mode", "external_scope", "approval_required", "experiments")}), "",
                   "NOT_SELECTED/DEFERRED znamená nerealizovaný návrh, nikoli zamítnutý výzkum. V supervised lze výzkum ukončit bez realizace.", "",
                   f"Ověřená uložení: {sum(a.get('status') == 'VERIFIED' and a.get('receipt', {}).get('host_verified') is True and a.get('receipt', {}).get('preservation_deposit') is not False for a in state.get('external_actions', []))} · Docker experimenty: {len(state.get('experiments', []))} · Zaznamenané testovací běhy: {len(state.get('tests', []))}", "",
                   "Receipts ověřují shodu přečtených bajtů při uložení; neprokazují trvalost úložiště. Popis assertions je úsudek testujícího agenta.", "",

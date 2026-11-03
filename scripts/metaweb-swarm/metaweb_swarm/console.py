@@ -11,13 +11,18 @@ def short(value, limit=160):
 def startup(state):
     config = state["config"]
     print(f"Run: {state['run_id']} | {config.get('run_mode', 'supervised')} | {config.get('external_scope', 'sandbox-only')} | experiments={config['experiments']}", flush=True)
+    if config.get('task_style')=='brainstorming':
+        print('Workflow: BRAINSTORMING | web research -> critique -> report | implementation deferred',flush=True)
+    elif config.get('experiments')=='docker' or config.get('external_scope')=='external':
+        print('Workflow: EXPERIMENTAL execution prototype | optional, further autonomous development deferred',flush=True)
     for tier in ("cheap", "strong", "flag"):
         agents = [a for a in state["agents"] if a.get("model_tier") == tier]
         if agents:
             models = 'demo-fixture (no API calls)' if state.get('backend') == 'demo' else ", ".join(sorted({a.get('model') or 'UNSET' for a in agents}))
             print(f"  {tier} = {short(models)} | " + short(", ".join(a["role"] for a in agents), 260), flush=True)
     print(f"Limits: {config['max_steps']} rounds, {config['max_total_tokens']:,} tokens, {config['max_active_seconds']}s; USD ceiling={config.get('estimated_budget_usd')}", flush=True)
-    print(f"Packages: {config.get('package_installation', 'disabled')} | Docker experiments: network none", flush=True)
+    print(f"Packages: {config.get('package_installation', 'disabled')} | Docker: "+
+          ('network none' if config.get('experiments')=='docker' else 'not required'), flush=True)
     if config.get('coding_backend')=='sdk_shell':
         print('Coding: SDK Shell -> isolated Docker | continuous write/run/repair | host API budget | independent review after execution',flush=True)
         if config.get('independent_review_probes'):print('Audit: shared helpers separate | independent Docker assertion probes before mechanism coverage',flush=True)
@@ -28,7 +33,8 @@ def startup(state):
         model = config.get('model_tiers', {}).get('cheap') or config.get('model')
         print(f"Dedupe: current run only | ambiguous proposals: {short(model)}", flush=True)
     if config.get('research_handoffs'):
-        print('Research handoffs: current IDEA -> independent audit -> linked prototype/test -> current-run report', flush=True)
+        print('Research handoffs: current IDEA -> independent critique -> human handoff/report' if config.get('task_style')=='brainstorming' else
+              'Research handoffs: current IDEA -> independent audit -> linked prototype/test -> current-run report', flush=True)
     if config.get('carrier_screening'):
         print('Carrier routing: screen before docs | known direction -> switch', flush=True)
     if config.get('task_style') == 'focused':

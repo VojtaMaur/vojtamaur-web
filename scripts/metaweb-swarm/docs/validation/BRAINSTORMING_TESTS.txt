@@ -1,0 +1,12 @@
+0.9.0 brainstorming defaults, 2026-11-03
+75 related regressions passed in 50.371s: test_brainstorming (initial 7),
+test_scheduling, test_backend, test_research_handoffs, test_report_packet, test_core.
+Final expanded test_brainstorming: 9 tests passed in 10.860s.
+Checks cover: CLI default profile, no Docker readiness/execution, research-only
+SDK tools for all seed/emergent roles, incompatible execution config refusal,
+full offline discovery -> two independent critiques -> final report with one
+retained unimplemented idea, zero approvals/packages/experiments/deposits,
+export intake skipped even below fixture file size, unchanged source, audit
+chain verification, current-run report receipt, original experimental profiles,
+actual Windows CMD aliases with a local stub interpreter, and real Agents SDK
+research note with a fake provider. No paid API calls. No live research claim.

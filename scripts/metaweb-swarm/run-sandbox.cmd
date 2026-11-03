@@ -1,6 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
+echo EXPERIMENTAL sandbox execution prototype. Docker is required; external writes stay disabled.
 if not defined SWARM_PYTHON (
   if exist "%~dp0.venv\Scripts\python.exe" (
     set "SWARM_PYTHON=%~dp0.venv\Scripts\python.exe"
@@ -11,5 +12,5 @@ if not defined SWARM_PYTHON (
   )
 )
 if not defined SWARM_RUNS_ROOT set "SWARM_RUNS_ROOT=%~dp0..\..\..\metaweb-swarm-runs"
-"%SWARM_PYTHON%" swarm.py start --project "%~dp0..\.." --runs-root "%SWARM_RUNS_ROOT%" --config "%~dp0config.research.json" --backend openai --mode autonomous --experiments docker --external-scope sandbox-only --approval required --fetch-live %*
+"%SWARM_PYTHON%" swarm.py start --project "%~dp0..\.." --runs-root "%SWARM_RUNS_ROOT%" --config "%~dp0config.http.json" --backend openai --mode autonomous --experiments docker --external-scope sandbox-only --approval required --fetch-live %*
 exit /b %errorlevel%

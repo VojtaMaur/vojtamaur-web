@@ -1,0 +1,21 @@
+{
+  "run_id": "20261103-082635-0ef17a77",
+  "prompt_chars_limit": 20000,
+  "prompt_lengths": {
+    "Meta-Archivist / Orchestrator": 8240,
+    "Loophole Archivist": 8332,
+    "Anomaly Engineer": 8222,
+    "Format Mutant": 8255,
+    "Failure-Domain Hunter": 8235,
+    "Infrastructure Scout": 8210,
+    "Future Archaeologist": 8207,
+    "Hostile Reviewer": 8543,
+    "Evidence Auditor": 8523,
+    "Role Architect": 8232,
+    "Synthesizer / Reporter": 8620
+  },
+  "current_evidence_and_mechanism_retained": true,
+  "complete_provenance_paging_verified": true,
+  "original_checkpoint_unchanged": true,
+  "paid_api_calls": 0
+}

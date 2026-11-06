@@ -78,7 +78,7 @@ upload jako úspěšný. Historické critique texty instalace zpětně nepřepis
 V projektové složce lze pokračovat v témže runu bez dalšího navyšování kol:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261013-043825-09e42a24" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261013-043825-09e42a24" --backend openai
 ```
 
 Prototyper má ve stávajícím rozpočtu nevyužitá kola. Dalším cílem je konkrétní

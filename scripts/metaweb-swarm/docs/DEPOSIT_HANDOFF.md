@@ -5,7 +5,7 @@
 Oprava je přímo ve frameworku. Pro již rozpracovaný NudgeHost pokračuj stejným runem:
 
 ~~~cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261012-092352-fd4b9ba8" --backend openai --extend-rounds 2
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261012-092352-fd4b9ba8" --backend openai --extend-rounds 2
 ~~~
 
 Přidá dvě kola k limitům rolí, nikoli tokeny/USD/runtime nebo oprávnění. Podklady NudgeHost zůstávají. Aktuální granty jsou prázdné; žádný účet se nevytváří a žádný klíč se nepřebírá z hostitelských účtů. Nečekej hotový upload: cílem pokračování je dokončit explicitní plán, nezávisle prověřit kandidáta a uložit konkrétní setup/capability překážky. Nový run lze dál založit run-deposit-trial.cmd.

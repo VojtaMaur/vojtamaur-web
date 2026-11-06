@@ -1,0 +1,206 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props { headings: MarkdownHeading[]; }
+const { headings } = Astro.props;
+const ancestors: MarkdownHeading[] = [];
+const entries = headings.filter(({ depth }) => depth >= 2).map((heading) => {
+  while (ancestors.length && ancestors[ancestors.length - 1].depth >= heading.depth) {
+    ancestors.pop();
+  }
+  const parents = ancestors.map(({ slug }) => slug);
+  const search = [...ancestors.map(({ text }) => text), heading.text].join(" ");
+  ancestors.push(heading);
+  return { ...heading, parents, search };
+});
+---
+
+<aside class="documentation-contents" aria-label="Documentation navigation">
+  <details open data-doc-contents>
+    <summary>On this page <span aria-hidden="true">↕</span></summary>
+    <nav aria-label="Table of contents">
+      <div class="contents-search" hidden data-doc-search>
+        <label for="documentation-filter">Find a section</label>
+        <input id="documentation-filter" type="search" placeholder="e.g. PDF, deployment…" autocomplete="off" aria-controls="documentation-links" />
+        <p class="contents-hint">Filters headings only. Ctrl+F searches the full page.</p>
+      </div>
+      <ol id="documentation-links" class="contents-links">
+        {entries.map(({ slug, text, depth, parents, search }) => (
+          <li style={`--depth: ${depth - 2}`} data-depth={depth} data-slug={slug} data-parents={JSON.stringify(parents)} data-search={search}>
+            <a href={`#${slug}`}>{text}</a>
+          </li>
+        ))}
+      </ol>
+      <p class="contents-empty" role="status" hidden data-doc-empty>No matching sections.</p>
+    </nav>
+  </details>
+</aside>
+
+<script>
+  const panel = document.querySelector<HTMLDetailsElement>("[data-doc-contents]");
+  if (panel) {
+    const sidebar = panel.closest<HTMLElement>(".documentation-contents")!;
+    const summary = panel.querySelector("summary")!;
+    const input = panel.querySelector<HTMLInputElement>("input")!;
+    const list = panel.querySelector<HTMLOListElement>("ol")!;
+    const empty = panel.querySelector<HTMLElement>("[data-doc-empty]")!;
+    const desktop = window.matchMedia("(min-width: 1680px)");
+    const normalize = (text: string) => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const entries = Array.from(list.querySelectorAll<HTMLLIElement>("li")).map((item) => ({
+      item,
+      link: item.querySelector<HTMLAnchorElement>("a")!,
+      heading: document.getElementById(item.dataset.slug!)!,
+      parents: JSON.parse(item.dataset.parents!) as string[],
+      search: normalize(item.dataset.search!),
+    }));
+    panel.querySelector<HTMLElement>("[data-doc-search]")!.hidden = false;
+
+    const syncPanel = () => { panel.open = desktop.matches; };
+    syncPanel();
+    desktop.addEventListener("change", syncPanel);
+    summary.addEventListener("click", (event) => {
+      if (desktop.matches) event.preventDefault();
+    });
+
+    input.addEventListener("input", () => {
+      const words = normalize(input.value).trim().split(/\s+/).filter(Boolean);
+      const visible = new Set<string>();
+      for (const entry of entries) {
+        if (words.every((word) => entry.search.includes(word))) {
+          visible.add(entry.item.dataset.slug!);
+          entry.parents.forEach((slug) => visible.add(slug));
+        }
+      }
+      for (const { item } of entries) item.hidden = !visible.has(item.dataset.slug!);
+      empty.hidden = visible.size > 0;
+      list.scrollTop = 0;
+      if (!words.length && active) {
+        list.scrollTop += active.getBoundingClientRect().top - list.getBoundingClientRect().top - list.clientHeight / 3;
+      }
+    });
+
+    panel.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !desktop.matches) {
+        panel.open = false;
+        summary.focus();
+      }
+    });
+
+    for (const { link, heading } of entries) {
+      link.addEventListener("click", (event) => {
+        if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        if (!desktop.matches) panel.open = false;
+        heading.setAttribute("tabindex", "-1");
+        heading.focus({ preventScroll: true });
+      });
+    }
+
+    let active: HTMLAnchorElement | undefined;
+    let scheduled = false;
+    const updateActive = () => {
+      scheduled = false;
+      const offset = desktop.matches ? 36 : summary.getBoundingClientRect().height + 48;
+      // Heading positions stay ordered, so only a few layout reads are needed.
+      let low = 0;
+      let high = entries.length - 1;
+      let current = 0;
+      while (low <= high) {
+        const middle = (low + high) >>> 1;
+        if (entries[middle].heading.getBoundingClientRect().top <= offset) {
+          current = middle;
+          low = middle + 1;
+        } else high = middle - 1;
+      }
+      const next = entries[current]?.link;
+      if (next === active) return;
+      active?.removeAttribute("aria-current");
+      active = next;
+      active?.setAttribute("aria-current", "location");
+      if (active && !input.value && !sidebar.contains(document.activeElement)) {
+        const linkRect = active.getBoundingClientRect();
+        const listRect = list.getBoundingClientRect();
+        if (linkRect.top < listRect.top || linkRect.bottom > listRect.bottom) {
+          list.scrollTop += linkRect.top - listRect.top - listRect.height / 3;
+        }
+      }
+    };
+    const scheduleUpdate = () => {
+      if (!scheduled) {
+        scheduled = true;
+        requestAnimationFrame(updateActive);
+      }
+    };
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    window.addEventListener("hashchange", scheduleUpdate);
+    window.addEventListener("load", scheduleUpdate, { once: true });
+    scheduleUpdate();
+  }
+</script>
+
+<style>
+  .documentation-contents {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding-top: 1rem;
+    background: var(--bg);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    min-width: 0;
+    overflow-anchor: none;
+  }
+  details { border: 1px solid var(--border); background: var(--bg); }
+  summary {
+    padding: 0.8rem 1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  summary span { float: right; color: var(--muted); }
+  nav { padding: 0 0.75rem 0.75rem; }
+  .contents-search { padding: 0.2rem 0.25rem 0.6rem; }
+  label { display: block; margin-bottom: 0.4rem; font-weight: 700; }
+  input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.6rem;
+    font: inherit;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 0;
+  }
+  .contents-hint { margin: 0.5rem 0 0; color: var(--muted); font-size: 0.75rem; }
+  .contents-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 35vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+  li { margin: 0; }
+  a {
+    display: block;
+    padding: 0.45rem 0.5rem 0.45rem calc(0.5rem + var(--depth) * 0.65rem);
+    border-left: 2px solid transparent;
+    overflow-wrap: anywhere;
+  }
+  li[data-depth="2"] > a { font-weight: 700; margin-top: 0.35rem; }
+  a:hover { background: #f5f5f5; }
+  a[aria-current] { border-left-color: var(--text); background: #ececec; }
+  :is(a, input, summary):focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  .contents-empty { padding: 0 0.25rem; color: var(--muted); }
+  [hidden] { display: none !important; }
+
+  @media (min-width: 1680px) {
+    .documentation-contents { top: 1rem; padding-top: 0; margin-top: 1.5rem; }
+    details { max-height: calc(100dvh - 3rem); display: flex; flex-direction: column; }
+    summary { list-style: none; cursor: default; }
+    summary::-webkit-details-marker { display: none; }
+    summary span { display: none; }
+    .contents-links { max-height: calc(100dvh - 16rem); }
+  }
+  @media print { .documentation-contents { display: none; } }
+</style>

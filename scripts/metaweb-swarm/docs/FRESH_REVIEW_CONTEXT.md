@@ -43,8 +43,8 @@ Open Library prototypu. Viz validation/FRESH_REVIEW_LIVE_PROOF.json.
 Auditor je nyní skutečně BLOCKED, takže potřebuje explicitní unblock operátora:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py unblock "G:\metaweb-swarm-runs\20261022-051417-8cb93cc5" AGENT-006 --note "Opraven kontext auditu; znovu precist skutecny kod a vystupy"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261022-051417-8cb93cc5" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py unblock "G:\vojtamaur-metaweb-swarm-files\runs\20261022-051417-8cb93cc5" AGENT-006 --note "Opraven kontext auditu; znovu precist skutecny kod a vystupy"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261022-051417-8cb93cc5" --backend openai
 ```
 
 Instalace tyto příkazy nespouští. Stávající token/čas/USD/round limity se nenavyšují.

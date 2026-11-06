@@ -1,3 +1,19 @@
+**0.14.0 — shortlist → cílené rozpracování → IDEA nebo důvod odložení:** [návod](docs/CANDIDATE_DEVELOPMENT.md).
+
+**0.13.1 — náměty mají vlastní kritiku, závěr a paměť:** [návod](docs/HYPOTHESIS_HANDOFF.md).
+
+**0.13.0 — uložené výchozí nastavení, podrobný průběh práce a pracovní hypotézy.**
+V GUI otevři **Výchozí nastavení**: role, vlastní agenty, zadání, modely a limity lze
+uložit pro další nové běhy v GUI i CMD. Existující běhy si zachovají svůj profil.
+Karta **Průběh práce** ukazuje nástroje, čtení dokumentů, hledání a veřejný výstup;
+skryté uvažování modelu není dostupné. [Podrobnosti](docs/DEFAULTS_AND_ACTIVITY.md).
+Nedostatek tokenů se ověřuje před přípravou dalšího kola; stejný neproveditelný
+požadavek se neopakuje, menší uzavírací úlohy mohou pokračovat. Brainstorming
+neprovádí zbytečné porovnávání celého stromu kvůli patchům.
+[Šířka brainstormingu a konec rozpočtu](docs/BRAINSTORM_PRODUCTIVITY.md).
+
+Pracovní soubory zůstávají [pohromadě mimo projekt](docs/RUNTIME_FILES.md).
+
 # Metaweb agent swarm
 
 **0.10.0 — lokální GUI a zachované CLI.**
@@ -29,7 +45,7 @@ stejný brainstorming; poslední vypíše upozornění na změnu významu.
 Pokračování použije skutečnou cestu vypsanou při startu:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "CESTA_BEHU" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "CESTA_BEHU" --backend openai
 ```
 
 **Resume zachovává profil uložený při založení běhu.** Starý Docker/autonomous run
@@ -86,21 +102,21 @@ překážku přidělené práce a `LIMIT_REACHED` dosažený limit. Otevřené o
 Python 3.11+, samostatné prostředí mimo produkční strom:
 
 ```cmd
-py -3.11 -m venv G:\metaweb-swarm-env
-G:\metaweb-swarm-env\Scripts\python.exe -m pip install -r requirements-openai.txt
+py -3.11 -m venv G:\vojtamaur-metaweb-swarm-files\env
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe -m pip install -r requirements-openai.txt
 set "OPENAI_API_KEY=SEM_VLOZ_SKUTECNY_KLIC"
 ```
 
 Klíč platí v tomto CMD, neukládá se do projektu. Ve stávajícím prostředí nemusíš
 instalaci opakovat. SDK verze se touto změnou neaktualizují. Launchery hledají
-`SWARM_PYTHON`, pak lokální `.venv`, pak `G:\metaweb-swarm-env`, pak `python` v PATH.
-`SWARM_RUNS_ROOT` přepíše složku runů; zde je výchozí `G:\metaweb-swarm-runs`.
+`SWARM_PYTHON`, pak lokální `.venv`, pak `G:\vojtamaur-metaweb-swarm-files\env`, pak `python` v PATH.
+`SWARM_FILES_ROOT` přepíše společný kořen pomocných souborů. `SWARM_RUNS_ROOT` přepíše složku runů; zde je výchozí `G:\vojtamaur-metaweb-swarm-files\runs`.
 PowerShell ExecutionPolicy nemá na `.cmd` spouštěče vliv.
 
 Bez Windows launcheru (také Linux/macOS, uprav cesty a interpreter):
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py start --project G:\vojtamaur-web --runs-root G:\metaweb-swarm-runs --backend openai --fetch-live
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py start --project G:\vojtamaur-web --runs-root G:\vojtamaur-metaweb-swarm-files\runs --backend openai --fetch-live
 ```
 
 Vlastní zadání lze předat `run.cmd --task "Konkrétní výzkumná otázka"` nebo
@@ -110,7 +126,7 @@ startu; samotný OpenAI výzkum stále používá síť a může vyhledávat.
 Kontrola SDK bez placeného modelového volání:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py doctor --backend openai --format text
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py doctor --backend openai --format text
 ```
 
 ## Výstupy a ověření bez API klíče
@@ -119,16 +135,16 @@ Každý run zachová `SWARM_REPORT.md`, `TIMELINE.md`, `ideas.jsonl`, `manifest.
 checkpoint, primární zdroje a auditní artefakty. Report lze předat dalšímu LLM.
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py pause "CESTA_BEHU"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py status "CESTA_BEHU"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py verify "CESTA_BEHU"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py pause "CESTA_BEHU"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py status "CESTA_BEHU"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py verify "CESTA_BEHU"
 ```
 
 Offline fixture nového výzkumného workflow, nikoli skutečné objevy:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py start --project G:\vojtamaur-web --runs-root G:\metaweb-swarm-runs --backend demo
-G:\metaweb-swarm-env\Scripts\python.exe -m unittest tests.test_brainstorming
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py start --project G:\vojtamaur-web --runs-root G:\vojtamaur-metaweb-swarm-files\runs --backend demo
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe -m unittest tests.test_brainstorming
 ```
 
 ## Volitelný experimentální prototyp realizace
@@ -168,3 +184,7 @@ Dokumentace patří swarmu, veřejnou dokumentaci webu tato změna neupravuje.
 
 Od 0.9.3 lze přes `close-research` zachytit existující sketches a následným resume
 pustit pouze kritiku a report. [Přesný příkaz a limity](docs/START_HERE.md).
+
+Pojmenované uživatelské profily a přejmenování agentů: [návod](docs/NAMED_PROFILES.md).
+
+Živá interaktivní mapa vztahů a workflow v GUI: [návod](docs/WORKFLOW_MAP.md).

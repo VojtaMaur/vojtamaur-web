@@ -88,6 +88,10 @@ def prepare_task_context(engine, agent, workspace):
         task={'kind':'CURRENT_RUN_REPORT','target_id':engine.state['run_id'],'revision':report_revision(engine.state)}
         # The same current packet is delivered directly in Engine.prompt.
         agent['research_report_revision']=task['revision']
+    if agent.get('development_worker'):
+        from .hypothesis_development import current
+        job=current(engine.state,agent)
+        task={'kind':'HYPOTHESIS_DEVELOPMENT','target_id':job['hypothesis_id'] if job else None}
     if not task: return
     if agent.get('work_kind')=='LOCAL':
         from .prototype_debug import last
@@ -319,7 +323,9 @@ def recover(engine):
         if agent['status'] != 'COMPLETED' and not retry_local and not retry_review: continue
         kind = agent.get('work_kind')
         from .prototype_review import pending as pending_tests
-        waiting = (bool(reviews(state, agent) or pending_tests(state,agent)) if kind == 'REVIEW' else
+        from .portfolio_workflow import pending as pending_hypotheses
+        sketch_waiting=state['config'].get('task_style')=='brainstorming' and kind=='REVIEW' and bool(pending_hypotheses(state,agent))
+        waiting = sketch_waiting or (bool(reviews(state, agent) or pending_tests(state,agent)) if kind == 'REVIEW' else
                    bool(local_candidates(state, agent)) if kind == 'LOCAL' else
                    agent.get('research_report_revision') != report_revision(state) if kind == 'SYNTHESIS' else False)
         if not waiting: continue

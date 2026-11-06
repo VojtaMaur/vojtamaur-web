@@ -1,3 +1,5 @@
+**0.12.0 — sjednocené pracovní soubory:** [umístění, přesun a nové cesty](RUNTIME_FILES.md).
+
 # Spuštění přes GUI nebo CMD (0.10.0)
 
 Nejjednodušší lokální panel:
@@ -41,7 +43,7 @@ Nebylo potřeba další navýšení tokenů. Původní run při replayi nezměn�
 Příprava (bez placeného API):
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py close-research "CESTA_BEHU" --report-only --note "Konecna synteza bez dalsiho hledani"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py close-research "CESTA_BEHU" --report-only --note "Konecna synteza bez dalsiho hledani"
 ```
 
 Potom resume s --backend openai provede jednorázovou placenou syntézu. Historické
@@ -74,8 +76,8 @@ rozpočtu pro závěr budoucích nových běhů zatím není součástí tohoto 
 Příklad pro existující silný run; přidává maximálně 2M tokenů, 30 minut a 30 kol:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py close-research "G:\metaweb-swarm-runs\20261103-092847-bc19693a" --note "Uzavrit dosavadni navrhy bez dalsi discovery" --extend-tokens 2000000 --extend-seconds 1800 --extend-steps 30
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261103-092847-bc19693a" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py close-research "G:\vojtamaur-metaweb-swarm-files\runs\20261103-092847-bc19693a" --note "Uzavrit dosavadni navrhy bez dalsi discovery" --extend-tokens 2000000 --extend-seconds 1800 --extend-steps 30
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261103-092847-bc19693a" --backend openai
 ```
 
 První příkaz nevolá model, druhý pokračuje placenou kritikou a reportem.
@@ -91,16 +93,16 @@ cd /d G:\vojtamaur-web\scripts\metaweb-swarm
 run.cmd
 ```
 
-Nový běh se uloží do `G:\metaweb-swarm-runs`; cestu vypíše při startu.
+Nový běh se uloží do `G:\vojtamaur-metaweb-swarm-files\runs`; cestu vypíše při startu.
 `run-research.cmd`, `run-supervised.cmd` a `run-http.cmd` jsou stejné výzkumné
 aliasy. Používá se `config.research.json`, modely jsou nyní rozdělené podle tierů.
 
 ## Pokračování, pauza a kontrola
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "CESTA_BEHU" --backend openai
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py pause "CESTA_BEHU"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py status "CESTA_BEHU"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "CESTA_BEHU" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py pause "CESTA_BEHU"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py status "CESTA_BEHU"
 ```
 
 `resume` pokračuje v původním zachyceném profilu. Nemění staré Docker runy na
@@ -143,7 +145,7 @@ strategicky odložen, schopnosti zůstávají pro dobrovolné experimenty.
 
 ## Instalace, cesty a klíč
 
-Stávající `G:\metaweb-swarm-env` lze použít beze změn. Nová instalace a nastavení
+Stávající `G:\vojtamaur-metaweb-swarm-files\env` lze použít beze změn. Nová instalace a nastavení
 klíče jsou v [README](../README.md#instalace-a-nastavení). Launchery používají
 `SWARM_PYTHON`, lokální `.venv`, existující prostředí na G: nebo `python` v PATH.
 `SWARM_RUNS_ROOT` změní umístění runů. Všechny launchery jsou součástí projektu;

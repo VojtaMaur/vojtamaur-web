@@ -1,0 +1,48 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import DocumentationContents from "../components/DocumentationContents.astro";
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  frontmatter: { title?: string };
+  headings: MarkdownHeading[];
+}
+
+const { frontmatter, headings } = Astro.props;
+---
+
+<BaseLayout frontmatter={frontmatter}>
+  <div class="documentation-layout">
+    <DocumentationContents headings={headings} />
+    <slot />
+  </div>
+</BaseLayout>
+
+<style>
+  .documentation-layout { min-width: 0; }
+
+  :global(.documentation-layout .post-body) { overflow-wrap: anywhere; }
+
+  :global(.documentation-layout .post-body :is(h2, h3, h4, h5, h6)) {
+    scroll-margin-top: 5rem;
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 1680px) {
+    .documentation-layout {
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      align-items: start;
+      gap: 2.5rem;
+      /* Put the navigation in the outer margin; keep the article in .site-shell. */
+      margin-left: calc(-270px - 2.5rem);
+    }
+    :global(.documentation-layout .post-body :is(h2, h3, h4, h5, h6)) {
+      scroll-margin-top: 2rem;
+    }
+  }
+
+  @media print {
+    .documentation-layout { display: block; margin-left: 0; }
+  }
+</style>

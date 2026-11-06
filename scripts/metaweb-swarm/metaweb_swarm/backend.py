@@ -199,6 +199,19 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
         blind_spots: list[str]
         handoff_leads: list[str] = Field(default_factory=list, description="Future work for another role/run; does not force this completed role to repeat. unexplored_leads is actionable remaining work of THIS role.")
 
+    if getattr(tools_api,'agent',{}).get('portfolio_task'):
+        class HypothesisAssessment(StrictModel):
+            hypothesis_id: str
+            verdict: Literal['PROMISING','NEEDS_EVIDENCE','UNSUITABLE','DUPLICATE']
+            reason: str
+            unknowns: list[str]
+            next_action: str
+            duplicate_of: str
+        class PortfolioOutput(StepOutput):
+            assessments: list[HypothesisAssessment]
+            covered_hypothesis_ids: list[str] = Field(default_factory=list,description="Synthesis: ALL retained HYP IDs covered by the conclusion. Reviewer: empty list.")
+        StepOutput=PortfolioOutput
+
     def recover_validation_error(context, error):
         if not isinstance(error, (ValueError, OSError)):
             raise error
@@ -374,7 +387,7 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
 
     @sdk.function_tool(failure_error_function=recover_validation_error)
     async def read_document(url: DocumentURL, purpose: str, offset: int = 0, limit: int = 12000) -> str:
-        """Read primary docs/terms from a public URL NOW. Returns readable untrusted HTML/text/JSON/PDF, useful links, pagination and an audited GET/hash read receipt in one call. Own complete unchanged GET is cached for paging; another agent must read independently. Text-bearing PDFs return source hash and page numbers; cached offsets reuse extracted text. No scripts/browser/OCR or redirects. Use next_offset for relevant unread sections; do not treat a link or HTTP 200 as verified claims."""
+        """Read primary docs/terms from a public URL NOW. Offset must be >=0; limit is 1..16000 characters (default 12000). Returns readable untrusted HTML/text/JSON/PDF, useful links, pagination and an audited GET/hash read receipt in one call. Own complete unchanged GET is cached for paging; another agent must read independently. Text-bearing PDFs return source hash and page numbers; cached offsets reuse extracted text. No scripts/browser/OCR or redirects. Use next_offset for relevant unread sections; do not treat a link or HTTP 200 as verified claims."""
         return json.dumps(_jsonable(await tools_api.read_document(url, purpose, offset, limit)), ensure_ascii=False)
 
     @sdk.function_tool(failure_error_function=recover_validation_error)
@@ -483,9 +496,29 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
         return json.dumps(_jsonable(tools_api.get_research_task()), ensure_ascii=False)
 
     @sdk.function_tool(failure_error_function=recover_validation_error)
+    def record_hypothesis(title: str, mechanism: str, unknowns: list[str], provider: str = '', source_urls: list[str] | None = None) -> str:
+        """Save an EARLY unreviewed research hypothesis before deep reading. Title 1..180 chars, mechanism 1..3500, unknowns up to8 short items, source_urls up to8. Distinct mechanism proposals are welcome with explicit uncertainty. This is a working HYP sketch, not admission as IDEA, verified novelty, rejection or implementation. Later submit_idea for promising evidenced candidates; no quota/filler or known layers masquerading as new."""
+        from .brainstorm_portfolio import record
+        return json.dumps(record(tools_api,title,mechanism,unknowns,provider,source_urls),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
     def record_research_report(idea_ids: list[str], conclusion: str, limitations: list[str]) -> str:
         """Finish the REPORTER's current-run report: include ALL actual IDEA IDs (or []), grounded conclusion and limitations. Unresolved/rejected candidates and zero tests/deposits are valid report findings, not reasons to continue research. Read get_research_task first. Does not complete ideas, perform actions, or change permissions. After this receipt, finish the role; future research belongs in handoff_leads."""
         return json.dumps(_jsonable(tools_api.record_research_report(idea_ids,conclusion,limitations)),ensure_ascii=False)
+
+    @sdk.function_tool(failure_error_function=recover_validation_error)
+    async def finish_development(outcome: Literal['CANDIDATE','CONTINUE','DEFERRED','REJECTED'], reason: str,
+        provider: str, mechanism: str, novelty_delta: str, recovery_plan: str,
+        cost: Literal['FREE','ONE_TIME','UNKNOWN','RECURRING'], evidence: list[Evidence], limitations: list[str]) -> str:
+        """Save YOUR assigned shortlist result. CANDIDATE needs a concrete carrier, mechanism, baseline comparison, recovery path and claims citing docs YOU read; creates only an INVESTIGATING IDEA through normal admission/dedupe. CONTINUE saves progress and exact next read for another assigned round. DEFERRED/REJECTED closes a real blocker. For non-candidates other strings/lists may be empty, cost UNKNOWN. A previous HYP is not implemented baseline or reason to abandon qualification. No implementation or verified novelty inferred."""
+        from .hypothesis_development import candidate,retain
+        if not getattr(tools_api,'agent',{}).get('development_worker'):raise ValueError('Assigned development worker only')
+        result=None
+        if outcome=='CANDIDATE':
+            payload=candidate(tools_api,provider,mechanism,novelty_delta,recovery_plan,cost,[e.model_dump() for e in evidence],limitations,reason)
+            decision=await compare_candidate(payload) if compare_candidate is not None else None
+            result=tools_api.submit_idea(payload,dedup_decision=decision) if decision is not None else tools_api.submit_idea(payload)
+        return json.dumps(_jsonable(retain(tools_api,outcome,reason,limitations,result)),ensure_ascii=False)
 
     @sdk.function_tool(failure_error_function=recover_validation_error)
     def register_idea_artifacts(idea_id: str, paths: list[str]) -> str:
@@ -594,6 +627,8 @@ def _make_sdk_tools(sdk, tools_api, compare_candidate=None):
         from .brainstorming import read_idea
         return json.dumps(_jsonable(read_idea(tools_api,idea_id,offset,limit)),ensure_ascii=False)
     available.append(read_research_idea)
+    available.append(record_hypothesis)
+    if getattr(tools_api,'agent',{}).get('development_worker'):available.append(finish_development)
     profile = getattr(getattr(tools_api, 'engine', None), 'state', {}).get('config', {})
     if profile.get('task_style')!='brainstorming':
         available=[tool for tool in available if tool.name!='read_research_idea']
@@ -759,6 +794,11 @@ def _make_hooks(sdk, progress):
                 progress.record("history_checkpoint", {
                     "history": _repair_interrupted_history(progress.history),
                 })
+            if tool.name=='finish_development':
+                try:development_result=json.loads(str(result))
+                except (ValueError,TypeError):development_result={}
+                if development_result.get('hypothesis_id') and development_result.get('status') in {'PENDING','IDEA_CREATED','DEFERRED','REJECTED'}:
+                    progress.yield_reason='Development outcome retained; continue next assigned task'
             if tool.name in {'run_experiment','execute_prototype'}:
                 try: outcome=json.loads(str(result))
                 except (ValueError,TypeError): outcome={}
@@ -772,6 +812,39 @@ def _make_hooks(sdk, progress):
                 if issue: progress.yield_reason='Prototype code checkpointed for independent relevance review'
 
     return AuditHooks()
+
+
+async def _run_public_stream(sdk, sdk_agent, input_items, config, run_config, progress, hooks=None):
+    import time
+    stream=sdk.Runner.run_streamed(sdk_agent,input=input_items,max_turns=config.get('max_turns',6),
+                                  run_config=run_config,hooks=hooks if hooks is not None else _make_hooks(sdk,progress))
+    text='';last=0.;updates=0
+    try:
+        async for event in stream.stream_events():
+            data=getattr(event,'data',None)
+            if getattr(event,'type',None)=='raw_response_event' and getattr(data,'type',None)=='response.created':
+                text='';updates=0
+                progress.record('activity',{'phase':'generating','text':'Model připravuje další krok'})
+            kind=getattr(data,'type','')
+            if kind in {'response.output_item.added','response.output_item.done'}:
+                item=getattr(data,'item',None)
+                if getattr(item,'type',None)=='function_call':
+                    name=str(getattr(item,'name','tool'))[:100]
+                    progress.record('activity',{'phase':'tool','tool':name,'text':'Připravuje volání nástroje: '+name})
+            if kind in {'response.web_search_call.in_progress','response.web_search_call.searching','response.web_search_call.completed'}:
+                progress.record('activity',{'phase':'search','text':'Webové hledání dokončeno' if kind.endswith('completed') else 'Vyhledává na webu'})
+            if getattr(event,'type',None)=='raw_response_event' and getattr(data,'type',None)=='response.output_text.delta':
+                text=(text+data.delta)[-12000:]
+                if time.monotonic()-last>=1 and updates<60:
+                    progress.record('output_preview',{'text':text,'partial':True})
+                    last=time.monotonic();updates+=1
+            if getattr(data,'type',None)=='response.completed' and text:
+                progress.record('output_preview',{'text':text,'partial':False})
+        return stream
+    finally:
+        if not stream.is_complete:
+            stream.cancel(mode='immediate')
+            async for _ in stream.stream_events():pass
 
 
 class OpenAIBackend:
@@ -791,7 +864,9 @@ class OpenAIBackend:
             raise BackendBlocked("Set an explicit OpenAI API model in configuration", history=history)
         if self.model_provider is None and not os.environ.get("OPENAI_API_KEY"):
             raise BackendBlocked("OPENAI_API_KEY is not set", history=history)
+        if agent.get('portfolio_task'):config=dict(config,max_turns=1,max_web_search_calls_per_request=0)
         if agent.get('final_report_only'):config=dict(config,max_turns=1)
+        if agent.get('portfolio_task'):history=[]
         input_items = _jsonable(history) + [{"role": "user", "content": prompt}]
         history_chars = config.get("history_chars", 150000)
         if len(json.dumps(input_items, ensure_ascii=False)) > history_chars:
@@ -912,7 +987,7 @@ class OpenAIBackend:
             if engine is not None:
                 step_timeout = min(step_timeout, max(.1, config["max_active_seconds"] - engine.current_active_seconds()))
             result = await asyncio.wait_for(
-                sdk.Runner.run(sdk_agent, input=input_items,
+                _run_public_stream(sdk,sdk_agent,input_items,config,run_config,progress) if config.get("live_output_preview") else sdk.Runner.run(sdk_agent, input=input_items,
                                max_turns=config.get("max_turns", 6), run_config=run_config,
                                hooks=_make_hooks(sdk, progress)),
                 timeout=step_timeout,

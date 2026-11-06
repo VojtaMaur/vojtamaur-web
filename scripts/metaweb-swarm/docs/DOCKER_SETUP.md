@@ -20,9 +20,9 @@ This document belongs to the swarm framework. It is not part of the public websi
 
 ## Installation performed — 2026-10-07
 
-The official Docker Desktop 4.94.0 installer was downloaded into the task's `outputs/cache` directory. Its SHA256 matched WinGet metadata exactly and its Authenticode signature was valid for Docker Inc. Installation used `install --user --backend=wsl-2 --no-windows-containers --quiet --wsl-default-data-root=G:\metaweb-swarm-docker-data`; the installer exited 0 and recorded `Installation succeeded`.
+The official Docker Desktop 4.94.0 installer was downloaded into the task's `outputs/cache` directory. Its SHA256 matched WinGet metadata exactly and its Authenticode signature was valid for Docker Inc. The original installation used the former G: data root; the installer exited 0 and recorded `Installation succeeded`. On 2026-11-03 the existing WSL distribution and both disks were moved to `G:\vojtamaur-metaweb-swarm-files\docker-data`. SHA256 matched before/after the move; the existing image started successfully with network disabled. Docker Desktop was returned to its original stopped state after verification.
 
-The application is installed at `C:\Users\Vojta\AppData\Local\Programs\DockerDesktop`. The bundled CLI reports Docker 29.8.2. The installer settings confirm `wslDefaultDataRoot=G:\metaweb-swarm-docker-data` and `noWindowsContainers=true`. The G: data location is outside the production project; it was selected because C: had about 9 GiB free while G: had about 386 GiB free.
+The application is installed at `C:\Users\Vojta\AppData\Local\Programs\DockerDesktop`. The bundled CLI reports Docker 29.8.2. The installer settings confirm `wslDefaultDataRoot=G:\vojtamaur-metaweb-swarm-files\docker-data` and `noWindowsContainers=true`. The G: data location is outside the production project; it was selected because C: had about 9 GiB free while G: had about 386 GiB free.
 
 No `--accept-license` flag was used and no reboot was requested by the agent. Immediately after installation, Docker Desktop/backend processes were absent and `docker info` reported the missing local `docker_engine` pipe. Docker Desktop was then launched; the Linux daemon became reachable without the agent clicking or accepting a license agreement. Existing user state may explain that behavior, but no assumption about an unseen dialog is needed: the daemon check returned `linux`. The `main` and `disk` directories were created under the selected G: data root.
 
@@ -65,7 +65,7 @@ PowerShell, once the verified installer is saved locally:
 
 ```powershell
 $dockerInstaller = 'C:\path\to\Docker Desktop Installer.exe'
-$dockerInstallProcess = Start-Process -FilePath $dockerInstaller -WindowStyle Hidden -Wait -PassThru -ArgumentList 'install', '--user', '--backend=wsl-2', '--no-windows-containers', '--quiet', '--wsl-default-data-root=G:\metaweb-swarm-docker-data'
+$dockerInstallProcess = Start-Process -FilePath $dockerInstaller -WindowStyle Hidden -Wait -PassThru -ArgumentList 'install', '--user', '--backend=wsl-2', '--no-windows-containers', '--quiet', '--wsl-default-data-root=G:\vojtamaur-metaweb-swarm-files\docker-data'
 $dockerInstallProcess.ExitCode
 ```
 
@@ -80,7 +80,7 @@ After Docker Desktop has started, open a fresh terminal so PATH changes are visi
 ```cmd
 docker info --format "{{.OSType}}"
 docker build --tag metaweb-swarm-experiment:local --file Dockerfile .
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py doctor --docker-check
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py doctor --docker-check
 ```
 
 The example assumes the current directory contains only the reviewed image build context. Never use the entire production project as a Docker build context. Record the resulting image ID/digest; pin it for reproducible experiments. The framework does not pull images during experiments.

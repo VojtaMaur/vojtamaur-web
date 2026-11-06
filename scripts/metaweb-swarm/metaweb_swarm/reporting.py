@@ -238,6 +238,8 @@ def generate_reports(run_dir: Path, state: dict) -> None:
     )
     context = state.get("context", {})
     status = state.get("status", "UNKNOWN")
+    from .brainstorm_portfolio import from_events
+    hypotheses=state.get('brainstorm_hypotheses') or from_events(events)
     lines = ["# Metaweb Swarm Report", "",
              f"Run: **{_text(state.get('run_id'))}** · Stav: **{_text(status)}** · Backend: {_text(backend)}", "",
              f"Vytvořen: {_text(state.get('created_at'))} · Poslední checkpoint: {_text(state.get('updated_at'))}", "",
@@ -245,6 +247,18 @@ def generate_reports(run_dir: Path, state: dict) -> None:
              "Přidělení modelů:", "", _code([{k: a.get(k) for k in ("id", "role", "model_tier", "model")} for a in agents]), "",
              "Verze runtime/SDK:", "", _code(state.get("runtime_versions", {})), "",
              "## Závěr", ""]
+    if config.get('task_style')=='brainstorming':
+        front=['## Výsledky brainstormingu', '', f"Formální IDEA: {len(ideas)} · Předběžné náměty: {len(hypotheses)} (včetně variant, neověřené).", '']
+        receipts=[a.get('research_report_receipt') for a in agents if a.get('research_report_receipt')]
+        front += [str(receipts[-1]['conclusion']) if receipts else 'Modelový závěr zatím nebyl dokončen. Níže jsou zachované předběžné náměty; jejich existence není ověření novosti ani realizace.', '']
+        development=state.get('hypothesis_development',{})
+        if development:front+=['### Rozpracování vybraných námětů', '', _code(development), '']
+        for h in hypotheses:
+            front += ['### '+_text(h['id'])+' — '+_text(h.get('title')), '', _text(h.get('mechanism')), '',
+                      'Nejistoty: '+_text('; '.join(h.get('unknowns',[]))), '']
+            for r in state.get('hypothesis_reviews',[]):
+                if r.get('hypothesis_id')==h['id']:front += ['Předběžná kritika '+_text(r['agent_id'])+': '+_text(r['verdict'])+' — '+_text(r['reason']), 'Další krok: '+_text(r.get('next_action')), '']
+        lines[6:6]=front+['## Technický audit a podklady', '']
     if config.get('task_style')=='brainstorming':
         lines.extend(['**Brainstorming / výzkum bez realizace.** Výstupem jsou nápady, zdroje, kritika a předání člověku.',
                       'Nulový počet Docker pokusů, testů a externích uložení je záměr. Nerealizované nápady nejsou zamítnuté.', ''])
@@ -331,7 +345,7 @@ def generate_reports(run_dir: Path, state: dict) -> None:
         agent_id = agent.get("id")
         actual = [event for event in events if event.get("agent_id") == agent_id]
         counts = Counter(str(event.get("kind", "UNKNOWN")) for event in actual)
-        lines.extend([f"### {_text(agent_id)} — {_text(agent.get('role'))}", "",
+        lines.extend([f"### {_text(agent_id)} — {_text(agent.get('display_name') or agent.get('role'))}", "",
                       f"Stav: **{_text(agent.get('status'))}** · Kola: {_text(agent.get('rounds'), '0')} · Rodič: {_text(agent.get('parent_id'), 'seed')}", "",
                       f"Úkol: {_text(agent.get('mission'))}", "",
                       f"Důvod zastavení: {_text(agent.get('reason_for_stopping'))}", "",
@@ -367,6 +381,14 @@ def generate_reports(run_dir: Path, state: dict) -> None:
             lines.append('| ' + ' | '.join(_cell(v) for v in (lead['id'], lead['provider'], lead['status'],
                 review.get('reason') or lead['summary'], review.get('next_action') or lead['next_action'])) + ' |')
         lines.extend(['', 'Úplné rozpracované podklady, provenance, nejasnosti a review:', '', _code(leads), ''])
+    from .brainstorm_portfolio import from_events
+    hypotheses=state.get('brainstorm_hypotheses') or from_events(events)
+    if hypotheses:
+        lines.extend(['## Pracovní hypotézy (neověřené)', '', 'Včasné návrhy zachované před přijetím do IDEA. Nejsou ověřenou novostí, realizací ani nezávislým posudkem.', ''])
+        for h in hypotheses:
+            lines.extend(['### '+_text(h.get('id'))+' — '+_text(h.get('title')), '', _text(h.get('mechanism')), '',
+                          'Autoři: '+', '.join(h.get('contributors',[])), 'Nejistoty: '+_text('; '.join(h.get('unknowns',[]))),
+                          'Screening: '+_text(h.get('screen_status')), ''])
     lines.extend(["## Kandidáti a jejich podklady", ""])
     if not ideas:
         lines.extend(["Dosud nebyl zaznamenán žádný kandidát.", ""])
@@ -444,12 +466,12 @@ def generate_reports(run_dir: Path, state: dict) -> None:
     for error in event_errors:
         timeline.extend([f"Čtení logu: {_text(error)}", ""])
     lines.extend(['## Návrhy čekající na posouzení identity', '', _code(state.get('pending_candidate_reviews', [])), ''])
-    manifest = {"operator_comments":state.get("operator_comments", []), "discovery_leads":state.get('discovery_leads', []), "pending_candidate_reviews": state.get('pending_candidate_reviews', []), "schema_version": 1, "run_id": state.get("run_id"), "created_at": state.get("created_at"),
+    manifest = {"hypothesis_development":state.get("hypothesis_development",{}), "hypothesis_reviews":state.get("hypothesis_reviews",[]), "brainstorm_hypotheses":hypotheses, "operator_comments":state.get("operator_comments", []), "discovery_leads":state.get('discovery_leads', []), "pending_candidate_reviews": state.get('pending_candidate_reviews', []), "schema_version": 1, "run_id": state.get("run_id"), "created_at": state.get("created_at"),
                 "updated_at": state.get("updated_at"), "status": status, "stop_reason": state.get("stop_reason"),
                 "backend": backend, "demo_fixture": is_demo, "usage": usage, "config": config,
                 "http_smoke": state.get("http_smoke"), "objective": state.get("objective"), "software_version": state.get("software_version"),
                 "runtime_versions": state.get("runtime_versions", {}), "prompt_hashes": state.get("prompt_hashes", {}),
-                "agents": [{**{key: agent.get(key) for key in ("id", "role", "mission", "phase", "parent_id", "depth", "creation_reason", "work_kind", "status", "rounds", "reason_for_stopping", "summary", "usage", "unexplored_leads", "handoff_leads", "blind_spots", "active_carrier_screen", "carrier_switch_required", "review_assignment")},
+                "agents": [{**{key: agent.get(key) for key in ("id", "role", "display_name", "mission", "phase", "parent_id", "depth", "creation_reason", "work_kind", "status", "rounds", "reason_for_stopping", "summary", "usage", "unexplored_leads", "handoff_leads", "blind_spots", "active_carrier_screen", "carrier_switch_required", "review_assignment")},
                             "research_repairs": agent.get('research_repairs',{}),
                             "research_task_blocks": agent.get('research_task_blocks',[]),
                             "prototype_review_repairs": agent.get('prototype_review_repairs',{}),

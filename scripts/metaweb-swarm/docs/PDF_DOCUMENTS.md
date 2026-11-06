@@ -11,7 +11,7 @@ Hlavička `[PDF page N]` usnadňuje orientaci, sama není důkazem přečteného
 V tomto pracovním prostředí již bylo nainstalováno. Na jiném počítači:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe -m pip install -r requirements-openai.txt
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe -m pip install -r requirements-openai.txt
 ```
 
 PDF dependency se během agentního běhu neinstaluje automaticky do hosta. Chybějící
@@ -68,7 +68,7 @@ upraven. Důkaz: [PDF_DOCUMENT_PROOF.json](validation/PDF_DOCUMENT_PROOF.json).
 Pro pokračování původního runu v CMD z projektové složky:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261013-043825-09e42a24" --backend openai --extend-rounds 2
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261013-043825-09e42a24" --backend openai --extend-rounds 2
 ```
 
 Tento příkaz spouští modelové pokračování s původním rozpočtem, oprávněními a

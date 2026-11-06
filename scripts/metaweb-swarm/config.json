@@ -35,7 +35,9 @@
   "input_price_per_million": null,
   "output_price_per_million": null,
   "web_search_price_per_call": null,
-  "role_round_limits": {},
+  "role_round_limits": {
+    "Meta-Archivist / Orchestrator": 2
+  },
   "model_tiers": {},
   "role_model_tiers": {},
   "emergent_model_tier": "strong",
@@ -62,6 +64,7 @@
   "require_independent_http_review": false,
   "require_deposit_qualification": false,
   "task_style": "research",
+  "role_display_names": {},
   "role_assignments": {},
   "carrier_screening": false,
   "require_explicit_upload_flow": false,
@@ -72,5 +75,9 @@
   "coding_max_turns": 24,
   "max_coding_commands_per_agent": 64,
   "coding_acceptance": null,
-  "independent_review_probes": false
+  "independent_review_probes": false,
+  "custom_agents": [],
+  "live_output_preview": false,
+  "brainstorm_development_candidates": 3,
+  "brainstorm_development_rounds": 2
 }

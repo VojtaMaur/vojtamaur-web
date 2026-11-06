@@ -23,22 +23,105 @@ from .context import _is_link, redact_text
 from .engine import ensure_external
 from .roles import SEED_ROLES, seed_agents
 from .storage import atomic_write, now
+from .profile_defaults import (PROFILE_FILES, EDITABLE, profile_config,
+                               validate_overrides, save_defaults, reset_defaults,
+                               profile_ids, profile_details, create_profile, delete_profile)
 
-PROFILE_FILES = {'research': 'config.research.json', 'cheap': 'config.cheap.json',
-                 'experimental': 'config.http.json'}
 PROFILE_NAMES = {'research': 'Brainstorming', 'cheap': 'Brainstorming · levné modely',
                  'experimental': 'Plný běh · experimentální prototyp'}
-EDITABLE = {'model_tiers', 'role_model_tiers', 'role_round_limits', 'seed_roles',
-            'max_total_tokens', 'max_active_seconds', 'max_steps', 'max_agent_rounds',
-            'max_agents', 'max_turns', 'max_output_tokens', 'max_concurrent_agents',
-            'estimated_budget_usd'}
 RUN_ID = re.compile(r'[A-Za-z0-9][A-Za-z0-9_-]{1,100}\Z')
 SAFE_EVENTS = {'agent_round_started','agent_round_finished','idea_recorded','research_task_assigned',
                'review_task_assigned','critique_recorded','note','research_report_recorded',
                'agent_note','sdk_tool_started','sdk_tool_finished',
                'prototype_review_recorded','prototype_review_probe_finished','operator_comment_applied',
                'operator_comment_received','run_stopped','research_report_only_prepared',
-               'research_closure_prepared','http_request_finished','http_request_completed'}
+               'research_closure_prepared','http_request_finished','http_request_completed',
+               'agent_round_failed','agent_round_interrupted','agent_prompt_preflight_blocked',
+               'sdk_model_request_started','sdk_web_search_call','sdk_activity','file_read','file_searched',
+               'http_document_read','document_redirect_hint','http_request_failed',
+               'http_request_uncertain','carrier_screened','spawn_decision',
+               'coding_command_finished','experiment_finished','export_materialized',
+               'hypothesis_recorded','hypothesis_portfolio_retained','hypothesis_review_recorded','hypothesis_shortlist_selected','hypothesis_development_started','hypothesis_development_finished',
+               'agent_request_capacity_deferred','agent_request_capacity_available','agent_request_preflight_blocked'}
+ACTIVITY_LIMIT = 80
+
+
+def _activity_url(value):
+    """Display public locations without signed queries, fragments or userinfo."""
+    if not isinstance(value,str):return ''
+    try:
+        url=urlsplit(value)
+        if url.scheme not in {'http','https'} or not url.hostname:return ''
+        hostname='['+url.hostname+']' if ':' in url.hostname else url.hostname
+        port=':'+str(url.port) if url.port else ''
+        return (url.scheme+'://'+hostname+port+url.path)[:800]
+    except ValueError:return ''
+
+
+def _activity_text(value, limit=900):
+    if not isinstance(value,(str,int,float,bool)):return ''
+    text=str(value)
+    text=re.sub(r'https?://[^\s<>\"\']+',lambda match:_activity_url(match.group()),text)
+    text=re.sub(r'(?im)\b(?:authorization|proxy-authorization|cookie|set-cookie|x-api-key)[\"\']?\s*[:=]\s*[^\r\n]+',
+                '[HTTP HEADER OMITTED]',text)
+    return redact_text(text)[:limit]
+
+
+def _activity_object(value):
+    if isinstance(value,dict):return value
+    if isinstance(value,str):
+        try:
+            parsed=json.loads(value)
+            return parsed if isinstance(parsed,dict) else {}
+        except (ValueError,TypeError):pass
+    return {}
+
+
+def _argument_preview(arguments):
+    """A fixed research-field allowlist, never headers, bodies or shell code."""
+    arguments=_activity_object(arguments);parts=[]
+    for key in ('idea_id','target_id','provider','url','service_url','path','query',
+                'queries','terms','purpose','proposed_change','validation_plan','offset','limit'):
+        value=arguments.get(key)
+        if value is None:continue
+        if key in {'url','service_url'}:value=_activity_url(value)
+        elif isinstance(value,list):value='; '.join(_activity_text(v,180) for v in value[:5] if isinstance(v,str))
+        value=_activity_text(value,400)
+        if value:parts.append(key+': '+value)
+    return '\n'.join(parts)[:1300]
+
+
+def _result_preview(name, result):
+    """Summarize observed public tool output, not an SDK conversation dump."""
+    parsed=_activity_object(result)
+    if not parsed:
+        # read_file intentionally returns public/snapshot text rather than JSON.
+        # Unknown tools and HTTP bodies never get a free-form output fallback.
+        if name=='read_file' and isinstance(result,str):return _activity_text(result,800)
+        return ''
+    parts=[]
+    for key in ('status','verdict','id','idea_id','target_id','request_id','reason','title','summary','mechanism','meaning','next_action',
+                'path','response_path','offset','end','total_chars','matches','count'):
+        value=_activity_text(parsed.get(key),320)
+        if value:parts.append(key+': '+value)
+    # A document tool extracts public text explicitly. Generic HTTP receipts
+    # retain only status/size/path; raw body, cookies and headers are omitted.
+    if name in {'read_document','search_file','check_baseline','check_prior_work'}:
+        excerpt=_activity_text(parsed.get('text') or parsed.get('excerpt'),700)
+        if excerpt:parts.append(excerpt)
+        for key in ('matches','results','entries'):
+            rows=parsed.get(key)
+            if isinstance(rows,list):
+                for row in rows[:3]:
+                    if isinstance(row,dict):
+                        sample=' | '.join(filter(None,(_activity_text(row.get(k),200) for k in ('id','path','line','title','excerpt','text'))))
+                        if sample:parts.append(sample)
+    response=parsed.get('response')
+    if isinstance(response,dict):
+        for key in ('status','response_bytes','path'):
+            value=_activity_text(response.get(key),200)
+            if value:parts.append('response.'+key+': '+value)
+    return '\n'.join(parts)[:1600]
 
 
 def _integer(value, name):
@@ -83,10 +166,11 @@ def writer_active(run_dir):
 class GUIService:
     def __init__(self, project=None, runs_root=None, settings_path=None):
         self.project=Path(project or PACKAGE_ROOT.parents[1]).resolve()
-        self.runs_root=Path(runs_root or self.project.parent/'metaweb-swarm-runs').resolve()
+        from .runtime_paths import runs_root as default_runs_root,files_root
+        self.runs_root=Path(runs_root or default_runs_root(self.project)).resolve()
         self._paths(self.project,self.runs_root)
         self.token=secrets.token_urlsafe(32)
-        self.settings_path=Path(settings_path) if settings_path else Path(os.environ.get('LOCALAPPDATA') or Path.home()/'.config')/'MetawebSwarm'/'gui-settings.json'
+        self.settings_path=Path(settings_path) if settings_path else files_root(self.project)/'gui-settings.json'
         self._saved_key=''
         try:
             if not _is_link(self.settings_path) and self.settings_path.stat().st_size<16384:
@@ -190,22 +274,53 @@ class GUIService:
                 json_extract(body,'$.config.task_style'), substr(json_extract(body,'$.objective'),1,600),
                 json_extract(body,'$.steps'), json_extract(body,'$.usage.total_tokens'),
                 json_extract(body,'$.usage_estimated_usd'),json_array_length(body,'$.agents'),
-                json_array_length(body,'$.ideas') FROM state WHERE id=1""").fetchone()
+                json_array_length(body,'$.ideas'),json_array_length(body,'$.brainstorm_hypotheses') FROM state WHERE id=1""").fetchone()
         if not row:raise ValueError('Chybí stav běhu')
-        return dict(zip(('status','updated_at','task_style','objective','steps','tokens','estimated_usd','agents','ideas'),row),id=run_id)
+        return dict(zip(('status','updated_at','task_style','objective','steps','tokens','estimated_usd','agents','ideas','hypotheses'),row),id=run_id)
 
     def bootstrap(self):
         profiles=[]
-        for key,name in PROFILE_FILES.items():
-            config=load_config(PACKAGE_ROOT/name)
-            roles=seed_agents(config)
-            for agent in roles:agent['round_limit']=round_allowance(config,agent)
-            profiles.append({'id':key,'name':PROFILE_NAMES[key],'label':PROFILE_NAMES[key],
-                             'config':config,'roles':roles,'agents':roles})
+        for key in profile_ids(self.project):
+            profiles.append(self._profile(key))
         return {'project':str(self.project),'runs_root':str(self.runs_root),
                 'api_key_present':bool(self._key),'api_key_saved':bool(self._saved_key),'profiles':profiles,
                 'role_catalog':[{'phase':phase,'role':role,'mission':mission} for phase,role,mission in SEED_ROLES],
                 'models':profiles[0]['config']['model_tiers']}
+
+    def _profile(self, key):
+        config,saved=profile_config(self.project,key)
+        details=profile_details(self.project,key)
+        from .engine import OBJECTIVE
+        config['operator_objective']=config.get('operator_objective') or OBJECTIVE
+        roles=seed_agents(config)
+        for agent in roles:agent['round_limit']=round_allowance(config,agent)
+        return {'id':key,'name':details['name'] or PROFILE_NAMES[details['base_profile']],
+                'label':details['name'] or PROFILE_NAMES[details['base_profile']],
+                'custom':details['custom'],'base_profile':details['base_profile'],
+                'config':config,'objective':config['operator_objective'],
+                'roles':roles,'agents':roles,'has_saved_defaults':saved}
+
+    def defaults(self, payload, reset=False):
+        key=payload.get('profile','research')
+        profile_details(self.project,key)
+        with self._lock:
+            if reset:reset_defaults(self.project,key)
+            else:
+                kwargs={k:payload[k] for k in ('objective','name') if k in payload}
+                save_defaults(self.project,key,payload.get('overrides',{}),**kwargs)
+        return {'ok':True,'profile':self._profile(key),
+                'message':'Původní profil obnoven. Dřívější běhy se nemění.' if reset else
+                          'Výchozí nastavení profilu uloženo pro příští běhy v GUI i CLI.'}
+
+    def create_profile(self,payload):
+        kwargs={'objective':payload['objective']} if 'objective' in payload else {}
+        with self._lock:
+            key=create_profile(self.project,payload.get('profile','research'),payload.get('name'),payload.get('overrides',{}),**kwargs)
+        return {'ok':True,'profile':self._profile(key)}
+
+    def delete_profile(self,payload):
+        with self._lock:base=delete_profile(self.project,payload.get('profile'))
+        return {'ok':True,'base_profile':base}
 
     def active(self):
         return bool(self._job and self._job['active'])
@@ -219,7 +334,7 @@ class GUIService:
     def runs(self):
         rows=[]
         if self.runs_root.is_dir():
-            paths=sorted((p for p in self.runs_root.iterdir() if RUN_ID.fullmatch(p.name) and p.is_dir() and not _is_link(p)),
+            paths=sorted((p for p in self.runs_root.iterdir() if RUN_ID.fullmatch(p.name) and p.is_dir() and not _is_link(p) and (p/'state.sqlite3').is_file()),
                          key=lambda p:p.stat().st_mtime,reverse=True)
             for path in paths[:60]:
                 try:
@@ -227,32 +342,97 @@ class GUIService:
                 except (ValueError,OSError,sqlite3.Error,json.JSONDecodeError):continue
         return {'runs':rows,'active_job':dict(self._job) if self._job else None}
 
-    def _events(self, run_id):
-        result=[]
+    def _activity(self, run_id):
+        # Filter *before* LIMIT: a hundred SDK history checkpoints must not
+        # erase the last useful tool/document/note observations. JSON1 extracts
+        # bounded scalar fields so model histories/HTTP bodies never leave SQL.
+        fields={
+            'time':('$.time',80),'kind':('$.kind',120),'agent_id':('$.agent_id',160),
+            'name':('$.data.name',160),'arguments':('$.data.arguments',12000),
+            'result':('$.data.result',24576),'text':('$.data.text',1800),
+            'reason':('$.data.reason',1200),'title':('$.data.title',500),
+            'conclusion':('$.data.conclusion',1200),'verdict':('$.data.verdict',100),
+            'task_kind':('$.data.kind',100),'target_id':('$.data.target_id',160),
+            'hypothesis_id':('$.data.hypothesis_id',160),'idea_id':('$.data.idea_id',160),'round':('$.data.round',20),
+            'status':('$.data.status',120),'path':('$.data.path',1000),
+            'url':('$.data.url',8000),'query':('$.data.query',600),
+            'offset':('$.data.offset',20),'end':('$.data.end',20),
+            'characters':('$.data.characters',20),'provider':('$.data.provider',300),
+            'action':('$.data.action',6000),'response_status':('$.data.response.status',30),
+            'response_bytes':('$.data.response.response_bytes',30),
+        }
+        selected='seq,'+','.join("substr(json_extract(body,'"+path+"'),1,"+str(size)+") AS "+name
+                                  for name,(path,size) in fields.items())
+        marks=','.join('?' for _ in SAFE_EVENTS);kinds=tuple(sorted(SAFE_EVENTS))
+        where="json_extract(body,'$.kind') IN ("+marks+")"
         with closing(self._db(run_id)) as db:
-            rows=db.execute('SELECT body FROM events ORDER BY seq DESC LIMIT 160').fetchall()
-        for body, in reversed(rows):
-            if len(body)>2_000_000:continue
-            event=json.loads(body)
-            if event['kind'] not in SAFE_EVENTS:continue
-            data=event.get('data',{})
-            if event['kind'] in {'sdk_tool_started','sdk_tool_finished'}:
-                name=str(data.get('name','tool'))
-                text=('Pracuje: ' if event['kind']=='sdk_tool_started' else 'Dokončeno: ')+name
-                # Never return raw arguments/results or credentials. A URL is
-                # displayed only without query/fragment/userinfo.
-                if event['kind']=='sdk_tool_started' and name=='read_document':
-                    try:
-                        arguments=data.get('arguments',{})
-                        arguments=json.loads(arguments) if isinstance(arguments,str) else arguments
-                        url=urlsplit(arguments.get('url',''))
-                        if url.scheme in {'http','https'} and url.hostname:text='Čte dokumentaci: '+url.scheme+'://'+url.hostname+url.path
-                    except (ValueError,TypeError,AttributeError):pass
+            rows=db.execute('SELECT '+selected+' FROM events WHERE '+where+
+                            ' ORDER BY seq DESC LIMIT ?',(*kinds,ACTIVITY_LIMIT)).fetchall()
+            # Separate per-agent latest lookup preserves the last observation of
+            # quieter/completed roles even after another role fills the stream.
+            latest=db.execute('SELECT '+selected+' FROM events WHERE seq IN ('+
+                'SELECT max(seq) FROM events WHERE '+where+
+                " AND json_extract(body,'$.agent_id') IS NOT NULL GROUP BY json_extract(body,'$.agent_id'))"+
+                ' ORDER BY seq DESC LIMIT 64',kinds).fetchall()
+        def display(row):
+            item=dict(zip(('seq',*fields),row));kind=item['kind'];detail=''
+            if kind in {'sdk_tool_started','sdk_tool_finished'}:
+                name=_activity_text(item['name'] or 'tool',120)
+                started=kind=='sdk_tool_started'
+                text=('Pracuje: ' if started else 'Dokončeno: ')+name
+                detail=_argument_preview(item['arguments']) if started else _result_preview(name,item['result'])
+            elif kind=='sdk_web_search_call':
+                text='Hledání na webu'
+                detail=_argument_preview(item['action']) or _activity_text(item['query'])
+            elif kind=='sdk_model_request_started':text='Čeká na odpověď modelu'
+            elif kind=='sdk_activity':text=item['text'] or 'Model připravuje odpověď'
+            elif kind=='agent_round_started':text='Začíná kolo '+str(item['round'] or '')
+            elif kind=='agent_round_finished':
+                text='Kolo dokončeno: '+str(item['status'] or '')
+                detail=_activity_text(item['reason'])
+            elif kind in {'agent_round_failed','agent_prompt_preflight_blocked'}:
+                text='Kolo zastaveno';detail=_activity_text(item['reason'])
+            elif kind=='hypothesis_shortlist_selected':text='Vybrán shortlist k rozpracování'
+            elif kind=='hypothesis_development_started':text='Rozpracovává námět';detail=_activity_text(item['hypothesis_id'])
+            elif kind=='hypothesis_development_finished':text='Rozpracování: '+str(item['status'] or '');detail=_activity_text(item['hypothesis_id'])+' '+_activity_text(item['reason'])
+            elif kind=='agent_round_interrupted':text='Kolo přerušeno; uložená práce zachována'
+            elif kind=='agent_request_capacity_deferred':
+                text='Úkol odložen: nevejde se do zbývajícího rozpočtu';detail=_activity_text(item['reason'])
+            elif kind=='agent_request_capacity_available':text='Rozpočet opět umožňuje pokračovat v úkolu'
+            elif kind=='agent_request_preflight_blocked':
+                text='Příprava požadavku blokována';detail=_activity_text(item['reason'])
+            elif kind=='file_read':
+                text='Čte soubor: '+_activity_text(item['path'],450)
+                detail='Pozice '+str(item['offset'] or 0)+'; '+str(item['characters'] or '?')+' znaků'
+            elif kind=='file_searched':
+                text='Hledá v souboru: '+_activity_text(item['path'],450)
+                detail=_activity_text(item['query'])
+            elif kind=='http_document_read':
+                text='Čte dokumentaci: '+_activity_url(item['url'])
+                detail='Znaky '+str(item['offset'] or 0)+'–'+str(item['end'] or '?')
+            elif kind in {'http_request_finished','http_request_completed','http_request_failed','http_request_uncertain'}:
+                action=_activity_object(item['action']);payload=action.get('payload',{})
+                if not isinstance(payload,dict):payload={}
+                text='HTTP '+_activity_text(payload.get('method',''),20)+' '+str(item['status'] or '')
+                detail=_activity_url(payload.get('url'))
+                if item['response_status']:detail+=' | HTTP '+str(item['response_status'])
+                if item['response_bytes']:detail+=' | '+str(item['response_bytes'])+' bytů'
+                if item['reason']:detail+='\n'+_activity_text(item['reason'],400)
+            elif kind in {'research_task_assigned','review_task_assigned'}:
+                text='Úkol: '+str(item['task_kind'] or '')+' '+str(item['target_id'] or '')
+            elif kind=='carrier_screened':
+                text='Prověřuje službu: '+_activity_text(item['provider'],300)
+                detail=_activity_text(item['status'],160)
             else:
-                text=data.get('text') or data.get('reason') or data.get('title') or data.get('conclusion') or data.get('verdict') or data.get('kind') or event['kind']
-            result.append({'seq':event['seq'],'time':event['time'],'kind':event['kind'],
-                           'agent_id':event.get('agent_id'),'text':str(text)[:1400]})
-        return result
+                text=next((item[key] for key in ('text','title','conclusion','verdict','reason','task_kind') if item.get(key)),kind)
+                if item['idea_id']:detail=str(item['idea_id'])
+            return self.clean({'seq':item['seq'],'time':item['time'],'kind':kind,
+                               'agent_id':item['agent_id'],'text':_activity_text(text,1400),
+                               'detail':_activity_text(detail,1600)})
+        return [display(row) for row in reversed(rows)],[display(row) for row in latest]
+
+    def _events(self, run_id):
+        return self._activity(run_id)[0]
 
     def run(self, run_id):
         state=self._state(run_id)
@@ -261,22 +441,42 @@ class GUIService:
         result['config']={k:v for k,v in result['config'].items() if k not in {'http_credentials','external_resources'}}
         result['agents']=[]
         for agent in state.get('agents',[]):
-            row={k:agent.get(k) for k in ('id','role','mission','work_kind','model_tier','model','status','rounds','summary','reason_for_stopping','parent_id','unexplored_leads','handoff_leads','blind_spots','usage')}
+            row={k:agent.get(k) for k in ('id','role','display_name','mission','work_kind','model_tier','model','status','rounds','summary','reason_for_stopping','parent_id','unexplored_leads','handoff_leads','blind_spots','usage')}
             row['round_limit']=round_allowance(state['config'],agent)
             assignment=agent.get('review_assignment') or agent.get('research_assignment') or {}
             row['current_task']={k:assignment.get(k) for k in ('kind','target_id','stage')}
             result['agents'].append(row)
         result['ideas']=[{k:i.get(k) for k in ('id','title','provider','status','summary','mechanism','payment','novelty','novelty_delta','next_action','blocker','critique','contributors','evidence')} for i in state.get('ideas',[])]
+        hypotheses=state.get('brainstorm_hypotheses',[])
+        if not hypotheses and state['config'].get('task_style')=='brainstorming':
+            from .brainstorm_portfolio import from_audit
+            with closing(self._db(run_id)) as db:hypotheses=from_audit(db)
+        result['hypothesis_reviews']=state.get('hypothesis_reviews',[])
+        result['hypothesis_development']=state.get('hypothesis_development',{})
+        result['hypotheses']=[{k:h.get(k) for k in ('id','title','mechanism','provider','unknowns','source_urls','status',
+            'contributors','screen_status','created_at','last_updated','source_event_seq','meaning','idea_id','development_status')}
+            for h in hypotheses[:120]]
         result['approvals']=[{k:a.get(k) for k in ('id','status','kind','description','target','idea_id','created_at','decision','note')} | {
             'description':a.get('description') or a.get('action',{}).get('description'),
             'target':a.get('target') or a.get('action',{}).get('target')}
             for a in state.get('approvals',[])]
-        result['events']=self._events(run_id)
+        result['activity'],result['current_activity']=self._activity(run_id)
+        result['events']=result['activity']  # Kept for older dashboard clients.
+        with closing(self._db(run_id)) as db:
+            preview=db.execute("""SELECT seq,json_extract(body,'$.time'),json_extract(body,'$.agent_id'),
+                substr(json_extract(body,'$.data.text'),1,12000),json_extract(body,'$.data.partial')
+                FROM events WHERE json_extract(body,'$.kind')='sdk_output_preview' ORDER BY seq DESC LIMIT 1""").fetchone()
+        result['live_output']=self.clean({'seq':preview[0],'time':preview[1],'agent_id':preview[2],
+            'kind':'sdk_output_preview','data':{'text':preview[3] or '','partial':bool(preview[4])}}) if preview else None
         for agent in result['agents']:
-            recent=next((event for event in reversed(result['events']) if event.get('agent_id')==agent['id']),None)
+            recent=next((event for event in result['current_activity'] if event.get('agent_id')==agent['id']),None)
             agent['last_action']=recent['text'] if recent else ''
+            agent['activity']=recent
         result['running']=writer_active(self.run_path(run_id)) or bool(self.active() and self._job.get('run_id')==run_id)
         result['interrupted']=state.get('status')=='RUNNING' and not result['running']
+        from .workflow_graph import build_workflow
+        result['workflow']=build_workflow(state,running=result['running'],
+            report_exists=(self.run_path(run_id)/'SWARM_REPORT.md').is_file(),hypotheses=hypotheses,activity=result['current_activity'])
         result['operator_comments']=[dict(item,status='APPLIED') for item in state.get('operator_comments',[])]
         inbox=self.run_path(run_id)/'operator-inbox'
         if inbox.is_dir() and not _is_link(inbox):
@@ -285,6 +485,22 @@ class GUIService:
                 try:result['operator_comments'].append(dict(json.loads(entry.read_text(encoding='utf-8')),status='QUEUED'))
                 except (ValueError,OSError):continue
         return result
+
+    def memory(self, run_id=None):
+        if run_id:
+            parent=self.run_path(run_id)/'context'
+            if _is_link(parent):raise ValueError('Propojený kontext je odmítnut')
+            path=parent/'prior-runs.json'
+        else:path=self.runs_root/'RUN_MEMORY.json'
+        if _is_link(path):raise ValueError('Propojený soubor paměti je odmítnut')
+        result={'path':str(path),'scope':'captured' if run_id else 'shared','run_id':run_id,'exists':path.is_file()}
+        if not result['exists']:return dict(result,entries=[],text='',message='Paměť zde zatím není vytvořená. Zobrazení ji nevytváří ani nepřepisuje.')
+        if path.stat().st_size>4*1024*1024:raise ValueError('Paměť přesahuje 4 MiB; otevři soubor v editoru')
+        text=path.read_text(encoding='utf-8-sig');data=json.loads(text)
+        if not isinstance(data,dict) or data.get('schema_version')!=1 or not isinstance(data.get('entries'),list):raise ValueError('Nepodporovaný formát paměti')
+        if any(not isinstance(row,dict) or not isinstance(row.get('candidates',[]),list) or any(not isinstance(c,dict) for c in row.get('candidates',[])) for row in data['entries']):raise ValueError('Neplatné záznamy paměti')
+        return dict(result,entries=data['entries'],notice=data.get('notice',''),truncated=bool(data.get('truncated')),
+                    skipped=data.get('skipped',[]),text=text,updated_at=datetime.fromtimestamp(path.stat().st_mtime,timezone.utc).isoformat())
 
     def report(self, run_id):
         path=self.run_path(run_id)/'SWARM_REPORT.md'
@@ -335,13 +551,15 @@ class GUIService:
 
     def start(self, payload):
         key=payload.get('profile','research')
-        if key not in PROFILE_FILES:raise ValueError('Neznámý profil')
+        profile_details(self.project,key)
         if payload.get('api_key') is not None:self.settings({'api_key':payload['api_key']})
         if self.active():raise ValueError('Nejprve dokonči aktivní příkaz')
-        config=load_config(PACKAGE_ROOT/PROFILE_FILES[key]);overrides=payload.get('overrides') or {}
-        if not isinstance(overrides,dict) or set(overrides)-EDITABLE:raise ValueError('Nepodporovaná změna profilu')
-        if 'seed_roles' in overrides and not overrides['seed_roles']:raise ValueError('Vyber alespoň jednu seed roli')
+        config,_=profile_config(self.project,key);overrides=payload.get('overrides',{})
+        validate_overrides(overrides)
         config.update(overrides)
+        config['live_output_preview']=True
+        objective=payload.get('objective')
+        if objective is not None:config['operator_objective']=objective
         task=payload.get('task','')
         if not isinstance(task,str) or len(task)>12000:raise ValueError('Zadání musí mít nejvýše 12000 znaků')
         if task.strip():
@@ -477,17 +695,31 @@ def make_server(service, port=0):
                     elif path.path=='/api/run':value=service.run(run_id)
                     elif path.path=='/api/job':value=service.job(int(query.get('cursor',['0'])[0]))
                     elif path.path=='/api/report':value=service.report(run_id)
+                    elif path.path=='/api/memory':value=service.memory(run_id or None)
                     else:return self.json(404,{'ok':False,'error':'Neznámá API cesta'})
                     return self.json(200,value)
                 except (ValueError,OSError,sqlite3.Error,json.JSONDecodeError) as error:return self.json(400,{'ok':False,'error':str(error)})
-            asset={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/style.css':'style.css'}.get(path.path)
+            asset={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/workflow.js':'workflow.js','/style.css':'style.css',
+                   '/favicon.ico':'favicon.ico','/favicon.png':'favicon.png'}.get(path.path)
             if asset is None:return self.json(404,{'ok':False,'error':'Nenalezeno'})
             target=Path(__file__).parent/'gui_static'/asset
             if not target.is_file() or _is_link(target):return self.json(404,{'ok':False,'error':'Chybí GUI soubory'})
-            kind='text/html; charset=utf-8' if asset.endswith('html') else 'text/css; charset=utf-8' if asset.endswith('css') else 'text/javascript; charset=utf-8'
+            kind='image/x-icon' if asset.endswith('.ico') else 'image/png' if asset.endswith('.png') else 'text/html; charset=utf-8' if asset.endswith('html') else 'text/css; charset=utf-8' if asset.endswith('css') else 'text/javascript; charset=utf-8'
             return self.send_body(200,target.read_bytes(),kind)
         def do_POST(self):
-            if not self.auth():return self.json(403,{'ok':False,'error':'Požadavek nemá platný GUI token/původ'})
+            if not self.auth():
+                # Consume a small already-sent body before closing; Windows
+                # otherwise resets the socket and can hide the 403 response.
+                # Never parse/execute it or wait indefinitely on a false size.
+                timeout=self.connection.gettimeout()
+                try:
+                    size=int(self.headers.get('Content-Length','0'))
+                    if 0<size<=65536:
+                        self.connection.settimeout(1)
+                        self.rfile.read(size)
+                except (ValueError,OSError):pass
+                finally:self.connection.settimeout(timeout)
+                return self.json(403,{'ok':False,'error':'Požadavek nemá platný GUI token/původ'})
             try:
                 size=int(self.headers.get('Content-Length','0'))
                 if not 0<size<=65536:return self.json(413,{'ok':False,'error':'Neplatná velikost požadavku'})
@@ -502,6 +734,10 @@ def make_server(service, port=0):
                 elif path=='/api/comment':value=service.comment(payload)
                 elif path=='/api/command':value=service.command(payload.get('command'))
                 elif path=='/api/settings':value=service.settings(payload)
+                elif path=='/api/profiles':value=service.create_profile(payload)
+                elif path=='/api/profiles/delete':value=service.delete_profile(payload)
+                elif path=='/api/defaults':value=service.defaults(payload)
+                elif path=='/api/defaults/reset':value=service.defaults(payload,reset=True)
                 elif path=='/api/open-cmd':value=service.open_cmd()
                 elif path=='/api/approval':value=service.approval(payload)
                 else:return self.json(404,{'ok':False,'error':'Neznámá API cesta'})

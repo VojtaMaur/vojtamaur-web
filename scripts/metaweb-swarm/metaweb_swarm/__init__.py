@@ -1,2 +1,2 @@
 """Metaweb research swarm. Offline core uses only the Python standard library."""
-__version__ = "0.10.1"
+__version__ = "0.16.0"

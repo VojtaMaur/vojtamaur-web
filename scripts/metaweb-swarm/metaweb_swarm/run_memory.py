@@ -97,6 +97,8 @@ def summarize_run(state: dict, run_id: str, source: str, source_sha256: str):
                f"{tested} tested, {checked - tested} untested; {deposits} verified external receipts")
     if subjects:
         summary += "; investigated " + ", ".join(subjects)
+    hypotheses=[_hypothesis(h,run_id) for h in state.get('brainstorm_hypotheses',[]) if isinstance(h,dict)][:100]
+    if hypotheses:summary+=f"; {len(hypotheses)} preliminary hypotheses (not admitted IDEA or verified novelty)"
     summary += "."
     return {"run_id": run_id, "status": state["status"], "updated_at": _short(state.get("updated_at", ""), 40),
             "source": source, "source_sha256": source_sha256, "summary": summary,
@@ -104,7 +106,7 @@ def summarize_run(state: dict, run_id: str, source: str, source_sha256: str):
                        "checked_artifacts": checked, "tested_artifacts": tested,
                        "untested_artifacts": checked - tested, "verified_external_receipts": deposits},
             "trust": "prior_run_claims_not_implemented_baseline",
-            "candidates": [_candidate(item, run_id) for item in ideas[:64]]}
+            "hypotheses":hypotheses, "candidates": [_candidate(item, run_id) for item in ideas[:64]]}
 
 
 def _candidate(item, run_id):
@@ -121,19 +123,29 @@ def _candidate(item, run_id):
             'evidence_urls': [_short(e['url'], 400) for e in (item.get('evidence') or []) if isinstance(e, dict) and isinstance(e.get('url'), str)][:4]}
 
 
+def _hypothesis(item,run_id):
+    return {'id':_short(item.get('id'),100),'title':_short(item.get('title'),180),
+            'provider':_short(item.get('provider'),160),'mechanism':_short(item.get('mechanism'),600),
+            'unknowns':[_short(u,180) for u in item.get('unknowns',[])[:5]],
+            'ref':run_id+'/'+str(item.get('id','')),'run_id':run_id,
+            'development_status':item.get('development_status'),'idea_id':item.get('idea_id'),
+            'status':'UNREVIEWED','record_kind':'PRELIMINARY_HYPOTHESIS','verified':False,
+            'meaning':'Historical brainstorming sketch, not admitted IDEA, implemented baseline, approval or rejection.'}
+
+
 def prior_candidates(memory):
     """Bounded mechanism inventory: all candidates, not just first three titles."""
     return [c for entry in memory.get('entries', []) if isinstance(entry, dict)
-            for c in entry.get('candidates', []) if isinstance(c, dict)][:200]
+            for c in entry.get('candidates', [])+entry.get('hypotheses',[]) if isinstance(c, dict)][:200]
 
 
 def matching_prior(candidates, idea):
     from .dedup import identity
     key = identity(idea)
     title = _short(idea.get('title', ''), 160).casefold()
-    return [c for c in candidates if (key and c.get('canonical_key') == key)
+    return [c for c in candidates if c.get('record_kind')!='PRELIMINARY_HYPOTHESIS' and ((key and c.get('canonical_key') == key)
             or (not key and title and c.get('title', '').casefold() == title
-                and c.get('provider', '').casefold() == str(idea.get('provider', '')).casefold())][:8]
+                and c.get('provider', '').casefold() == str(idea.get('provider', '')).casefold()))][:8]
 
 
 def search_prior(candidates, terms):
@@ -142,12 +154,12 @@ def search_prior(candidates, terms):
     matches = [c for c in candidates if any(t.casefold().strip() in ' '.join(str(c.get(k, '')) for k in
                 ('provider', 'title', 'mechanism', 'mechanism_key', 'canonical_key')).casefold() for t in terms)]
     return {'matches': matches[:8], 'total_matches': len(matches),
-            'meaning': 'Previously explored research, NOT implemented baseline or rejection. Discovery must move elsewhere; continuation needs an explicit unfinished task.'}
+            'meaning': 'Previously explored research, NOT implemented baseline or rejection. Preliminary hypotheses may be developed further; they do not prove novelty, approval or rejection.'}
 
 
 def prior_brief(candidates, limit=1800):
     counts = Counter(c.get('canonical_key') or c.get('title') for c in candidates)
-    lines = ['PRIOR WORK: do not propose these again as discoveries. Read check_prior_work for specific unfinished work.']
+    lines = ['PRIOR WORK: historical proposals, not implemented baseline. PRELIMINARY_HYPOTHESIS may be developed; no automatic rejection. Read check_prior_work for details.']
     seen = set()
     for item in sorted(candidates, key=lambda c: counts[c.get('canonical_key') or c.get('title')], reverse=True):
         key = item.get('canonical_key') or item.get('title')
@@ -182,6 +194,7 @@ def build_run_memory(runs_root, current_run_id=None, *, max_runs=20, max_chars=8
     paths.sort(key=lambda path: path.name, reverse=True)
     consumed = len(NOTICE)
     candidate_count = 0
+    hypothesis_count = 0
     for directory in paths[:max_scan_runs]:
         if directory.name == current_run_id:
             continue
@@ -206,6 +219,8 @@ def build_run_memory(runs_root, current_run_id=None, *, max_runs=20, max_chars=8
         result["entries"].append(entry)
         entry['candidates'] = entry.get('candidates', [])[:max(0, 200 - candidate_count)]
         candidate_count += len(entry['candidates'])
+        entry['hypotheses']=entry.get('hypotheses',[])[:max(0,200-hypothesis_count)]
+        hypothesis_count+=len(entry['hypotheses'])
         consumed += len(entry["summary"]) + 3
     result["skipped"] = result["skipped"][:20]
     return result

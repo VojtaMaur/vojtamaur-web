@@ -3,7 +3,9 @@ import hashlib
 import json
 import os
 import sqlite3
+import tempfile
 import threading
+import time
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,12 +22,29 @@ def canonical(data):
 def atomic_write(path, text):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(path.name + ".tmp")
-    with temporary.open("w", encoding="utf-8", newline="\n") as stream:
-        stream.write(text)
-        stream.flush()
-        os.fsync(stream.fileno())
-    os.replace(temporary, path)
+    # Unique siblings prevent concurrent writers from sharing one .tmp file.
+    descriptor, name = tempfile.mkstemp(prefix=path.name + ".", suffix=".tmp", dir=path.parent)
+    temporary = Path(name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as stream:
+            stream.write(text)
+            stream.flush()
+            os.fsync(stream.fileno())
+        # Windows scanners/readers can briefly hold the destination. Preserve
+        # the original error if this bounded retry cannot replace it.
+        for delay in (0.02, 0.05, 0.1, 0.2, None):
+            try:
+                os.replace(temporary, path)
+                break
+            except PermissionError:
+                if delay is None:
+                    raise
+                time.sleep(delay)
+    finally:
+        try:
+            temporary.unlink(missing_ok=True)
+        except OSError:
+            pass  # Cleanup must not obscure the original replacement error.
 
 
 class Store:

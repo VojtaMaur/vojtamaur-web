@@ -21,7 +21,7 @@
   "max_agents": 16,
   "max_agent_rounds": 3,
   "max_steps": 48,
-  "max_turns": 12,
+  "max_turns": 6,
   "step_timeout_seconds": 420,
   "max_total_tokens": 3000000,
   "max_active_seconds": 3600,
@@ -29,7 +29,7 @@
   "history_chars": 120000,
   "experiments": "disabled",
   "role_round_limits": {
-    "Meta-Archivist / Orchestrator": 1,
+    "Meta-Archivist / Orchestrator": 2,
     "Loophole Archivist": 4,
     "Evidence Auditor": 6,
     "Hostile Reviewer": 6,

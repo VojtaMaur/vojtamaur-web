@@ -363,6 +363,7 @@ class SchedulerTests(unittest.TestCase):
                 raise asyncio.CancelledError()
         engine = Engine(self.run, CancelledBackend(), "demo")
         engine.state["config"]["max_agent_rounds"] = 1
+        engine.state["config"]["role_round_limits"][engine.state["agents"][0]["role"]] = 1
         try:
             with self.assertRaises(asyncio.CancelledError):
                 asyncio.run(engine.run())

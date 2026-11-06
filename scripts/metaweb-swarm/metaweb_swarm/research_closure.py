@@ -13,6 +13,8 @@ def prepare(engine,note,extend_tokens=0,extend_seconds=0,extend_steps=0,report_o
     if state.get('budget_reservations') or state['usage'].get('unknown_steps'):
         raise ValueError('Resolve outstanding provider reservations before closing research')
     if report_only:
+        from .brainstorm_portfolio import capture_existing
+        capture_existing(engine)
         if not state['ideas']:prepare(engine,note,report_only=False)
         return prepare_report_only(engine,note,extend_tokens,extend_seconds,extend_steps)
     if state.get('research_closure',{}).get('prepared'):return state['research_closure']
@@ -76,6 +78,7 @@ def prepare(engine,note,extend_tokens=0,extend_seconds=0,extend_steps=0,report_o
 def report_packet(state):
     from .report_packet import short
     return {'kind':'FINAL_RESEARCH_SYNTHESIS','run_id':state['run_id'],
+        'unreviewed_hypotheses':[{'id':h['id'],'title':short(h.get('title'),100),'proposal':short(h.get('mechanism'),220),'status':'UNREVIEWED'} for h in state.get('brainstorm_hypotheses',[])[:25]],
         'counts':{'ideas':len(state['ideas']),'critiques':len(state['critiques'])},
         'ideas':[{'id':i['id'],'provider':short(i.get('provider'),120),'status':i['status'],
             'proposal':short(i.get('proposed_change') or i.get('summary'),500),

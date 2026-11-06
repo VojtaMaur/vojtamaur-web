@@ -358,9 +358,13 @@ async def step(owner,history,api,config,model_provider=None):
             turns=config['coding_max_turns']-progress.attempts
             if turns<=0 or remaining()<=0:
                 raise BackendYield('Coding quantum exhausted; host feedback and files retained',history=progress.history)
-            result=await asyncio.wait_for(sdk.Runner.run(agent,input=items,
-                max_turns=turns,run_config=sdk.RunConfig(model_provider=provider,tracing_disabled=True,
-                    trace_include_sensitive_data=False),hooks=Hooks()),timeout=remaining())
+            run_config=sdk.RunConfig(model_provider=provider,tracing_disabled=True,trace_include_sensitive_data=False)
+            if config.get('live_output_preview'):
+                from .backend import _run_public_stream
+                operation=_run_public_stream(sdk,agent,items,dict(config,max_turns=turns),run_config,progress,hooks=Hooks())
+            else:
+                operation=sdk.Runner.run(agent,input=items,max_turns=turns,run_config=run_config,hooks=Hooks())
+            result=await asyncio.wait_for(operation,timeout=remaining())
             replay=_jsonable(result.to_input_list())
             value=Result.model_validate(_jsonable(result.final_output)).model_dump()
             if remaining()<=0:raise BackendYield('Coding deadline before final capture',history=replay)

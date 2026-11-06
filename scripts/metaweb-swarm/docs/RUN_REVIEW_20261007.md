@@ -1,6 +1,6 @@
 # Revize prvního autonomous Docker běhu
 
-Run: `G:\metaweb-swarm-runs\20261007-052011-7c9a9a90`, verze 0.2.0,
+Run: `G:\vojtamaur-metaweb-swarm-files\runs\20261007-052011-7c9a9a90`, verze 0.2.0,
 `gpt-5.4-mini`, autonomous / sandbox-only / Docker.
 
 Revize čte SQLite checkpoint v read-only režimu, audit, zdrojové prototypy a

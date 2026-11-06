@@ -25,8 +25,8 @@ zdroje. Limity, účty a approval gates se nemění. Aktuálně BLOCKED auditor 
 explicitní operátorovo odblokování, nikoli nový run:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py unblock "G:\metaweb-swarm-runs\20261022-051417-8cb93cc5" AGENT-006 --note "Odstranena duplicitni citace vady; dokoncit audit a predat opravu negativniho testu"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261022-051417-8cb93cc5" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py unblock "G:\vojtamaur-metaweb-swarm-files\runs\20261022-051417-8cb93cc5" AGENT-006 --note "Odstranena duplicitni citace vady; dokoncit audit a predat opravu negativniho testu"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261022-051417-8cb93cc5" --backend openai
 ```
 
 Přesné argumenty ze skutečného round 4 byly bez nového generování odpovědi přehrány

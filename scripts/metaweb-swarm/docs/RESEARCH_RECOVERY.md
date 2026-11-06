@@ -22,7 +22,7 @@ hodina a externí human approval. Tato oprava nepouští placený běh automatic
 Resume používá původní run config a role allowances; nic nenavyšuje samo:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\CESTA_BEHU" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\CESTA_BEHU" --backend openai
 ```
 
 ## Auditor

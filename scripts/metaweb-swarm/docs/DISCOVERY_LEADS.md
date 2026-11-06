@@ -55,7 +55,7 @@ run-deposit-trial.cmd
 Pokračování konkrétního běhu (nahraď cestu svým runem):
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\RUN_ID" --backend openai --extend-rounds 2
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\RUN_ID" --backend openai --extend-rounds 2
 ```
 
 Instalace nemění již dokončené historické runy ani jejich rozpočty. Historické

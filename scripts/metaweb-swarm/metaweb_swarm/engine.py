@@ -25,13 +25,33 @@ from .run_memory import write_run_memory
 from .export_intake import intake_exports
 from .actions import digest_file
 from .deposit_worker import execute_bounded as execute_deposit
-from .budget import reserve, settle, conservative_input_tokens, recover_unsettled, mark_unknown
+from .budget import reserve, settle, conservative_input_tokens, recover_unsettled, mark_unknown, capacity_reason
 from .models import assign_model, search_allowance
 from .console import startup, progress, short
 from .http_tools import HttpTools
 
 OBJECTIVE = "Discover and critically verify novel, independent, reconstructable Metaweb preservation mechanisms without recurring payment dependency. Prototype locally, preserve valuable human-blocked ideas, and provide a reviewable independent audit package."
 USAGE_KEYS = ("requests", "input_tokens", "output_tokens", "total_tokens", "web_search_calls", "unknown_steps")
+
+
+def _request_task_key(state, agent):
+    """Stable task/context identity, excluding consumption and scheduler status."""
+    config = state['config']
+    task = {k: agent.get(k) for k in ('work_kind', 'research_assignment', 'review_assignment',
+            'development_assignment','portfolio_task', 'discovery_pivot', 'final_report_only', 'research_closure', 'model', 'operator_notes')}
+    task.update(objective=state.get('objective'), comments=state.get('operator_comments', []),
+                context=state.get('prompt_hashes'), history=agent.get('history', []),
+                prompt_chars=config.get('prompt_chars'), history_chars=config.get('history_chars'),
+                max_output_tokens=config['max_output_tokens'], search_calls=search_allowance(config, agent),
+                search_context_tokens=config.get('max_web_search_context_tokens_per_call', 128000))
+    if agent.get('work_kind') == 'SYNTHESIS':
+        from .deposit_handoff import report_revision
+        task['report_revision'] = report_revision(state)
+    return hashlib.sha256(canonical(task).encode()).hexdigest()
+
+
+def _capacity_stop(reason):
+    return bool(reason and reason.startswith(('MAX_TOTAL_TOKENS', 'ESTIMATED_DOLLAR_BUDGET')))
 
 
 def ensure_external(project, runs_root):
@@ -107,7 +127,10 @@ class ToolAPI(HttpTools):
     def screen_carrier(self, provider, service_url, baseline_behavior='', proposed_change='', validation_plan=''):
         from .carrier_screening import assess
         with self.engine.mutex:
-            return assess(self, provider, service_url, baseline_behavior, proposed_change, validation_plan)
+            result = assess(self, provider, service_url, baseline_behavior, proposed_change, validation_plan)
+            from .brainstorm_portfolio import capture_screen
+            capture_screen(self, provider, service_url, proposed_change, result)
+            return result
 
     def list_discovery_state(self):
         from .discovery_leads import state_view
@@ -859,16 +882,21 @@ class ToolAPI(HttpTools):
 
     def begin_model_request(self, system_prompt, input_items, tool_schemas, output_schema, *, model=None, search_calls=None, max_output=None):
         with self.engine.mutex:
-            reason = self.check_model_budget()
-            if reason:
-                return reason
             config = self.engine.state["config"]
             search_calls = search_allowance(config, self.agent) if search_calls is None else search_calls
             bound = conservative_input_tokens(system_prompt or "", input_items, tool_schemas, output_schema)
             bound += search_calls * config.get("max_web_search_context_tokens_per_call", 128000)
-            result = reserve(self.engine.state, self.agent["id"], bound, max_output or config["max_output_tokens"], search_calls, model or self.agent.get("model", config.get("model")))
+            from .hypothesis_development import closing_reserve
+            bound += closing_reserve(self.engine.state,self.agent)
+            output = max_output if max_output is not None else config['max_output_tokens']
+            selected_model = model or self.agent.get('model', config.get('model'))
+            reason = self.check_model_budget()
+            result = reason or reserve(self.engine.state, self.agent['id'], bound, output, search_calls, selected_model)
             if isinstance(result, str):
+                if _capacity_stop(result):
+                    self.engine.record_request_capacity_stop(self.agent, result, bound, output, search_calls, selected_model)
                 return result
+            self.agent.pop('request_budget_stop', None)
             self.event("model_budget_reserved", result)
             return None
 
@@ -1377,12 +1405,94 @@ class Engine:
                       if type(usage.get(key, 0)) is int}
         self.add_usage(agent, increments)
 
+    def record_request_capacity_stop(self, agent, reason, input_upper, output_upper, searches, model):
+        marker = {'task_key': _request_task_key(self.state, agent), 'reason': reason,
+                  'input_upper_tokens': input_upper, 'output_upper_tokens': output_upper,
+                  'max_search_calls': searches, 'model': model}
+        if agent.get('request_budget_stop') != marker:
+            agent['request_budget_stop'] = marker
+            self.store.commit(self.state, 'model_request_capacity_stopped',
+                dict(marker, request_reserved=False, provider_called=False), agent['id'])
+
+    def request_capacity_reason(self, agent):
+        """Cheap lower-bound preflight; exact reservation remains mandatory.
+
+        A failed exact request is not repeatedly dispatched with the same task
+        and headroom. Other roles can still use smaller/no-search requests.
+        """
+        if self.backend_name != 'openai':
+            return None
+        config = self.state['config']
+        marker = agent.get('request_budget_stop')
+        if marker and marker.get('task_key') == _request_task_key(self.state, agent):
+            reason = capacity_reason(self.state, agent['id'], marker['input_upper_tokens'],
+                marker['output_upper_tokens'], marker['max_search_calls'], marker.get('model'))
+            if reason:
+                return reason
+        elif marker:
+            # A new assignment, explicit context reset, or final-only synthesis
+            # has different request bounds. Preserve the original event audit.
+            agent.pop('request_budget_stop', None)
+        from .flow_capture import pending as pending_flow
+        searches = 0 if pending_flow(self.state, agent) else search_allowance(config, agent)
+        lower_input = 4096 + searches * config.get('max_web_search_context_tokens_per_call', 128000)
+        from .hypothesis_development import closing_reserve
+        lower_input += closing_reserve(self.state,agent)
+        reason = capacity_reason(self.state, agent['id'], lower_input, config['max_output_tokens'],
+                                 searches, agent.get('model', config.get('model')))
+        if _capacity_stop(reason):
+            self.record_request_capacity_stop(agent, reason, lower_input, config['max_output_tokens'],
+                                              searches, agent.get('model', config.get('model')))
+        elif reason is None:
+            agent.pop('request_budget_stop', None)
+        return reason
+
+    def prepare_request_capacity(self, agent):
+        """Prepare task identity and retain unavailable work without a round."""
+        if self.backend_name != 'openai':
+            return None
+        from .review_tasks import assign
+        from .research_tasks import assign as assign_research
+        assign(self, agent)
+        assign_research(self, agent)
+        from .portfolio_workflow import prepare as prepare_portfolio
+        prepare_portfolio(self.state,agent)
+        if agent.get('development_worker'):
+            from .hypothesis_development import current as development_job
+            job=development_job(self.state,agent)
+            agent['development_assignment']=job['hypothesis_id'] if job else None
+        was_capacity_limited = bool(agent.get('request_budget_stop')) and agent.get('status') == 'LIMIT_REACHED'
+        reason = self.request_capacity_reason(agent)
+        if _capacity_stop(reason):
+            changed = (agent.get('status'), agent.get('reason_for_stopping')) != (
+                'LIMIT_REACHED', 'REQUEST_CAPACITY_REQUIRED: ' + reason)
+            agent.update(status='LIMIT_REACHED', reason_for_stopping='REQUEST_CAPACITY_REQUIRED: ' + reason)
+            if changed:
+                self.store.commit(self.state, 'agent_request_capacity_deferred',
+                    {'reason': reason, 'round_reserved': False, 'provider_called': False}, agent['id'])
+        elif reason is None and was_capacity_limited:
+            if agent['rounds'] < round_allowance(self.state['config'], agent):
+                agent.update(status='PENDING', reason_for_stopping='Request capacity available; retained task can resume')
+                self.store.commit(self.state, 'agent_request_capacity_available', {}, agent['id'])
+        elif reason:
+            # A pricing/reservation fault must not leave a PENDING task spinning
+            # through the scheduler without consuming a round or making progress.
+            stopped='REQUEST_PREFLIGHT_BLOCKED: '+reason
+            if (agent.get('status'),agent.get('reason_for_stopping'))!=('BLOCKED',stopped):
+                agent.update(status='BLOCKED',reason_for_stopping=stopped)
+                self.store.commit(self.state,'agent_request_preflight_blocked',
+                    {'reason':reason,'provider_called':False},agent['id'])
+        return reason
+
     async def step(self, agent):
         config = self.state["config"]
         from .review_tasks import assign
         assign(self,agent)
         from .research_tasks import assign as assign_research
         assign_research(self,agent)
+        with self.mutex:
+            if self.prepare_request_capacity(agent):
+                return  # No round, workspace, request reservation, or charge.
         # Host prompt construction must succeed before reserving a model round.
         try:
             self.prompt(agent)
@@ -1429,6 +1539,8 @@ class Engine:
                 self.state['http_smoke']['input_bytes'] = input_info['bytes']
                 self.store.commit(self.state, 'http_smoke_input_checked', input_info, agent['id'])
             api = ToolAPI(self, agent, workspace)
+            from .hypothesis_development import begin as begin_development
+            if agent.get('development_worker'):begin_development(api)
             step_config = dict(config, model=agent.get("model", config.get("model")),
                                max_web_search_calls_per_request=search_allowance(config, agent))
             from .flow_capture import pending as pending_flow
@@ -1455,7 +1567,12 @@ class Engine:
             from .planning_recovery import complete as complete_planning
             output=complete_planning(api,output)
             from .review_contract import complete_review
-            output,review_completion=complete_review(self.state,agent,result["output"],output)
+            if agent.get('portfolio_task'):
+                from .portfolio_workflow import finish as finish_portfolio
+                output=finish_portfolio(api,result['output'],output)
+                review_completion=None
+            else:
+                output,review_completion=complete_review(self.state,agent,result["output"],output)
             from .research_tasks import complete as complete_research
             if agent.get('final_report_only') and output['status']=='COMPLETED':
                 from .deposit_handoff import report_revision
@@ -1555,8 +1672,10 @@ class Engine:
             holds = [r for r in self.state.get("budget_reservations", {}).values() if r.get("agent_id") == agent["id"] and r.get("status") == "RESERVED"]
             for hold in holds:
                 mark_unknown(self.state, hold["id"], "Round ended without durable provider usage settlement")
+            from .hypothesis_development import finish_round as finish_development_round
+            if api is not None:finish_development_round(api)
             try:
-                if workspace is not None:
+                if workspace is not None and config.get('task_style') != 'brainstorming':
                     agent["patch"] = export_patch(self.store.run_dir / "snapshot", workspace.source, self.store.run_dir / "patches" / agent["id"])
             except Exception as error:
                 agent.update(status="BLOCKED", reason_for_stopping=f"Patch export failed safely: {error}")
@@ -1616,6 +1735,9 @@ class Engine:
                 recover(self)
                 from .research_tasks import recover as recover_research
                 recover_research(self)
+                from .hypothesis_development import recover as recover_development
+                recover_development(self)
+                recover_research(self)  # A new shortlist/outcome also refreshes the final report.
                 from .prototype_debug import hold
                 hold(self)
                 from .prototype_preflight import hold as hold_preflight
@@ -1624,6 +1746,14 @@ class Engine:
                 synchronize_prototypes(self)
                 from .deposit_execution import resume as resume_deposit_sequences
                 await resume_deposit_sequences(self)
+                # Do this after handoff recovery: an auditor or final report can
+                # fit even after discovery's search reservation no longer does.
+                # Unavailable tasks retain LIMIT_REACHED and are reconsidered on
+                # an explicit budget/context change, without a failed round.
+                with self.mutex:
+                    for candidate in self.state['agents']:
+                        if candidate['status'] == 'PENDING' or (candidate['status'] == 'LIMIT_REACHED' and candidate.get('request_budget_stop')):
+                            self.prepare_request_capacity(candidate)
                 pending = [a for a in self.state["agents"] if a["status"] == "PENDING"]
                 if self.state["config"].get("run_mode", "supervised") == "supervised" and not any(c.get("decision") == "implement" for c in self.state.get("implementation_choices", {}).values()):
                     for candidate in pending:
@@ -1660,7 +1790,10 @@ class Engine:
                     if assessment_blocked(self.state):
                         self.state.update(status="BLOCKED",stop_reason="PROTOTYPE_REVIEW_BLOCKED: independent assessment unresolved; work retained")
                     elif any(a["status"] == "LIMIT_REACHED" for a in self.state["agents"]):
-                        self.state.update(status="LIMIT_REACHED", stop_reason="At least one agent exhausted its limits; remaining leads retained")
+                        capacity_limited = any(a.get('request_budget_stop') for a in self.state['agents'] if a['status'] == 'LIMIT_REACHED')
+                        self.state.update(status="LIMIT_REACHED", stop_reason=(
+                            'REQUEST_CAPACITY_REQUIRED: remaining tasks cannot reserve a complete request; work retained'
+                            if capacity_limited else 'At least one agent exhausted its limits; remaining leads retained'))
                     elif any(a["status"] == "BLOCKED" for a in self.state["agents"]) or (self.state["config"].get("run_mode", "supervised") != "supervised" and (any(a["status"] == "PENDING" for a in self.state["approvals"]) or any(i["status"] == "BLOCKED" for i in self.state["ideas"]))):
                         self.state.update(status="BLOCKED", stop_reason="Available research finished; unresolved human actions or technical blockers remain")
                     else:

@@ -54,7 +54,7 @@ provider-specific integrace ani browser fallback tato změna nepřidává.
 Vlož skutečnou cestu vypsanou launcherem:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\SKUTECNE_ID_BEHU" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\SKUTECNE_ID_BEHU" --backend openai
 ```
 
 Resume načte uloženou konfiguraci a checkpoint svého runu. Úprava profilu platí

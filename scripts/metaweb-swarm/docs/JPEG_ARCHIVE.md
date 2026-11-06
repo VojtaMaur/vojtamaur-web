@@ -9,7 +9,7 @@ ani nešifruje. Oba příklady používají jen standardní Python, nepotřebuj�
 V adresáři `G:\vojtamaur-web\scripts\metaweb-swarm`:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe examples\jpeg_extract_independent.py "G:\metaweb-swarm-runs\manual-jpeg-recovery-20261022-090142-1d20ea49\metaweb-export.jpg" "G:\metaweb-swarm-runs\manual-jpeg-recovery-20261022-090142-1d20ea49\recovered.epub"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe examples\jpeg_extract_independent.py "G:\vojtamaur-metaweb-swarm-files\runs\manual-jpeg-recovery-20261022-090142-1d20ea49\metaweb-export.jpg" "G:\vojtamaur-metaweb-swarm-files\runs\manual-jpeg-recovery-20261022-090142-1d20ea49\recovered.epub"
 ```
 
 Lze také zkopírovat pouze JPEG a `jpeg_extract_independent.py` na jiný počítač a

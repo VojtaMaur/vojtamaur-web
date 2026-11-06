@@ -16,7 +16,7 @@ není třeba přestavovat. Instalace aktualizace sama výzkum ani API nespoušt�
 Pro pokračování existujícího běhu použij jeho skutečnou cestu:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\ID_BEHU" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\ID_BEHU" --backend openai
 ```
 
 Resume samo nezvýší vyčerpané limity kol/tokenů/času. Aktualizace nepřepisuje

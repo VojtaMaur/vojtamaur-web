@@ -19,7 +19,7 @@ Docker Desktop musí běžet v Linux režimu a musí existovat image podle
 
 ```cmd
 cd /d G:\vojtamaur-web\scripts\metaweb-swarm
-G:\metaweb-swarm-env\Scripts\python.exe -m pip install -e ".[openai]"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe -m pip install -e ".[openai]"
 run-prototype.cmd
 ```
 
@@ -58,8 +58,8 @@ vytvoří test receipt. Změněný helper kód nebo chybějící výstup se nece
 Zpětné vazby se týkají aktuálního úkolu; nejsou potřeba ručně vyplněná opravná ID.
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py pause "CESTA_BEHU"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "CESTA_BEHU" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py pause "CESTA_BEHU"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "CESTA_BEHU" --backend openai
 ```
 
 Použij skutečnou cestu vypsanou při startu. Pause se kontroluje před dalšími
@@ -131,7 +131,7 @@ PASS ani certifikaci; jeho audit zůstal nezměněný. Žádné placené modelov
 Pro dokončení téhož běhu po instalaci opravy:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261020-124142-61ef3319" --backend openai --extend-rounds 1
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261020-124142-61ef3319" --backend openai --extend-rounds 1
 ```
 
 To přidá jedno plánovací kolo rolím; tokenový a časový limit zůstane stejný.

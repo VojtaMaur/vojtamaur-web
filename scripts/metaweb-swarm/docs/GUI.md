@@ -1,4 +1,43 @@
-# Lokální GUI Metaweb Swarm (0.10.1)
+**0.12.0 — sjednocené pracovní soubory:** [umístění, přesun a nové cesty](RUNTIME_FILES.md).
+
+# Lokální GUI Metaweb Swarm (0.13.0)
+
+**Výchozí nastavení** v levém panelu ukládá zadání, role a limity pro příští běhy
+v GUI i CMD. **Průběh práce** ukazuje nástroje, hledání a čtené podklady; pracovní
+hypotézy jsou samostatně na kartě **Nápady**. [Uložené profily a aktivity](DEFAULTS_AND_ACTIVITY.md),
+[šířka výzkumu a tokenové rezervace](BRAINSTORM_PRODUCTIVITY.md).
+
+## Úprava zadání, týmu a živý náhled
+
+Při založení běhu je **Celé zadání tohoto běhu** předvyplněné cílem profilu.
+Můžeš ho celé přepsat. Volitelný doplňující komentář se připíše až za tento text.
+Změna výzkumného cíle nemění oprávnění, approval ani limity.
+
+U výchozích rolí rozbal **Upravit zadání role**. Interní názvy rolí zůstávají,
+protože podle nich framework směruje audit, koordinaci a reportování; upravuje
+se jejich mise, tier a počet kol. Tlačítko **Přidat agenta** přidává vlastní
+pojmenované výzkumné specialisty s misí, tierem a limitem kol. Jejich názvy musejí
+být unikátní. Počítají se do max. agentů i globálních limitů a ukládají se do
+konfigurace/checkpointu. Vlastní specialisté začínají ve výzkumné fázi.
+
+Výchozí Orchestrátor má nově dvě kola v brainstormingových profilech. Může
+skončit dříve; plánování pořadí agentů stále řídí program, nikoli nepřetržité
+volání orchestrátora. Zvětšení jeho limitu neprodlužuje automaticky celý běh.
+
+**Živý náhled** ukazuje stream veřejného textu modelu (i neúplného JSON), nejvýše
+posledních 12000 znaků. Aktualizace se auditují nejvýše přibližně jednou za
+sekundu, max. 60 průběžných záznamů na odpověď plus dokončení. Skryté uvažování
+se nepřenáší. Při práci s nástroji může být text prázdný; průběh je v aktivitách
+a konzoli. Zapíná se pro nové GUI běhy (`live_output_preview`); staré běhy se
+zpětně nepřepínají a demo žádný skutečný modelový stream nevytváří.
+
+Nastavení cest i klíče mají jediné tlačítko **Nastavení / API klíč** vpravo nahoře.
+Původní postranní tlačítko bylo odstraněno. CLI zůstává kompatibilní.
+
+Ověřeny GUI/backend/brainstorming regrese, vlastní role, nahrazení zadání,
+veřejný stream přes skutečný Agents SDK s lokálním modelem bez sítě a zrušení
+streamu. Nebyl spuštěn placený modelový běh. Streaming vychází z
+[oficiální dokumentace OpenAI](https://developers.openai.com/api/docs/guides/streaming-responses).
 
 GUI je ovládací panel nad existujícím Python CLI. Nejde o další agentní runtime:
 stejné profily, checkpointy, limity a audit zůstávají rozhodující. Původní CMD
@@ -21,7 +60,7 @@ potřeba Node, npm, frontend build ani další UI knihovna.
 Přímo přes CLI, případně bez automatického otevření prohlížeče:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py gui --project G:\vojtamaur-web --runs-root G:\metaweb-swarm-runs --no-browser
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py gui --project G:\vojtamaur-web --runs-root G:\vojtamaur-metaweb-swarm-files\runs --no-browser
 ```
 
 Pak otevři úplnou adresu vypsanou v terminálu včetně jejího fragmentu `#token=…`.
@@ -78,7 +117,7 @@ modelové kolo; pro jiné nové zadání je vhodný nový běh.
 Stejná cesta existuje i v původním CLI:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py comment "CESTA_BEHU" --text "Pouze digitalni moznosti ulozeni, bez fyzickych nosicu."
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py comment "CESTA_BEHU" --text "Pouze digitalni moznosti ulozeni, bez fyzickych nosicu."
 ```
 
 ## Přehled práce a výsledků
@@ -142,8 +181,8 @@ zobrazit při vkládání, nahradit nebo tlačítkem **Zapomenout uložený klí
 Bez zapamatování zůstává jen v paměti aktuálního GUI. Prázdné pole zachová aktuální
 hodnotu. Změny se provádějí po dokončení nebo pozastavení aktivní GUI úlohy.
 
-Soubor `%LOCALAPPDATA%\MetawebSwarm\gui-settings.json` obsahuje klíč jako prostý text
-(mimo Windows `~/.config/MetawebSwarm/gui-settings.json`). Je mimo projekt i běhy,
+Soubor `G:\vojtamaur-metaweb-swarm-files\gui-settings.json` obsahuje klíč jako prostý text
+(obecně `gui-settings.json` pod `SWARM_FILES_ROOT`). Je mimo projekt i běhy,
 takže se nedostane do git commitu, snapshotu ani reportů. GUI jej neposílá zpět do
 prohlížeče a předává jej podprocesu prostředím. Pokud uložený klíč není, převezme
 `OPENAI_API_KEY` z CMD. Expiraci určuje poskytovatel klíče; prošlý klíč nahraď novým.
@@ -169,3 +208,22 @@ nepředstavují placený modelový výzkum. V prohlížeči byl navíc dokončen
 demo běh, předání komentáře a resume se stejným demo backendem, načtení reportu
 a spuštění `doctor` z integrované konzole. Vše na samostatném testovacím projektu;
 žádné placené modelové volání ani externí upload.
+
+## Paměť minulých běhů (0.11.1)
+
+Tlačítko **Paměť běhů / RUN_MEMORY.json** vlevo otevře sdílený index z nastavené
+složky běhů. Ukazuje shrnutí běhů a rozbalitelné kandidáty (mechanismus, stav,
+překážku a další krok), nabízí hledání, otevření původního běhu a původní JSON
+ke zkopírování. **Obnovit** znovu načte soubor; nic neregeneruje ani nezapisuje.
+Zdroj lze přepnout na `context/prior-runs.json` právě vybraného běhu: to je paměť,
+kterou dostal zachycenou pro svůj výzkum, nikoli dnešní sdílený index. Zdrojová
+cesta a čas změny jsou vidět. Chybějící paměť se hlásí výslovně.
+Index je omezený a odvozený; historické tvrzení není realizovaná baseline.
+Úplná historie a důkazy zůstávají v původních bězích. Pohled je pouze pro čtení,
+bez placených volání. Endpoint povoluje jen tyto dvě pevné cesty, odmítá propojené
+soubory a načítá nejvýše 4 MiB; zobrazení prochází stejnou redakcí jako ostatní GUI.
+
+## Mapa roje
+
+Karta **Mapa roje** ukazuje fáze workflow a živé vztahy mezi agenty, náměty,
+nápady a záznamy výsledků. Návod a přesný význam šipek: [WORKFLOW_MAP.md](WORKFLOW_MAP.md).

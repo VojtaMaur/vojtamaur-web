@@ -6,7 +6,8 @@ from collections import Counter
 SECTIONS = {'ideas': 'id', 'critiques': 'id', 'tests': 'id', 'prototype_reviews': 'id',
             'experiments': 'experiment_id', 'http_requests': 'id', 'external_actions': 'id',
             'approvals': 'id', 'agents': 'id', 'package_installations': 'id', 'prototype_plan_submissions': 'id',
-            'coding_commands':'id','coding_validations':'id','prototype_review_probes':'id'}
+            'coding_commands':'id','coding_validations':'id','prototype_review_probes':'id',
+            'brainstorm_hypotheses':'id'}
 
 
 def short(value, limit=240):
@@ -43,6 +44,10 @@ def build(state):
                          'verified_deposits': sum(len(i.get('completion_receipts', [])) for i in state['ideas']),
                          'pending_approvals': sum(a.get('status') == 'PENDING' for a in state.get('approvals', []))},
               'ideas': [], 'tests': [],
+              'unreviewed_hypotheses':[{'id':h['id'],'title':short(h.get('title'),100),
+                  'proposal':short(h.get('mechanism'),180),'status':'UNREVIEWED'}
+                  for h in state.get('brainstorm_hypotheses',[])[:12]],
+              'hypothesis_count':len(state.get('brainstorm_hypotheses',[])),
               'detail': {'tool': 'read_report_detail', 'sections': list(SECTIONS),
                          'usage': 'Pass section and record_id for one original record, or empty record_id for a paged ID index. '
                              'Read pages only as needed. Raw histories, old submissions and HTTP headers are not part of this overview.'},
@@ -80,6 +85,10 @@ def build(state):
                        for t in state.get('tests', [])[:8]]
     result['omitted_test_summaries'] = max(0, len(state.get('tests', [])) - len(result['tests']))
     result['omitted_idea_summaries'] = 0
+    result['omitted_hypothesis_summaries']=result['hypothesis_count']-len(result['unreviewed_hypotheses'])
+    while len(json.dumps(result, ensure_ascii=False)) > budget and result['unreviewed_hypotheses']:
+        result['unreviewed_hypotheses'].pop()
+        result['omitted_hypothesis_summaries']+=1
     while len(json.dumps(result, ensure_ascii=False)) > budget and result['ideas']:
         result['ideas'].pop()
         result['omitted_idea_summaries'] += 1

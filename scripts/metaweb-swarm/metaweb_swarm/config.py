@@ -43,8 +43,16 @@ def validate_config(config):
         raise ValueError("export_filenames must be a nonempty list of export-relative file names or null")
     if config.get("task_style", "research") not in {"research", "focused", "brainstorming"}:
         raise ValueError("task_style must be research, focused or brainstorming")
+    for field,maximum in (('brainstorm_development_candidates',5),('brainstorm_development_rounds',4)):
+        value=config.get(field,3 if field.endswith('candidates') else 2)
+        if type(value) is not int or value<0 or value>maximum or (field.endswith('rounds') and value==0):raise ValueError('Invalid '+field)
     from .brainstorming import validate as validate_brainstorming
     validate_brainstorming(config)
+    names=config.get('role_display_names',{})
+    from .roles import SEED_ROLES
+    if (not isinstance(names,dict) or set(names)-{r[1] for r in SEED_ROLES}
+            or any(not isinstance(v,str) or not 1<=len(v.strip())<=160 or any(ord(c)<32 for c in v) for v in names.values())):
+        raise ValueError('role_display_names must map seed roles to names of 1..160 characters')
     assignments = config.get("role_assignments", {})
     if not isinstance(assignments, dict) or any(not isinstance(k, str) or not 1 <= len(k.strip()) <= 160 or not isinstance(v, str) or not 1 <= len(v.strip()) <= 4000 for k, v in assignments.items()):
         raise ValueError("role_assignments must map role names to nonempty assignments up to 4000 characters")
@@ -74,6 +82,9 @@ def validate_config(config):
     overrides = config.get("role_round_limits", {})
     if not isinstance(overrides, dict) or any(not isinstance(k, str) or not k.strip() or len(k) > 160 or type(v) is not int or v < 1 for k, v in overrides.items()):
         raise ValueError("role_round_limits must map role names to positive integer round limits")
+    from .roles import validate_custom_agents
+    validate_custom_agents(config)
+    if type(config.get("live_output_preview",False)) is not bool:raise ValueError("live_output_preview must be boolean")
     roles = config.get("seed_roles", [])
     if not isinstance(roles, list) or any(not isinstance(r, str) or r not in {s[1] for s in SEED_ROLES} for r in roles) or len(set(roles)) != len(roles):
         raise ValueError("seed_roles must contain unique known seed role names")
@@ -144,7 +155,7 @@ def estimated_cost(usage, config):
 
 
 def round_allowance(config, agent):
-    base = config.get("role_round_limits", {}).get(agent["role"], config["max_agent_rounds"])
+    base = config.get("role_round_limits", {}).get(agent["role"], agent.get("operator_round_limit", config["max_agent_rounds"]))
     return max(base, agent.get("round_limit", 0))
 
 

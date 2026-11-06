@@ -15,15 +15,15 @@ Profil `config.deposit-trial.json` obsahuje zadání v operator_objective. Profi
 Zkopíruj cestu runu z výpisu. Každý příkaz vlož SAMOSTATNĚ:
 
 ```cmd
-set "LIVE_RUN=G:\metaweb-swarm-runs\CESTA_Z_VYPISU"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py approvals "%LIVE_RUN%"
+set "LIVE_RUN=G:\vojtamaur-metaweb-swarm-files\runs\CESTA_Z_VYPISU"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py approvals "%LIVE_RUN%"
 ```
 
 V reportu a artefaktu UPLOAD_PLAN.md zkontroluj soubor/rozsah obsahu, URL služby, podmínky, retenci, cenu a hash. Schvaluješ konkrétní HTTP požadavek a jeho bytes; změna vyžaduje nové schválení. Approval ID použij z výpisu, příklad:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py decide "%LIVE_RUN%" APPROVAL-0001 --decision approve --note "Schvaluji tento konkretni bezplatny upload"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "%LIVE_RUN%" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py decide "%LIVE_RUN%" APPROVAL-0001 --decision approve --note "Schvaluji tento konkretni bezplatny upload"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "%LIVE_RUN%" --backend openai
 ```
 
 `decide` samo nic neposílá; pouze `resume` pokračuje v TOMTÉŽ běhu. Nepouštěj znovu run-deposit-trial.cmd pro pokračování. Schválení nezvyšuje globální čas/tokeny/kola/USD. Pokud limit zabrání pokračování, nejprve zkontroluj status; nezvyšuj naslepo. BLOCKED při čekání na approval je očekávaný checkpoint. Zamítnutí konkrétní akce nemusí znamenat špatný výzkumný nápad; report lze ponechat bez uploadu.
@@ -31,7 +31,7 @@ G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "%LIVE_RUN%" --backend o
 Úspěch vyžaduje upload + samostatný download skutečných původních bytes + hostem ověřený SHA256 receipt. Zkontroluj SWARM_REPORT.md a manifest.json; audit:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py verify "%LIVE_RUN%"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py verify "%LIVE_RUN%"
 ```
 
 Report se aktualizuje i po resume bez dalšího reporter kola. HTTP UNKNOWN není povolení k opakování uploadu. Dočasná transportní služba není archivní úspěch. Žádné změny produkčního webu/repozitářů ani automatický git push.

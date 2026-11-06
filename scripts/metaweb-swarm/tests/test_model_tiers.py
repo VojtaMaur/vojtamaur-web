@@ -186,7 +186,9 @@ class ModelTierTests(unittest.TestCase):
                 auditor, reporter = state['agents']
                 self.assertEqual(auditor['status'], 'LIMIT_REACHED')
                 self.assertEqual(reporter['status'], 'COMPLETED')
-                self.assertEqual(provider.models_requested, ['large', 'flagship'])
+                # Capacity preflight now skips even constructing the SDK model
+                # for the unaffordable role; the cheaper report still runs.
+                self.assertEqual(provider.models_requested, ['flagship'])
                 kwargs = provider.model.calls[0][1]
                 self.assertFalse(any(t.__class__.__name__ == 'WebSearchTool' for t in kwargs['tools']))
                 self.assertEqual(state['usage']['by_model']['flagship']['total_tokens'], 15)

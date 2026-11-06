@@ -1,3 +1,15 @@
+## 0.12.0 — sjednocené pracovní soubory (2026-11-03)
+
+Běhy, Python prostředí, Docker disky a uživatelský config jsou nově pod
+G:\vojtamaur-metaweb-swarm-files. Launchery sdílejí runtime.cmd, GUI/CLI používají
+stejné výchozí cesty. Modelové profily ani rozpočty se nemění. 553 důkazních souborů
+zůstalo shodných, 63 auditních řetězců prošlo, 409 pracovních značek bylo upraveno
+se zálohou. Python má stejných 43 distribucí, původní Docker image byl ověřen
+kontejnerem bez sítě a Docker byl opět zastaven. Prošlo 49 GUI a 51 core/workspace/
+layout testů (v každé sadě jeden volitelný symlink skip). Zastaralý test zrušeného
+posledního kola nyní svůj limit nastavuje explicitně, nezávisle na dvou výchozích
+kolech Orchestrátora. [Rozložení a použití](RUNTIME_FILES.md).
+
 ## 0.10.0 — lokální GUI nad stávajícím CLI
 
 Přidán run-gui.cmd a swarm.py gui: lokální Python HTTP panel, žádný frontend
@@ -42,7 +54,7 @@ Nebylo potřeba další navýšení tokenů. Původní run při replayi nezměn�
 Příprava (bez placeného API):
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py close-research "CESTA_BEHU" --report-only --note "Konecna synteza bez dalsiho hledani"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py close-research "CESTA_BEHU" --report-only --note "Konecna synteza bez dalsiho hledani"
 ```
 
 Potom resume s --backend openai provede jednorázovou placenou syntézu. Historické
@@ -75,8 +87,8 @@ rozpočtu pro závěr budoucích nových běhů zatím není součástí tohoto 
 Příklad pro existující silný run; přidává maximálně 2M tokenů, 30 minut a 30 kol:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py close-research "G:\metaweb-swarm-runs\20261103-092847-bc19693a" --note "Uzavrit dosavadni navrhy bez dalsi discovery" --extend-tokens 2000000 --extend-seconds 1800 --extend-steps 30
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261103-092847-bc19693a" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py close-research "G:\vojtamaur-metaweb-swarm-files\runs\20261103-092847-bc19693a" --note "Uzavrit dosavadni navrhy bez dalsi discovery" --extend-tokens 2000000 --extend-seconds 1800 --extend-steps 30
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261103-092847-bc19693a" --backend openai
 ```
 
 První příkaz nevolá model, druhý pokračuje placenou kritikou a reportem.

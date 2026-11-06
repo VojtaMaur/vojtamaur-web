@@ -16,18 +16,39 @@ SEED_ROLES = [
 ]
 
 
+def validate_custom_agents(config):
+    rows=config.get('custom_agents',[])
+    if not isinstance(rows,list) or len(rows)>32:raise ValueError('custom_agents must be a list of at most 32 agents')
+    names={r[1] for r in SEED_ROLES}
+    for row in rows:
+        if not isinstance(row,dict) or set(row)-{'role','mission','model_tier','rounds'}:raise ValueError('Invalid custom agent fields')
+        role=row.get('role');mission=row.get('mission')
+        if not isinstance(role,str) or not 1<=len(role.strip())<=160 or role!=role.strip() or role in names:raise ValueError('Custom role names must be unique and distinct from seed roles')
+        if not isinstance(mission,str) or not 1<=len(mission.strip())<=4000:raise ValueError('Custom mission requires 1..4000 characters')
+        if row.get('model_tier') not in {'cheap','strong','flag'}:raise ValueError('Invalid custom agent tier')
+        if type(row.get('rounds')) is not int or not 1<=row['rounds']<=100:raise ValueError('Custom rounds must be 1..100')
+        names.add(role)
+
+
 def seed_agents(config):
+    validate_custom_agents(config)
     selected = config.get("seed_roles", [])
     roster = [s for s in SEED_ROLES if not selected or s[1] in selected]
     if config.get('task_style')=='brainstorming':
         roster=[s for s in roster if s[1]!='Prototyper']
-    if config["max_agents"] < len(roster):
+    if config["max_agents"] < len(roster)+len(config.get("custom_agents",[])):
         raise ValueError("max_agents must allow the selected seed roles")
     agents = []
     for n, (phase, role, mission) in enumerate(roster, 1):
         if config.get('require_independent_http_review') or config.get('research_handoffs'):
             phase = {'Prototyper': 3, 'Synthesizer / Reporter': 4}.get(role, phase)
         agents.append(assign_model(config, new_agent(f"AGENT-{n:03d}", role, config.get("role_assignments", {}).get(role, mission), phase)))
+    for row in config.get('custom_agents',[]):
+        agent=new_agent(f"AGENT-{len(agents)+1:03d}",row['role'],row['mission'],1,reason='Operator-defined starting specialist')
+        agent['model_tier']=row['model_tier'];agent['operator_round_limit']=row['rounds']
+        agents.append(assign_model(config,agent))
+    for agent in agents:
+        agent['display_name']=config.get('role_display_names',{}).get(agent['role'],agent['role']).strip()
     return agents
 
 

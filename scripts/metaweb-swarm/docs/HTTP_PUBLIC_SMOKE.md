@@ -88,7 +88,7 @@ aby se neověřoval jen jeden provider. Prokazují omezení scope/payloadu,
 Nevolají internet ani placené modely:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe -m unittest tests.test_http_public_smoke -v
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe -m unittest tests.test_http_public_smoke -v
 ```
 
 Živý levný model ověří až výše uvedený projektový launcher.

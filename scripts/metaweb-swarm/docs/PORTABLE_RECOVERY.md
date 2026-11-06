@@ -72,7 +72,7 @@ Soubory:
 Hotový JPEG, nezávislá čtečka, návod a proof se ukládají mimo produkční strom do:
 
 ```text
-G:\metaweb-swarm-runs\manual-jpeg-recovery-20261022-090142-1d20ea49\
+G:\vojtamaur-metaweb-swarm-files\runs\manual-jpeg-recovery-20261022-090142-1d20ea49\
 ```
 
 Modely zůstávají gpt-5.4-mini. Nový celý výzkumný běh zatím není potřeba k prokázání

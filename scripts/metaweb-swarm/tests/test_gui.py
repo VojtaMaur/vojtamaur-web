@@ -70,6 +70,10 @@ class GUITests(unittest.TestCase):
         self.assertNotIn('--fetch-live',args)
         self.assertEqual(json.loads((PACKAGE_ROOT/'config.research.json').read_text())['max_total_tokens'],3000000)
 
+    def test_artifact_folders_do_not_hide_initialized_runs(self):
+        for n in range(65):(self.runs_root/f'20261104-artifacts-{n}').mkdir()
+        self.assertEqual([r['id'] for r in self.service.runs()['runs']],[self.run_id])
+
     def test_start_refuses_unknown_capability_overrides(self):
         with self.assertRaisesRegex(ValueError,'Nepodporovaná'):
             self.service.start({'overrides':{'external_resources':[{'unsafe':'grant'}]}})

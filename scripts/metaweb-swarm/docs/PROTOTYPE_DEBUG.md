@@ -60,7 +60,7 @@ je v report.json. Nadměrné poškození a chybná hlavička byly odmítnuty. Er
 indexy se třídí po blocích, aby decoder neprováděl opakované globální skenování.
 
 Artefakt je uložen mimo produkční web pod
-G:/metaweb-swarm-runs/manual-artifacts/rs-recovery-20261014-v0615/README.md.
+G:/vojtamaur-metaweb-swarm-files/runs/manual-artifacts/rs-recovery-20261014-v0615/README.md.
 Obsahuje kód, požadavky, encoded/damaged/erased soubory a recovered.epub.
 Jde o otestovanou payload komponentu. Netestuje tisk, optické čtení, neindexované
 smazání bytes, autentizaci proti útočníkovi ani nezávislé veřejné uchování.

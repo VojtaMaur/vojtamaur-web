@@ -36,7 +36,7 @@ Globální nastavení zůstalo 40 kol, 3 000 000 tokenů a 3600 sekund aktivníh
 Pokračování existujícího běhu vyžaduje jeho vypsanou cestu:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "CESTA_BEHU" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "CESTA_BEHU" --backend openai
 ```
 
 Instalace opravy původní run nepřepisuje, nerozšiřuje jeho limity ani jej nespouští.

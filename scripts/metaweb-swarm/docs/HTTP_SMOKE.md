@@ -63,8 +63,8 @@ dlouhodobě něco archivovat.** To bude samostatný další test.
 Standardní `pause` / `resume` funguje. Zadej skutečnou vypsanou cestu běhu:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py pause "G:\metaweb-swarm-runs\ID_BEHU"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\ID_BEHU" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py pause "G:\vojtamaur-metaweb-swarm-files\runs\ID_BEHU"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\ID_BEHU" --backend openai
 ```
 
 Služba se po skončení/pause běhu vypne. Objekt zůstává v adresáři běhu
@@ -79,7 +79,7 @@ v dostupných kolech a po jejich vyčerpání LIMIT_REACHED.
 ## Ověření bez API klíče
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe -m unittest tests.test_http_smoke -v
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe -m unittest tests.test_http_smoke -v
 ```
 
 Testy používají skutečný HTTP server a skutečné OpenAI Agents SDK s lokálním

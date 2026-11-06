@@ -33,8 +33,8 @@ Source text i modelové závěry jsou tvrzení. Úspěšné nezávislé GET a co
 Ze `G:\vojtamaur-web\scripts\metaweb-swarm` zadej odděleně:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py unblock "G:\metaweb-swarm-runs\20261013-084733-7be96a07" AGENT-002 --note "Opraveny review packet: dokoncit vlastni cteni a posouzeni Open Library"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261013-084733-7be96a07" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py unblock "G:\vojtamaur-metaweb-swarm-files\runs\20261013-084733-7be96a07" AGENT-002 --note "Opraveny review packet: dokoncit vlastni cteni a posouzeni Open Library"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261013-084733-7be96a07" --backend openai
 ```
 
 Unblock poskytne auditorovi jedno další bounded role kolo; globálních 20 kol, tokeny, USD a runtime se nemění. V posledním běhu bylo spotřebováno 8 globálních kol, ale všechna 3 původní auditora. Příkazy pokračují ve stávajícím běhu. Nezaručují objev ani deposit; předmětem je nyní dokončení skutečného posouzení uloženého LEADu. Nový izolovaný běh: `run-deposit-trial.cmd`.

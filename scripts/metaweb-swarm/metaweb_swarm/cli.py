@@ -164,12 +164,14 @@ def main(argv=None):
         if args.command=='gui':
             from .gui import serve
             project=args.project.resolve()
-            serve(project,args.runs_root or project.parent/'metaweb-swarm-runs',args.port,not args.no_browser)
+            from .runtime_paths import runs_root as default_runs_root
+            serve(project,args.runs_root or default_runs_root(project),args.port,not args.no_browser)
             return 0
         if args.command == "doctor":
             return doctor(args.backend, args.docker_check, args.config, args.format)
         if args.command in ("init", "start"):
-            config = load_config(args.config)
+            from .profile_defaults import load_new_run_config
+            config = load_new_run_config(args.project, args.config)
             if args.task is not None:
                 config["operator_objective"] = args.task
             elif args.task_file is not None:

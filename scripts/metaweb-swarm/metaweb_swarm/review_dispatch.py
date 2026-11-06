@@ -7,6 +7,10 @@ def action(api):
     from .research_tasks import enabled
     state=getattr(getattr(api,'engine',None),'state',{})
     agent=getattr(api,'agent',{})
+    if agent.get('development_worker'):
+        if agent.get('round_usage',{}).get('requests',0)>=state['config'].get('max_turns',6)-1:
+            return {'tool':'finish_development','next_action':'Close now with sourced CANDIDATE or honest DEFERRED reasoning; no further searching in this round.'}
+        return None
     if not enabled(state) or agent.get('work_kind') not in {'REVIEW','LOCAL'}: return None
     from .prototype_debug import last,missing
     if agent.get('work_kind')=='LOCAL':
@@ -115,7 +119,7 @@ def read_assigned_artifact(api, test_id, path, offset=0, limit=12000):
 
 def wrap_provider(sdk,provider,api):
     from .research_tasks import enabled
-    if not enabled(getattr(getattr(api,'engine',None),'state',{})) or getattr(api,'agent',{}).get('work_kind') not in {'REVIEW','LOCAL'}:
+    if not enabled(getattr(getattr(api,'engine',None),'state',{})) or (getattr(api,'agent',{}).get('work_kind') not in {'REVIEW','LOCAL'} and not getattr(api,'agent',{}).get('development_worker')):
         return provider
     from agents.models.interface import Model,ModelProvider
     class ReviewModel(Model):
@@ -124,6 +128,7 @@ def wrap_provider(sdk,provider,api):
             required=action(api)
             if not required: return args,kwargs
             tools=kwargs.get('tools',args[3] if len(args)>3 else [])
+            if getattr(api,'agent',{}).get('development_worker') and not tools:return args,kwargs
             if required['tool']!='required' and required['tool'] not in {getattr(t,'name',None) for t in tools}:
                 raise RuntimeError('Required assigned review tool is unavailable')
             args=list(args);kwargs=dict(kwargs)
@@ -155,6 +160,9 @@ def schedule(state,pending,steps_left,concurrency):
     from .research_tasks import enabled
     from .config import schedule_batch,round_allowance
     if not enabled(state): return schedule_batch(pending,steps_left,concurrency)
+    from .hypothesis_development import schedule as development_schedule
+    choice=development_schedule(state,pending,steps_left,concurrency)
+    if choice is not None:return choice
     from . import prototype_queue
     if prototype_queue.enabled(state):return prototype_queue.schedule(state,pending,steps_left,concurrency)
     from .review_tasks import pending as review_pending

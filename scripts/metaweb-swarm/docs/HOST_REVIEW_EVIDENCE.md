@@ -57,7 +57,7 @@ certifikace nebyly provedeny. Změna nemůže garantovat správný úsudek levn�
 Pro tento běh stačí ve stávajícím CMD s API klíčem:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261022-051417-8cb93cc5" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261022-051417-8cb93cc5" --backend openai
 ```
 
 Není třeba nový run ani navýšení limitů. Auditor je v checkpointu PENDING; pokud se

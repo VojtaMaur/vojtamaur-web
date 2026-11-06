@@ -89,13 +89,13 @@ před případným rozšířením vícekrokového plánu musí mít i tato cesta
 Plán lze uložit ručně ze souboru pro EXISTUJÍCÍ IDEA (nevytváří account/PASS):
 
 ~~~cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py deposit-plan "%LIVE_RUN%" IDEA-0001 --plan-file "C:\cesta\deposit-plan.json"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py deposit-plan "%LIVE_RUN%" IDEA-0001 --plan-file "C:\cesta\deposit-plan.json"
 ~~~
 
 Vykonat již připravený a nezávisle schválený plán:
 
 ~~~cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py deposit-execute "%LIVE_RUN%" IDEA-0001
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py deposit-execute "%LIVE_RUN%" IDEA-0001
 ~~~
 
 Tohle nepotřebuje OpenAI API klíč a nedělá žádné modelové volání. **Může provést
@@ -105,9 +105,9 @@ runu se tím nepřepisuje na COMPLETED; rozhodující je nový stav FLOW a jeho 
 Při pending schválení zjisti jeho skutečné ID, rozhodni a zopakuj execution:
 
 ~~~cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py approvals "%LIVE_RUN%"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py decide "%LIVE_RUN%" APPROVAL-0001 --decision approve --note "Schvaluji uvedeny presny export, postup a cilove servery"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py deposit-execute "%LIVE_RUN%" IDEA-0001
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py approvals "%LIVE_RUN%"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py decide "%LIVE_RUN%" APPROVAL-0001 --decision approve --note "Schvaluji uvedeny presny export, postup a cilove servery"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py deposit-execute "%LIVE_RUN%" IDEA-0001
 ~~~
 
 `APPROVAL-0001` je ilustrace: použij skutečné zobrazené ID. Pro návrat výzkumných

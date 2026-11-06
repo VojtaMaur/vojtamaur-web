@@ -28,7 +28,7 @@ Starší checkpoint při resume obnoví draft pouze z vlastních bounded raw/his
 Z adresáře `G:\vojtamaur-web\scripts\metaweb-swarm`:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261013-043825-09e42a24" --backend openai --extend-steps 6
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261013-043825-09e42a24" --backend openai --extend-steps 6
 ```
 
 Tento běh už skutečně spotřeboval globálních 20 kol. Šest dalších kol je explicitní omezená kapacita na opravu/audit/report; tokeny, USD, runtime, per-role round allowance a externí oprávnění se tím nezvyšují. Poslední čtyři modelová kola se nevracejí do budgetu. Příkaz pokračuje ve stávajícím běhu. Nový samostatný pokus: `run-deposit-trial.cmd`.

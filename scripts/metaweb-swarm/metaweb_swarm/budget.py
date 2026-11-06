@@ -84,19 +84,18 @@ def held_totals(state):
             "reservations": len(reservations), "unknown": sum(r.get("status") == "UNKNOWN" for r in reservations.values())}
 
 
-def reserve(state, agent_id, input_upper_tokens, output_upper_tokens, max_search_calls, model=None):
-    """Return a reservation dict or a blocking reason string; no unsafe mutation.
+def capacity_reason(state, agent_id, input_upper_tokens, output_upper_tokens, max_search_calls, model=None):
+    """Check request affordability without reserving, charging, or changing state.
 
-    One in-flight provider request per agent. Request sequence numbers are durable
-    and never reset at round boundaries, avoiding accidental overwrite on resume.
-    The caller persists this object BEFORE it starts the remote request.
+    This is only a scheduling hint: reserve() repeats the complete check under the
+    host mutex immediately before a real request. Concurrent headroom can change.
     """
     if not isinstance(agent_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,100}", agent_id):
         raise ValueError("Invalid agent ID")
     _integer(input_upper_tokens, "input_upper_tokens")
     _integer(output_upper_tokens, "output_upper_tokens")
     _integer(max_search_calls, "max_search_calls")
-    config, usage = state["config"], state.setdefault("usage", {})
+    config, usage = state["config"], state.get("usage", {})
     for key in USAGE_KEYS:
         _integer(usage.get(key, 0), key)
     current = state.get("budget_reservations", {})
@@ -130,6 +129,24 @@ def reserve(state, agent_id, input_upper_tokens, output_upper_tokens, max_search
         spent = sum(costs, Decimal(0))
         if spent + _money(held["usd"], "held USD") + usd > _money(budget, "estimated_budget_usd"):
             return "ESTIMATED_DOLLAR_BUDGET: insufficient capacity for complete request reservation"
+    return None
+
+
+def reserve(state, agent_id, input_upper_tokens, output_upper_tokens, max_search_calls, model=None):
+    """Reserve durable bounds; one in-flight provider request per agent.
+
+    Sequence numbers never reset at round boundaries. The caller persists the
+    reservation BEFORE starting the remote request; preflight never replaces it.
+    """
+    reason = capacity_reason(state, agent_id, input_upper_tokens, output_upper_tokens, max_search_calls, model)
+    if reason:
+        return reason
+    config = state["config"]
+    model = model if model is not None else config.get("model")
+    prices = prices_for(config, model)
+    total = input_upper_tokens + output_upper_tokens
+    usd = _cost({"input_tokens": input_upper_tokens, "output_tokens": output_upper_tokens,
+                 "web_search_calls": max_search_calls}, prices)
     seq = state.get("budget_request_sequences", {}).get(agent_id, 0) + 1
     record = {"id": f"{agent_id}:{seq}", "agent_id": agent_id, "request_seq": seq,
               "status": "RESERVED", "created_at": now(), "input_upper_tokens": input_upper_tokens,

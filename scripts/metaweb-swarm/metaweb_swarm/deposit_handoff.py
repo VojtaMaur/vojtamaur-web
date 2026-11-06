@@ -18,6 +18,10 @@ def report_revision(state):
             'research_task_blocks':{a['id']:a['research_task_blocks'] for a in state['agents'] if a.get('research_task_blocks')},
             'prototype_queue_holds':{a['id']:a['prototype_queue_hold'] for a in state['agents'] if a.get('prototype_queue_hold')},
             'coding_local_contracts':{a['id']:a['coding_local_contracts'] for a in state['agents'] if a.get('coding_local_contracts')}}
+    if state.get('hypothesis_development'):body['hypothesis_development']=state['hypothesis_development']
+    if state.get('hypothesis_reviews'):body['hypothesis_reviews']=state['hypothesis_reviews']
+    if state.get('brainstorm_hypotheses'):
+        body['brainstorm_hypotheses']=state['brainstorm_hypotheses']
     return hashlib.sha256(canonical(body).encode()).hexdigest()
 
 def recover(engine):

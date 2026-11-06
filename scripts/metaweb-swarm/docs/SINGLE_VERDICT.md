@@ -47,8 +47,8 @@ ani potvrzen původní Open Library/EPUB prototyp.
 Ve stejné konzoli s API klíčem, z adresáře scripts/metaweb-swarm:
 
 ```cmd
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py unblock "G:\metaweb-swarm-runs\20261022-051417-8cb93cc5" AGENT-006 --note "Opraveno rozhrani na jeden verdikt; dokoncit audit a predat konkretni opravu"
-G:\metaweb-swarm-env\Scripts\python.exe swarm.py resume "G:\metaweb-swarm-runs\20261022-051417-8cb93cc5" --backend openai
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py unblock "G:\vojtamaur-metaweb-swarm-files\runs\20261022-051417-8cb93cc5" AGENT-006 --note "Opraveno rozhrani na jeden verdikt; dokoncit audit a predat konkretni opravu"
+G:\vojtamaur-metaweb-swarm-files\env\Scripts\python.exe swarm.py resume "G:\vojtamaur-metaweb-swarm-files\runs\20261022-051417-8cb93cc5" --backend openai
 ```
 
 První příkaz jen zaznamená explicitní operátorovo obnovení auditora; druhý spustí

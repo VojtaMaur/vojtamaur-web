@@ -2,6 +2,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import * as cheerio from "cheerio";
+import { generateIntegrity } from "./generate-integrity.mjs";
+import { HISTORY_FILE, readHistory } from "./build-hash-history.mjs";
 
 const ROOT = process.cwd();
 const DEFAULT_DIST_DIR = path.join(ROOT, "dist");
@@ -12,16 +14,20 @@ const GEMINI_CAPSULE_PREFIX = "/~vojtamaur";
 const GOPHER_HOST = "envs.net";
 const GOPHER_PORT = "70";
 const GOPHER_SELECTOR_PREFIX = GEMINI_CAPSULE_PREFIX;
-const CAPSULE_TEXT_ASSET_PATHS = [
-  "SHA256SUMS.txt",
-  "SHA256SUMS.txt.asc",
-  "BUILD_SHA256.txt",
+const COPIED_CAPSULE_TEXT_ASSET_PATHS = [
   "BUILD_HASH_HISTORY.txt",
-  "integrity.json",
-  "SIGNING_STATUS.txt",
   "ALL_POSTS.txt",
   "ARCHIVE.txt",
 ];
+// These files are generated for the capsule rather than copied from the web.
+// Their article links must still resolve to the capsule's own build identity.
+const GENERATED_CAPSULE_ASSET_PATHS = new Set([
+  "SHA256SUMS.txt",
+  "SHA256SUMS.txt.asc",
+  "BUILD_SHA256.txt",
+  "integrity.json",
+  "SIGNING_STATUS.txt",
+]);
 
 const SECTION_DEFINITIONS = {
   personalWork: {
@@ -272,7 +278,8 @@ function gopherDirectorySelector(toCapsulePath) {
 
 function isCapsuleTextAssetPath(pathname) {
   const clean = normalizeCapsulePath(pathname);
-  return clean.startsWith("keys/") || CAPSULE_TEXT_ASSET_PATHS.includes(clean);
+  return clean.startsWith("keys/") || COPIED_CAPSULE_TEXT_ASSET_PATHS.includes(clean)
+    || GENERATED_CAPSULE_ASSET_PATHS.has(clean);
 }
 
 function normalizeWebPathname(pathname) {
@@ -1332,7 +1339,14 @@ async function generateGopherMaps(posts, homepageData, outputDir, siteUrl, stats
 
 
 async function copyCapsuleTextAssets(distDir, outputDir, stats, warnings) {
-  for (const assetPath of CAPSULE_TEXT_ASSET_PATHS) {
+  for (const assetPath of COPIED_CAPSULE_TEXT_ASSET_PATHS) {
+    if (assetPath === HISTORY_FILE) {
+      // Preserve the web build's exact snapshot, never substitute newer source history.
+      const history = await readHistory(path.join(distDir, HISTORY_FILE));
+      await fs.writeFile(path.join(outputDir, HISTORY_FILE), history, "utf8");
+      stats.copiedFiles += 1;
+      continue;
+    }
     const copied = await copyFirstExisting(
       [
         path.join(distDir, assetPath),
@@ -1418,6 +1432,7 @@ async function main() {
   };
   const posts = await getPosts(contentDir, distDir, siteUrl, warnings);
   const routeMap = buildRouteMap(posts, homepageData, siteUrl);
+  await readHistory(path.join(distDir, HISTORY_FILE));
 
   await fs.rm(outputDir, { recursive: true, force: true });
   await fs.mkdir(outputDir, { recursive: true });
@@ -1452,6 +1467,9 @@ async function main() {
   if (!copiedDistKeys) {
     await copyDirectoryIfPresent(path.join(ROOT, "public", "keys"), path.join(outputDir, "keys"), stats);
   }
+
+  // Hash the final Gemtext, Gopher maps and copied assets, not the source HTML tree.
+  await generateIntegrity(normalizeSlashes(path.relative(ROOT, outputDir)), "gemini");
 
   const totalPages = stats.articlePages + stats.sectionPages + stats.homePages;
   console.log(`[GEMINI] Written ${normalizeSlashes(path.relative(ROOT, outputDir))}/`);

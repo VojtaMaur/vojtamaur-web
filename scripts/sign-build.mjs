@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { HISTORY_FILE, readHistory, validateBuildType, recordSignedBuild } from "./build-hash-history.mjs";
+import { HISTORY_FILE, readHistory, validateBuildType, recordSignedBuilds } from "./build-hash-history.mjs";
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -12,8 +12,19 @@ const scriptPath = fileURLToPath(import.meta.url);
 const scriptDir = path.dirname(scriptPath);
 const projectRoot = path.resolve(scriptDir, "..");
 
-const targetArg = process.argv[2] ?? "dist";
-const targetDir = path.resolve(projectRoot, targetArg);
+const targetArgs = process.argv.slice(2);
+if (!targetArgs.length) targetArgs.push("dist");
+const targets = targetArgs.map((targetArg) => {
+  const targetDir = path.resolve(projectRoot, targetArg);
+  return {
+    targetArg, targetDir,
+    manifestPath: path.join(targetDir, "SHA256SUMS.txt"),
+    signaturePath: path.join(targetDir, "SHA256SUMS.txt.asc"),
+    signingStatusPath: path.join(targetDir, "SIGNING_STATUS.txt"),
+    integrityJsonPath: path.join(targetDir, "integrity.json"),
+  };
+});
+const attemptedTargets = [];
 
 const MANIFEST_FILE = "SHA256SUMS.txt";
 const SIGNATURE_FILE = "SHA256SUMS.txt.asc";
@@ -21,10 +32,6 @@ const SIGNING_STATUS_FILE = "SIGNING_STATUS.txt";
 const JSON_FILE = "integrity.json";
 const BUILD_HASH_FILE = "BUILD_SHA256.txt";
 
-const manifestPath = path.join(targetDir, MANIFEST_FILE);
-const signaturePath = path.join(targetDir, SIGNATURE_FILE);
-const signingStatusPath = path.join(targetDir, SIGNING_STATUS_FILE);
-const integrityJsonPath = path.join(targetDir, JSON_FILE);
 const fingerprintPath = path.join(
   projectRoot,
   "public",
@@ -77,7 +84,7 @@ async function readFingerprint() {
   const raw = await fs.readFile(fingerprintPath, "utf8");
   const normalized = raw.replace(/\s+/g, "").toUpperCase();
 
-  if (!/^[0-9A-F]{40}$/.test(normalized)) {
+  if (!/^(?:[0-9A-F]{40}|[0-9A-F]{64})$/.test(normalized)) {
     throw new Error(
       `Invalid OpenPGP fingerprint in ${path.relative(projectRoot, fingerprintPath)}`
     );
@@ -202,7 +209,7 @@ async function resolveGnuPgHome(fingerprint) {
   }
 }
 
-async function inspectBuildHistory() {
+async function inspectBuildHistory({ manifestPath, targetDir, integrityJsonPath }) {
   const manifest = await fs.readFile(manifestPath);
   const buildHash = createHash("sha256").update(manifest).digest("hex");
   const declaredHash = await fs.readFile(path.join(targetDir, BUILD_HASH_FILE), "utf8");
@@ -226,9 +233,10 @@ async function inspectBuildHistory() {
   return { history, buildHash, buildType: metadata.buildType };
 }
 
-async function updateIntegrityMetadata({
+async function updateIntegrityMetadata({ integrityJsonPath }, {
   present,
   fingerprint = null,
+  signingFingerprint = null,
   error = null
 }) {
   try {
@@ -241,6 +249,7 @@ async function updateIntegrityMetadata({
       statusFile: SIGNING_STATUS_FILE,
       present,
       fingerprint,
+      signingFingerprint,
       error,
       note: "Informational metadata. Verify the detached signature directly."
     };
@@ -258,7 +267,7 @@ async function updateIntegrityMetadata({
   }
 }
 
-async function writeSignedStatus(fingerprint) {
+async function writeSignedStatus({ signingStatusPath }, fingerprint, signingFingerprint) {
   const text = `OPENPGP BUILD SIGNATURE STATUS
 
 This build is OpenPGP signed by the author.
@@ -266,8 +275,10 @@ This build is OpenPGP signed by the author.
 Signed manifest: ${MANIFEST_FILE}
 Detached signature: ${SIGNATURE_FILE}
 Previous signed builds: ${HISTORY_FILE} (covered by the signed manifest)
-Signing key fingerprint:
+Primary-key fingerprint:
 ${formatFingerprint(fingerprint)}
+Actual signing-key fingerprint:
+${formatFingerprint(signingFingerprint)}
 
 This file is informational. Verify the detached signature directly.
 `;
@@ -275,7 +286,7 @@ This file is informational. Verify the detached signature directly.
   await fs.writeFile(signingStatusPath, text, "utf8");
 }
 
-async function writeFailedStatus(error) {
+async function writeFailedStatus({ signingStatusPath }, error) {
   const message = String(error?.message ?? error).replace(/\s+/g, " ").trim();
   const text = `OPENPGP BUILD SIGNATURE STATUS
 
@@ -294,69 +305,93 @@ ${SIGNATURE_FILE} is present and its signature verifies successfully.
   await fs.writeFile(signingStatusPath, text, "utf8");
 }
 
+// VALIDSIG reports the actual signer plus (for a signing subkey) its primary key.
+// History identifies the primary key; metadata also retains the exact signing subkey.
+export function parseVerifiedFingerprint(status, expectedFingerprint) {
+  const signatures = status.split(/\r?\n/).filter((line) => line.startsWith("[GNUPG:] VALIDSIG "));
+  if (signatures.length !== 1) throw new Error("Expected exactly one valid OpenPGP signature.");
+  const fields = signatures[0].slice("[GNUPG:] ".length).trim().split(/\s+/);
+  const signingFingerprint = fields[1];
+  const fingerprint = fields[10] ?? signingFingerprint;
+  const valid = /^(?:[0-9A-F]{40}|[0-9A-F]{64})$/;
+  if (!valid.test(signingFingerprint) || !valid.test(fingerprint) || fingerprint !== expectedFingerprint) {
+    throw new Error("Verified signature does not belong to the expected primary key.");
+  }
+  return { fingerprint, signingFingerprint };
+}
+
+function verifySignature(target, expectedFingerprint) {
+  const result = spawnSync(gpgBinary, [
+    "--batch", "--status-fd", "1", "--verify", target.signaturePath, target.manifestPath,
+  ], { cwd: projectRoot, env: process.env, encoding: "utf8", stdio: ["ignore", "pipe", "inherit"], windowsHide: true });
+  if (result.error) throw result.error;
+  if (result.status !== 0) throw new Error(`OpenPGP verification failed for ${target.targetArg}.`);
+  return parseVerifiedFingerprint(result.stdout, expectedFingerprint);
+}
+
 async function main() {
-  await fs.access(targetDir);
-  await fs.access(manifestPath);
-
-  const build = await inspectBuildHistory();
   const fingerprint = await readFingerprint();
+  const paths = new Set();
+  const builds = [];
+  for (const target of targets) {
+    const realPath = await fs.realpath(target.targetDir);
+    const identity = process.platform === "win32" ? realPath.toLowerCase() : realPath;
+    if (paths.has(identity)) throw new Error("Duplicate signing target.");
+    paths.add(identity);
+    builds.push(await inspectBuildHistory(target));
+  }
+  if (builds.some((build) => build.history !== builds[0].history)) {
+    throw new Error("Signing targets have different history snapshots; rebuild them together.");
+  }
 
-  await fs.rm(signaturePath, { force: true });
-
-  console.log(`[signing] target=${targetArg}`);
   console.log(`[signing] key=${formatFingerprint(fingerprint)}`);
-
   const gnuPgHome = await resolveGnuPgHome(fingerprint);
   console.log(`[signing] GNUPGHOME=${gnuPgHome}`);
 
-  run(gpgBinary, [
-    "--yes",
-    "--armor",
-    "--detach-sign",
-    "--local-user",
-    fingerprint,
-    "--output",
-    signaturePath,
-    manifestPath
-  ]);
-
-  run(gpgBinary, [
-    "--verify",
-    signaturePath,
-    manifestPath
-  ]);
-
-  const verifiedBuild = await inspectBuildHistory();
-  if (verifiedBuild.buildHash !== build.buildHash || verifiedBuild.buildType !== build.buildType) {
-    throw new Error("Build changed during signing; rebuild before signing again.");
+  // Any subsequent failure invalidates the entire attempted batch.
+  attemptedTargets.push(...targets);
+  for (const target of targets) await fs.rm(target.signaturePath, { force: true });
+  for (const [index, target] of targets.entries()) {
+    console.log(`[signing] target=${target.targetArg}`);
+    run(gpgBinary, [
+      "--yes", "--armor", "--detach-sign", "--local-user", fingerprint,
+      "--output", target.signaturePath, target.manifestPath,
+    ]);
+    Object.assign(builds[index], verifySignature(target, fingerprint));
   }
 
-  await writeSignedStatus(fingerprint);
-  await updateIntegrityMetadata({
-    present: true,
-    fingerprint: formatFingerprint(fingerprint)
-  });
+  // Recheck every manifest after all signing, before committing either history record.
+  for (const [index, target] of targets.entries()) {
+    const verifiedBuild = await inspectBuildHistory(target);
+    const build = builds[index];
+    if (verifiedBuild.buildHash !== build.buildHash || verifiedBuild.buildType !== build.buildType
+      || verifiedBuild.history !== build.history) {
+      throw new Error("Build changed during signing; rebuild before signing again.");
+    }
+    await writeSignedStatus(target, build.fingerprint, build.signingFingerprint);
+    await updateIntegrityMetadata(target, {
+      present: true,
+      fingerprint: formatFingerprint(build.fingerprint),
+      signingFingerprint: formatFingerprint(build.signingFingerprint),
+    });
+  }
 
-  // Last commit step: any earlier failure leaves canonical history untouched.
-  const appended = await recordSignedBuild(projectRoot, build);
-  console.log("[signing] " + HISTORY_FILE + ": " + (appended ? "recorded in source" : "already recorded"));
-  console.log("[signing] " + SIGNATURE_FILE + ": verified");
+  // One atomic history commit for the entire batch, after every signature verifies.
+  const appended = await recordSignedBuilds(projectRoot, builds);
+  console.log("[signing] " + HISTORY_FILE + ": " + (appended ? `${builds.length} build(s) recorded in source` : "already recorded"));
+  for (const target of targets) console.log(`[signing] ${target.targetArg}/${SIGNATURE_FILE}: verified`);
 }
 
-main().catch(async (error) => {
-  await fs.rm(signaturePath, { force: true }).catch(() => {});
-
-  await writeFailedStatus(error).catch((statusError) => {
-    console.error(
-      `[signing] Could not write fallback status: ${statusError.message}`
-    );
+if (process.argv[1] && path.resolve(process.argv[1]) === scriptPath) {
+  main().catch(async (error) => {
+    for (const target of attemptedTargets) {
+      await fs.rm(target.signaturePath, { force: true }).catch(() => {});
+      await writeFailedStatus(target, error).catch((statusError) => {
+        console.error(`[signing] Could not write fallback status: ${statusError.message}`);
+      });
+      await updateIntegrityMetadata(target, { present: false, error: String(error?.message ?? error) });
+    }
+    console.error(`[signing] Failed: ${error.message}`);
+    process.exitCode = 1;
   });
-
-  await updateIntegrityMetadata({
-    present: false,
-    error: String(error?.message ?? error)
-  });
-
-  console.error(`[signing] Failed: ${error.message}`);
-  process.exit(1);
-});
+}

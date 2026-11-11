@@ -176,12 +176,15 @@ npm run build:arweave:signed
 npm run generate:all-posts
 npm run generate:gemini
 npm run build:gemini
+npm run build:gemini:signed
 npm run generate:source-bundle
 npm run generate:sitemap
 npm run generate:integrity
 npm run generate:integrity:arweave
 npm run sign:build
 npm run sign:build:arweave
+npm run sign:build:gemini
+npm run sign:build:all
 npm run test:integrity
 npm run export:epub
 npm run export:epub:metaweb
@@ -202,8 +205,8 @@ Meaning of the main scripts:
 - `npm run build:web` – creates the standard production web build, applies the English postprocess using existing cache only, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package at `dist/source/vojtamaur-web-source.zip`, enriches the sitemap with images and PDF/TXT files, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:web:signed` – runs the standard web build and then creates and verifies the detached OpenPGP signature for `dist/SHA256SUMS.txt`
 - `npm run build:signed` – alias for `npm run build:web:signed`
-- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package, enriches the sitemap with images and PDF/TXT files, writes unsigned build integrity metadata for `dist/`, and then generates the Gemini/Gopher text edition in `dist-gemini/`
-- `npm run build:web:translate:signed` – runs the translating web build, including Gemini/Gopher text-edition generation, and then signs and verifies the checksum manifest for `dist/`; the detached signature does not cover the separate `dist-gemini/` directory
+- `npm run build:web:translate` – creates the web build, fills missing English translation cache entries through DeepL, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package, enriches the sitemap with images and PDF/TXT files, writes unsigned build integrity metadata for `dist/`, and then generates the Gemini/Gopher text edition with its own integrity manifest in `dist-gemini/`
+- `npm run build:web:translate:signed` – runs the translating web build, including Gemini/Gopher text-edition generation, and then signs and verifies separate manifests for both `dist/` and `dist-gemini/` in one signing session
 - `npm run build:translate:signed` – alias for `npm run build:web:translate:signed`
 - `npm run build:web:strict` – creates the web build, fails if an English translation cache entry is missing, generates `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`, generates the reconstructable source package, enriches the sitemap with images and PDF/TXT files, and writes unsigned build integrity metadata for `dist/`
 - `npm run build:web:strict:signed` – runs the strict web build and then signs and verifies its checksum manifest
@@ -221,8 +224,9 @@ Meaning of the main scripts:
 - `npm run build:arweave` – creates the strict standard web build, creates `dist-arweave/` as a Permaweb-compatible deployment copy with rewritten paths, and then writes separate unsigned build integrity metadata for `dist-arweave/`
 - `npm run build:arweave:signed` – runs the Arweave build and then signs and verifies `dist-arweave/SHA256SUMS.txt`
 - `npm run generate:all-posts` – generates `dist/ALL_POSTS.txt` and the structured `dist/ALL_POSTS.json` from the finished build output, and embeds the text export into `dist/404.html`
-- `npm run generate:gemini` – replaces `dist-gemini/` with a freshly generated bilingual Gemini/Gopher text edition based on the existing finished `dist/` build and the post frontmatter
-- `npm run build:gemini` – runs the strict standard web build and then generates `dist-gemini/`; this is the standalone complete Gemini/Gopher text-edition build command
+- `npm run generate:gemini` – replaces `dist-gemini/` with a freshly generated bilingual Gemini/Gopher text edition based on the existing finished `dist/` build and the post frontmatter, then generates its own unsigned integrity files
+- `npm run build:gemini` – runs the strict standard web build and then generates `dist-gemini/` with its own unsigned integrity files
+- `npm run build:gemini:signed` – runs the strict web and Gemini/Gopher builds, then signs and verifies both output manifests in one session
 - `npm run generate:source-bundle` – generates `dist/source/vojtamaur-web-source.zip`, a small reconstructable source package with a media manifest and an asset downloader
 - `npm run generate:sitemap` – enriches existing web sitemaps with page-associated images and public PDF/TXT files after content generation and before integrity generation; USB builds omit this step
 - `npm run generate:integrity` – generates `SHA256SUMS.txt`, `BUILD_SHA256.txt`, `integrity.json`, and an unsigned `SIGNING_STATUS.txt` for `dist/`; any stale detached signature is removed
@@ -1071,7 +1075,7 @@ It reads the expected primary-key fingerprint from `public/keys/vojta-maur-openp
 
 and immediately verifies the new signature against `SHA256SUMS.txt`. Only after successful verification does it write a signed `SIGNING_STATUS.txt` and update the informational `openPgp` object in `integrity.json`.
 
-The final step appends the current build hash to the canonical source history. Before signing and again after verification, the signer checks that `BUILD_SHA256.txt` matches the manifest, that the manifest covers the exact history snapshot, and that `integrity.json` contains a valid build type and matching build hash/history reference. Failure before the final history commit leaves the canonical file unchanged.
+The final step appends the current build hash and verified primary-key fingerprint to the canonical source history. When signing multiple outputs, every signature must verify before all records are appended together in one atomic history update. Before signing and again after verification, the signer checks that `BUILD_SHA256.txt` matches the manifest, that the manifest covers the exact history snapshot, and that `integrity.json` contains a valid build type and matching build hash/history reference. Failure before the final history commit leaves the canonical file unchanged.
 
 If signing fails, the script removes `SHA256SUMS.txt.asc`, writes a failed unsigned status where possible, records `openPgp.present: false`, and exits with a non-zero status. A build is therefore signed only when the detached signature is present and verifies successfully.
 
@@ -1097,6 +1101,7 @@ npm run build:usb:signed
 npm run build:usb:translate:signed
 npm run build:usb:strict:signed
 npm run build:arweave:signed
+npm run build:gemini:signed
 ```
 
 The signing step can also be applied to an already generated output:
@@ -1104,30 +1109,34 @@ The signing step can also be applied to an already generated output:
 ```bash
 npm run sign:build
 npm run sign:build:arweave
+npm run sign:build:gemini
+npm run sign:build:all
 ```
 
 #### Cumulative signed build history
 
-`BUILD_HASH_HISTORY.txt` at the project root is the canonical source file shared by the web, USB, and Arweave signing workflows. It contains one record per successfully signed build, in append order, without a header:
+`BUILD_HASH_HISTORY.txt` at the project root is the canonical source file shared by the web, USB, Arweave, and Gemini/Gopher signing workflows. It contains one record per successfully signed build, in append order, with a first-line column header:
 
 ```text
-ISO-8601 UTC timestamp | build type | SHA256 | hash
+RECORDED_AT_UTC          | TYPE    | ALGO   | BUILD_SHA256                                                     | PRIMARY_KEY_FINGERPRINT
 ```
 
-The timestamp is the local record-creation time in UTC, written as `YYYY-MM-DDTHH:mm:ss.sssZ`. The stable build type is `web`, `usb`, or `arweave`; translation and strict modes do not create additional types. The hash is the lowercase 64-character SHA-256 digest of that build's `SHA256SUMS.txt`, also declared in its `BUILD_SHA256.txt`. Each record ends with a newline; an empty file is valid before the first recorded signed build.
+The timestamp is the local record-creation time in UTC, written as `YYYY-MM-DDTHH:mm:ss.sssZ`. The stable build type is `web`, `usb`, `arweave`, or `gemini`; the latter covers the combined Gemini/Gopher output. Translation and strict modes do not create additional types. The hash is the lowercase 64-character SHA-256 digest of that build's `SHA256SUMS.txt`, also declared in its `BUILD_SHA256.txt`. The fifth column contains the full uppercase primary-key fingerprint without spaces, obtained from GnuPG's successful `VALIDSIG` verification status and checked against the configured expected primary key. `integrity.json` additionally stores the actual signing-key/subkey fingerprint as `openPgp.signingFingerprint`. The header identifies the UTC record time, build type, hash algorithm, manifest hash and primary-key fingerprint. New rows use spaces to align columns: the timestamp has width 24, type width 7 (including `arweave`), algorithm width 6 and manifest hash width 64. Legacy unpadded and four-column histories without a header remain readable; the header is optional for parsing and allowed only on the first line. Existing snapshots inside signed builds remain byte-for-byte unchanged. On 2026-11-06 the current source history was reformatted with this header and alignment while preserving every record value; the next build incorporates that formatting. Each record ends with a newline; an empty file is valid before the first recorded signed build.
+
+**Historical fingerprint migration (2026-11-06).** The 54 existing source-history records through `2026-11-06T06:43:49.636Z` were enriched with primary-key fingerprint `57E9D455FB10A228F66E18AEC5F5B3905220BE59` based on the owner's confirmation that the same key was used throughout. This is retrospective owner attribution, not fresh cryptographic verification of all 54 old signatures. Original timestamps, types and build hashes were preserved. Previously published history snapshots, manifests and signatures are not rewritten. The next build incorporates the enriched source history; rebuild before signing an output created before this migration.
 
 For build N, the lifecycle is:
 
 1. Source-bundle generation embeds the existing history in both source archives and copies those exact bytes into the build as `BUILD_HASH_HISTORY.txt`.
 2. After all build-specific rewriting, integrity generation includes that snapshot in `SHA256SUMS.txt` and writes the current manifest hash to `BUILD_SHA256.txt`.
 3. The explicit signing step creates and verifies `SHA256SUMS.txt.asc`, then writes the signed status and informational metadata.
-4. Only then is the current hash appended to the project-root history. The history snapshot, manifest, and source archives inside build N remain unchanged. The next build inherits the new record.
+4. Only then are the current hash and verified primary-key fingerprint appended to the project-root history. The history snapshot, manifest, and source archives inside build N remain unchanged. The next build inherits the new record.
 
 This separates previous signed builds (`BUILD_HASH_HISTORY.txt` in the output) from the current build (`BUILD_SHA256.txt`). It avoids putting the current hash into a file that contributes to that same hash. The existing signature on `SHA256SUMS.txt` also authenticates the history snapshot through its checksum; no separate `BUILD_HASH_HISTORY.txt.asc` is created.
 
-`integrity.json` records `buildType` and `buildHistoryFile` alongside `buildHash`. Both web and USB builds use `dist/`, and the USB runner's environment is not automatically inherited by the later standalone signing process. The integrity step therefore stores `usb` in the metadata while `BUILD_TARGET=usb` is available, and the signer reads the stored type. The Arweave integrity command passes `arweave` explicitly. These metadata fields remain informational; verification uses the detached signature and the manifest checksums.
+`integrity.json` records `buildType` and `buildHistoryFile` alongside `buildHash`. Both web and USB builds use `dist/`, and the USB runner's environment is not automatically inherited by the later standalone signing process. The integrity step therefore stores `usb` in the metadata while `BUILD_TARGET=usb` is available, and the signer reads the stored type. The Arweave integrity command passes `arweave` explicitly; the Gemini/Gopher generator passes `gemini`. These metadata fields remain informational; verification uses the detached signature and the manifest checksums.
 
-Unsigned builds and failed signing attempts do not append records. Re-signing the same already recorded build does not append a duplicate. If another build has advanced the canonical history since the snapshot was taken, a new unrecorded build using that old snapshot is rejected; rebuild from the current source history before signing it.
+Unsigned builds and failed signing attempts do not append records. Web and Gemini outputs generated together share one previous-history snapshot and are signed as a batch: all signatures verify before the two records are appended atomically, with the same record timestamp. A handled failure in either signing, verification, metadata writing or the history commit removes all attempted batch signatures and marks both outputs unsigned. An abrupt process termination may leave partial output; check each detached signature and rerun the combined signing command. Re-signing the same already recorded build or complete batch with the same verified primary key does not append duplicates. If another build has advanced the canonical history since the snapshot was taken, a new unrecorded build using that old snapshot is rejected; rebuild from the current source history before signing it.
 
 History updates use an exclusive lock and a temporary file under `.source-bundle-staging/`, which is excluded from Git and the source archives, followed by atomic replacement of the canonical source file. A lock conflict stops the update. After an interrupted signing process, remove a leftover `.source-bundle-staging/build-hash-history.lock` only after confirming that no signer is still running.
 
@@ -1886,7 +1895,7 @@ The translating production workflow also generates the text edition automaticall
 npm run build:web:translate:signed
 ```
 
-builds and translates the normal website, generates `dist-gemini/`, and then signs the checksum manifest belonging to `dist/`.
+builds and translates the normal website, generates `dist-gemini/` with its own checksums, and then signs and verifies both output manifests in one invocation. `npm run build:gemini:signed` does the same for the strict, cache-only web build. Each output receives its own `SHA256SUMS.txt.asc`.
 
 The Gemini/Gopher text edition is deliberately generated from the finished HTML rather than directly from the MDX body. This preserves the actual postprocessed English output and the rendered behavior of shared Astro components. The generator also reads article frontmatter from `src/content/posts/` for stable slugs, section membership, dates, draft filtering, and ordering.
 
@@ -1985,7 +1994,9 @@ Available command-line overrides are:
 --site-url <url>
 ```
 
-Because `dist-gemini/` is outside `dist/`, the existing web integrity and signing commands do not cover it. Even when the capsule is produced during `build:web:translate:signed`, the resulting detached signature authenticates only `dist/SHA256SUMS.txt`. A separate checksum or signing workflow for `dist-gemini/` has not been implemented. This applies to both the Gemini files and the generated Gopher map layer.
+The generator creates `SHA256SUMS.txt`, `BUILD_SHA256.txt`, `integrity.json` and an unsigned `SIGNING_STATUS.txt` for the final capsule, with build type `gemini`. Its manifest covers the generated `.gmi` files, `gophermap` files, copied public keys, text assets and the exact history snapshot from the source web build. Web checksum/signature/status files are never copied as capsule identity files. The converter maintains separate lists of copied assets and locally generated identity files. Links in both article languages to `SHA256SUMS.txt`, `SHA256SUMS.txt.asc`, `BUILD_SHA256.txt`, `BUILD_HASH_HISTORY.txt`, `integrity.json`, `SIGNING_STATUS.txt` and public `keys/` files resolve to relative capsule paths, including same-site absolute HTTPS links. These relative links stay within the capsule when opened over Gemini or Gopher and refer to the capsule's own identity, not the web build. `SHA256SUMS.txt.asc` exists only after successful capsule signing; an unsigned capsule does not redirect its missing signature to HTTPS. A missing or invalid web history snapshot stops generation; newer project-root history is not substituted.
+
+`npm run sign:build:all` signs existing `dist/` and `dist-gemini/` outputs together; they must share the same history snapshot. `npm run sign:build:gemini` signs only an existing capsule whose snapshot is still current. Use the combined command for siblings built together, rather than signing them sequentially. Both signatures authenticate local output files only; media linked over HTTPS remain external. Regeneration replaces the capsule and returns it to unsigned status. GnuPG home selection occurs once per signing invocation; passphrase caching remains controlled by GnuPG.
 
 ### 9.6.8 Manual SSTV PNG export
 
@@ -3084,15 +3095,15 @@ Astro build
 -> English postprocess with missing translations enabled
 -> ALL_POSTS.txt, ALL_POSTS.json and source-bundle generation
 -> integrity generation for dist/
--> Gemini capsule generation in dist-gemini/
--> detached OpenPGP signing and verification of dist/SHA256SUMS.txt
--> signed status/metadata updates
--> append the web build hash to the canonical source BUILD_HASH_HISTORY.txt
+-> Gemini/Gopher generation and its own integrity manifest in dist-gemini/
+-> detached OpenPGP signing and verification of both manifests
+-> signed status/metadata updates for both outputs
+-> atomic append of web and gemini hashes plus verified fingerprints to source BUILD_HASH_HISTORY.txt
 ```
 
-The final signing step remains scoped to the normal web build. `dist-gemini/` is generated in the same workflow but is a separate unsigned artifact.
+The final signing invocation covers both outputs using the same configured key, with one detached signature per manifest. Only after both verify does the signer atomically record the `web` and `gemini` hashes and their verified primary-key fingerprints in the canonical source history.
 
-The capsule copies `BUILD_HASH_HISTORY.txt` from the completed web output so that the article's history link works in the text edition. During this workflow the copied file contains the same previous-build snapshot as `dist/`. Capsule generation itself adds no history record, and the later source-history append does not refresh the capsule copy.
+The capsule copies `BUILD_HASH_HISTORY.txt` from the completed web output so that the article's history link works in the text edition. During this workflow the copied file contains the same previous-build snapshot as `dist/`. Capsule generation itself adds no history record. The later batch-signing step appends both current build records only to source; neither output snapshot is refreshed afterwards.
 
 ---
 
@@ -3680,7 +3691,7 @@ dist/source/vojtamaur-web-source.zip
 
 The `source/` directory in `dist/` is a generated output directory. It should not be treated as source input or committed as a hand-maintained project directory.
 
-The Gemini capsule is not part of this tree. It is generated separately as the sibling directory `dist-gemini/`, and it is not included in the checksum manifest or detached signature stored in `dist/`.
+The Gemini capsule is not part of this tree. It is generated separately as the sibling directory `dist-gemini/`, and it has its own checksum manifest and, in combined signed workflows, its own detached signature. The web signature stored in `dist/` covers only the web output.
 
 ### 12.2 Deployment of the standard web build
 For the production website, the content corresponding to the standard web build is uploaded to the hosting server.
@@ -4171,7 +4182,7 @@ The manifest Data TX ID is the authoritative archival identifier. Gateway URLs a
 
 ### 15.6 Arctic World Archive pricing note
 
-For Shared piqlFilm, the observed minimum price is €139. An approximately 0.8 GB package cost €139; 1.19 GB was quoted at €165.48, close to €139/GB; and 9.22 GB was quoted at €1,113.21, which may indicate a different calculation or volume discount at larger sizes. Because the exact public pricing formula is not known, treat these figures as practical observations rather than guaranteed price tiers. To stay at the €139 minimum in practice, keep the package safely below 1 GB.
+For Shared piqlFilm, the observed minimum price is €139. An approximately 0.8 GB package cost €139; 1.19 GB was quoted at €165.48, close to €139/GB; and 9.22 GB was quoted at €1,113.21, which may indicate a different calculation or volume discount at larger sizes. Because the exact public pricing formula is not known, treat these figures as practical observations rather than guaranteed price tiers. To stay at the €139 minimum in practice, keep the package equal to 1 GB.
 
 ### 15.7 Recurring preservation and maintenance
 
@@ -4201,6 +4212,175 @@ The following archival operations should be performed periodically to maintain t
 - Indicative annual invoice prices including VAT are CZK 264.99 for the domain and CZK 907.50 for hosting. Combined prepayments and credit are estimated to cover operation until approximately 2040, depending on future prices; this is an estimate, not a guarantee.
 - Continued operation also depends on meeting any ownership-verification requirements, the provider remaining in business, and changes to its terms and prices. Review these conditions periodically.
 
+### 15.8 Metaweb Swarm
+
+Metaweb Swarm is a local Python tool for researching new ways to preserve and reconstruct `vojtamaur.cz`. Its source is in `scripts/metaweb-swarm/`. The research objective is to find mechanisms that can survive different failures from the existing copies and give a future reader a way to locate and recover the material. The [Metaweb Article](/metawebovy-clanek/) and [`ARCHIVE.txt`](/ARCHIVE.txt) describe the existing preservation layers.
+
+#### 15.8.1 Default research and brainstorming
+
+The default profile, `config.research.json`, captures a read-only view of the project and can also capture public pages at the start of a run. Agents use web search and read primary documentation to investigate new mechanisms. They compare proposed mechanisms with the captured Metaweb baseline, check for duplicates within the run, and consult earlier research for leads and unresolved questions. Prior reports are working records. Evidence of an existing archival layer comes from the captured archive index and supporting sources.
+
+1. **Discovery.** Specialized roles investigate different services, storage formats, recovery paths, and failure risks. They save early hypotheses as `HYP` records with the proposed mechanism, authors, sources, and unresolved questions. The scheduler can assign additional specialists within the run's limits.
+2. **Preliminary review.** Independent critics assess the hypotheses and record `PROMISING`, `NEEDS_EVIDENCE`, `UNSUITABLE`, or `DUPLICATE` with reasons and a proposed validation step. These judgments concern the proposed concept. Confirmation of a service's terms, capacity, or suitability requires primary evidence.
+3. **Candidate development.** By default, up to three distinct promising hypotheses receive up to two rounds of focused work each, subject to the remaining budget. The developer checks the concrete mechanism against the baseline, describes how to recover the material, and cites primary documents actually read. A sufficiently specified proposal enters the run as a formal `IDEA` in `INVESTIGATING` status and can receive a separate evidence review. Missing evidence, unsuitable variants, and exhausted limits are recorded as outcomes of the development attempt.
+4. **Synthesis.** The reporter summarizes hypotheses, formal proposals, critiques, gaps in the evidence, and priorities for follow-up. A useful handoff identifies what the proposal adds, the expected costs and dependencies, how recovery would work, and the smallest next step a person can take to test it.
+
+The new-run editor exposes the shortlist size and the number of development rounds per hypothesis. The corresponding configuration keys are `brainstorm_development_candidates` and `brainstorm_development_rounds`. A shortlist size of zero disables focused development. A `PROMISING` review alone leaves the hypothesis in the research record. It enters the formal idea register only if the later development produces a concrete proposal and it passes the run's admission and duplicate checks.
+
+The runner checks whether the next model request fits before preparing the round. If the same request still exceeds the available budget, it skips the retry until the context, assignment, or budget changes. A smaller synthesis request can still fit after discovery has reached its limit.
+
+The research profile provides reading, search, and research record tools. Docker, shell execution, package installation, code changes, and uploads are disabled. It skips copying `exports/` and keeps its records outside the website project. A run can reach `COMPLETED` with zero prototypes or deposits. The author evaluates promising proposals and implements selected ones separately with human oversight.
+
+#### 15.8.2 Installation and new runs
+
+Python 3.11 or newer is required. In Windows Command Prompt, create the virtual environment and install the dependencies once. These examples use the project's local checkout on `G:`. Adjust the paths for a different checkout.
+
+```bat
+cd /d G:\vojtamaur-web\scripts\metaweb-swarm
+set "SWARM_FILES_ROOT=G:\vojtamaur-metaweb-swarm-files"
+py -3.11 -m venv "%SWARM_FILES_ROOT%\env"
+set "SWARM_PYTHON=%SWARM_FILES_ROOT%\env\Scripts\python.exe"
+"%SWARM_PYTHON%" -m pip install -r requirements-openai.txt
+```
+
+For a live run, set the OpenAI API key for the current CMD session. `doctor` checks the local SDK and whether a key is present without calling a model. `run.cmd` starts a new billable research run and prints its directory.
+
+```bat
+set "OPENAI_API_KEY=YOUR_API_KEY"
+"%SWARM_PYTHON%" swarm.py doctor --backend openai --format text
+run.cmd
+```
+
+Use `run.cmd --task "Research question"` or `run.cmd --task-file "research-question.txt"` to supply a different objective. The launcher captures live public context by default. `--no-fetch-live` skips that initial capture. An OpenAI run can still search and read public sources during research. `run-research.cmd`, `run-supervised.cmd`, and the older `run-http.cmd` all launch the research profile.
+
+The checked-in research profile uses `gpt-6-luna` for the `cheap` tier, `gpt-6.1-terra` for `strong`, and `gpt-6.1-sol` for `flag`. `run.cmd --config config.cheap.json` uses the lower-cost profile, and `--model MODEL` overrides all tiers for a single new run. The default ceilings are 48 steps, three million tokens, and 3,600 seconds of active time, with separate per-role round limits. The host checks available budget before requesting model work. A cost estimate uses configured rates and limits, independently of the API account's balance.
+
+By default, the launchers use the sibling directory `vojtamaur-metaweb-swarm-files` for the working environment, saved profiles, and `runs/`. `SWARM_FILES_ROOT` changes that location and `SWARM_RUNS_ROOT` can override the run directory separately. The launchers use `SWARM_PYTHON` when set. Otherwise they check a local `.venv`, the shared `env`, and then Python on `PATH`.
+
+The runtime root also contains `defaults/` for saved profiles and, on this Windows installation, `docker-data/` for Docker Desktop's WSL data. The run directory holds the evidence and its original provenance. When moving the runtime root, stop the Swarm and Docker first and keep the run databases, checkpoints, and evidence together. Recreate the Python environment at its new path because the virtual environment's launchers contain absolute paths. Existing working copies may also need their workspace markers updated after a move.
+
+Outside Windows, run `swarm.py` using the environment's Python executable and pass explicit `--project` and `--runs-root` paths. To start live research, add `--backend openai --fetch-live` to the `start` command. To prepare a snapshot and configuration for later use, use `init` without a backend argument, then use `run` with the printed directory and the selected backend.
+
+For a local workflow check, use the demo backend with live capture disabled. It writes a run with synthetic results without model calls.
+
+```bat
+"%SWARM_PYTHON%" swarm.py start --project "G:\vojtamaur-web" --runs-root "%SWARM_FILES_ROOT%\runs" --backend demo --no-fetch-live
+```
+
+#### 15.8.3 Local browser interface
+
+Run `run-gui.cmd` from the swarm directory to open the local Python dashboard. Opening the panel requires neither an API key nor Docker and makes no model calls. The interface runs on the local computer without a separate frontend build. It uses the same runtime, profiles, and run directories as the CLI.
+
+- **Nový běh** selects the research, lower-cost research, or experimental profile and lets the operator set the objective, roles, models, and limits. Select the demo backend and disable live capture for an offline run.
+- **Výchozí nastavení** saves changes to a built-in profile for future runs in the GUI and CLI. The GUI can also save named presets. Each existing run retains its own saved profile.
+- **Průběh práce** shows agent assignments, observed tool activity, search queries, documents read, and public model output when live preview is enabled. **Náměty**, **Nápady**, and **Mapa roje** show hypotheses, formal ideas, and recorded relationships between agents, work items, and results.
+- **Pokyn pro další krok** queues operator guidance for the next work boundary or resume. The current model call may finish before the guidance takes effect. **Pozastavit** requests a pause and **Pokračovat** resumes the saved run. Closing the browser tab leaves the server and current work running.
+
+The panel can use the key inherited from CMD or a key entered in **Nastavení / API klíč**. If the operator chooses to remember it, the key is stored as plain text in `gui-settings.json` under the runtime directory. Saved research profiles have no API key field.
+
+The dashboard listens on `127.0.0.1`. For manual browser startup, run `run-gui.cmd --no-browser` and open the full address it prints, including its session-token fragment. The server normally chooses an available port. Pass `--port 8765` to choose one. Pressing Ctrl+C in the dashboard server requests a pause for work it started.
+
+To save a named preset, enter its name in **Název vlastního profilu** and choose **Uložit jako nový profil**. A preset stores the objective, team, model tiers, and limits. Changing an agent's display name preserves its underlying role. The preset inherits its execution permissions from its base profile. The project profiles and saved defaults are used by new runs as described above. Use the GUI's profile selector to launch a named preset.
+
+**Swarm CMD** accepts Swarm commands against the project's configured run directory. **Otevřít CMD** opens a separate Windows shell. A run started independently in CMD can appear in the dashboard after refresh. The dashboard reads its state and audit instead of attaching to the other terminal.
+
+**Mapa roje** opens the active agent or a recorded idea. Select a node to see direct links and the evidence behind them, or choose **Celá síť** to browse the recorded run. Links represent relationships such as authorship, assignment, critique, and a test or report receipt. **Paměť běhů** can show either the current shared index or the specific memory snapshot captured when the selected run started.
+
+To give an existing run the same kind of guidance from CMD, queue a comment. The next eligible work boundary records when it was applied. The comment leaves the saved permissions and limits intact.
+
+```bat
+"%SWARM_PYTHON%" swarm.py comment "RUN_DIR" --text "Investigate recovery without the original host"
+```
+
+#### 15.8.4 Continuing a run and reading the results
+
+Substitute the actual run path printed at startup for `RUN_DIR`. `pause` lets the current bounded batch finish before stopping. `resume` continues with the checkpoint's models and permissions. Use the same backend as the original run. Limits can be extended explicitly with `--extend-steps`, `--extend-tokens`, `--extend-seconds`, or `--extend-rounds`. To change from research to an experiment, create a new run with the experimental profile.
+
+```bat
+"%SWARM_PYTHON%" swarm.py status "RUN_DIR"
+"%SWARM_PYTHON%" swarm.py pause "RUN_DIR"
+"%SWARM_PYTHON%" swarm.py resume "RUN_DIR" --backend openai
+"%SWARM_PYTHON%" swarm.py verify "RUN_DIR"
+```
+
+To finish an idle or paused research run with the material already collected, prepare a report-only closure and then resume. **Připravit závěrečný report** performs the same preparation in the GUI. Preparing the closure is local. Resuming a live run makes one final paid synthesis request without new searches or reviews, provided the request fits the remaining budget.
+
+```bat
+"%SWARM_PYTHON%" swarm.py close-research "RUN_DIR" --report-only --note "Summarize the current findings"
+"%SWARM_PYTHON%" swarm.py resume "RUN_DIR" --backend openai
+```
+
+| Run file | Contents |
+| --- | --- |
+| `SWARM_REPORT.md` | Findings, hypotheses and formal proposals, critiques, uncertainties, and next steps for the operator |
+| `TIMELINE.md` | Chronological record of work and decisions |
+| `ideas.jsonl` and `manifest.json` | Formal idea records and the machine-readable inventory of the run, evidence, and artifacts |
+| `state.sqlite3` and `checkpoint.json` | Authoritative run state and hash-chained audit in SQLite, with a portable checkpoint file |
+
+`verify` checks the integrity of the run's audit chain. The report preserves unreviewed work and identifies missing evidence or synthesis. `REJECTED` records a negative decision on a candidate, `BLOCKED` records a specific obstacle, and `LIMIT_REACHED` records an exhausted limit. `RUN_MEMORY.json` in the shared run directory is a bounded index of earlier runs. Refer to the original run records for the evidence behind an entry.
+
+#### 15.8.5 Optional experimental implementation prototype
+
+`config.http.json` enables a separate, experimental workflow for prototyping and testing selected mechanisms. Start `run-sandbox.cmd` for Docker experiments. That profile permits public reads and disables external writes. `run-experimental.cmd` starts the full profile, which can move from research into prototyping and prepare external actions for approval. Adding `--mode supervised` requires operator selection before implementation. Further development of fully autonomous implementation is deferred as described in section 14.3.
+
+Prepare a running Linux Docker daemon and a local `metaweb-swarm-experiment:local` image. Copy the reviewed `scripts/metaweb-swarm/Dockerfile` into a temporary directory by itself and run the image build from that directory:
+
+```bat
+docker info --format "{{.OSType}}"
+docker build --tag metaweb-swarm-experiment:local --file Dockerfile .
+```
+
+The daemon should report `linux`. On Windows, use Docker Desktop with its WSL 2 backend and Linux containers. The swarm expects the prepared image to be available locally. To reproduce a specific image later, record its image ID and pin the reviewed base image digest. The experiment runner uses the configured local image.
+
+Return to `scripts/metaweb-swarm/` to check the daemon and local image. `doctor` performs this check without starting a container. The following sandbox launcher starts a new billable experimental run when the OpenAI backend is configured.
+
+```bat
+"%SWARM_PYTHON%" swarm.py doctor --config config.http.json --docker-check --format text
+run-sandbox.cmd
+```
+
+An experiment runs in a private working copy with a read-only container root, no network access, and limits on CPU, memory, processes, and time. The writable work mount has no hard disk quota. The package broker can prepare PyPI wheels separately without mounting the project or passing credentials into that process. Selected prebuilt exports can be captured as inputs. The framework keeps patches, artifacts, and test evidence in the run directory for review.
+
+The experiment container runs unprivileged with dropped capabilities and receives only its private workspace. The Docker socket and host credentials are excluded. If the daemon or image is unavailable, the experiment stops at the prerequisite check. PyPI preparation builds wheels separately, then installs them into the agent's workspace offline. Use a reviewed image for system-level tools. A readiness check only inspects prerequisites. An execution smoke test exercises file creation in a private copy, an expected command failure, a timeout, network isolation, and cleanup.
+
+External actions use host-side tools outside the experiment container. In the full profile, privileged HTTP requests require operator approval by default. Approval applies to the specific request and payload. When a service requires credentials, the operator supplies a dedicated grant scoped to that host. Production files and personal repository credentials are outside the experiment's write scope. A write with an uncertain outcome requires checking the destination before retrying.
+
+In a supervised run, select a specific candidate to implement. For pending external actions, inspect the request in the dashboard or with `approvals`. These are separate operator decisions. Substitute the IDs shown by the run before recording a decision and resuming.
+
+```bat
+"%SWARM_PYTHON%" swarm.py select "RUN_DIR" IDEA_ID --decision implement --note "Test recovery in Docker"
+"%SWARM_PYTHON%" swarm.py approvals "RUN_DIR"
+"%SWARM_PYTHON%" swarm.py decide "RUN_DIR" APPROVAL_ID --decision approve --note "Reviewed the request and payload"
+```
+
+A local test provides evidence for the operation exercised. A recovery test should restore the claimed material from the resulting specimen and check its hash against the expected bytes. A verified deposit also requires a successful read-back of the stored material and a matching checksum. That evidence establishes what was retrievable at the time of the check. For example, the manually completed JPEG prototype recovered a real EPUB from a JPEG alone in an offline test. Its evidence covers local recovery. Publication and long-term availability would require separate evidence.
+
+#### 15.8.6 HTTP access and deposit evidence
+
+The experimental profile has a host-side HTTP client. It supports reading public documentation and, when allowed by the run, submitting files to HTTPS services. Public `GET`, `HEAD`, and `OPTIONS` are available in the sandbox-only experimental profile. Authenticated requests and writes require external scope. A supervised run also requires the relevant candidate to be selected for implementation. There is no browser fallback.
+
+The HTTP client supports text or JSON request bodies, a raw file, or multipart form data. Upload paths resolve inside the agent's workspace, where prepared exports can be materialized as inputs. Each response records its status, sanitized headers, byte counts, hashes, and the location of any retained body. Redirects require a new request and policy check. The transport verifies TLS and blocks private network destinations. An explicit loopback test origin is available for local integration tests.
+
+The shipped profile grants no HTTP credentials. To authorize one, the operator adds a grant to `http_credentials` with an ID, the name of a dedicated runtime environment variable, the exact allowed host, and the header and scheme. The model sees the grant ID and scope. The host adds the credential value only when sending the request to the permitted host. Approval is bound to the method, URL, headers, body or file hashes, and credential grant. Changing those inputs requires a fresh approval. Protected production and source-repository destinations still reject writes.
+
+The shipped full profile allows up to 100 requests, with 16 MiB per request body, 16 MiB per response body, 128 MiB of combined body traffic, and a 30-second HTTP timeout. External actions also use their own count and byte limits. An operation is recorded as `RESERVED` before transfer. An interrupted request can leave an `UNKNOWN` outcome that survives resume. Check the destination before repeating a write. A successful write response is evidence of the response. `verify_http_copy` uses a separate successful retrieval to compare the downloaded bytes with the uploaded artifact.
+
+The dedicated `local_directory` and `http_put` deposit connectors require an explicitly configured destination. The directory connector writes a new file and reads it back. The HTTPS connector requires conditional creation at its configured endpoint and checks the returned bytes with SHA-256. Generic HTTP and the dedicated connectors both keep evidence in the audit, manifest, and report. Account setup and payments are manual, and the model budget tracks inference and search costs.
+
+#### 15.8.7 Validation and development history
+
+Run the local test suites from `scripts/metaweb-swarm/` with the same environment used by the tool:
+
+```bat
+"%SWARM_PYTHON%" -m unittest tests.test_brainstorming tests.test_gui tests.test_gui_review tests.test_operator_comments
+```
+
+The offline research fixture exercises candidate records, review, synthesis, and report generation. The GUI suites exercise local access controls, saved profiles, the run lock, and operator comments. The development validation also used an offline browser session to create and resume a demo, apply a comment, and view the report. Docker checks and the HTTP integration tests exercise different boundaries. A local container test checks isolation and artifact handling. A controlled HTTP round trip checks the recorded request, download, and hash comparison. A live service test establishes the behavior observed for that test at that time.
+
+Early versions concentrated on Docker prototyping, recovery tests, and external deposit experiments. In November 2026 the project made research and brainstorming the default, kept implementation in the optional experimental profile, and added a local dashboard over the existing CLI. Subsequent changes placed the Python environment and run data in a shared runtime directory, preserved preliminary hypotheses for critique and cross-run memory, and added focused development of shortlisted proposals. Older runs retain their original profile and audit history.
+
+Source documentation is maintained in the [Swarm README](https://github.com/VojtaMaur/vojtamaur-web/blob/main/scripts/metaweb-swarm/README.md), [brainstorming workflow](https://github.com/VojtaMaur/vojtamaur-web/blob/main/scripts/metaweb-swarm/docs/BRAINSTORMING.md), [GUI guide](https://github.com/VojtaMaur/vojtamaur-web/blob/main/scripts/metaweb-swarm/docs/GUI.md), and [execution modes](https://github.com/VojtaMaur/vojtamaur-web/blob/main/scripts/metaweb-swarm/docs/EXECUTION_MODES.md).
+
 ---
 
 ## 16. Summary
@@ -4214,7 +4394,7 @@ From a maintenance perspective, the following points are especially important:
 - specialized content is encapsulated in several reusable components
 - the project supports a standard web build, a portable file-based build, a derived Arweave / Permaweb deployment build, and a generated bilingual Gemini capsule in `dist-gemini/`
 - the Gemini capsule uses English at the root, Czech under `/cs/`, native Gemtext navigation, and HTTPS links for binary media and interactive content
-- `build:web:translate:signed` generates the Gemini capsule but signs only the normal `dist/` checksum manifest; `dist-gemini/` is currently a separate unsigned artifact
+- `build:web:translate:signed` and `build:gemini:signed` sign separate manifests for `dist/` and `dist-gemini/` in one invocation and atomically record both builds in the shared history
 - Codeberg Pages is deployed separately from the generated `pages` branch through the `deploy-codeberg-pages.bat` worktree workflow
 - web and USB builds generate a recursively reconstructable source package at `/source/vojtamaur-web-source.zip`
 - when working with new content, it is useful to expect the occasional need to restart the development server

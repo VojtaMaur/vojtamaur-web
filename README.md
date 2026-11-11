@@ -328,7 +328,7 @@ The graph reads `a[href]` and `area[href]` from built HTML, including navigation
 
 Important files in the finished standard build include `ALL_POSTS.txt`, `ARCHIVE.txt`, the reconstructable `source/vojtamaur-web-source.zip`, the public OpenPGP material under `keys/`, and build-integrity files such as `SHA256SUMS.txt`, `BUILD_SHA256.txt`, `integrity.json`, and `SIGNING_STATUS.txt`.
 
-Signed builds additionally create `SHA256SUMS.txt.asc`. The Gemini capsule is generated separately in `dist-gemini/` and is not covered by the `dist/` checksum manifest or its detached signature. The Arweave / Permaweb workflow uses a separate `dist-arweave/` output with its own integrity metadata.
+Signed builds additionally create `SHA256SUMS.txt.asc`. The Gemini/Gopher output in `dist-gemini/` has its own checksum manifest and build hash. `npm run build:web:translate:signed` (also `build:translate:signed`) and `npm run build:gemini:signed` sign both web and capsule manifests in one session; `npm run sign:build:all` signs already generated matching outputs. Each output has a separate detached signature. Both signatures must verify before their `web` and `gemini` records are committed together to the shared `BUILD_HASH_HISTORY.txt`. New history rows include the full verified primary-key fingerprint; metadata also records the actual signing subkey. The 54 historical rows were backfilled on 2026-11-06 based on the owner's confirmation of unchanged key usage, without rewriting old signed artifacts (see documentation section 9.6.1). The Arweave / Permaweb workflow uses a separate `dist-arweave/` output with its own integrity metadata.
 
 ## Portable build
 

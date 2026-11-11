@@ -2979,6 +2979,31 @@ b0a1d7f40da1748d638620db71c3a7ae0c43b2fa77ca5da56cebcaa4f05d36a5
 An earlier complete edition was also tested by withholding its first 40 source-symbol images, shuffling the remaining 264 and adding a duplicate; it still reconstructed exactly using repair symbols. Withholding images from a test input did not delete them from either export. Additional localized examples remained readable after 50% resizing and JPEG quality-85 recompression. These are recorded tests on specific files, not a guarantee for every image transformation or hosting service.
 
 
+### 9.6.17 A5 booklet export
+
+`scripts/export-site-booklet.py` uses the existing `dist/ALL_POSTS.json` to make a text-only booklet for folding and stapling or sewing through the spine. Run it from the repository root:
+
+```bash
+python -m pip install -r requirements-mom-like-export.txt
+python scripts/export-site-booklet.py
+python scripts/export-site-booklet.py --lang en --section vystavy
+python scripts/export-site-booklet.py --lang cs --section volna-tvorba,cestovani --font-size 6
+python scripts/export-site-booklet.py --help
+```
+
+The default selection is Czech (`cs`) articles from `volna-tvorba`. Use `--lang en` for an English edition. An explicit `--section` replaces the default. Repeat the option or give a comma-separated list. `--section all` includes every section. Use `--input` to select a different JSON snapshot. Relative input paths are resolved from the repository root.
+
+The default layout uses two columns, 7 mm margins, 5.5 pt embedded Arial or an installed fallback font, and bold article headings. Media appear as compact text references, and the full DullGPT output log is included. Characters unsupported by the PDF fonts are written as explicit `[U+XXXX]` code points. Use `--font-size` to adjust the type size before printing. The minimalist cover counts as page 1 without a visible numeral. Numbering continues across the whole edition.
+
+The timestamped `exports/` edition folder contains an A5 reading PDF in page order and numbered A4 print PDFs, one per separately folded signature. The folder and filenames share the project's `YYYY-MM-DD_HH-MM-SS-ffffff` timestamp. The default limit is 10 A4 sheets per signature (40 A5 pages). Use `--max-sheets N` to suit the paper and binding, or `--max-sheets 0` to impose the entire edition as one stack. The final signature may have blank A5 panels after the last page.
+
+#### Printing and folding
+
+1. Open one A4 print PDF at a time. Select A4 landscape, **Actual size / 100%**, one PDF page per side, and duplex **Flip on short edge**. The A4 PDF already contains the imposed A5 spreads. Turn booklet mode, additional pages-per-sheet layout and blank-page suppression off.
+2. Keep the sheets from that file together in the delivered order. Identify the outside of the stack by the first spread. Fold the whole stack down the middle and staple or sew through the crease. For an edition with multiple A4 print PDFs, fold each stack separately and keep the signatures in filename order.
+3. Before printing the edition, run `python scripts/export-site-booklet.py --print-test` for a standalone two-sheet A4 proof. Print it with the same settings and fold both sheets together. Check that pages 1–8 read in order and are upright, and that the sample text is legible at the default size on the chosen paper.
+
+
 ## 10. Exact special build logic
 
 The `build:usb` script is defined as a USB-targeted Astro build followed by postprocessing. In the current translation-aware workflow, the effective order is:
@@ -3560,6 +3585,12 @@ npm run build:usb:translate
 ```
 
 Then run the strict build again.
+
+**Cloudflare Pages and the travel index.** A Cloudflare Pages build failed with `Missing EN translation cache for /en/cestovani/ (html-region, ...)`. The travel index sorts by `date` alone. The likely cause was that posts with duplicate dates rendered in a different order locally and on Cloudflare, changing the HTML region's cache hash.
+
+Check whether the hash from the build log has a matching `translations/en/<hash>.json` in the deployed commit. Run `npm run build:web:strict` locally at the same revision. If the error occurs only on Cloudflare, check the travel posts' frontmatter for duplicate `date` values and compare the rendered tile order if both build outputs are available.
+
+The deploy succeeded after correcting the duplicate dates, running `npm run build:web:translate`, committing the updated EN translation cache, and redeploying. Use accurate, distinct dates where possible. If posts legitimately share a date, use the slug as a deterministic tie-break.
 
 #### `Remote DeepL glossary created from local TSV`
 

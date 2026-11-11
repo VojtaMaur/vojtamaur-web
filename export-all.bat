@@ -134,7 +134,7 @@ if not defined VOJTAMAUR_EXPORT_TIMESTAMP (
 echo [EDITION] !VOJTAMAUR_EXPORT_TIMESTAMP!
 
 echo.
-echo [1/16] Compact English Free Creation text export
+echo [1/18] Compact English Free Creation text export
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -142,7 +142,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/16] Compact Czech Free Creation text export
+echo [2/18] Compact Czech Free Creation text export
 python scripts/filter-all-posts.py --language cs --section volna-tvorba --format compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -150,7 +150,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/16] Czech Markdown export (all sections)
+echo [3/18] Czech Markdown export (all sections)
 python scripts/export-site-markdown.py --language cs --section all
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -158,7 +158,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/16] English Markdown export (all sections)
+echo [4/18] English Markdown export (all sections)
 python scripts/export-site-markdown.py --language en --section all
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -166,7 +166,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [5/16] Bilingual Markdown export (all sections)
+echo [5/18] Bilingual Markdown export (all sections)
 python scripts/export-site-markdown.py --language both --section all
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -174,7 +174,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [6/16] Bilingual Morse text export
+echo [6/18] Bilingual Morse text export
 python scripts/export-site-morse.py --lang both
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -182,7 +182,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [7/16] Standard archival PDF export
+echo [7/18] Standard archival PDF export
 python scripts/export-site-pdf.py !PDF_QUALITY_ARGS!
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -190,7 +190,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [8/16] Ultra-compact Czech PDF export
+echo [8/18] Ultra-compact Czech PDF export
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -198,7 +198,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [9/16] MoM-like Czech Free Creation PDF export
+echo [9/18] MoM-like Czech Free Creation PDF export
 python scripts/export-site-mom-like.py --lang cs
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -206,7 +206,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [10/16] MoM-like English Free Creation PDF export
+echo [10/18] MoM-like English Free Creation PDF export
 python scripts/export-site-mom-like.py --lang en
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -214,7 +214,23 @@ if errorlevel 1 (
 )
 
 echo.
-echo [11/16] Metaweb archival PDF export
+echo [11/18] Czech Free Creation A5 booklet export
+python scripts/export-site-booklet.py --lang cs --section volna-tvorba
+if errorlevel 1 (
+    set "EXPORT_EXIT=!ERRORLEVEL!"
+    goto :failed
+)
+
+echo.
+echo [12/18] English Free Creation A5 booklet export
+python scripts/export-site-booklet.py --lang en --section volna-tvorba
+if errorlevel 1 (
+    set "EXPORT_EXIT=!ERRORLEVEL!"
+    goto :failed
+)
+
+echo.
+echo [13/18] Metaweb archival PDF export
 python scripts/export-metaweb-pdf.py
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -222,7 +238,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [12/16] Compact bilingual Metaweb EPUB export
+echo [14/18] Compact bilingual Metaweb EPUB export
 python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -230,7 +246,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [13/16] Compact Czech and English site EPUB exports
+echo [15/18] Compact Czech and English site EPUB exports
 python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -238,7 +254,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [14/16] SSTV PNG export
+echo [16/18] SSTV PNG export
 python scripts/export-site-sstv.py
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -249,7 +265,7 @@ rem Gallery exports consume only the PDFs/manifests from this exact shared editi
 rem Exit 3 means an optional rasterizer/dependency is unavailable. Run both scopes
 rem before propagating a real conversion failure; never hide a corrupt source PDF.
 echo.
-echo [15/16] Complete bilingual site gallery images
+echo [17/18] Complete bilingual site gallery images
 python scripts/export-site-images.py --scope all
 set "IMAGE_RESULT=!ERRORLEVEL!"
 if "!IMAGE_RESULT!"=="3" (
@@ -260,7 +276,7 @@ if "!IMAGE_RESULT!"=="3" (
 )
 
 echo.
-echo [16/16] Complete Metaweb gallery images
+echo [18/18] Complete Metaweb gallery images
 python scripts/export-site-images.py --scope metaweb
 set "IMAGE_RESULT=!ERRORLEVEL!"
 if "!IMAGE_RESULT!"=="3" (

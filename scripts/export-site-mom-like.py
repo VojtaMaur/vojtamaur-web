@@ -400,7 +400,7 @@ def styled_runs(text, fonts, bold_positions, position):
         yield *key, "".join(run)
 
 
-def render_pdf(path, source, fonts, args, bold_positions=None):
+def render_pdf(path, source, fonts, args, bold_positions=None, *, heading_stroke=0.02):
     from reportlab.pdfgen.canvas import Canvas
     from reportlab.pdfbase.pdfmetrics import getAscentDescent
     width, height = args.page_width_mm * MM, args.page_height_mm * MM
@@ -420,7 +420,8 @@ def render_pdf(path, source, fonts, args, bold_positions=None):
     canvas.setSubject("Text-only compact archive; source line breaks rendered as wide gaps.")
     # Fill-and-stroke produces heavier headings using the same embedded glyphs
     # and advances. This preserves the calibrated density and page count.
-    canvas.setLineWidth(args.font_size * 0.02)
+    heading_line_width = args.font_size * heading_stroke
+    canvas.setLineWidth(heading_line_width)
     bold_positions = bold_positions or set()
     position = 0
     page_number, column, row, count = 1, 0, 0, 0
@@ -444,7 +445,7 @@ def render_pdf(path, source, fonts, args, bold_positions=None):
         if column == args.columns:
             footer()
             canvas.showPage()
-            canvas.setLineWidth(args.font_size * 0.02)
+            canvas.setLineWidth(heading_line_width)
             page_number, column = page_number + 1, 0
         x = margin + column * (column_width + gap)
         y = first_baseline - row * leading

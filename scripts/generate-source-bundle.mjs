@@ -6,6 +6,7 @@ import { HISTORY_FILE, validateHistory } from "./build-hash-history.mjs";
 
 const ROOT = process.cwd();
 const TARGET_DIR = path.resolve(process.argv[2] ?? "dist");
+const JPEG_CARRIER = process.argv[3] !== "--no-jpeg-carrier";
 const OUTPUT_RELATIVE = "source/vojtamaur-web-source.zip";
 const OUTPUT_PATH = path.join(TARGET_DIR, ...OUTPUT_RELATIVE.split("/"));
 const CARRIER_SOURCE_RELATIVE = "public/images/kurt-godel-rat.jpg";
@@ -598,7 +599,11 @@ async function main() {
   const jpegCarrierBase = await readJpegCarrierBase();
 
   await writeZip(OUTPUT_PATH, entries);
-  await writeZip(CARRIER_OUTPUT_PATH, entries, { prefix: jpegCarrierBase });
+  if (JPEG_CARRIER) {
+    await writeZip(CARRIER_OUTPUT_PATH, entries, { prefix: jpegCarrierBase });
+  } else {
+    await fs.writeFile(CARRIER_OUTPUT_PATH, jpegCarrierBase);
+  }
 
   await fs.writeFile(path.join(TARGET_DIR, HISTORY_FILE), history.data);
 
@@ -613,8 +618,8 @@ async function main() {
   console.log(`[source-bundle] ${assetManifest.totalBytes} external asset bytes`);
   console.log(`[source-bundle] ${zipStat.size} ZIP bytes`);
   console.log(
-    `[source-bundle] ${CARRIER_OUTPUT_RELATIVE}: ` +
-    `${jpegCarrierBase.length} JPEG bytes + ${carrierStat.size - jpegCarrierBase.length} ZIP bytes`
+    `[source-bundle] ${CARRIER_OUTPUT_RELATIVE}: ${jpegCarrierBase.length} JPEG bytes` +
+    (JPEG_CARRIER ? ` + ${carrierStat.size - jpegCarrierBase.length} ZIP bytes` : "")
   );
 }
 

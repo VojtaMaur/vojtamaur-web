@@ -4,7 +4,8 @@ import { exportSiteJson } from "./export-site-json.mjs";
 
 const ROOT = process.cwd();
 const CONTENT_DIR = path.join(ROOT, "src", "content", "posts");
-const DIST_DIR = path.join(ROOT, "dist");
+const DIST_DIR = path.resolve(ROOT, process.env.DIST_DIR || "dist");
+const INDEX_ROOT = process.env.COMPACT_BUILD === "1" ? DIST_DIR : ROOT;
 const OUTPUT_FILE = path.join(DIST_DIR, "ALL_POSTS.txt");
 const RECOVERY_PAGE = path.join(DIST_DIR, "404.html");
 
@@ -477,7 +478,7 @@ async function buildEntry(post, lang) {
     `SECTION: ${post.section}`,
     `DATE: ${post.date}`,
     `SOURCE: ${post.sourcePath}`,
-    `BUILT_HTML: ${normalizeSlashes(path.relative(ROOT, result.filePath))}`,
+    `BUILT_HTML: ${normalizeSlashes(path.relative(INDEX_ROOT, result.filePath))}`,
     "============================================================",
     "",
     text,

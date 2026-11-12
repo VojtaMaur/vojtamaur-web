@@ -54,6 +54,7 @@
     "export:sstv": "python scripts/export-site-sstv.py",
     "export:images": "python scripts/export-site-images.py",
     "export:images:metaweb": "python scripts/export-site-images.py --scope metaweb",
+    "export:compact": "python -B scripts/export-compact-build.py",
     "export:markdown": "python scripts/export-site-markdown.py",
     "export:morse": "python scripts/export-site-morse.py",
     "export:mom-like": "python scripts/export-site-mom-like.py",

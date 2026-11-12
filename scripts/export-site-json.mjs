@@ -216,7 +216,7 @@ async function exportDocument(root, dist, includeBuildHash) {
     inLanguage: [...new Set(articles.map((article) => article.inLanguage))],
     "vm:exportVersion": VERSION,
     "vm:generatedAt": new Date().toISOString(),
-    "vm:sourceIndexPath": slash(path.relative(root, path.join(dist, "ALL_POSTS.txt"))),
+    "vm:sourceIndexPath": slash(path.relative(process.env.COMPACT_BUILD === "1" ? dist : root, path.join(dist, "ALL_POSTS.txt"))),
     "vm:sourceIndexSha256": sha256(indexBytes),
     "vm:sourceGeneratedAt": /^Generated: (.+)$/m.exec(indexText)?.[1].trim() || "",
     "vm:articleCount": articles.length,

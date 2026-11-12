@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const distDir = path.resolve("dist");
+const distDir = path.resolve(process.env.DIST_DIR || "dist");
 
 function walk(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -49,7 +49,7 @@ function rewriteHtml(html, file) {
 
   // Homepage.
   out = out
-    .replace(/href="\/"/g, `href="${prefix}index.html"`)
+    .replace(/href="\/([?#][^"]*)?"/g, (_match, suffix = "") => `href="${prefix}index.html${suffix}"`)
     .replace(/href="\.\/index\.html"/g, `href="${prefix}index.html"`);
 
   // Directory-style internal links -> flat html links.
@@ -57,8 +57,8 @@ function rewriteHtml(html, file) {
   //   /foo/      -> ./foo.html      from dist/foo.html
   //   /foo/      -> ../foo.html     from dist/en/bar.html
   //   /en/foo/   -> ../en/foo.html  from dist/en/bar.html
-  out = out.replace(/href="\/([^"?#]+?)\/"/g, (_match, slug) => {
-    return `href="${prefix}${slug}.html"`;
+  out = out.replace(/href="\/((?!\/)[^"?#]+?)\/([?#][^"]*)?"/g, (_match, slug, suffix = "") => {
+    return `href="${prefix}${slug}.html${suffix}"`;
   });
 
   // Any remaining root-relative href/src points to a file or asset that was

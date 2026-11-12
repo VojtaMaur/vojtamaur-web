@@ -49,6 +49,7 @@ for %%R in (
     "requirements-epub-export.txt"
     "requirements-sstv-export.txt"
     "requirements-mom-like-export.txt"
+    "requirements-compact-export.txt"
 ) do (
     if not exist "%%~R" (
         echo [ERROR] Missing requirements file: %%~R
@@ -62,7 +63,8 @@ python -m pip install --disable-pip-version-check ^
     -r requirements-pdf-export.txt ^
     -r requirements-epub-export.txt ^
     -r requirements-sstv-export.txt ^
-    -r requirements-mom-like-export.txt
+    -r requirements-mom-like-export.txt ^
+    -r requirements-compact-export.txt
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
     echo.
@@ -108,6 +110,7 @@ if defined GS_EXE (
     echo.
     echo [WARN] Optional Ghostscript not found. Standard PDF will use uncompressed archive quality.
     echo [WARN] Image exports will try Poppler, or report unavailable and let other exports finish.
+    echo [WARN] The compact ZIP step requires Ghostscript.
     set "PDF_QUALITY_ARGS=--pdf-quality archive"
     set "EXPORT_WARNINGS=1"
 )
@@ -134,7 +137,7 @@ if not defined VOJTAMAUR_EXPORT_TIMESTAMP (
 echo [EDITION] !VOJTAMAUR_EXPORT_TIMESTAMP!
 
 echo.
-echo [1/18] Compact English Free Creation text export
+echo [1/19] Compact English Free Creation text export
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -142,7 +145,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/18] Compact Czech Free Creation text export
+echo [2/19] Compact Czech Free Creation text export
 python scripts/filter-all-posts.py --language cs --section volna-tvorba --format compact
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -150,7 +153,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/18] Czech Markdown export (all sections)
+echo [3/19] Czech Markdown export (all sections)
 python scripts/export-site-markdown.py --language cs --section all
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -158,7 +161,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/18] English Markdown export (all sections)
+echo [4/19] English Markdown export (all sections)
 python scripts/export-site-markdown.py --language en --section all
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -166,7 +169,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [5/18] Bilingual Markdown export (all sections)
+echo [5/19] Bilingual Markdown export (all sections)
 python scripts/export-site-markdown.py --language both --section all
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -174,7 +177,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [6/18] Bilingual Morse text export
+echo [6/19] Bilingual Morse text export
 python scripts/export-site-morse.py --lang both
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -182,7 +185,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [7/18] Standard archival PDF export
+echo [7/19] Standard archival PDF export
 python scripts/export-site-pdf.py !PDF_QUALITY_ARGS!
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -190,7 +193,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [8/18] Ultra-compact Czech PDF export
+echo [8/19] Ultra-compact Czech PDF export
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -198,7 +201,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [9/18] MoM-like Czech Free Creation PDF export
+echo [9/19] MoM-like Czech Free Creation PDF export
 python scripts/export-site-mom-like.py --lang cs
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -206,7 +209,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [10/18] MoM-like English Free Creation PDF export
+echo [10/19] MoM-like English Free Creation PDF export
 python scripts/export-site-mom-like.py --lang en
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -214,7 +217,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [11/18] Czech Free Creation A5 booklet export
+echo [11/19] Czech Free Creation A5 booklet export
 python scripts/export-site-booklet.py --lang cs --section volna-tvorba
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -222,7 +225,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [12/18] English Free Creation A5 booklet export
+echo [12/19] English Free Creation A5 booklet export
 python scripts/export-site-booklet.py --lang en --section volna-tvorba
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -230,7 +233,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [13/18] Metaweb archival PDF export
+echo [13/19] Metaweb archival PDF export
 python scripts/export-metaweb-pdf.py
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -238,7 +241,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [14/18] Compact bilingual Metaweb EPUB export
+echo [14/19] Compact bilingual Metaweb EPUB export
 python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -246,7 +249,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [15/18] Compact Czech and English site EPUB exports
+echo [15/19] Compact Czech and English site EPUB exports
 python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -254,7 +257,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [16/18] SSTV PNG export
+echo [16/19] SSTV PNG export
 python scripts/export-site-sstv.py
 if errorlevel 1 (
     set "EXPORT_EXIT=!ERRORLEVEL!"
@@ -265,7 +268,7 @@ rem Gallery exports consume only the PDFs/manifests from this exact shared editi
 rem Exit 3 means an optional rasterizer/dependency is unavailable. Run both scopes
 rem before propagating a real conversion failure; never hide a corrupt source PDF.
 echo.
-echo [17/18] Complete bilingual site gallery images
+echo [17/19] Complete bilingual site gallery images
 python scripts/export-site-images.py --scope all
 set "IMAGE_RESULT=!ERRORLEVEL!"
 if "!IMAGE_RESULT!"=="3" (
@@ -276,7 +279,7 @@ if "!IMAGE_RESULT!"=="3" (
 )
 
 echo.
-echo [18/18] Complete Metaweb gallery images
+echo [18/19] Complete Metaweb gallery images
 python scripts/export-site-images.py --scope metaweb
 set "IMAGE_RESULT=!ERRORLEVEL!"
 if "!IMAGE_RESULT!"=="3" (
@@ -287,6 +290,14 @@ if "!IMAGE_RESULT!"=="3" (
 )
 if not "!IMAGE_EXPORT_EXIT!"=="0" (
     set "EXPORT_EXIT=!IMAGE_EXPORT_EXIT!"
+    goto :failed
+)
+
+echo.
+echo [19/19] Compact USB and web ZIP exports (40 MB and 100 MB)
+python -B scripts/export-compact-build.py --target both --limit all
+if errorlevel 1 (
+    set "EXPORT_EXIT=!ERRORLEVEL!"
     goto :failed
 )
 

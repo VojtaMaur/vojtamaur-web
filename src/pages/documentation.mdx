@@ -241,6 +241,7 @@ Meaning of the main scripts:
 - `npm run export:sstv` – manually renders indexed articles from the finished `dist/` build to numbered PNG frames at native SSTV mode dimensions; defaults to Czech PD120 output under `exports/sstv/pd120/`, does not run a build or generate audio, and is not part of any build pipeline (section 9.6.8)
 - `npm run export:images` – converts the latest complete bilingual site PDF into a numbered gallery edition in separate Czech and English folders; also runs in `export-all.bat` (section 9.6.15).
 - `npm run export:images:metaweb` – converts the complete bilingual Metaweb PDF into one numbered page sequence with all appendices (section 9.6.15).
+- `npm run export:compact` - builds and verifies four size-limited ZIPs, with USB and web editions for the 40 MB and 100 MB profiles. Also runs as the final step of `export-all.bat` (section 9.6.18).
 - `npm run export:markdown` – manually creates one readable Markdown archive from the full rendered HTML in `dist/ALL_POSTS.json`; supports language, section and date filters, and runs only when explicitly requested (section 9.6.13).
 - `npm run export:morse` – manually converts the existing `dist/ALL_POSTS.json` through the compact text serializer into an ASCII Morse edition under `exports/`; supports `--lang cs|en|both`, defaults to one bilingual file, and is also included in `export-all.bat` (section 9.6.11)
 - `npm run export:meme` – manually creates random meme PNGs carrying reconstructable RaptorQ QR fragments of the complete existing `ALL_POSTS.txt`; English captions/footer and a calculated full-edition count are the defaults, with optional language, count, continuous generation and resume (section 9.6.16).
@@ -1683,11 +1684,11 @@ require the local tools described above.
 
 The manual TXT, Markdown, Morse, PDF, Ultra PDF, MoM-like PDF and EPUB exporters append the local export start time to automatically generated filenames, before the extension: `-YYYY-MM-DD_HH-MM-SS-ffffff`. For example, `vojtamaur-web-export-ultra-2026-10-05_14-30-00-123456.pdf` and `vojtamaur-web-export-ultra-2026-10-05_14-30-00-123456.manifest.json` belong to the same run. Microseconds distinguish repeated runs, including multiple exports on the same day. Separate article exports also receive the timestamp. An explicit `--output` is used exactly as supplied, including its adjacent TXT and manifest names. `--no-timestamp` restores legacy automatic names; `--timestamp YYYY-MM-DD_HH-MM-SS-ffffff` selects a specific edition timestamp. PDF/A and uncompressed derivative labels precede the timestamp. The generated build files in `dist/` retain their stable names.
 
-`export-all.bat` generates one shared timestamp in `VOJTAMAUR_EXPORT_TIMESTAMP` for all sixteen steps, including the SSTV and gallery image output directories. A new batch run creates a new timestamp and preserves older editions. Metaweb PDF includes the Ultra PDF with that same timestamp, creating it at that exact path if needed; a standalone Metaweb PDF run creates its own matching Ultra edition. MoM-like automatic English and bilingual names add `-en` and `-cs-en`, respectively, before the timestamp. Metaweb EPUB uses an `.epub.manifest.json` sidecar so it can coexist with the PDF's `.manifest.json` without replacing it.
+`export-all.bat` generates one shared timestamp in `VOJTAMAUR_EXPORT_TIMESTAMP` for all 19 steps, including the SSTV output, gallery image directories and four compact ZIPs. A new batch run creates a new timestamp and preserves older editions. Metaweb PDF includes the Ultra PDF with that same timestamp, creating it at that exact path if needed; a standalone Metaweb PDF run creates its own matching Ultra edition. MoM-like automatic English and bilingual names add `-en` and `-cs-en`, respectively, before the timestamp. Metaweb EPUB uses an `.epub.manifest.json` sidecar so it can coexist with the PDF's `.manifest.json` without replacing it.
 
 The default output listings in the sections below and above show the base names; the timestamp is appended automatically unless an explicit `--output` or `--no-timestamp` is used.
 
-The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, and runs sixteen export steps sequentially. The fourteen existing exporters retain their failure handling. The two gallery image scopes run independently at the end: missing optional tools produce warnings (status 3), while actual conversion errors fail the batch after both scopes have been attempted. If optional Ghostscript is absent, the standard PDF step uses uncompressed archive quality instead of stopping all exports. The ultra export runs before the metaweb PDF export, so the combined PDF receives the freshly generated ultra PDF rather than a stale copy. The workflow requires both `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json` from the existing build and begins with separate English and Czech compact text exports, followed by Czech, English and combined Czech + English Markdown exports covering every section. It uses the built JSON without regenerating it, preserving the bytes covered by any existing build checksum manifest or signature. The PDF steps include separate Czech and English MoM-like editions of `volna-tvorba` at the default 4 pt font size. After the PDF steps it creates the practical compact Metaweb EPUB and separate compact Czech and English site EPUBs, preserving animated GIFs. The SSTV PNG export is followed by the two gallery image exports (section 9.6.15):
+The repository root contains `export-all.bat`. It switches the Windows console and Python standard streams to UTF-8, changes to the repository directory, and runs 19 export steps sequentially. The first 18 steps use the current standard web build as input, including `dist/ALL_POSTS.txt` and `dist/ALL_POSTS.json`. The Ultra PDF runs before the Metaweb PDF so the latter can include the Ultra PDF from the same edition. The site and Metaweb gallery scopes run after SSTV. They report missing optional tools as warnings (exit status 3), and a conversion error fails the batch after both scopes have run. If Ghostscript is unavailable, the standard PDF uses uncompressed archive quality. The final compact ZIP step requires Ghostscript and builds its own USB and web editions from source in temporary directories. A failed compact export produces a nonzero batch exit code.
 
 ```bat
 python scripts/filter-all-posts.py --language en --section volna-tvorba --format compact
@@ -1700,12 +1701,15 @@ python scripts/export-site-pdf.py --pdf-quality ebook --image-dpi 150 --jpeg-qua
 python scripts/export-site-pdf-ultra.py --lang cs --image-dpi 400
 python scripts/export-site-mom-like.py --lang cs
 python scripts/export-site-mom-like.py --lang en
+python scripts/export-site-booklet.py --lang cs --section volna-tvorba
+python scripts/export-site-booklet.py --lang en --section volna-tvorba
 python scripts/export-metaweb-pdf.py
 python scripts/export-metaweb-epub.py --image-quality compact --gif-mode preserve
 python scripts/export-site-epub.py --lang both --image-quality compact --gif-mode preserve
 python scripts/export-site-sstv.py
 python scripts/export-site-images.py --scope all
 python scripts/export-site-images.py --scope metaweb
+python -B scripts/export-compact-build.py --target both --limit all
 ```
 
 Run the complete workflow with:
@@ -1714,9 +1718,9 @@ Run the complete workflow with:
 export-all.bat
 ```
 
-The batch file also reuses the current `dist/` and does not create a web build. If the last build was a USB variant, restore a standard web build before running `export-all.bat`.
+Run `npm run build:web:strict` first when `dist/` is missing or contains a USB build. The compact ZIP step uses its own staging directories under `exports/`.
 
-The SSTV PNG export precedes the final gallery image steps in `export-all.bat` and can also be run separately with `npm run export:sstv` (section 9.6.8). The batch does not generate SSTV audio. The meme archive is a separate manual workflow and is not one of the batch steps; see section 9.6.16.
+The SSTV PNG export precedes the gallery image steps in `export-all.bat` and can also be run separately with `npm run export:sstv` (section 9.6.8). The batch does not generate SSTV audio. The meme archive is a separate manual workflow and is not one of the batch steps; see section 9.6.16.
 
 ### 9.6.6 Manual EPUB exports
 
@@ -2007,7 +2011,7 @@ scripts/export-site-sstv.py
 requirements-sstv-export.txt
 ```
 
-It creates numbered RGB PNG pages at the native resolution of the selected standard SSTV mode. Each PNG represents one complete frame. The exporter is started explicitly with `npm run export:sstv` or as step 14 of `export-all.bat`; it is not called by any normal web, USB, Arweave, or Gemini build.
+It creates numbered RGB PNG pages at the native resolution of the selected standard SSTV mode. Each PNG represents one complete frame. The exporter is started explicitly with `npm run export:sstv` or as step 16 of `export-all.bat`; it is not called by any normal web, USB, Arweave, or Gemini build.
 
 #### Setup and build-before-export workflow
 
@@ -2993,7 +2997,7 @@ python scripts/export-site-booklet.py --help
 
 The default selection is Czech (`cs`) articles from `volna-tvorba`. Use `--lang en` for an English edition. An explicit `--section` replaces the default. Repeat the option or give a comma-separated list. `--section all` includes every section. Use `--input` to select a different JSON snapshot. Relative input paths are resolved from the repository root.
 
-The default layout uses two columns, 7 mm margins, 5.5 pt embedded Arial or an installed fallback font, and bold article headings. Media appear as compact text references, and the full DullGPT output log is included. Characters unsupported by the PDF fonts are written as explicit `[U+XXXX]` code points. Use `--font-size` to adjust the type size before printing. The minimalist cover counts as page 1 without a visible numeral. Numbering continues across the whole edition.
+The default layout uses two columns, 7 mm margins, 5.5 pt embedded Arial or an installed fallback font, and bold article headings. Media appear as compact text references. The DullGPT example output log is shortened to the first 120 lines, capped at 12000 characters, as in the MoM-like export. A visible `[TRUNCATED: ...]` note reports the omitted content. The executable program and other code blocks remain complete. Use `--full-dullgpt-log` to keep the complete example log. Characters unsupported by the PDF fonts are written as explicit `[U+XXXX]` code points. Use `--font-size` to adjust the type size before printing. The minimalist cover counts as page 1 without a visible numeral. Numbering continues across the whole edition.
 
 The timestamped `exports/` edition folder contains an A5 reading PDF in page order and numbered A4 print PDFs, one per separately folded signature. The folder and filenames share the project's `YYYY-MM-DD_HH-MM-SS-ffffff` timestamp. The default limit is 10 A4 sheets per signature (40 A5 pages). Use `--max-sheets N` to suit the paper and binding, or `--max-sheets 0` to impose the entire edition as one stack. The final signature may have blank A5 panels after the last page.
 
@@ -3003,6 +3007,47 @@ The timestamped `exports/` edition folder contains an A5 reading PDF in page ord
 2. Keep the sheets from that file together in the delivered order. Identify the outside of the stack by the first spread. Fold the whole stack down the middle and staple or sew through the crease. For an edition with multiple A4 print PDFs, fold each stack separately and keep the signatures in filename order.
 3. Before printing the edition, run `python scripts/export-site-booklet.py --print-test` for a standalone two-sheet A4 proof. Print it with the same settings and fold both sheets together. Check that pages 1–8 read in order and are upright, and that the sample text is legible at the default size on the chosen paper.
 
+
+### 9.6.18 Compact USB and web ZIP exports
+
+`scripts/export-compact-build.py` creates portable USB and static web editions within 40 MB and 100 MB ZIP limits. By default it produces all four combinations. The 40 MB profile is suitable for a 50 MB storage quota that also needs to accommodate up to 10 MB of other files. Limits use decimal bytes, so 40 MB means 40,000,000 bytes.
+
+#### Setup and commands
+
+Run from the repository root with the project Node.js dependencies installed. Install Python dependencies from `requirements-compact-export.txt`. Pillow needs AVIF and WebP support. Ghostscript is required for PDF compression and is detected automatically on PATH or in the usual Windows installation directories. Supply `--ghostscript` with the executable path to select it explicitly. The script uses the existing English translation cache and fails if a required translation is missing.
+
+```cmd
+python -m pip install -r requirements-compact-export.txt
+npm run export:compact
+npm run export:compact -- --target both --limit all
+npm run export:compact -- --target usb --limit 40
+npm run export:compact -- --target web --limit 100
+```
+
+`--target` accepts `usb`, `web`, or `both`. `--limit` accepts `40`, `100`, or `all`, with `both` as an alias for `all`. On Windows, double-clicking `export-all.bat` runs the compact exporter as step 19 with both targets and both limits. The batch installs the required Python packages and supplies its shared `VOJTAMAUR_EXPORT_TIMESTAMP`.
+
+#### Media profiles
+
+| Setting | 40 MB | 100 MB |
+| --- | ---: | ---: |
+| Re-encoded still image long edge | 600 px | 1,600 px |
+| Still-image AVIF quality | 30 | 58 |
+| Article thumbnail width | 400 px | 480 px |
+| Animation encoding | AVIF up to 360 px on the long edge when smaller than lossless WebP | Lossless animated WebP at the original resolution when smaller than the GIF |
+| PDF image downsampling and JPEG quality | 110 dpi, 72 | 180 dpi, 85 |
+
+The exporter finds article card thumbnails in the rendered HTML. It applies the thumbnail width only to still images used exclusively in those cards. It compares AVIF and lossless WebP for resized low-color thumbnails. Other stills with few colors can use lossless WebP at native resolution. The exporter keeps original files when their general-purpose replacements are larger. GIFs with finite loops or short frame delays keep their original encoding. Animated AVIF candidates must preserve frame timing.
+
+Ghostscript tries to shrink PDFs of at least 250,000 bytes under `files/`. The exporter accepts a smaller candidate after checking page count and dimensions, external URI links, and the presence of an existing outline and searchable text.
+
+#### Build and verification
+
+1. The script runs Astro once per selected target into a temporary staging directory under `exports/`, applies cached English translations, and generates the reconstructable source bundle. The source bundle references the original public media by checksum. The archive carries `images/kurt-godel-rat.jpg` with its original JPEG data and metadata and the reconstructable bundle as `source/vojtamaur-web-source.zip`.
+2. It creates a staging copy per profile, optimizes images and PDFs, and updates references to renamed assets. USB and web builds reuse optimized media when they have the same set of thumbnail paths.
+3. It generates the content indexes, applies USB link rewrites or enriches the web sitemap, and generates the link graph and SHA-256 integrity files. `COMPACT_BUILD.txt` records the profile, instructions, renamed images and recompressed PDFs. The build includes the generated pages, Rosetta exports and demos.
+4. It creates a ZIP using Deflate level 9. If 7-Zip is available, it also tries 15-pass Deflate and selects the smaller ZIP. It verifies the file list and ZIP integrity, enforces the exact byte limit, then publishes the requested ZIPs under `exports/` and prints their SHA-256 hashes.
+
+Names follow `vojtamaur-web-compact-{target}-{limit}mb-{timestamp}.zip`. A standalone run uses one local timestamp for its ZIPs, and a batch run shares its timestamp with the other exports. Extract a USB ZIP and open `index.html` directly. Extract a web ZIP into the root of a static HTTP server.
 
 ## 10. Exact special build logic
 
@@ -4040,7 +4085,8 @@ The following approaches remain relevant to the project's long-term preservation
 - further development of fully autonomous implementation capabilities within Metaweb Swarm has been temporarily deprioritized. The main reason is the expectation that major AI companies, particularly OpenAI with products such as Dot, may soon offer comparable autonomous agent capabilities. Given their substantially greater development resources, independently building and maintaining a parallel system may not be a sensible investment of time, especially considering the complexity of the framework and the risk of breaking changes to AI APIs and SDKs. Metaweb Swarm will therefore primarily serve as a research and brainstorming system, with optional experimental prototyping and execution capabilities. Promising discoveries will be implemented separately with human oversight and assistance from ChatGPT Work. Further development of autonomous execution may be reconsidered depending on the capabilities and availability of commercial agent systems, particularly OpenAI Dot in the Czech Republic.
 - laser engraving of the `export-site-mom-like.py` output into a glass cube was explored with GLASSTECH s.r.o., a Czech glass engraving company, regarding the long-term preservation of approximately 188,000 characters exported from the Metaweb using the `export-site-mom-like.py` script. The proposed design distributes the text across all six faces of a solid glass cube, with the final dimensions to be determined by achievable engraving resolution and character legibility. The company proposed testing both internal 3D laser engraving and surface microengraving on scrap glass, with internal engraving being preferable for long-term preservation if sufficient legibility can be achieved. However, the feasibility of complete production within the target budget of approximately CZK 10,000 remains unconfirmed. A response to the latest request for indicative pricing is still pending. The author explicitly informed the company that there was no urgency regarding the production schedule, so the delayed response may simply reflect the project's low time priority rather than a lack of interest or technical feasibility. Further development is deferred pending clarification of costs and the outcome of potential engraving tests.
 - inclusion of the Metaweb project in a future Galactic Library Preserve Humanity (GLPH) lunar archive was explored through Stamper Technology, the company behind NanoFiche archival technology. An initial inquiry was submitted through the NanoFiche contact form on September 30, 2026, followed by a direct email to `info@stampertech.com` on October 21, 2026, after no response had been received. The inquiry introduced the Metaweb project, referenced its existing preservation efforts at Memory of Mankind and Arctic World Archive, and expressed interest in submitting artistic and written content in a suitable format, such as PDF or plain text. The main questions concerned whether individual artistic projects could be included in future GLPH collections, the submission procedure, and approximate costs. As of November 2026, no response has been received, leaving the project's eligibility, technical requirements, pricing, and potential lunar mission assignment unconfirmed. Further development is deferred pending a response from Stamper Technology or the availability of another suitable submission channel.
-
+- find a suitable third-party time capsule willing to accept the author's physical materials for long-term preservation. No suitable opportunities have been identified in Plzeň or elsewhere in the Czech Republic. Implementation is deferred until such an opportunity becomes available.
+- find a suitable third-party time capsule willing to accept the author's digital materials for long-term preservation. No suitable opportunities have been identified worldwide. Implementation is deferred until such an opportunity becomes available.
 ---
 
 ## 15. Archival operations

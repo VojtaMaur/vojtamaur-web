@@ -1,8 +1,9 @@
 ---
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 const archive = readFileSync(
-  new URL('../../public/ARCHIVE.txt', import.meta.url),
+  resolve(process.cwd(), 'public', 'ARCHIVE.txt'),
   'utf-8'
 );
 

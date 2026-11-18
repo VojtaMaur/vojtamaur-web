@@ -1722,6 +1722,8 @@ Run `npm run build:web:strict` first when `dist/` is missing or contains a USB b
 
 The SSTV PNG export precedes the gallery image steps in `export-all.bat` and can also be run separately with `npm run export:sstv` (section 9.6.8). The batch does not generate SSTV audio. The meme archive is a separate manual workflow and is not one of the batch steps; see section 9.6.16.
 
+For a checkbox-based interface with editable parameters, saved job sets and optional web preparation, use the [Windows Export Manager GUI (section 9.6.19)](#9619-windows-export-manager-gui). It is a separate entry point and leaves `export-all.bat` available for the fixed workflow above.
+
 ### 9.6.6 Manual EPUB exports
 
 The project includes two manual reflowable EPUB exporters:
@@ -2706,6 +2708,20 @@ simplified typography and native radio dimensions are deliberately not used for
 this visual gallery edition. Shared timestamp naming and Ghostscript discovery
 are reused from the existing export helpers.
 
+**Important: refresh the archival PDF before exporting images.**
+`npm run export:images` does not create a new PDF. It converts the newest existing
+archival PDF, which may be outdated even if the source content has changed.
+To export images from the current content, first rebuild the site and generate
+a fresh archival PDF, then export the images:
+
+```bash
+npm run build:web:strict
+npm run export:pdf
+npm run export:images
+```
+
+Additional commands and options:
+
 ```bash
 npm run export:images
 npm run export:images:metaweb
@@ -3048,6 +3064,122 @@ Ghostscript tries to shrink PDFs of at least 250,000 bytes under `files/`. The e
 4. It creates a ZIP using Deflate level 9. If 7-Zip is available, it also tries 15-pass Deflate and selects the smaller ZIP. It verifies the file list and ZIP integrity, enforces the exact byte limit, then publishes the requested ZIPs under `exports/` and prints their SHA-256 hashes.
 
 Names follow `vojtamaur-web-compact-{target}-{limit}mb-{timestamp}.zip`. A standalone run uses one local timestamp for its ZIPs, and a batch run shares its timestamp with the other exports. Extract a USB ZIP and open `index.html` directly. Extract a web ZIP into the root of a static HTTP server.
+
+### 9.6.19 Windows Export Manager GUI
+
+The project includes a local Windows interface for choosing exports, editing their options and running a saved set of jobs. It uses the existing export scripts and complements the fixed `export-all.bat` workflow; the original batch file remains available and unchanged. Starting the manager or opening an export's settings does not start a build, translation or export.
+
+#### Launch and requirements
+
+Double-click **`export-manager.bat` in the repository root**. The older `scripts/export-manager.bat` entry point forwards to this root launcher. From a terminal in the repository root, the equivalent commands are:
+
+```cmd
+export-manager.bat
+python scripts/export-manager.py
+```
+
+The GUI requires Python 3.10 or newer with Tkinter and uses only the Python standard library. Node.js, the project's npm dependencies and the original exporters' Python packages and external tools are still required for the selected operations. The manager does not install dependencies automatically. For example, PDF rendering may require Playwright Chromium, while gallery conversion requires Ghostscript or Poppler; follow the setup instructions in each export's section. An exporter with a higher Python requirement, such as the meme archive, retains that requirement.
+
+The implementation is split into these files:
+
+| File | Purpose |
+| --- | --- |
+| `export-manager.bat` | Main launcher in the repository root |
+| `scripts/export-manager.bat` | Compatibility entry point |
+| `scripts/export-manager.py` | Tkinter window and user controls |
+| `scripts/export_manager_core.py` | Export discovery, argument inspection, execution plans and process handling |
+| `scripts/export_manager_help.py` | Czech labels, help text, section defaults and documentation links |
+| `scripts/export_manager_tasks.py` | Independent archival copies of the built TXT and JSON files |
+| `scripts/export-manager-README.md` | Short local usage guide |
+
+#### Select exports and adjust parameters
+
+The **Sestavení webu** category groups Online web, Offline web (USB), Arweave, Gemini/Gopher and the compact USB/web ZIPs. The reconstructable source ZIP belongs to **Data**; there is no separate Archiv category.
+
+1. Tick the checkboxes beside the required exports in the left-hand list. Opening every settings page or adding every item to a queue is unnecessary.
+2. Click **Spustit vybrané** to run the checked exports using their remembered settings or the underlying scripts' defaults. Search filters the visible list without clearing checked items that are hidden by the filter. **Vybrat zobrazené** checks the visible exports; **Zrušit výběr** clears the selection.
+3. Click an export's **name** to open its settings independently of its checkbox. **Spustit tento export** runs only this open detail, regardless of the other checked exports.
+4. Set language, quality, format or other supported options. Empty ordinary fields leave the script's default unchanged. Less common options are under **Další parametry**. **Obnovit výchozí nastavení** resets the open export's options.
+5. Use **Dokumentace tohoto exportu** to open the relevant documentation heading directly through its URL fragment. **Nápověda** also explains the export's inputs, outputs and limitations.
+
+For exporters with `--section`, the form offers multiple checkboxes for **Volná tvorba**, **Výstavy** and **Cestování**. It passes the selected section identifiers to the existing script. Defaults remain exporter-specific: MoM-like PDF and the A5 booklet initially select Volná tvorba, while the other current section-aware exporters default to all sections. **Výchozí sekce** restores that default; an explicitly empty selection is rejected rather than silently exporting everything. An export without a section option does not gain a section filter through the GUI.
+
+**Vlastní argumenty** accepts additional command-line arguments for options that the automatic form cannot describe. Use Windows double quotes around paths containing spaces, for example `--output "exports/my reading copy.txt"`. Single quotes do not group arguments in this field. The command preview on **Nastavení** shows the plan for the open export; the execution log shows the actual steps of a multi-export run. **Ctrl+F** focuses search and **F5** refreshes discovery.
+
+#### Saved job sets: Sestava
+
+The **Sestava** tab is optional. Use it when one export needs to run several times with different options or when a particular job order should be saved:
+
+- Configure an export and click **+ Do sestavy**. Each added job captures its arguments and preparation options.
+- Select a row and use **↑** or **↓** to change its position.
+- To remove a job, select its row and click **Odebrat** above the list. Reordering and removal are blocked while a run is active.
+- **Uložit sestavu…** saves the jobs as JSON; **Načíst sestavu…** loads them for review and execution. A missing exporter must be restored or the set corrected before loading it successfully.
+- **Spustit sestavu** runs the stored jobs in order. Running a set again runs the whole set, including previously completed jobs; it is not an automatic resume operation.
+
+The set's controls stay above the scrolling list, including in a reduced window. The main run and stop controls remain outside the scrollable settings area. The single-click checked-export workflow prepares its own job list; it does not require a pre-existing saved set.
+
+#### Web preparation, translation and signatures
+
+On **Příprava webu**, enable **Před vybranými exporty obnovit web** when the articles, media or source code have changed. The corresponding **Před exporty obnovit web** control in an export's settings is the same shared choice. If it is disabled, ordinary exports reuse the current `dist/` and do not refresh its contents or translation cache.
+
+The default preparation command is:
+
+```cmd
+npm run build:web:translate:signed
+```
+
+It fills missing English translations and signs the resulting web and Gemini builds through the project's existing workflow. The dropdown also offers the available plain, signed, translating and strict web variants. A strict variant checks the existing English cache rather than filling missing translations. A checked-export batch normally shares one web preparation step. It does not rebuild separately for every selected ordinary export.
+
+The standalone **Online web** catalog entry creates the standard hosting build in `dist/`, using the variant selected on **Příprava webu**. It always runs when selected, even if optional preparation before exports is disabled. Select `build:web` for the ordinary cached-translation build without signing, or `build:web:translate:signed` for the translating and signed workflow. In a checked-export batch, Online web runs before the other exporters and supplies their web preparation, avoiding a duplicate build. Saved sets retain their explicit order, so an Online web job can also restore the standard route layout after USB. The result is a local build, not an automatic upload to hosting. Online and USB builds share `dist/`; selecting both leaves the USB edition there because USB runs last.
+
+The complete USB export always builds its own offline edition. It maps the chosen web variant to its USB equivalent, for example `build:web:translate:signed` to `build:usb:translate:signed`, and reports an error if that equivalent is missing from `package.json`. In the checked-export workflow, USB runs last because it replaces `dist/` with flat, file-based routes. Saved sets preserve the manually chosen order; after a USB job, subsequent web-based exporters need a standard web build again.
+
+The GUI's Arweave plan derives `dist-arweave/` from the standard build instead of invoking the npm wrapper that unconditionally runs a strict web build. It uses the selected preparation command when rebuilding is enabled. With a signed variant selected, it refreshes the derived Arweave source bundle and history snapshot, regenerates its integrity files and signs that artifact without rewriting the already signed web build. These operations prepare local files; they do not upload or publish the site.
+
+When a web preparation step already creates the default source bundle or, for a translating build, the default Gemini capsule, the set does not immediately regenerate the same default outputs. Such jobs are marked **Součást sestavení**. This avoids invalidating their freshly produced signatures. Explicit custom generator arguments still run as requested; independently regenerating files inside a signed build can require a new integrity/signing pass.
+
+#### Temporary DeepL and GnuPG inputs
+
+The **Příprava webu** tab has two session-only fields:
+
+- **DeepL API klíč (`DEEPL_AUTH_KEY`)**: enter the key itself, without a CMD `set` command, surrounding quotes or an environment-variable assignment. Include the complete suffix, such as `:fx` when present. The input is masked.
+- **Složka GnuPG (`GNUPGHOME`)**: select the directory containing the intended GnuPG home and private key, not a key file. The signing script still validates the required key as described in section 9.6.1.
+
+The manager can inherit these values from the environment in which it was launched. GUI-entered values remain in the open application's memory and are passed to child processes through their environment. They are not saved in settings, saved job sets, `.env` files, launchers or repository source. The manager redacts both values from its process log and does not change persistent system environment variables.
+
+**Zapomenout dočasné údaje** clears the GUI inputs; closing the manager discards the session. A process that is already running retains the environment with which it started until it exits. After forgetting the values or reopening the application, supply them again when required. The manager checks that a translating workflow has a key and that a signing workflow has an existing `GNUPGHOME` directory before launching it; this does not prove that the API key is accepted by DeepL.
+
+#### Separate TXT/JSON copies and fresh PDF sources for images
+
+**ALL_POSTS.txt** and **ALL_POSTS.json** are separate archival-copy operations. Each copies the corresponding current file from `dist/` byte for byte to a new `exports/ALL_POSTS-{timestamp}.txt` or `.json`. An optional output filename must remain outside `dist/`. These copies leave the built source files, integrity manifests and signatures unchanged. Enable web preparation first if fresh source content is required.
+
+**TXT s filtry** instead runs `filter-all-posts.py`, allowing language, section, date, metadata and compact-format choices. It is not an exact copy of the basic built TXT. The combined `generate:all-posts` index-rebuilding command and the raw in-build JSON regenerator are therefore not presented as additional, overlapping TXT/JSON export choices.
+
+For JPG/PNG gallery exports, **Nejdřív vytvořit nové PDF** is enabled by default. The plan first creates the appropriate complete PDF and manifest, then converts that exact edition. The site scope uses one complete combined Czech-and-English PDF; the Metaweb scope uses its own PDF, including its normal appendices. The prerequisite and conversion receive the same `VOJTAMAUR_EXPORT_TIMESTAMP`, so the gallery cannot silently select an older PDF. This pairing applies to that image workflow; it is not a promise that every export in the whole GUI selection shares a single timestamp as in `export-all.bat`.
+
+To convert an existing PDF, disable the fresh-PDF option and supply `--pdf` and, when needed, `--source-manifest`. Without an explicit source or a fresh-PDF step, the gallery script performs its usual latest-edition selection. Conflicting explicit source/timestamp overrides are rejected while automatic PDF preparation is enabled. `--verify` only verifies an existing image edition and skips web/PDF preparation.
+
+#### Discovery, logs and troubleshooting
+
+The manager scans top-level `scripts/export-*.py`, `export-*.mjs` and `export-*.js` files, `filter-all-posts.py`, and `export:*` entries in `package.json`, including npm entry points for exporters in subdirectories. New matching exporters appear after **Obnovit seznam / F5** without editing the GUI. Equivalent base aliases are deduplicated; argument-bearing variants such as `export:images:metaweb` remain separate. `export:*:build` aliases are represented by the preparation controls. Online web, complete USB, Gemini, the source bundle and Arweave have explicit catalog entries. The link-graph generator and Wayback submission tool are excluded from the export list; web-build variants are selected through the shared preparation controls rather than duplicated as separate catalog items.
+
+Python `argparse` declarations, supported shared helpers and JavaScript argument declarations are inspected as source rather than executed during discovery. Unusual dynamically constructed arguments may need **Vlastní argumenty**. Czech descriptions and documentation hashes can be extended in `export_manager_help.py`; unknown exporters remain usable without a description entry.
+
+Ordinary remembered settings and checked export IDs are stored in `exports/export-manager/settings.json`. Saved sets are written to the JSON file chosen by the user. **Průběh** shows step output and exit status; complete UTF-8 logs are stored under `exports/export-manager/logs/`. **Otevřít exporty** and **Otevřít logy** open those folders. The existing `exports/` Git ignore rule covers the default settings and log locations; session credentials are not written there in the first place.
+
+On Windows the output reader preserves UTF-8 while recovering native Windows-encoded fragments, such as the Czech time-zone name embedded in a GnuPG message. This prevents replacement characters in new output without changing signature verification. It does not repair an older log that already contains replacement characters.
+
+A nonzero step exit stops the remaining steps and leaves the error visible in **Průběh**. **Zastavit** terminates the manager's current export process and its descendants; unfinished files may remain, and changes already made by a build are not rolled back. Check the log before reusing an interrupted output. Closing the window during a run asks whether to stop it. After changing the manager's own files, close and reopen the application to load the updated code.
+
+For example, `DeepL glossary HTTP 403` with `Authentication failed, provided API key is invalid` means that the translation request was rejected. Re-enter the complete raw API key and check its validity; entering a key in the GUI is not an authentication test. The USB translation script can still print its link-rewrite message after that failure, but exit status 1 means the export is incomplete and the subsequent signing command did not run. Correct the cause and rerun the intended build rather than treating the partially rewritten `dist/` as a finished signed edition.
+
+A read-only catalog diagnostic is available from the repository root:
+
+```cmd
+python scripts/export-manager.py --check
+```
+
+It lists discovered commands and parameter counts without opening the window or running exports. To inspect another checkout, pass `--project-root` to `scripts/export-manager.py`.
 
 ## 10. Exact special build logic
 
@@ -4023,7 +4155,6 @@ Possible future directions for the project:
 - restructuring of the homepage biographical content by replacing the current formal “About me” text with a shorter, more informal introduction, while providing a separate detailed curriculum vitae as a linked PDF document
 - evaluation of custom perforated boards manufactured by JLCPCB as a passive, punch-card-like physical storage medium, encoding binary data as a regular pattern of through-holes, with development of a self-describing format and optical decoding method using backlighting and conventional cameras or scanners
 - evaluation of emerging long-term archival media (e.g. [NanoFiche](https://nanofiche.com/)) as costs and availability improve
-- evaluation of 5D memory crystal storage, once the technology becomes more affordable and openly accessible
 - evaluation of DNA-of-Things storage embedded in physical artworks or materials, once the currently prohibitive cost of custom synthesis and production decreases
 - evaluation of future opportunities for inclusion in space-based cultural archives (e.g. the [Arch Mission Foundation](https://www.archmission.org/)), if suitable public submission pathways become available
 - self-hosting a Tor Onion Service mirror (e.g. on a Raspberry Pi), exposing the same content from a single .onion address over multiple protocols, including HTTP/HTTPS, Gemini (gemini://...onion), Spartan (spartan://...onion), and Gopher (gopher://...onion)
@@ -4077,16 +4208,19 @@ The following approaches were tested or seriously evaluated but were ultimately 
 - a BitTorrent edition of `vojtamaur.cz` was evaluated as a way to reconstruct the complete web build directly from existing public hosting mirrors using HTTP web seeds, without storing an additional ZIP archive; the approach was abandoned because the BEP 19 multi-file web seeding specification requires compatible URL directory structures, while individual hosting providers may serve structurally or byte-wise different builds. Supporting these differences would require provider-specific configuration or changes to the existing deployment workflows. Furthermore, continuously updated mirrors cannot guarantee the availability of immutable historical torrent releases. The resulting implementation and maintenance overhead was considered disproportionate to the expected archival benefit. Conventional P2P torrent distribution remains technically possible but was not pursued as part of this approach.
 - inclusion of `vojtamaur.cz` in the [Lunar Codex](https://www.lunarcodex.com/) was considered as a potential form of lunar archival preservation; however, the project closed submissions in August 2025 and has stated that it does not plan to reopen them. The approach was therefore abandoned indefinitely without contacting the organization, although its submission status may be reassessed in the future
 - experimental preservation of `vojtamaur.cz` by transmitting its Morse code exports as HTTP requests (e.g. `/dot` and `/dash`), potentially reconstructable from publicly archived server access logs, was considered using the [CDSL dataset](https://github.com/cdsl-research/website-access-logs-public). Following the laboratory's closure, publication of new logs ceased. On 2026-10-13, former member Tomoyuki Koyama was contacted and kindly offered to continue collecting logs if needed, although future public releases remain unconfirmed. The experiment remains unimplemented.
+- publication of text-based content from `vojtamaur.cz` on [Write.as](https://write.as/) was attempted as an additional independent distribution and preservation channel; however, the platform's automated anti-spam system blocked the submission, flagging it as potentially containing excessive backlinks or search engine-oriented content. The exact reason for the rejection was not disclosed. The approach was therefore abandoned.
 
-### 14.3 Temporarily unavailable, blocked, or deferred approaches
+### 14.3 Temporarily unavailable, blocked, deferred, or pending approaches
 
-The following approaches remain relevant to the project's long-term preservation and distribution objectives, but their implementation or further development is currently unavailable, blocked, or deliberately deferred. Reasons may include external technical, administrative, or operational limitations, maintenance costs, or strategic considerations. Unlike abandoned approaches, these options remain of interest and may be revisited if circumstances change.
+The following approaches remain relevant to the project's long-term preservation and distribution objectives, but their implementation or further development is currently unavailable, blocked, deliberately deferred, or awaiting external processing or confirmation. Reasons may include external technical, administrative, or operational limitations, maintenance costs, strategic considerations, or ongoing procedures managed by third parties. Unlike abandoned approaches, these options remain active, pending, or potentially viable and may be revisited as circumstances change.
 
 - further development of fully autonomous implementation capabilities within Metaweb Swarm has been temporarily deprioritized. The main reason is the expectation that major AI companies, particularly OpenAI with products such as Dot, may soon offer comparable autonomous agent capabilities. Given their substantially greater development resources, independently building and maintaining a parallel system may not be a sensible investment of time, especially considering the complexity of the framework and the risk of breaking changes to AI APIs and SDKs. Metaweb Swarm will therefore primarily serve as a research and brainstorming system, with optional experimental prototyping and execution capabilities. Promising discoveries will be implemented separately with human oversight and assistance from ChatGPT Work. Further development of autonomous execution may be reconsidered depending on the capabilities and availability of commercial agent systems, particularly OpenAI Dot in the Czech Republic.
 - laser engraving of the `export-site-mom-like.py` output into a glass cube was explored with GLASSTECH s.r.o., a Czech glass engraving company, regarding the long-term preservation of approximately 188,000 characters exported from the Metaweb using the `export-site-mom-like.py` script. The proposed design distributes the text across all six faces of a solid glass cube, with the final dimensions to be determined by achievable engraving resolution and character legibility. The company proposed testing both internal 3D laser engraving and surface microengraving on scrap glass, with internal engraving being preferable for long-term preservation if sufficient legibility can be achieved. However, the feasibility of complete production within the target budget of approximately CZK 10,000 remains unconfirmed. A response to the latest request for indicative pricing is still pending. The author explicitly informed the company that there was no urgency regarding the production schedule, so the delayed response may simply reflect the project's low time priority rather than a lack of interest or technical feasibility. Further development is deferred pending clarification of costs and the outcome of potential engraving tests.
 - inclusion of the Metaweb project in a future Galactic Library Preserve Humanity (GLPH) lunar archive was explored through Stamper Technology, the company behind NanoFiche archival technology. An initial inquiry was submitted through the NanoFiche contact form on September 30, 2026, followed by a direct email to `info@stampertech.com` on October 21, 2026, after no response had been received. The inquiry introduced the Metaweb project, referenced its existing preservation efforts at Memory of Mankind and Arctic World Archive, and expressed interest in submitting artistic and written content in a suitable format, such as PDF or plain text. The main questions concerned whether individual artistic projects could be included in future GLPH collections, the submission procedure, and approximate costs. As of November 2026, no response has been received, leaving the project's eligibility, technical requirements, pricing, and potential lunar mission assignment unconfirmed. Further development is deferred pending a response from Stamper Technology or the availability of another suitable submission channel.
 - find a suitable third-party time capsule willing to accept the author's physical materials for long-term preservation. No suitable opportunities have been identified in Plzeň or elsewhere in the Czech Republic. Implementation is deferred until such an opportunity becomes available.
 - find a suitable third-party time capsule willing to accept the author's digital materials for long-term preservation. No suitable opportunities have been identified worldwide. Implementation is deferred until such an opportunity becomes available.
+- archival preservation of the Metaweb project through the Arctic World Archive (AWA) using piqlFilm is currently awaiting completion of external processing. The author has submitted archival materials, but the submission remains marked as "Processing". As of November 2026, neither completion of the processing stage nor physical deposit in the AWA vault on Svalbard, Norway, has been confirmed. The preservation process is therefore considered ongoing rather than completed, with further progress dependent on Piql and Arctic World Archive.
+
 ---
 
 ## 15. Archival operations

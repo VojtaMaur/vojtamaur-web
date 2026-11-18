@@ -73,3 +73,5 @@ while True:
         index += 1
     lenght += 1
 ```
+
+Technická poznámka (2026): Původní kód programu výše má zásadní nedostatek. Pokud vygeneruje program s nekonečnou smyčkou, jeho vykonávání se zasekne a další programy již nevygeneruje. Tento problém lze teoreticky vyřešit metodou *dovetailing* (viz *Universal Dovetailer*), která prokládá jednotlivé výpočty tak, aby žádný program nemohl ostatní zablokovat. Původní kód ponechávám beze změny.

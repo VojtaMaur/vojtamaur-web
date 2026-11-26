@@ -1,4 +1,4 @@
-=== ENTRY POINTS START ===
+﻿=== ENTRY POINTS START ===
 
 MAIN SITE (primary live version):
 	https://vojtamaur.cz/

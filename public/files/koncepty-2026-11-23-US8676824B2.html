@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="light">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sto příkladů záměny klávesnicových rozložení: původní text, výstup na české QWERTZ a český význam.">
+  <title>100 různých rozložení a vstupních metod | Vojta Maur</title>
+  <style>
+    :root { color-scheme:only light; --page-width:1000px; --border:#d8d8d8; --text:#171717; --muted:#666; --bg:#fff; }
+    * { box-sizing:border-box; }
+    html { background:var(--bg); color:var(--text); font-family:Arial,Helvetica,sans-serif; line-height:1.6; }
+    body { margin:0; background:var(--bg); color:var(--text); }
+    main { width:min(100% - 2rem,var(--page-width)); margin:0 auto; padding:1.5rem 0 3rem; }
+    h1 { margin:0 0 1rem; font-size:2rem; line-height:1.25; }
+    .intro { margin:0 0 1rem; }
+    .links { margin:1rem 0; }
+    a { color:inherit; text-decoration:underline; text-decoration-color:rgba(0,0,0,.3); text-underline-offset:3px; }
+    a:focus-visible,summary:focus-visible,.table-scroll:focus-visible { outline:2px solid var(--text); outline-offset:4px; }
+    .table-scroll { overflow-x:auto; overscroll-behavior-inline:contain; margin:1rem 0; }
+    table { width:100%; min-width:960px; border-collapse:collapse; table-layout:fixed; }
+    col.layout { width:20%; } col.text { width:28%; } col.result { width:28%; } col.meaning { width:24%; }
+    th,td { border:1px solid var(--border); padding:.5rem .65rem; text-align:left; vertical-align:top; overflow-wrap:anywhere; line-height:1.45; }
+    thead th { background:#f5f5f5; font-size:13px; font-weight:600; }
+    tbody th { font-size:14px; font-weight:400; }
+    td.original,td.result { font:14px/1.75 "Cascadia Code",Consolas,monospace; }
+    bdi { display:block; white-space:pre-wrap; }
+    td.meaning { font-size:14px; color:var(--muted); }
+    details { margin-top:1.5rem; font-size:14px; }
+    summary { cursor:pointer; font-weight:600; }
+    details p { margin:1rem 0; }
+    .input-codes { font:13px/1.8 "Cascadia Code",Consolas,monospace; overflow-wrap:anywhere; margin:1rem 0; }
+    .mobile-hint { display:none; margin:0 0 10px; color:var(--muted); font-size:13px; }
+    @media (max-width:991px) { .mobile-hint { display:block; } }
+    @media print { main { width:100%; max-width:none; padding:0; } .links,.mobile-hint { display:none; } .table-scroll { overflow:visible; } table { min-width:0; } th,td { padding:6px; font-size:9pt!important; } tr { break-inside:avoid; } thead { display:table-header-group; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>100 různých rozložení a vstupních metod</h1>
+  <p class="intro">Člověk chce psát na svém rozložení, ale omylem má zapnutou českou QWERTZ.
+  Tady jsou stejné fyzické stisky napříč stovkou různých způsobů zadávání.
+  Každé rozložení či vstupní metoda se v tabulce objevuje právě jednou. Významy jsou volné překlady.</p>
+  <p class="links"><a href="/koncepty/">Zpět na Koncepty</a></p>
+  <p class="mobile-hint" id="scroll-hint">Tabulku lze posouvat do stran.</p>
+  <div class="table-scroll" tabindex="0" role="region" aria-label="Sto příkladů chybného rozložení klávesnice">
+    <table>
+      <colgroup><col class="layout"><col class="text"><col class="result"><col class="meaning"></colgroup>
+      <thead><tr><th scope="col">Rozložení / vstupní metoda</th><th scope="col">Co chtěl napsat</th><th scope="col">Co vznikne na české QWERTZ</th><th scope="col">Význam v češtině</th></tr></thead>
+      <tbody>
+<tr>
+  <th scope="row">Čínské Rime Bopomofo</th>
+  <td class="original"><bdi dir="auto">夢在散步</bdi></td>
+  <td class="result"><bdi dir="ltr">a-čzíčnéč+jč</bdi></td>
+  <td class="meaning">Sen se prochází.</td>
+</tr>
+<tr>
+  <th scope="row">Japonské kana (XKB)</th>
+  <td class="original"><bdi dir="auto">ネコハネテイル</bdi></td>
+  <td class="result"><bdi dir="ltr">,bf,we.</bdi></td>
+  <td class="meaning">Kočka spí.</td>
+</tr>
+<tr>
+  <th scope="row">Čínské Rime Cangjie 5</th>
+  <td class="original"><bdi dir="auto">時間在打盹</bdi></td>
+  <td class="result"><bdi dir="ltr">agdianaklgqmnbupu</bdi></td>
+  <td class="meaning">Čas si dává šlofíka.</td>
+</tr>
+<tr>
+  <th scope="row">Korejské Sebeolsik 390</th>
+  <td class="original"><bdi dir="auto">내 마음에도 문이 있다</bdi></td>
+  <td class="result"><bdi dir="ltr">hr ifjgyjcu- iísjd jděuf</bdi></td>
+  <td class="meaning">I v mém srdci jsou dveře.</td>
+</tr>
+<tr>
+  <th scope="row">Čínské Rime Wubi 86</th>
+  <td class="original"><bdi dir="auto">宇宙欠我咖啡</bdi></td>
+  <td class="result"><bdi dir="ltr">pgfjpmfqwutrntklkgkdjd</bdi></td>
+  <td class="meaning">Vesmír mi dluží kávu.</td>
+</tr>
+<tr>
+  <th scope="row">Japonské Mozc rómadži</th>
+  <td class="original"><bdi dir="auto">きのうをへんぴんしたい</bdi></td>
+  <td class="result"><bdi dir="ltr">kinouwohenpinshitai</bdi></td>
+  <td class="meaning">Chci vrátit včerejšek.</td>
+</tr>
+<tr>
+  <th scope="row">Čínské Rime Terra Pinyin</th>
+  <td class="original"><bdi dir="auto">月亮拒絕加班</bdi></td>
+  <td class="result"><bdi dir="ltr">zuečliangčjučjueějia+ban+</bdi></td>
+  <td class="meaning">Měsíc odmítá pracovat přesčas.</td>
+</tr>
+<tr>
+  <th scope="row">Korejské Dubeolsik</th>
+  <td class="original"><bdi dir="auto">고양이는 철학을 한다</bdi></td>
+  <td class="result"><bdi dir="ltr">rhdiddlsms cjfgkrdmf gksek</bdi></td>
+  <td class="meaning">Kočka se věnuje filozofii.</td>
+</tr>
+<tr>
+  <th scope="row">Barmské (fonetické pořadí)</th>
+  <td class="original"><bdi dir="auto">ကြောင်က အိပ်မက်မက်နေတယ်</bdi></td>
+  <td class="result"><bdi dir="ltr">ujamifu tdzfrufrufeawBf</bdi></td>
+  <td class="meaning">Kočka právě sní.</td>
+</tr>
+<tr>
+  <th scope="row">Tibetské (PRC)</th>
+  <td class="original"><bdi dir="auto">ཟླ་བ་གཉིད་ཉལ།</bdi></td>
+  <td class="result"><bdi dir="ltr">ymljfjk-idj-l§</bdi></td>
+  <td class="meaning">Měsíc spí.</td>
+</tr>
+<tr>
+  <th scope="row">Khmerské NIDA</th>
+  <td class="original"><bdi dir="auto">ស្រមោលខ្ញុំចង់ឈប់សម្រាក</bdi></td>
+  <td class="result"><bdi dir="ltr">sjrmolxjJ,cg§Qb§smjrak</bdi></td>
+  <td class="meaning">Můj stín si chce odpočinout.</td>
+</tr>
+<tr>
+  <th scope="row">Sinhálské Wij 9</th>
+  <td class="original"><bdi dir="auto">මගේ සෙවණැල්ල නිවාඩු ඉල්ලයි</bdi></td>
+  <td class="result"><bdi dir="ltr">u. ifjKe,a, ksjdvq b,a,hs</bdi></td>
+  <td class="meaning">Můj stín žádá dovolenou.</td>
+</tr>
+<tr>
+  <th scope="row">Tifinagh fonetické (Maroko)</th>
+  <td class="original"><bdi dir="auto">ⵜⴰⴼⵓⴽⵜ</bdi></td>
+  <td class="result"><bdi dir="ltr">tqfukt</bdi></td>
+  <td class="meaning">Slunce.</td>
+</tr>
+<tr>
+  <th scope="row">Anglické US Symbolic</th>
+  <td class="original"><bdi dir="auto">∞ + 1 = ∞</bdi></td>
+  <td class="result"><bdi dir="ltr"> ˇ+ ´</bdi></td>
+  <td class="meaning">Nekonečno plus jedna je nekonečno.</td>
+</tr>
+<tr>
+  <th scope="row">Čerokíjské fonetické</th>
+  <td class="original"><bdi dir="auto">ᎠᎹ</bdi></td>
+  <td class="result"><bdi dir="ltr">ama</bdi></td>
+  <td class="meaning">Voda.</td>
+</tr>
+<tr>
+  <th scope="row">Inuktitut (XKB ca/ike)</th>
+  <td class="original"><bdi dir="auto">ᐃᓄᒃ</bdi></td>
+  <td class="result"><bdi dir="ltr">wkč</bdi></td>
+  <td class="meaning">Člověk.</td>
+</tr>
+<tr>
+  <th scope="row">Dzongkha (Bhútán)</th>
+  <td class="original"><bdi dir="auto">ཆུ་དང་སེམས་</bdi></td>
+  <td class="result"><bdi dir="ltr">pz dr ,uk, </bdi></td>
+  <td class="meaning">Voda a mysl.</td>
+</tr>
+<tr>
+  <th scope="row">Divehi fonetické</th>
+  <td class="original"><bdi dir="auto">ހަނދު</bdi></td>
+  <td class="result"><bdi dir="ltr">handu</bdi></td>
+  <td class="meaning">Měsíc.</td>
+</tr>
+<tr>
+  <th scope="row">Syrské fonetické</th>
+  <td class="original"><bdi dir="auto">ܚܠܡܐ</bdi></td>
+  <td class="result"><bdi dir="ltr">ůlma</bdi></td>
+  <td class="meaning">Sen.</td>
+</tr>
+<tr>
+  <th scope="row">Amharské (XKB)</th>
+  <td class="original"><bdi dir="auto">በረደ</bdi></td>
+  <td class="result"><bdi dir="ltr">brd</bdi></td>
+  <td class="meaning">Ochladilo se.</td>
+</tr>
+<tr>
+  <th scope="row">Thajské Kedmanee</th>
+  <td class="original"><bdi dir="auto">ฉันสร้างบันไดที่พาขึ้นไปชั้นเดิม ทุกคนบอกว่านี่คือความก้าวหน้า</bdi></td>
+  <td class="result"><bdi dir="ltr">Czolihk§úzowfmujrk=ýhowxźhogfb, mždáoúvdůjkoujánváůk,dhkůsohk</bdi></td>
+  <td class="meaning">Postavil jsem schody, které vedou nahoru do stejného patra. Všichni říkají, že to je pokrok.</td>
+</tr>
+<tr>
+  <th scope="row">Francouzské AZERTY (Legacy)</th>
+  <td class="original"><bdi dir="auto">Je classe les nuages par ordre de disparition, mais le dernier refuse de signer le formulaire et demande un avocat spécialisé dans la pluie.</bdi></td>
+  <td class="result"><bdi dir="ltr">Je clqsse les nuqges pqr ordre de dispqritionm ůqis le dernier refuse de signer le forůulqire et deůqnde un qvocqt spěciqlisě dqns lq pluie?</bdi></td>
+  <td class="meaning">Řadím mraky podle pořadí zániku, ale poslední odmítá podepsat formulář a žádá advokáta specializovaného na déšť.</td>
+</tr>
+<tr>
+  <th scope="row">Vietnamské (Windows)</th>
+  <td class="original"><bdi dir="auto">Cái bóng của tôi xin nghỉ phép.</bdi></td>
+  <td class="result"><bdi dir="ltr">Caái boáng cuža tči xin nghiž pheáp.</bdi></td>
+  <td class="meaning">Můj stín žádá dovolenou.</td>
+</tr>
+<tr>
+  <th scope="row">Tamilské INSCRIPT</th>
+  <td class="original"><bdi dir="auto">நிழல் சம்பளம் கேட்கிறது</bdi></td>
+  <td class="result"><bdi dir="ltr">vfBnd ůcdzNcd isúdifJog</bdi></td>
+  <td class="meaning">Stín požaduje plat.</td>
+</tr>
+<tr>
+  <th scope="row">Anglické Dvorak</th>
+  <td class="original"><bdi dir="auto">If every lost sock opens a tiny universe, my washing machine is either a laboratory or a very poorly managed department of cosmology.</bdi></td>
+  <td class="result"><bdi dir="ltr">Gz d.dot psůk ůsiv srdlů a kglt flg.doůdw mt ,aůjglu maijgld gů dgkjdo a pansoaksot so a .dot rssopt malaudh hdraokmdlk sz isůmspsute</bdi></td>
+  <td class="meaning">Pokud každá ztracená ponožka otevírá malý vesmír, je moje pračka buď laboratoř, nebo velmi špatně řízené oddělení kosmologie.</td>
+</tr>
+<tr>
+  <th scope="row">Telugské (Windows)</th>
+  <td class="original"><bdi dir="auto">నా గడియారం నిన్ననే ఆగిపోయింది</bdi></td>
+  <td class="result"><bdi dir="ltr">ve iúf-ejx vfvdvvs Eifha-fxof</bdi></td>
+  <td class="meaning">Moje hodiny se zastavily už včera.</td>
+</tr>
+<tr>
+  <th scope="row">Kannadské (Windows)</th>
+  <td class="original"><bdi dir="auto">ನನ್ನ ಕನ್ನಡಿ ಸತ್ಯವನ್ನು ಮರೆಮಾಡುತ್ತದೆ</bdi></td>
+  <td class="result"><bdi dir="ltr">vvdv kvdvúf mld-bvdvg cjyceúgldloy</bdi></td>
+  <td class="meaning">Moje zrcadlo skrývá pravdu.</td>
+</tr>
+<tr>
+  <th scope="row">Německé QWERTZ</th>
+  <td class="original"><bdi dir="auto">Ich stand so lange in der Schlange, dass die Menschen hinter mir ein Dorf gründeten und mich zum Denkmal erklärten.</bdi></td>
+  <td class="result"><bdi dir="ltr">Ich stand so lange in der Schlange, dass die Menschen hinter mir ein Dorf grúndeten und mich zum Denkmal erkl§rten.</bdi></td>
+  <td class="meaning">Stál jsem ve frontě tak dlouho, až lidé za mnou založili vesnici a prohlásili mě za památník.</td>
+</tr>
+<tr>
+  <th scope="row">Malajálamské (Windows)</th>
+  <td class="original"><bdi dir="auto">മേഘങ്ങൾക്ക് വിലാസമില്ല</bdi></td>
+  <td class="result"><bdi dir="ltr">csIUdU8kdkd bfnemcfndn</bdi></td>
+  <td class="meaning">Mraky nemají adresu.</td>
+</tr>
+<tr>
+  <th scope="row">Gudžarátské (Windows)</th>
+  <td class="original"><bdi dir="auto">મારી છત્રી વરસાદથી ડરે છે</bdi></td>
+  <td class="result"><bdi dir="ltr">cejr &quot;6r bjmeoLr újs &quot;s</bdi></td>
+  <td class="meaning">Můj deštník se bojí deště.</td>
+</tr>
+<tr>
+  <th scope="row">Turecké F</th>
+  <td class="original"><bdi dir="auto">Şehrin çıkışına bir ayna koydular; şimdi herkes eve döndüğünü sanıyor, ama kimse kapıyı bulamıyor.</bdi></td>
+  <td class="result"><bdi dir="ltr">!dousi brjr§rif ,su fůif jtůzalfu_ §skzs odujdm dcd zxizgegig mfirůtu- fkf jskmd jfprůr ,alfkrůtu.</bdi></td>
+  <td class="meaning">K východu z města dali zrcadlo; teď si všichni myslí, že se vrátili domů, ale nikdo nemůže najít dveře.</td>
+</tr>
+<tr>
+  <th scope="row">Paňdžábské Gurmukhi</th>
+  <td class="original"><bdi dir="auto">ਮੇਰੀ ਕਿਤਾਬ ਮੈਨੂੰ ਪੜ੍ਹਦੀ ਹੈ</bdi></td>
+  <td class="result"><bdi dir="ltr">csjr kflez cwvtx hJ°or uw</bdi></td>
+  <td class="meaning">Moje kniha čte mě.</td>
+</tr>
+<tr>
+  <th scope="row">Odijské (Windows)</th>
+  <td class="original"><bdi dir="auto">ମୋ ଛାଇ ଛୁଟି ଚାହୁଁଛି</bdi></td>
+  <td class="result"><bdi dir="ltr">ca &quot;eF &quot;g§f ůeugX&quot;f</bdi></td>
+  <td class="meaning">Můj stín chce dovolenou.</td>
+</tr>
+<tr>
+  <th scope="row">Ruské ЙЦУКЕН</th>
+  <td class="original"><bdi dir="auto">Я попытался нарисовать время, но карандаш всё время спешил, бумага старела, а ластик уверял меня, что никакого прошлого вообще не было.</bdi></td>
+  <td class="result"><bdi dir="ltr">Y gjgsnfkcy zfhbcjdfnm dhtvy_ zj rfhfzlfi dc; dhtvy cgtibk_ ,evfuf cnfhtkf_ f kfcnbr edthyk vtzy_ xnj zbrfrjuj ghjikjuj djj,ot zt ,skj-</bdi></td>
+  <td class="meaning">Pokusil jsem se nakreslit čas, ale tužka pořád spěchala, papír stárl a guma mě ujišťovala, že žádná minulost nikdy nebyla.</td>
+</tr>
+<tr>
+  <th scope="row">Ásámské INSCRIPT</th>
+  <td class="original"><bdi dir="auto">আকাশৰ ঠিকনা নাই</bdi></td>
+  <td class="result"><bdi dir="ltr">EkeMj !fkve veF</bdi></td>
+  <td class="meaning">Obloha nemá adresu.</td>
+</tr>
+<tr>
+  <th scope="row">Maráthské (Windows)</th>
+  <td class="original"><bdi dir="auto">चंद्राला सोमवार आवडत नाही</bdi></td>
+  <td class="result"><bdi dir="ltr">ůxo3ene macbej Ebúl veur</bdi></td>
+  <td class="meaning">Měsíc nemá rád pondělky.</td>
+</tr>
+<tr>
+  <th scope="row">Hebrejské</th>
+  <td class="original"><bdi dir="auto">אם כל מחשבה צריכה סיסמה, אני מבקש לפחות אפשרות לשחזר את שם המשתמש לפני שהמוח שלי נועל את החשבון לנצח</bdi></td>
+  <td class="result"><bdi dir="ltr">to fk njacv mrhfv xhxnv§ tbh ncea kpju, tparu, kajyr t, ao vna,na kpbh avnuj akh bugk t, vjacui kbmj</bdi></td>
+  <td class="meaning">Jestli každá myšlenka potřebuje heslo, žádám aspoň možnost obnovit uživatelské jméno, než můj mozek navždy uzamkne účet.</td>
+</tr>
+<tr>
+  <th scope="row">Nepálské (Windows)</th>
+  <td class="original"><bdi dir="auto">मेरो सपनाको पासवर्ड हरायो</bdi></td>
+  <td class="result"><bdi dir="ltr">d)-Q ůkgfsQ kfůj/á x-foQ</bdi></td>
+  <td class="meaning">Ztratilo se heslo k mému snu.</td>
+</tr>
+<tr>
+  <th scope="row">Laoské (Windows)</th>
+  <td class="original"><bdi dir="auto">ແມວກຳລັງຝັນ</bdi></td>
+  <td class="result"><bdi dir="ltr">c,ůde)a§-ao</bdi></td>
+  <td class="meaning">Kočka právě sní.</td>
+</tr>
+<tr>
+  <th scope="row">Arabské (101)</th>
+  <td class="original"><bdi dir="auto">وضعت ساعة في صندوق مغلق كي أعرف كيف يمر الوقت حين لا يراقبه أحد، لكنها طلبت مني راتبا إضافيا مقابل العمل في الظلام</bdi></td>
+  <td class="result"><bdi dir="ltr">,quj shum td wk),r lzgr ůd Huvt ůdt dlv hg,rj pdk b dvhrfi Hp)K gůkih §gfj lkd vhjfh Zqhtdh lrhfg hgulg td hg-bl</bdi></td>
+  <td class="meaning">Dal jsem hodiny do zavřené krabice, abych zjistil, jak plyne čas, když ho nikdo nesleduje, ale požádaly mě o příplatek za práci ve tmě.</td>
+</tr>
+<tr>
+  <th scope="row">Urdské (Windows)</th>
+  <td class="original"><bdi dir="auto">میرا آئینہ سچ چھپاتا ہے</bdi></td>
+  <td class="result"><bdi dir="ltr">aldj JNlfh vO Oezjuj hc</bdi></td>
+  <td class="meaning">Moje zrcadlo skrývá pravdu.</td>
+</tr>
+<tr>
+  <th scope="row">Paštunské (Afghánistán)</th>
+  <td class="original"><bdi dir="auto">سپوږمۍ کور ته ځي</bdi></td>
+  <td class="result"><bdi dir="ltr">sF,.lS ů,v ji OD</bdi></td>
+  <td class="meaning">Měsíc jde domů.</td>
+</tr>
+<tr>
+  <th scope="row">Gruzínské (Legacy)</th>
+  <td class="original"><bdi dir="auto">როცა მაცივარი ფილოსოფიაზე ფიქრობს, რძე მოთმინებით ელოდება პასუხს კითხვაზე, არსებობს თუ არა ვადა დროის გარეშე.</bdi></td>
+  <td class="result"><bdi dir="ltr">jk)g bg)ndgjn anlkvkangpt an,jk.ví jst bkfbnzt.nf tlkůt.g hgveúv rnfúdgptí gjvt.k.v fe gjg dgůg ůjknv ugjtitý</bdi></td>
+  <td class="meaning">Když lednice přemýšlí o filozofii, mléko trpělivě čeká na odpověď na otázku, zda existuje lhůta bez času.</td>
+</tr>
+<tr>
+  <th scope="row">Kurdské (sorání)</th>
+  <td class="original"><bdi dir="auto">مانگ خەونی دەبینێت</bdi></td>
+  <td class="result"><bdi dir="ltr">mang xewnz debznZt</bdi></td>
+  <td class="meaning">Měsíc sní.</td>
+</tr>
+<tr>
+  <th scope="row">Ujgurské (Windows)</th>
+  <td class="original"><bdi dir="auto">ئاي چۈش كۆرىدۇ</bdi></td>
+  <td class="result"><bdi dir="ltr">-fz qvx kKrhdu</bdi></td>
+  <td class="meaning">Měsíc sní.</td>
+</tr>
+<tr>
+  <th scope="row">Východoarménské (Legacy)</th>
+  <td class="original"><bdi dir="auto">Եթե ամեն մի սխալ նոր տիեզերք է ստեղծում, ապա իմ հին ստեղնաշարը շատ ավելի մեծ պատասխանատվություն ունի, քան ես կարծում էի</bdi></td>
+  <td class="result"><bdi dir="ltr">Zůz amzn mi sqal nor tizyzrg e stz.-owmř apa im hin stz.na,aru ,at avzli mz- patasqanatvowůšown owniř gan zs kar-owm ei</bdi></td>
+  <td class="meaning">Jestli každá chyba vytváří nový vesmír, má moje stará klávesnice mnohem větší odpovědnost, než jsem si myslel.</td>
+</tr>
+<tr>
+  <th scope="row">Kazašské (Windows)</th>
+  <td class="original"><bdi dir="auto">Менің сағатым кешегі күнді сағынады.</bdi></td>
+  <td class="result"><bdi dir="ltr">Vtzšč cfřfnsv rtituš rázlš cfřszflsý</bdi></td>
+  <td class="meaning">Mým hodinám se stýská po včerejšku.</td>
+</tr>
+<tr>
+  <th scope="row">Kyrgyzské (cyrilice)</th>
+  <td class="original"><bdi dir="auto">Менин китебим мени окуйт.</bdi></td>
+  <td class="result"><bdi dir="ltr">Vtzbz rbnt,bv vtzb jreqn-</bdi></td>
+  <td class="meaning">Moje kniha čte mě.</td>
+</tr>
+<tr>
+  <th scope="row">Bulharské (psací stroj)</th>
+  <td class="original"><bdi dir="auto">Построих машина за случайни числа, която всяка сутрин ми дава едно и също число и настоява, че това също е напълно възможно</bdi></td>
+  <td class="result"><bdi dir="ltr">Mfij,frn ůdtrkd pd i.w§dxkr §ri.dq ufsjf lisud iwj,rk ůr odld eokf r iczf §ri.f r kdijfsldq §e jfld iczf e kdmc.kf lcpůfgkf</bdi></td>
+  <td class="meaning">Postavil jsem stroj na náhodná čísla, který mi každé ráno dává stejné číslo a trvá na tom, že i to je zcela možné.</td>
+</tr>
+<tr>
+  <th scope="row">Mongolské (cyrilice)</th>
+  <td class="original"><bdi dir="auto">Хөргөгч маань цөлийг зүүдэлдэг.</bdi></td>
+  <td class="result"><bdi dir="ltr">Hfjufux bggz, wflnau pooůtlůtuž</bdi></td>
+  <td class="meaning">Moje lednice sní o poušti.</td>
+</tr>
+<tr>
+  <th scope="row">Tádžické (Windows)</th>
+  <td class="original"><bdi dir="auto">Соати ман ба вақт бовар надорад.</bdi></td>
+  <td class="result"><bdi dir="ltr">Cjfnb vfz ,f dfwn ,jdfh zfljhfl-</bdi></td>
+  <td class="meaning">Moje hodiny nevěří v čas.</td>
+</tr>
+<tr>
+  <th scope="row">Ukrajinské (Enhanced)</th>
+  <td class="original"><bdi dir="auto">Я хотів зберегти лише найважливіший спогад, та пам&#x27;ять запропонувала спочатку погодитися з умовами використання дитинства і прийняти всі файли печива.</bdi></td>
+  <td class="result"><bdi dir="ltr">Y újnsd p,thtunb kbit zfqdfůkbdsibq cgjufl_ nf gfv;ynm pfghjgjzedfkf cgjxfnre gjujlbnbcy p evjdfvb dbrjhbcnfzzy lbnbzcndf s ghbqzynb dcs afqkb gtxbdf-</bdi></td>
+  <td class="meaning">Chtěl jsem uchovat jen nejdůležitější vzpomínku, ale paměť mi navrhla nejdřív souhlasit s podmínkami používání dětství a přijmout všechny cookies.</td>
+</tr>
+<tr>
+  <th scope="row">Tatarské (Windows)</th>
+  <td class="original"><bdi dir="auto">Минем төшләремә билет кирәк.</bdi></td>
+  <td class="result"><bdi dir="ltr">Vbztv nwikohtvo ,bktn rbhor-</bdi></td>
+  <td class="meaning">Do mých snů je potřeba vstupenka.</td>
+</tr>
+<tr>
+  <th scope="row">Baškirské (Windows)</th>
+  <td class="original"><bdi dir="auto">Ай бөгөн эшләмәй.</bdi></td>
+  <td class="result"><bdi dir="ltr">Fq ,ěuěz §ik;v;q-</bdi></td>
+  <td class="meaning">Měsíc dnes nepracuje.</td>
+</tr>
+<tr>
+  <th scope="row">Srbské (cyrilice)</th>
+  <td class="original"><bdi dir="auto">Кад би свака фиока водила у други свет, тражио бих онај у коме се каблови сами распетљавају и нико не чува кутије од старих телефона.</bdi></td>
+  <td class="result"><bdi dir="ltr">Kad bi svaka fioka vodila u drugi svet, traïo bih onaj u kome se kablovi sami raspetqavaju i niko ne ůuva kutije od starih telefona.</bdi></td>
+  <td class="meaning">Kdyby každá zásuvka vedla do jiného světa, hledal bych ten, kde se kabely samy rozmotávají a nikdo neschovává krabice od starých telefonů.</td>
+</tr>
+<tr>
+  <th scope="row">Sacha / jakutské</th>
+  <td class="original"><bdi dir="auto">Күн уонна ый</bdi></td>
+  <td class="result"><bdi dir="ltr">Ráz ejzzf sq</bdi></td>
+  <td class="meaning">Slunce a Měsíc.</td>
+</tr>
+<tr>
+  <th scope="row">Lotyšské (Standard)</th>
+  <td class="original"><bdi dir="auto">Mans sapnis pieprasa paroli.</bdi></td>
+  <td class="result"><bdi dir="ltr">Mans sapnis pieprasa paroli.</bdi></td>
+  <td class="meaning">Můj sen požaduje heslo.</td>
+</tr>
+<tr>
+  <th scope="row">Řecké</th>
+  <td class="original"><bdi dir="auto">Αν η μνήμη ήταν μουσείο, θα ήθελα μια αίθουσα μόνο για τις ιδέες που είχα λίγο πριν ξεχάσω γιατί μπήκα στην κουζίνα.</bdi></td>
+  <td class="result"><bdi dir="ltr">An h mnůhmh ůhtan mozseůio, ua ůhuela mia aůiuozsa můono gia tiw idůeew poz eůixa lůigo prin jexůasv giatůi mpůhka sthn kozyůina.</bdi></td>
+  <td class="meaning">Kdyby paměť byla muzeum, chtěl bych sál jen pro nápady, které jsem měl těsně předtím, než jsem zapomněl, proč jsem šel do kuchyně.</td>
+</tr>
+<tr>
+  <th scope="row">Litevské (Standard)</th>
+  <td class="original"><bdi dir="auto">Mano veidrodis prašo antros nuomonės.</bdi></td>
+  <td class="result"><bdi dir="ltr">Mano veidrodis prafo antros nuomon§sý</bdi></td>
+  <td class="meaning">Moje zrcadlo žádá o druhý názor.</td>
+</tr>
+<tr>
+  <th scope="row">Estonské (Windows)</th>
+  <td class="original"><bdi dir="auto">Mu kohver tahab üksi reisida.</bdi></td>
+  <td class="result"><bdi dir="ltr">Mu kohver tahab úksi reisida.</bdi></td>
+  <td class="meaning">Můj kufr chce cestovat sám.</td>
+</tr>
+<tr>
+  <th scope="row">Hindské Devanagari INSCRIPT</th>
+  <td class="original"><bdi dir="auto">अगर हर अधूरा विचार एक पेड़ बन जाए तो मेरे कमरे में जंगल होगा और मुझे काम करने से पहले रास्ता खोजना पड़ेगा।</bdi></td>
+  <td class="result"><bdi dir="ltr">Dij uj DOtje bfůej Sk hsú) zv peS la csjs kcjs csx pxin uaie Qj cgPs kec kjvs ms huns jemdle Kapve hú)sie:</bdi></td>
+  <td class="meaning">Kdyby se každá nedokončená myšlenka proměnila ve strom, měl bych v pokoji les a před prací bych si musel najít cestu.</td>
+</tr>
+<tr>
+  <th scope="row">Maďarské (Windows)</th>
+  <td class="original"><bdi dir="auto">A jövő csak előjegyzéssel fogad.</bdi></td>
+  <td class="result"><bdi dir="ltr">A jévú csak elújegyzůssel fogad.</bdi></td>
+  <td class="meaning">Budoucnost přijímá jen na objednání.</td>
+</tr>
+<tr>
+  <th scope="row">Maltské (47 kláves)</th>
+  <td class="original"><bdi dir="auto">Il-qamar tilef l-indirizz tiegħu.</bdi></td>
+  <td class="result"><bdi dir="ltr">Il=qamar tilef l=indiriyy tieg)u.</bdi></td>
+  <td class="meaning">Měsíc ztratil svou adresu.</td>
+</tr>
+<tr>
+  <th scope="row">Bengálské Bangla</th>
+  <td class="original"><bdi dir="auto">আমি সব ভুল আলাদা বাক্সে রাখি, কিন্তু রাতে তারা নিজেদের মধ্যে কথা বলে এবং সকালে নতুন একটি পরিকল্পনা নিয়ে হাজির হয়</bdi></td>
+  <td class="result"><bdi dir="ltr">Ecf mz Zgn Eneoe zekdms jeKf, kfvdlg jels leje vfpsosj cOd-s kLe zns Szx mkens vlgv Sk§f hjfkndhve vf-)s uepfj u-)</bdi></td>
+  <td class="meaning">Všechny chyby dávám do oddělených krabic, ale v noci si spolu povídají a ráno se objeví s novým plánem.</td>
+</tr>
+<tr>
+  <th scope="row">Faerské (Windows)</th>
+  <td class="original"><bdi dir="auto">Kaffið bíðar eftir svarinum.</bdi></td>
+  <td class="result"><bdi dir="ltr">Kaffi) bí)ar eftir svarinum.</bdi></td>
+  <td class="meaning">Káva čeká na odpověď.</td>
+</tr>
+<tr>
+  <th scope="row">Rumunské (Standard)</th>
+  <td class="original"><bdi dir="auto">Umbrela mea cere prognoza în scris.</bdi></td>
+  <td class="result"><bdi dir="ltr">Umbrela mea cere prognoya )n scris.</bdi></td>
+  <td class="meaning">Můj deštník chce předpověď písemně.</td>
+</tr>
+<tr>
+  <th scope="row">Perské</th>
+  <td class="original"><bdi dir="auto">اگر هر فکر فراموش شده یک ستاره شود، آسمان بالای میز من آن قدر روشن خواهد بود که دیگر برای کار به چراغ نیاز ندارم</bdi></td>
+  <td class="result"><bdi dir="ltr">h§v iv tův tvhl,a ani dů sjhvi a,nT Hslhk fhghd ldc lk Hk rnv v,ak o,hin f,n ůi nd§v fvhd ůhv fi )vhz kdhc knhvl</bdi></td>
+  <td class="meaning">Kdyby se každá zapomenutá myšlenka stala hvězdou, nebe nad mým stolem by bylo tak jasné, že bych k práci nepotřeboval lampu.</td>
+</tr>
+<tr>
+  <th scope="row">Slovenské QWERTZ</th>
+  <td class="original"><bdi dir="auto">Moja budúcnosť sa nedá reklamovať.</bdi></td>
+  <td class="result"><bdi dir="ltr">Moja budúcnosř sa nedá reklamovař.</bdi></td>
+  <td class="meaning">Moje budoucnost se nedá reklamovat.</td>
+</tr>
+<tr>
+  <th scope="row">Irské (Windows)</th>
+  <td class="original"><bdi dir="auto">Tá an ghealach ar saoire.</bdi></td>
+  <td class="result"><bdi dir="ltr">T an ghealach ar saoire.</bdi></td>
+  <td class="meaning">Měsíc má dovolenou.</td>
+</tr>
+<tr>
+  <th scope="row">Švédské</th>
+  <td class="original"><bdi dir="auto">Om tystnaden hade en kundtjänst skulle jag ringa och fråga varför den alltid spelar musik medan jag väntar på att få tala med ingen.</bdi></td>
+  <td class="result"><bdi dir="ltr">Om tzstnaden hade en kundtj§nst skulle jag ringa och frúga varfůr den alltid spelar musik medan jag v§ntar pú att fú tala med ingen.</bdi></td>
+  <td class="meaning">Kdyby ticho mělo zákaznickou linku, zavolal bych a zeptal se, proč vždycky hraje hudbu, zatímco čekám, až si promluvím s nikým.</td>
+</tr>
+<tr>
+  <th scope="row">Havajské (Windows)</th>
+  <td class="original"><bdi dir="auto">Ke moeʻuhane nei ke kai.</bdi></td>
+  <td class="result"><bdi dir="ltr">Ke moe§uhane nei ke kai.</bdi></td>
+  <td class="meaning">Moře právě sní.</td>
+</tr>
+<tr>
+  <th scope="row">Maorské (Windows)</th>
+  <td class="original"><bdi dir="auto">Kei te whakaaro te rorohiko ki ngā whetū.</bdi></td>
+  <td class="result"><bdi dir="ltr">Kei te whakaaro te rorohiko ki ng;a whet;u.</bdi></td>
+  <td class="meaning">Počítač přemýšlí o hvězdách.</td>
+</tr>
+<tr>
+  <th scope="row">Islandské</th>
+  <td class="original"><bdi dir="auto">Ef hver týndur sokkur yrði að eyju, þyrfti ég stærra kort og þvottavélin mín ætti sennilega rétt á sæti á þingi.</bdi></td>
+  <td class="result"><bdi dir="ltr">Ef hver t§zndur sokkur zrúi aú ezju, -zrfti §eg stůrra kort og -vottav§elin m§in ůtti sennilega r§ett §a sůti §a -ingi.</bdi></td>
+  <td class="meaning">Kdyby se každá ztracená ponožka stala ostrovem, potřeboval bych větší mapu a moje pračka by nejspíš měla nárok na místo v parlamentu.</td>
+</tr>
+<tr>
+  <th scope="row">Grónské (Windows)</th>
+  <td class="original"><bdi dir="auto">Kalaallit Nunaat 2026</bdi></td>
+  <td class="result"><bdi dir="ltr">Kalaallit Nunaat ěéěž</bdi></td>
+  <td class="meaning">Grónsko 2026.</td>
+</tr>
+<tr>
+  <th scope="row">Tamazight / tifinagh Basic</th>
+  <td class="original"><bdi dir="auto">ⴰⵎⴰⵏ</bdi></td>
+  <td class="result"><bdi dir="ltr">qůqn</bdi></td>
+  <td class="meaning">Voda.</td>
+</tr>
+<tr>
+  <th scope="row">Polské (programátorské)</th>
+  <td class="original"><bdi dir="auto">Zapisałem wszystkie sny na jednej kartce, ale rano odkryłem, że papier śnił o byciu drzewem i zapomniał o moich sprawach.</bdi></td>
+  <td class="result"><bdi dir="ltr">YapisaŁem wsyzstkie snz na jednej kartce, ale rano odkrzŁem, e papier đniŁ o bzciu dryewem i yapomniaŁ o moich sprawach.</bdi></td>
+  <td class="meaning">Zapsal jsem všechny sny na jeden list, ale ráno jsem zjistil, že papír snil o tom, že je strom, a na moje záležitosti zapomněl.</td>
+</tr>
+<tr>
+  <th scope="row">Thajské Pattachote</th>
+  <td class="original"><bdi dir="auto">ความฝันมีเวลาทำการ</bdi></td>
+  <td class="result"><bdi dir="ltr">nojiUgkihlocjsDfjt</bdi></td>
+  <td class="meaning">Sen má úřední hodiny.</td>
+</tr>
+<tr>
+  <th scope="row">Západoarménské (Legacy)</th>
+  <td class="original"><bdi dir="auto">Հայելին զիս չի ճանչնար</bdi></td>
+  <td class="result"><bdi dir="ltr">Hašzlin yis úi janúnar</bdi></td>
+  <td class="meaning">Zrcadlo mě nepoznává.</td>
+</tr>
+<tr>
+  <th scope="row">Španělské</th>
+  <td class="original"><bdi dir="auto">Si pudiera guardar los domingos en un archivo, lo llamaría final definitivo de verdad y luego haría siete copias por si el lunes aprende a borrarlo.</bdi></td>
+  <td class="result"><bdi dir="ltr">Si pudiera guardar los domingos en un archivo, lo llamar§ia final definitivo de verdad z luego har§ia siete copias por si el lunes aprende a borrarlo.</bdi></td>
+  <td class="meaning">Kdybych mohl ukládat neděle do souboru, pojmenoval bych ho opravdu definitivní finále a pak bych udělal sedm kopií pro případ, že se ho pondělí naučí mazat.</td>
+</tr>
+<tr>
+  <th scope="row">Gruzínské ergonomické</th>
+  <td class="original"><bdi dir="auto">ხვალინდელი დღე პაროლს ითხოვს.</bdi></td>
+  <td class="result"><bdi dir="ltr">aod,sihf,s hvf wdlg,k suagoká</bdi></td>
+  <td class="meaning">Zítřek požaduje heslo.</td>
+</tr>
+<tr>
+  <th scope="row">Ruské (psací stroj)</th>
+  <td class="original"><bdi dir="auto">Пожалуйста, не кормите чужие идеи.</bdi></td>
+  <td class="result"><bdi dir="ltr">Gjůfkeqcnfž zt rjhvbnt xeůbt bltbý</bdi></td>
+  <td class="meaning">Prosím nekrmte cizí nápady.</td>
+</tr>
+<tr>
+  <th scope="row">Ázerbájdžánské (latinka)</th>
+  <td class="original"><bdi dir="auto">Əgər hər səhv yeni bir dünya yaradırsa, köhnə klaviaturam kainatın ən məhsuldar memarıdır və mən ona heç vaxt maaş verməmişəm.</bdi></td>
+  <td class="result"><bdi dir="ltr">!g§r h§r s§hv zeni bir dwnza zaradůrsa_ kúhn§ klaviaturam kainatůn §n m§hsuldar memarůdůr v§ m§n ona he, vaxt maa. verm§mi.§m-</bdi></td>
+  <td class="meaning">Jestli každá chyba vytváří nový svět, moje stará klávesnice je nejplodnější architekt vesmíru a já jsem jí nikdy nedal plat.</td>
+</tr>
+<tr>
+  <th scope="row">Turecké Q</th>
+  <td class="original"><bdi dir="auto">Lütfen gölgelerin üstüne basmayın.</bdi></td>
+  <td class="result"><bdi dir="ltr">L)tfen g,lgeler§n )st)ne basmazin-</bdi></td>
+  <td class="meaning">Prosím nešlapejte na stíny.</td>
+</tr>
+<tr>
+  <th scope="row">Řecké polytonické</th>
+  <td class="original"><bdi dir="auto">χρόνος καὶ σιωπή</bdi></td>
+  <td class="result"><bdi dir="ltr">xrůonow ka)i sivpůh</bdi></td>
+  <td class="meaning">Čas a ticho.</td>
+</tr>
+<tr>
+  <th scope="row">Makedonské</th>
+  <td class="original"><bdi dir="auto">Ако времето е пари, мојот стар часовник сигурно има тајна сметка на која ги чува сите минути што ги изгубив барајќи ги клучевите.</bdi></td>
+  <td class="result"><bdi dir="ltr">Ako vremeto e pari, mojot star ůasovnik sigurno ima tajna smetka na koja gi ůuva site minuti úto gi iygubiv baraj§i gi kluůevite.</bdi></td>
+  <td class="meaning">Jestli čas jsou peníze, moje staré hodiny mají určitě tajný účet, na kterém schovávají všechny minuty, jež jsem ztratil hledáním klíčů.</td>
+</tr>
+<tr>
+  <th scope="row">Bulharské fonetické</th>
+  <td class="original"><bdi dir="auto">Сънят ми иска парола.</bdi></td>
+  <td class="result"><bdi dir="ltr">Sznút mi iska parola.</bdi></td>
+  <td class="meaning">Můj sen chce heslo.</td>
+</tr>
+<tr>
+  <th scope="row">Severosámské (Finsko)</th>
+  <td class="original"><bdi dir="auto">Čáhci lea eallin.</bdi></td>
+  <td class="result"><bdi dir="ltr">hci lea eallin.</bdi></td>
+  <td class="meaning">Voda je život.</td>
+</tr>
+<tr>
+  <th scope="row">Norské (bokmål)</th>
+  <td class="original"><bdi dir="auto">Hvis alle utsatte oppgaver ble til snø, ville skrivebordet mitt være et fjell og kalenderen en svært optimistisk værmelding for neste uke.</bdi></td>
+  <td class="result"><bdi dir="ltr">Hvis alle utsatte oppgaver ble til snů, ville skrivebordet mitt v§re et fjell og kalenderen en sv§rt optimistisk v§rmelding for neste uke.</bdi></td>
+  <td class="meaning">Kdyby se všechny odložené úkoly změnily ve sníh, můj stůl by byl hora a kalendář velmi optimistická předpověď počasí na příští týden.</td>
+</tr>
+<tr>
+  <th scope="row">Běloruské (Windows)</th>
+  <td class="original"><bdi dir="auto">Мой кактус патрабуе абдымкаў.</bdi></td>
+  <td class="result"><bdi dir="ltr">Vjq rfrnec gfnhf,et f,lsvrfo-</bdi></td>
+  <td class="meaning">Můj kaktus vyžaduje objetí.</td>
+</tr>
+<tr>
+  <th scope="row">Srbské (latinka)</th>
+  <td class="original"><bdi dir="auto">Moja senka traži potvrdu da postojim.</bdi></td>
+  <td class="result"><bdi dir="ltr">Moja senka traï potvrdu da postojim.</bdi></td>
+  <td class="meaning">Můj stín chce potvrzení, že existuji.</td>
+</tr>
+<tr>
+  <th scope="row">Portugalské (Portugalsko)</th>
+  <td class="original"><bdi dir="auto">No fim do mundo havia uma rececionista que me pediu um número de senha e disse que o apocalipse estava atrasado por falta de pessoal.</bdi></td>
+  <td class="result"><bdi dir="ltr">No fim do mundo havia uma rececionista que me pediu um n)umero de senha e disse que o apocalipse estava atrasado por falta de pessoal.</bdi></td>
+  <td class="meaning">Na konci světa byla recepční, která po mně chtěla pořadové číslo a řekla, že apokalypsa má zpoždění kvůli nedostatku personálu.</td>
+</tr>
+<tr>
+  <th scope="row">Anglické Colemak</th>
+  <td class="original"><bdi dir="auto">My password forgot me.</bdi></td>
+  <td class="result"><bdi dir="ltr">Mo raddwůsg eůstůf mk.</bdi></td>
+  <td class="meaning">Moje heslo na mě zapomnělo.</td>
+</tr>
+<tr>
+  <th scope="row">Anglické Colemak-DH</th>
+  <td class="original"><bdi dir="auto">I bought a map of places that do not exist.</bdi></td>
+  <td class="result"><bdi dir="ltr">L tůigmf a har ůe ruaxkd fmaf ců jůf kyldf.</bdi></td>
+  <td class="meaning">Koupil jsem mapu míst, která neexistují.</td>
+</tr>
+<tr>
+  <th scope="row">Anglické Workman</th>
+  <td class="original"><bdi dir="auto">The future is out of office.</bdi></td>
+  <td class="result"><bdi dir="ltr">Fdk uifiek ůs lif lu luuůvk.</bdi></td>
+  <td class="meaning">Budoucnost má nastavenou nepřítomnost.</td>
+</tr>
+<tr>
+  <th scope="row">Anglické Norman</th>
+  <td class="original"><bdi dir="auto">My shadow has a better lawyer.</bdi></td>
+  <td class="result"><bdi dir="ltr">Mh sůaelw ůas a bdffdi oawhdi.</bdi></td>
+  <td class="meaning">Můj stín má lepšího právníka.</td>
+</tr>
+<tr>
+  <th scope="row">Německé Neo 2</th>
+  <td class="original"><bdi dir="auto">Die Treppe führt zum selben Gedanken.</bdi></td>
+  <td class="result"><bdi dir="ltr">&quot;sf Lkfvvf oyukl bam hfenfj Ifůdjzfj.</bdi></td>
+  <td class="meaning">Schody vedou ke stejné myšlence.</td>
+</tr>
+<tr>
+  <th scope="row">Francouzské BÉPO</th>
+  <td class="original"><bdi dir="auto">Le vide exige un billet.</bdi></td>
+  <td class="result"><bdi dir="ltr">Of udif fcd,f sů qdoofjv</bdi></td>
+  <td class="meaning">Prázdno vyžaduje vstupenku.</td>
+</tr>
+<tr>
+  <th scope="row">Esperantské (XKB)</th>
+  <td class="original"><bdi dir="auto">Mia ombro postulas salajron.</bdi></td>
+  <td class="result"><bdi dir="ltr">Mia ombro postulas salajron.</bdi></td>
+  <td class="meaning">Můj stín požaduje plat.</td>
+</tr>
+<tr>
+  <th scope="row">Anglické programátorské Dvorak</th>
+  <td class="original"><bdi dir="auto">return yesterday + 1;</bdi></td>
+  <td class="result"><bdi dir="ltr">odkfol tdůkdohat í 5q</bdi></td>
+  <td class="meaning">Vrať včerejšek plus jedna; hříčka ve stylu programu.</td>
+</tr>
+<tr>
+  <th scope="row">Portugalské Nativo (US)</th>
+  <td class="original"><bdi dir="auto">O vazio tem fome.</bdi></td>
+  <td class="result"><bdi dir="ltr">F md-af ish .fhse</bdi></td>
+  <td class="meaning">Prázdno má hlad.</td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+  <details>
+    <summary>Jak číst příklady s IME</summary>
+<p>Čínské znaky nemají univerzální převod na klávesy. Zde se simuluje přesně uvedená metoda na US QWERTY: Rime Terra Pinyin s tóny, Cangjie 5, Wubi 86 a Bopomofo se standardní mapou ču-jin. Každý požadovaný znak je vybrán a potvrzen myší po zadání jeho kódu. Automatická volba a předpovědi jsou vypnuté. Kliknutí myší do českého textu nepřidá žádný znak ani mezeru. V následujících seznamech svislítko odděluje kódy znaků; samo se nepíše.</p>
+<div class="input-codes">Čínské Rime Bopomofo:<br>  夢在散步 ← a/4 | y94 | n04 | 1j4<br>Čínské Rime Cangjie 5:<br>  時間在打盹 ← agdi | ana | klg | qmn | bupu<br>Korejské Sebeolsik 390:<br>  내 마음에도 문이 있다 ← hr ifjgzjcu/ i9sjd jd2uf<br>Čínské Rime Wubi 86:<br>  宇宙欠我咖啡 ← pgfj | pmf | qwu | trnt | klkg | kdjd<br>Japonské Mozc rómadži:<br>  きのうをへんぴんしたい ← kinouwohenpinshitai<br>Čínské Rime Terra Pinyin:<br>  月亮拒絕加班 ← yue4 | liang4 | ju4 | jue2 | jia1 | ban1<br>Korejské Dubeolsik:<br>  고양이는 철학을 한다 ← rhdiddlsms cjfgkrdmf gksek</div>
+<p>U japonského Mozc je výstup přímo hiragana bez převodu na kandži; závěrečné potvrzení je myší. U japonského kana jde naopak o přímou katakanu podle mapy XKB, nikoli o rómadži nebo obecnou japonskou IME. Korejské varianty používají mapy libhangul: Dubeolsik a Sebeolsik 390. Souhlásky a samohlásky se skládají do slabik; mezery jsou skutečné stisky.</p>
+  </details>
+</main>
+</body>
+</html>

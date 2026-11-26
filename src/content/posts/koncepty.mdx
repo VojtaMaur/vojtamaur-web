@@ -173,9 +173,15 @@ Její odpověď byla:
 Názvy chatů se generují automaticky z počátku konverzace a tady se generátor titulku zjevně rozhodl přihodit náhodný znak z arménské abecedy. V obsahu konverzace pro něj nevidím žádný důvod.
 Takže ne, není to nějaká tajná značka pro program. Je to prostě „Popis programu“ + typografický vetřelec.“
 
-Po pár dalších interakcích jí došlo, že ne, není to arménština, ale čínština. Nicméně je vidět, že byla zprvu hodně zmatená. Myslím si, že string „<NoTranslate>天天中彩票买</NoTranslate>“ funguje trochu jako nechvalně známý token „<NoTranslate>SolidGoldMagikarp</NoTranslate>“. Netvrdím, že funguje stejně, ani nevím, jestli tokenizer řetězec „<NoTranslate>天天中彩票买</NoTranslate>“ reprezentuje jako jeden token. Nicméně se model při práci s ním chová trochu jako ChatGPT 3 s tokenem „<NoTranslate>SolidGoldMagikarp</NoTranslate>“. Taky není vyloučeno, že to nějak souvisí s její pamětí, protože ta sahá i mimo tento chat.
+Po pár dalších interakcích jí došlo, že ne, není to arménština, ale čínština. Nicméně je vidět, že byla zprvu hodně zmatená. Myslím si, že string <NoTranslate>„天天中彩票买“</NoTranslate> funguje trochu jako nechvalně známý token <NoTranslate>„SolidGoldMagikarp“</NoTranslate>. Netvrdím, že funguje stejně, ani nevím, jestli tokenizer řetězec <NoTranslate>„天天中彩票买“</NoTranslate> reprezentuje jako jeden token. Nicméně se model při práci s ním chová trochu jako ChatGPT 3 s tokenem <NoTranslate>„SolidGoldMagikarp“</NoTranslate>. Taky není vyloučeno, že to nějak souvisí s její pamětí, protože ta sahá i mimo tento chat.
 
 Celý tento chat vyexportovaný jako PDF: [koncepty-2026-08-22-chatgpt-cely-chat.pdf](/files/koncepty-2026-08-22-chatgpt-cely-chat.pdf)
+
+Aktualizace z 2026-11-20: Pomocí [OpenAI Tokenizeru](https://platform.openai.com/tokenizer) jsem ověřil, že řetězec `天下彩买` se skládá ze dvou tokenů: `天下彩` (volně „každý den vyhrát v loterii“) a `买` („koupit“).
+
+Zajímavý je především první token. Jde o výraz související s čínským internetovým hazardem, který se mohl vyskytovat v takovém množství scrapovaných dat, že se dostal do slovníku tokenizeru jako jeden token.
+
+Navíc není jasné, zda automatické názvy konverzací generuje stejný model, který je v daném chatu zvolený. Nepodařilo se mi k tomu dohledat veřejnou technickou dokumentaci. Přesto je zvláštní, že samotný GPT-5.6 Sol měl následně s interpretací tohoto řetězce takové problémy.
 
 **<NoTranslate>2026-08-26:</NoTranslate> TLAČÍTKO MÝCH SNŮ**  
 
@@ -229,6 +235,10 @@ Potenciálních problémů to ale má více:
 
 Když jsem teď posledních asi sedm měsíců intenzivně tvořil [Metawebový článek](/metawebovy-clanek/), mám nutkání vytvořit něco v přímém rozporu s filosofií tohohle projektu. Vytvořit něco naprosto pomíjivého. Zatím nevím co. 
 
+Bohužel, v tomhle vesmíru je paradoxně snazší uchovat informaci po stovky tisíc let než ji skutečně zničit tak, aby po ní nikde nezůstala žádná fyzikální stopa.
+
+Jedinou cestu proto vidím v tom vytvořit si vlastní formální systém, uvnitř něhož budou události, které nepůjde rekonstruovat ani při úplné znalosti jeho výsledného stavu, protože jeho pravidla umožní nevratnou ztrátu informace. Zvenčí samozřejmě bude možné tyto události rekonstruovat, ale zevnitř systému nikoliv.
+
 **<NoTranslate>2026-11-11:</NoTranslate> MÍSTO REKLAMY FRAKTÁL**
 
 Hraju si s myšlenkou pronajmout si na nějaké webové stránce reklamní banner a na něj dát obrázek nějakého fraktálu. 
@@ -244,3 +254,29 @@ Vytvořil jsem proto program, který tohle udělá s libovolnou vlajkou.
 Upozornění: Neručím za výstupy programu ani za jejich použití. Veřejné šíření vytvořených vzorů může v některých zemích podléhat právním omezením.
 
 Zdrojový kód: [koncepty-2026-11-13-dekorativni-vzory-z-vlajek.py](/files/koncepty-2026-11-13-dekorativni-vzory-z-vlajek.py)
+
+**<NoTranslate>2026-11-19:</NoTranslate> ASEMICKÉ PROGRAMOVÁNÍ**
+
+Vždycky mě bavili věci, které vypadají, že mají význam, ale žádný nemají. Taky proto jsem si na webu hrdě vystavil [pseudobáseň Jezápek](/pseudobasen/). Fascinovala mě také glosolálie a asemické písmo. Navíc lze dnes asemické písmo snadno vytvářet pomocí obrázkových AI generátorů. Bavilo mě zadávat jim něco jako <NoTranslate>„Photo of a book page“</NoTranslate> a pak se jen bavit výstupy.
+
+Proč ale nezkusit tvořit asemicky v dalších modalitách? Třeba asémické programování. 
+
+Jdeme na to, nikdy jsem to nedělal, takže tohle je můj první pokus: [koncepty-2026-11-19-asemicke-programovani.txt](/files/koncepty-2026-11-19-asemicke-programovani.txt)
+
+**<NoTranslate>2026-11-23:</NoTranslate> US8676824B2**
+
+Můj kamarád Filip Drábek si všiml zajímavého jevu, když omylem zadal do Googlu vyhledávací dotaz se zapnutou arabskou klávesnicí. Přestože výsledný řetězec nedával smysl, Google správně rozpoznal, co chtěl vyhledat. To překvapilo i mě. Následně jsem zjistil, že Google má podobný mechanismus popsaný už v patentu US8676824B2 z roku 2007, který umožňuje opravovat dotazy napsané na nesprávném rozložení klávesnice.
+
+Začalo mě tedy zajímat, jak takové chyby vlastně vypadají v různých jazycích. Princip je jednoduchý: člověk píše na klávesnici tak, jak je zvyklý, ale počítač interpretuje stejné stisky podle jiného rozložení. Rozhodl jsem se proto nasimulovat sto případů, kdy chce člověk psát ve svém jazyce, ale omylem má zapnutou českou klávesnici QWERTZ. 
+
+Sto příkladů: [koncepty-2026-11-23-US8676824B2.html](/files/koncepty-2026-11-23-US8676824B2.html)
+
+**<NoTranslate>2026-11-25:</NoTranslate> SVĚT JE OBČAS PROSTĚ ŠEDÝ**
+
+Chtěl jsem přepnout článek na Erowidu do bílého barevného režimu, ale nefungovalo to. Takže jsem otevřel dev tools a nastavil si to sám. Pak mě ale napadlo: co nastavit úplně minimální kontrast mezi pozadím a textem? Tak, aby byl text ještě čitelný, ale obtížně. Takže jsem nastavil dva téměř totožné odstíny šedé: barvu pozadí na rgb(123, 123, 123) a barvu textu na rgb(132, 132, 132). Začal jsem číst.
+
+Soustředit se na význam textu bylo náročnější. Po čase jsem si trochu zvykl a přišlo mi, že dokážu číst o něco rychleji (ale rychlost čtení jsem neměřil).
+
+Zajímalo by mě, jaké by bylo aplikovat takovýhle filtr nejen na text, ale na celý monitor a pak třeba hodinu pracovat na počítači.
+
+Podobný koncept mě napadl už dříve v jiných podobách: třeba prohodit osy x a y u počítačové myši, používat monitor s obrazem otočeným o 90° nebo nosit celý den brýle, které propouštějí jen úzké pásmo vlnových délek světla. A následně sledovat, jak se na to adaptuji.

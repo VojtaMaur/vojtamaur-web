@@ -1,0 +1,3 @@
+## Full-text archive
+
+- [ALL_POSTS.txt](./ALL_POSTS.txt): Consolidated plain-text archive of published articles in Czech and English.

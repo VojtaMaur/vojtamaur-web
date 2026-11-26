@@ -4014,6 +4014,33 @@ Deploy the history snapshot already contained in the signed output. The newer pr
 ### 12.3 `.htaccess`
 For a static Astro website, a minimalist configuration is appropriate. 
 
+`public/.htaccess` is copied to the root of the Astro build. It configures the custom 404 page, redirects HTTP requests to HTTPS, and provides `/llms-full.txt` as a conventional URL for the archive described in section 9.6.
+
+```apache
+RewriteEngine On
+
+ErrorDocument 404 /404.html
+
+# HTTPS redirect
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# llms-full.txt alias
+RewriteRule ^llms-full\.txt$ ALL_POSTS.txt [L]
+```
+
+On Apache hosts that apply these rules, `mod_rewrite` internally serves `ALL_POSTS.txt` for requests to `/llms-full.txt`. The request stays on the same host and the URL remains `/llms-full.txt`.
+
+Static mirrors and offline copies can serve or open the physical fallback copied from `public/llms-full.txt`. Follow its relative link to the generated bilingual article archive in the same directory.
+
+```text
+## Full-text archive
+
+- [ALL_POSTS.txt](./ALL_POSTS.txt): Consolidated plain-text archive of published articles in Czech and English.
+```
+
+`ALL_POSTS.txt` remains the canonical text export. The separate `llms.txt` index links to it directly.
+
 ### 12.4 Portable build
 The portable build can be used as a file-based snapshot or offline copy. However, it is not identical to normal web hosting, and some external services may behave differently.
 
@@ -4167,7 +4194,6 @@ Possible future directions for the project:
   - [Keybase](https://keybase.io/) – storage of archival exports or static website files in the publicly accessible, cryptographically signed Keybase Filesystem (`/keybase/public/`), subject to the service's continued operation and storage policies
   - [FOREVER](https://www.forever.com/) – evaluation as an additional long-term digital preservation service, complementing the existing use of [Permanent.org](https://www.permanent.org/) and providing further redundancy through an independent archival provider
   - [Auto Drive (Autonomys Network)](https://ai3.storage/) – evaluation of decentralized archival storage for public website exports (e.g. ZIP, PDF, or ALL_POSTS.txt), using an independent blockchain-based storage network; practical upload limits, costs, public retrieval, and long-term data availability require verification
-- evaluation of using LLM agents to perform the archivist's role, scaling web discovery and preservation by running many parallel instances
 - evaluation of Bitcoin Ordinals inscriptions as an immutable, blockchain-based archival medium, embedding selected small digital artifacts directly into the Bitcoin blockchain to provide highly durable, publicly retrievable copies independent of conventional hosting infrastructure
 - implementation of standardized RSS and JSON Feed endpoints (e.g. /rss.xml and /feed.json) for machine-readable syndication and independent subscription to newly published content
 - implementation of an automated link and file integrity checker for detecting broken internal links, missing assets and invalid fragment references across the website and generated archival outputs
@@ -4407,6 +4433,7 @@ The following archival operations should be performed periodically to maintain t
 - approximately once per year, review the availability of existing archival copies, repositories, and mirrors, identifying inaccessible or discontinued services
 - periodically verify the integrity and recoverability of stored archival copies using available checksums and signatures
 - approximately once per decade, deposit an updated archival edition of `vojtamaur.cz` in the Memory of Mankind (MoM) archive, preserving previous deposits
+- every 50 years, starting in 2070 (2070, 2120, 2170, …), the current holder of the Memory of Mankind (MoM) token should attend the scheduled gathering of token holders to assess whether the archived content remains known and whether further additions are needed; preserve the ceramic token, pass it on to future generations, and communicate its purpose and the recurring gathering schedule to each successive holder.
 - approximately once per decade, deposit an updated archival edition of `vojtamaur.cz` in the Arctic World Archive (AWA), preserving previous deposits
 - approximately once every three years, update the archival copies of the project's YouTube videos, including newly published content, on the existing archival platforms
 - periodically archive `ALL_POSTS.txt`, `ARCHIVE.txt`, the documentation page, and the Metaweb article using independent web snapshot services (e.g. archive.today, Ghost Archive, Arquivo.pt, Web Gyotaku, ...), particularly after significant updates

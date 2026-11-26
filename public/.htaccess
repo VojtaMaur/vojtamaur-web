@@ -5,3 +5,6 @@ ErrorDocument 404 /404.html
 # HTTPS redirect
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# llms-full.txt alias
+RewriteRule ^llms-full\.txt$ ALL_POSTS.txt [L]

@@ -1,0 +1,11 @@
+﻿import a=int
+
+while else:
+	if import:
+		a = import[1]
+		
+	else:
+		#b + a = import
+		goto eval/100
+		
+eval (#b)
